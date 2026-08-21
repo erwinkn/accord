@@ -21,8 +21,14 @@ import {
   useQuery,
 } from "@tanstack/react-query"
 
-export type ApiQueryKey = readonly [scope: "accord", endpoint: string, input: unknown]
-export type ApiMutationKey = readonly [scope: "accord", endpoint: string]
+export type ApiEndpointKey = readonly [
+  scope: "accord",
+  method: string,
+  path: string,
+  operationId: string | null,
+]
+export type ApiQueryKey = readonly [...ApiEndpointKey, input: unknown]
+export type ApiMutationKey = ApiEndpointKey
 
 export type ApiQueryOptions<E extends QueryEndpoint, TData = ResponseOf<E>> = Omit<
   UseQueryOptions<ResponseOf<E>, HttpError<ErrorOf<E>>, TData, ApiQueryKey>,
@@ -38,16 +44,21 @@ export type ApiMutationOptions<E extends MutationEndpoint, TContext = unknown> =
   readonly clientOptions?: ClientOptions
 }
 
-export function endpointIdentity(endpoint: EndpointDescriptor): string {
-  return endpoint.operationId ?? `${endpoint.method.toUpperCase()} ${endpoint.path}`
+export function endpointIdentity(endpoint: EndpointDescriptor): ApiEndpointKey {
+  return [
+    "accord",
+    endpoint.method.toUpperCase(),
+    endpoint.path,
+    endpoint.operationId ?? null,
+  ]
 }
 
 export function apiQueryKey<E extends QueryEndpoint>(endpoint: E, input: InputOf<E>): ApiQueryKey {
-  return ["accord", endpointIdentity(endpoint), canonicalQueryValue(input)]
+  return [...endpointIdentity(endpoint), canonicalQueryValue(input)]
 }
 
 export function apiMutationKey<E extends MutationEndpoint>(endpoint: E): ApiMutationKey {
-  return ["accord", endpointIdentity(endpoint)]
+  return endpointIdentity(endpoint)
 }
 
 export function apiQuery<E extends QueryEndpoint, TData = ResponseOf<E>>(
