@@ -201,7 +201,7 @@ describe("normalizeOpenApi", () => {
               operationId: "getUser",
               parameters: [
                 { in: "path", name: "user-id", required: true, schema: { type: "string" } },
-                { in: "query", name: "user_id", schema: { type: "string" } },
+                { in: "query", name: "user.id", schema: { type: "string" } },
               ],
               responses: { 200: { description: "ok" } },
             },
@@ -285,7 +285,8 @@ describe("normalizeOpenApi", () => {
         },
       },
     }
-    const operation = normalizeOpenApi(input).operations[0]
+    const operation = normalizeOpenApi(input, { body: { mode: "separate" } }).operations[0]
+    expect(operation?.bodyMode).toBe("separate")
     expect(operation?.parameters[0]?.name).toBe("id")
     expect(operation?.requestBody?.fields).toEqual(["id", "name"])
     expect(operation?.responses[0]?.contentTypes).toEqual(["application/json"])

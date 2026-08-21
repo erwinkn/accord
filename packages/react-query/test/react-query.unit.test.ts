@@ -167,10 +167,14 @@ describe("React Query adapter", () => {
     expect(query.result.current.data).toEqual({ id: "7", name: "Erwin" })
 
     const mutation = renderHook(() => useApiMutation(createUser, { clientOptions }), { wrapper })
+    let created: User | undefined
     await act(async () => {
-      await mutation.result.current.mutateAsync({ name: "Alice" })
+      created = await mutation.result.current.mutateAsync({ name: "Alice" })
     })
-    expect(mutation.result.current.data).toEqual({ id: "created", name: "Alice" })
+    expect(created).toEqual({ id: "created", name: "Alice" })
+    await waitFor(() => {
+      expect(mutation.result.current.data).toEqual({ id: "created", name: "Alice" })
+    })
   })
 
   it("passes disabled query options through without executing", () => {
