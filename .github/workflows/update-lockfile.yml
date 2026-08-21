@@ -1,0 +1,35 @@
+name: Update workspace lockfile
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.head_ref == 'init/typed-openapi-sdk'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@11.22.0 --activate
+      - name: Refresh lockfile
+        run: pnpm install --lockfile-only --no-frozen-lockfile
+      - name: Commit lockfile
+        run: |
+          if git diff --quiet -- pnpm-lock.yaml; then
+            echo "Lockfile is already current"
+            exit 0
+          fi
+          git add pnpm-lock.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Link workspace packages in root test environment"
+          git push origin HEAD:${{ github.head_ref }}
