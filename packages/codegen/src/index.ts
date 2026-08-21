@@ -13,6 +13,7 @@ export {
   writeGeneratedFile,
 } from "./generate.js"
 export {
+  fallbackOperationName,
   isDangerousInputName,
   operationName,
   operationNamespace,
