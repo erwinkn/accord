@@ -87,13 +87,31 @@ describe("React Query adapter", () => {
   it("builds stable endpoint-scoped query and mutation keys", () => {
     expect(apiQueryKey(getUser, { userId: "1", include: ["posts", "teams"] })).toEqual([
       "accord",
+      "GET",
+      "/users/{userId}",
       "getUser",
       { include: ["posts", "teams"], userId: "1" },
     ])
     expect(apiQueryKey(getUser, { include: ["posts"], userId: "1" })).toEqual(
       apiQueryKey(getUser, { userId: "1", include: ["posts"] }),
     )
-    expect(apiMutationKey(createUser)).toEqual(["accord", "createUser"])
+    expect(apiMutationKey(createUser)).toEqual([
+      "accord",
+      "POST",
+      "/users",
+      "createUser",
+    ])
+  })
+
+  it("does not collide when unrelated APIs reuse an operationId", () => {
+    const secondEndpoint = {
+      ...getUser,
+      path: "/accounts/{userId}",
+    } as EndpointDescriptor<GetUserTypes, "merge", "query">
+
+    expect(apiQueryKey(secondEndpoint, { userId: "1" })).not.toEqual(
+      apiQueryKey(getUser, { userId: "1" }),
+    )
   })
 
   it("works with QueryClient prefetch and cache APIs", async () => {
@@ -209,7 +227,7 @@ describe("React Query adapter", () => {
           }),
       },
     })
-    expect(options.mutationKey).toEqual(["accord", "createUser"])
+    expect(options.mutationKey).toEqual(["accord", "POST", "/users", "createUser"])
     await expect(options.mutationFn?.({ name: "Alice" })).resolves.toEqual({
       id: "1",
       name: "Alice",
