@@ -45,12 +45,7 @@ export type ApiMutationOptions<E extends MutationEndpoint, TContext = unknown> =
 }
 
 export function endpointIdentity(endpoint: EndpointDescriptor): ApiEndpointKey {
-  return [
-    "accord",
-    endpoint.method.toUpperCase(),
-    endpoint.path,
-    endpoint.operationId ?? null,
-  ]
+  return ["accord", endpoint.method.toUpperCase(), endpoint.path, endpoint.operationId ?? null]
 }
 
 export function apiQueryKey<E extends QueryEndpoint>(endpoint: E, input: InputOf<E>): ApiQueryKey {
