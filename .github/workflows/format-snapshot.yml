@@ -1,10 +1,10 @@
-name: Format snapshot
+name: Apply formatting
 
 on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   format:
@@ -13,6 +13,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -22,14 +24,18 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Apply Biome safe fixes
         run: pnpm exec biome check --write . || true
-      - name: Package changed files
+      - name: Commit formatter output and lockfile
         run: |
-          git diff --name-only --diff-filter=ACMRT > /tmp/changed-files.txt
-          tar -czf /tmp/formatted-files.tar.gz --files-from=/tmp/changed-files.txt
-      - name: Upload formatted snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: biome-formatted-files
-          path: |
-            /tmp/changed-files.txt
-            /tmp/formatted-files.tar.gz
+          if git diff --quiet && git diff --cached --quiet && [ -f pnpm-lock.yaml ]; then
+            git add pnpm-lock.yaml
+          else
+            git add -A
+          fi
+          if git diff --cached --quiet; then
+            echo "No formatter or lockfile changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Apply Biome formatting and lock dependencies"
+          git push origin HEAD:${{ github.head_ref }}
