@@ -1,0 +1,221 @@
+{
+  "openapi": "3.0.3",
+  "operations": [
+    {
+      "key": "GET /api/v1/health",
+      "method": "GET",
+      "methodKey": "get",
+      "path": "/api/v1/health",
+      "operationName": "get",
+      "namespace": [
+        "health"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "query",
+      "parameters": [],
+      "responses": [
+        {
+          "status": 204,
+          "contentTypes": []
+        }
+      ],
+      "typeName": "HealthGet"
+    },
+    {
+      "key": "createNode",
+      "method": "POST",
+      "methodKey": "post",
+      "path": "/api/v1/nodes",
+      "operationId": "createNode",
+      "operationName": "createNode",
+      "namespace": [
+        "nodes"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "mutation",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "application/json",
+        "contentTypes": [
+          "application/json"
+        ],
+        "fields": [
+          "children",
+          "name"
+        ]
+      },
+      "responses": [
+        {
+          "status": 201,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "NodesCreateNode"
+    },
+    {
+      "key": "search-users",
+      "method": "GET",
+      "methodKey": "get",
+      "path": "/api/v1/organizations/{organization-id}/users",
+      "operationId": "search-users",
+      "operationName": "searchUsers",
+      "namespace": [
+        "organizations",
+        "users"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "query",
+      "parameters": [
+        {
+          "name": "session",
+          "inputName": "session",
+          "in": "cookie",
+          "required": true,
+          "style": "form",
+          "explode": true,
+          "allowReserved": false
+        },
+        {
+          "name": "X-Request-ID",
+          "inputName": "xRequestId",
+          "in": "header",
+          "required": false,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        },
+        {
+          "name": "organization-id",
+          "inputName": "organizationId",
+          "in": "path",
+          "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        },
+        {
+          "name": "filter",
+          "inputName": "filter",
+          "in": "query",
+          "required": false,
+          "style": "deepObject",
+          "explode": true,
+          "allowReserved": false
+        },
+        {
+          "name": "roles",
+          "inputName": "roles",
+          "in": "query",
+          "required": false,
+          "style": "form",
+          "explode": true,
+          "allowReserved": false
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "OrganizationsUsersSearchUsers"
+    },
+    {
+      "key": "get-post",
+      "method": "GET",
+      "methodKey": "get",
+      "path": "/api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}",
+      "operationId": "get-post",
+      "operationName": "getPost",
+      "namespace": [
+        "organizations",
+        "users",
+        "posts"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "query",
+      "parameters": [
+        {
+          "name": "organization-id",
+          "inputName": "organizationId",
+          "in": "path",
+          "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        },
+        {
+          "name": "post-id",
+          "inputName": "postId",
+          "in": "path",
+          "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        },
+        {
+          "name": "user-id",
+          "inputName": "userId",
+          "in": "path",
+          "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "OrganizationsUsersPostsGetPost"
+    },
+    {
+      "key": "uploadFile",
+      "method": "POST",
+      "methodKey": "post",
+      "path": "/api/v1/uploads",
+      "operationId": "uploadFile",
+      "operationName": "uploadFile",
+      "namespace": [
+        "uploads"
+      ],
+      "bodyMode": "separate",
+      "operationKind": "mutation",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "multipart/form-data",
+        "contentTypes": [
+          "multipart/form-data"
+        ],
+        "fields": [
+          "file",
+          "metadata"
+        ],
+        "encoding": {
+          "metadata": {
+            "contentType": "application/json"
+          }
+        }
+      },
+      "responses": [
+        {
+          "status": 201,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "UploadsUploadFile"
+    }
+  ]
+}

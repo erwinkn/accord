@@ -1,12 +1,31 @@
 {
   "name": "@accord/codegen",
   "version": "0.0.0",
-  "private": true,
+  "description": "OpenAPI to Accord endpoint descriptor and TypeScript generator",
   "type": "module",
-  "exports": "./dist/index.js",
+  "sideEffects": false,
+  "files": ["dist"],
+  "bin": {
+    "accord": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist *.tsbuildinfo",
     "typecheck": "tsc -p tsconfig.json --noEmit"
-  }
+  },
+  "dependencies": {
+    "openapi-typescript": "7.13.0",
+    "yaml": "2.8.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT"
 }

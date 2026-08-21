@@ -2,6 +2,7 @@
   "name": "accord",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "Type-safe OpenAPI SDK code generation with a small generic runtime",
   "license": "MIT",
   "packageManager": "pnpm@11.22.0",
