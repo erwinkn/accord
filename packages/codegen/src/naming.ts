@@ -69,9 +69,20 @@ export function operationNamespace(options: {
   return pathNamespace(options.path, options.basePath)
 }
 
+export function fallbackOperationName(method: string, path: string): string {
+  const verb = sanitizeIdentifier(method.toLowerCase())
+  const parameters = [...path.matchAll(/\{([^}]+)\}/g)]
+    .map((match) => match[1])
+    .filter((name): name is string => name !== undefined && name.length > 0)
+
+  if (parameters.length === 0) return verb
+  return `${verb}By${parameters.map(sanitizeTypeIdentifier).join("And")}`
+}
+
 export function operationName(
   operation: Readonly<Record<string, unknown>>,
   method: string,
+  path = "",
 ): string {
   const sdkName = operation["x-sdk-name"]
   if (typeof sdkName === "string" && sdkName.trim().length > 0) return sanitizeIdentifier(sdkName)
@@ -80,5 +91,5 @@ export function operationName(
   if (typeof operationId === "string" && operationId.trim().length > 0) {
     return sanitizeIdentifier(operationId)
   }
-  return sanitizeIdentifier(method.toLowerCase())
+  return fallbackOperationName(method, path)
 }
