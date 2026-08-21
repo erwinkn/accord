@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  fallbackOperationName,
   operationName,
   pathNamespace,
   sanitizeIdentifier,
@@ -31,11 +32,24 @@ describe("identifier generation", () => {
     expect(stripBasePath("/api/v10/users", "/api/v1")).toBe("/api/v10/users")
   })
 
-  it("uses x-sdk-name, then operationId, then method", () => {
-    expect(operationName({ "x-sdk-name": "fetch-one", operationId: "ignored" }, "get")).toBe(
-      "fetchOne",
+  it("uses x-sdk-name, then operationId, then a path-aware fallback", () => {
+    expect(
+      operationName(
+        { "x-sdk-name": "fetch-one", operationId: "ignored" },
+        "get",
+        "/users/{userId}",
+      ),
+    ).toBe("fetchOne")
+    expect(operationName({ operationId: "get-user" }, "get", "/users/{userId}")).toBe(
+      "getUser",
     )
-    expect(operationName({ operationId: "get-user" }, "get")).toBe("getUser")
-    expect(operationName({}, "patch")).toBe("patch")
+    expect(operationName({}, "patch", "/users")).toBe("patch")
+    expect(operationName({}, "get", "/users/{userId}")).toBe("getByUserId")
+  })
+
+  it("includes every ordered path parameter in fallback names", () => {
+    expect(fallbackOperationName("GET", "/users/{user-id}/posts/{postId}")).toBe(
+      "getByUserIdAndPostId",
+    )
   })
 })
