@@ -6,7 +6,7 @@
       "!**/dist",
       "!**/coverage",
       "!tests/generated",
-      "!tests/golden/**/*.ts",
+      "!tests/golden",
       "!pnpm-lock.yaml"
     ]
   },

@@ -73,6 +73,6 @@ describe("golden generation", () => {
     expect(first.source).toBe(second.source)
     expect(first.source).toContain("export const api")
     expect(first.source).toContain('"getUser"')
-    expect(first.source).toContain("AccordUsersGetUserInput")
+    expect(first.source).toContain("UsersGetUserInput")
   })
 })

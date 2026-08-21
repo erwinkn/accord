@@ -7,7 +7,9 @@
       "methodKey": "get",
       "path": "/api/v1/health",
       "operationName": "get",
-      "namespace": ["health"],
+      "namespace": [
+        "health"
+      ],
       "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [],
@@ -26,20 +28,29 @@
       "path": "/api/v1/nodes",
       "operationId": "createNode",
       "operationName": "createNode",
-      "namespace": ["nodes"],
+      "namespace": [
+        "nodes"
+      ],
       "bodyMode": "merge",
       "operationKind": "mutation",
       "parameters": [],
       "requestBody": {
         "required": true,
         "contentType": "application/json",
-        "contentTypes": ["application/json"],
-        "fields": ["children", "name"]
+        "contentTypes": [
+          "application/json"
+        ],
+        "fields": [
+          "children",
+          "name"
+        ]
       },
       "responses": [
         {
           "status": 201,
-          "contentTypes": ["application/json"]
+          "contentTypes": [
+            "application/json"
+          ]
         }
       ],
       "typeName": "NodesCreateNode"
@@ -51,7 +62,10 @@
       "path": "/api/v1/organizations/{organization-id}/users",
       "operationId": "search-users",
       "operationName": "searchUsers",
-      "namespace": ["organizations", "users"],
+      "namespace": [
+        "organizations",
+        "users"
+      ],
       "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
@@ -104,7 +118,9 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": ["application/json"]
+          "contentTypes": [
+            "application/json"
+          ]
         }
       ],
       "typeName": "OrganizationsUsersSearchUsers"
@@ -116,7 +132,11 @@
       "path": "/api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}",
       "operationId": "get-post",
       "operationName": "getPost",
-      "namespace": ["organizations", "users", "posts"],
+      "namespace": [
+        "organizations",
+        "users",
+        "posts"
+      ],
       "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
@@ -151,7 +171,9 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": ["application/json"]
+          "contentTypes": [
+            "application/json"
+          ]
         }
       ],
       "typeName": "OrganizationsUsersPostsGetPost"
@@ -163,15 +185,22 @@
       "path": "/api/v1/uploads",
       "operationId": "uploadFile",
       "operationName": "uploadFile",
-      "namespace": ["uploads"],
+      "namespace": [
+        "uploads"
+      ],
       "bodyMode": "separate",
       "operationKind": "mutation",
       "parameters": [],
       "requestBody": {
         "required": true,
         "contentType": "multipart/form-data",
-        "contentTypes": ["multipart/form-data"],
-        "fields": ["file", "metadata"],
+        "contentTypes": [
+          "multipart/form-data"
+        ],
+        "fields": [
+          "file",
+          "metadata"
+        ],
         "encoding": {
           "metadata": {
             "contentType": "application/json"
@@ -181,7 +210,9 @@
       "responses": [
         {
           "status": 201,
-          "contentTypes": ["application/json"]
+          "contentTypes": [
+            "application/json"
+          ]
         }
       ],
       "typeName": "UploadsUploadFile"
