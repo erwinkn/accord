@@ -39,24 +39,26 @@ export function encodeValue(value: unknown, allowReserved = false): string {
   const encoded = encodeURIComponent(primitive(value))
   if (!allowReserved) return encoded
 
-  return encoded.replace(/%[0-9A-F]{2}/gi, match => RESERVED_REPLACEMENTS[match.toUpperCase()] ?? match)
+  return encoded.replace(
+    /%[0-9A-F]{2}/gi,
+    (match) => RESERVED_REPLACEMENTS[match.toUpperCase()] ?? match,
+  )
 }
 
-function objectEntries(value: Readonly<Record<string, unknown>>): readonly (readonly [string, unknown])[] {
+function objectEntries(
+  value: Readonly<Record<string, unknown>>,
+): readonly (readonly [string, unknown])[] {
   return Object.entries(value).filter((entry): entry is [string, unknown] => entry[1] !== undefined)
 }
 
-export function serializePathParameter(
-  descriptor: ParameterDescriptor,
-  value: unknown,
-): string {
+export function serializePathParameter(descriptor: ParameterDescriptor, value: unknown): string {
   const name = encodeValue(descriptor.name)
   const encode = (item: unknown) => encodeValue(item)
 
   if (descriptor.style === "matrix") {
     if (Array.isArray(value)) {
       return descriptor.explode
-        ? value.map(item => `;${name}=${encode(item)}`).join("")
+        ? value.map((item) => `;${name}=${encode(item)}`).join("")
         : `;${name}=${value.map(encode).join(",")}`
     }
 
@@ -110,7 +112,9 @@ export function serializeQueryParameter(
 
   if (descriptor.style === "deepObject") {
     if (!isRecord(value)) {
-      throw new TypeError(`Query parameter ${descriptor.name} with deepObject style must be an object`)
+      throw new TypeError(
+        `Query parameter ${descriptor.name} with deepObject style must be an object`,
+      )
     }
     return objectEntries(value).map(([key, item]) => pair(`${inputName}[${key}]`, item))
   }
@@ -133,7 +137,7 @@ export function serializeQueryParameter(
 
   if (Array.isArray(value)) {
     return descriptor.explode
-      ? value.map(item => pair(inputName, item))
+      ? value.map((item) => pair(inputName, item))
       : [pair(inputName, value.map(primitive).join(","))]
   }
 
@@ -141,12 +145,7 @@ export function serializeQueryParameter(
     const entries = objectEntries(value)
     return descriptor.explode
       ? entries.map(([key, item]) => pair(key, item))
-      : [
-          pair(
-            inputName,
-            entries.flatMap(([key, item]) => [key, primitive(item)]).join(","),
-          ),
-        ]
+      : [pair(inputName, entries.flatMap(([key, item]) => [key, primitive(item)]).join(","))]
   }
 
   return [pair(inputName, value)]
@@ -155,16 +154,12 @@ export function serializeQueryParameter(
 export function renderQueryString(pairs: readonly QueryPair[]): string {
   return pairs
     .map(
-      ([name, value, allowReserved]) =>
-        `${encodeValue(name)}=${encodeValue(value, allowReserved)}`,
+      ([name, value, allowReserved]) => `${encodeValue(name)}=${encodeValue(value, allowReserved)}`,
     )
     .join("&")
 }
 
-export function serializeHeaderParameter(
-  descriptor: ParameterDescriptor,
-  value: unknown,
-): string {
+export function serializeHeaderParameter(descriptor: ParameterDescriptor, value: unknown): string {
   if (Array.isArray(value)) return value.map(primitive).join(",")
   if (isRecord(value)) {
     const entries = objectEntries(value)
@@ -181,7 +176,7 @@ export function serializeCookieParameter(
 ): readonly (readonly [string, string])[] {
   if (Array.isArray(value)) {
     return descriptor.explode
-      ? value.map(item => [descriptor.name, primitive(item)] as const)
+      ? value.map((item) => [descriptor.name, primitive(item)] as const)
       : [[descriptor.name, value.map(primitive).join(",")]]
   }
 
@@ -189,12 +184,7 @@ export function serializeCookieParameter(
     const entries = objectEntries(value)
     return descriptor.explode
       ? entries.map(([key, item]) => [key, primitive(item)] as const)
-      : [
-          [
-            descriptor.name,
-            entries.flatMap(([key, item]) => [key, primitive(item)]).join(","),
-          ],
-        ]
+      : [[descriptor.name, entries.flatMap(([key, item]) => [key, primitive(item)]).join(",")]]
   }
 
   return [[descriptor.name, primitive(value)]]
@@ -207,7 +197,7 @@ export function interpolatePath(
 ): string {
   let path = pathTemplate
 
-  for (const descriptor of descriptors.filter(parameter => parameter.in === "path")) {
+  for (const descriptor of descriptors.filter((parameter) => parameter.in === "path")) {
     const inputName = descriptor.inputName ?? descriptor.name
     const value = input[inputName]
     if (value === undefined) {
@@ -218,7 +208,7 @@ export function interpolatePath(
     path = path.split(token).join(serializePathParameter(descriptor, value))
   }
 
-  const unresolved = [...path.matchAll(/\{([^}]+)\}/g)].map(match => match[1]).filter(Boolean)
+  const unresolved = [...path.matchAll(/\{([^}]+)\}/g)].map((match) => match[1]).filter(Boolean)
   if (unresolved.length > 0) {
     throw new TypeError(`Unresolved path parameters: ${unresolved.join(", ")}`)
   }

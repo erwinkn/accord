@@ -2,15 +2,13 @@ import { describe, expect, it } from "vitest"
 import {
   encodeValue,
   interpolatePath,
+  type ParameterDescriptor,
   renderQueryString,
   serializePathParameter,
   serializeQueryParameter,
-  type ParameterDescriptor,
 } from "../src/index.js"
 
-const parameter = (
-  overrides: Partial<ParameterDescriptor> = {},
-): ParameterDescriptor => ({
+const parameter = (overrides: Partial<ParameterDescriptor> = {}): ParameterDescriptor => ({
   name: "value",
   in: "query",
   required: false,
@@ -29,10 +27,10 @@ describe("parameter serialization", () => {
       ]),
     ).toBe("a,b")
     expect(
-      serializePathParameter(
-        parameter({ in: "path", style: "label", explode: true }),
-        { role: "admin", active: true },
-      ),
+      serializePathParameter(parameter({ in: "path", style: "label", explode: true }), {
+        role: "admin",
+        active: true,
+      }),
     ).toBe(".role=admin.active=true")
     expect(
       serializePathParameter(
@@ -51,10 +49,10 @@ describe("parameter serialization", () => {
 
     expect(
       renderQueryString(
-        serializeQueryParameter(
-          parameter({ name: "filter", style: "deepObject", explode: true }),
-          { role: "admin", active: true },
-        ),
+        serializeQueryParameter(parameter({ name: "filter", style: "deepObject", explode: true }), {
+          role: "admin",
+          active: true,
+        }),
       ),
     ).toBe("filter%5Brole%5D=admin&filter%5Bactive%5D=true")
   })
@@ -72,9 +70,7 @@ describe("parameter serialization", () => {
       style: "simple",
       explode: false,
     })
-    expect(interpolatePath("/users/{userId}", [descriptor], { userId: "a/b" })).toBe(
-      "/users/a%2Fb",
-    )
+    expect(interpolatePath("/users/{userId}", [descriptor], { userId: "a/b" })).toBe("/users/a%2Fb")
     expect(() => interpolatePath("/users/{userId}", [descriptor], {})).toThrow(
       "Missing required path parameter: userId",
     )

@@ -6,7 +6,7 @@ import { canonicalize } from "../src/object.js"
 describe("naming properties", () => {
   it("always emits syntactically valid deterministic ASCII identifiers", () => {
     fc.assert(
-      fc.property(fc.string(), value => {
+      fc.property(fc.string(), (value) => {
         const first = sanitizeIdentifier(value)
         const second = sanitizeIdentifier(value)
         expect(first).toBe(second)
@@ -40,7 +40,7 @@ describe("naming properties", () => {
 
   it("canonicalizes object property order", () => {
     fc.assert(
-      fc.property(fc.dictionary(fc.string(), fc.jsonValue()), object => {
+      fc.property(fc.dictionary(fc.string(), fc.jsonValue()), (object) => {
         const reversed = Object.fromEntries(Object.entries(object).reverse())
         expect(JSON.stringify(canonicalize(object))).toBe(JSON.stringify(canonicalize(reversed)))
       }),

@@ -55,6 +55,7 @@ function lookupOverride<T>(
   path: string,
 ): T | undefined {
   if (!overrides) return undefined
-  if (operationId !== undefined && Object.hasOwn(overrides, operationId)) return overrides[operationId]
+  if (operationId !== undefined && Object.hasOwn(overrides, operationId))
+    return overrides[operationId]
   return overrides[`${method} ${path}`]
 }

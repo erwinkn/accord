@@ -9,13 +9,13 @@ export function canonicalize(value: unknown, depth = 0): unknown {
   if (depth > 256) {
     throw new Error("Maximum canonicalization depth exceeded")
   }
-  if (Array.isArray(value)) return value.map(item => canonicalize(item, depth + 1))
+  if (Array.isArray(value)) return value.map((item) => canonicalize(item, depth + 1))
   if (!isObject(value)) return value
 
   return Object.fromEntries(
     Object.keys(value)
       .sort((left, right) => left.localeCompare(right))
-      .map(key => [key, canonicalize(value[key], depth + 1)]),
+      .map((key) => [key, canonicalize(value[key], depth + 1)]),
   )
 }
 

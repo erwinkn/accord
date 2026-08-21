@@ -1,12 +1,10 @@
-import { createClient, type ClientFor, type HttpError } from "@accord/client"
+import { type ClientFor, createClient, type HttpError } from "@accord/client"
 import { apiMutation, apiQuery, useApiMutation, useApiQuery } from "@accord/react-query"
-import { api, type AccordTypes, type components } from "../generated/users.js"
 import { api as featureApi } from "../generated/features.js"
+import { type AccordTypes, api, type components } from "../generated/users.js"
 
 type Equal<TLeft, TRight> =
-  (<T>() => T extends TLeft ? 1 : 2) extends <T>() => T extends TRight ? 1 : 2
-    ? true
-    : false
+  (<T>() => T extends TLeft ? 1 : 2) extends <T>() => T extends TRight ? 1 : 2 ? true : false
 type Expect<TValue extends true> = TValue
 
 type User = components["schemas"]["User"]
@@ -21,9 +19,7 @@ const createPromise = http.users.createUser({ name: "Alice" })
 type _ListResponse = Expect<Equal<Awaited<typeof listPromise>, readonly User[]>>
 type _GetResponse = Expect<Equal<Awaited<typeof getPromise>, User>>
 type _CreateResponse = Expect<Equal<Awaited<typeof createPromise>, User>>
-type _GeneratedInput = Expect<
-  Equal<AccordTypes.UsersGetUserInput, { readonly userId: string }>
->
+type _GeneratedInput = Expect<Equal<AccordTypes.UsersGetUserInput, { readonly userId: string }>>
 type _TypedError = Expect<Equal<AccordTypes.UsersGetUserError, ApiError>>
 
 // @ts-expect-error userId is required

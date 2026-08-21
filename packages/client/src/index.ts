@@ -1,5 +1,5 @@
 export { createClient, createEndpointClient, isEndpointDescriptor } from "./client.js"
-export { HttpError, isHttpError, type HttpErrorOptions } from "./errors.js"
+export { HttpError, type HttpErrorOptions, isHttpError } from "./errors.js"
 export {
   encodeValue,
   interpolatePath,

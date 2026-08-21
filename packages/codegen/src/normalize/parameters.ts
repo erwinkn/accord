@@ -166,11 +166,11 @@ export function validatePathParameters(
 ): void {
   const placeholders = new Set(
     [...path.matchAll(/\{([^}]+)\}/g)]
-      .map(match => match[1])
+      .map((match) => match[1])
       .filter((name): name is string => Boolean(name)),
   )
   const pathParameters = new Set(
-    parameters.filter(parameter => parameter.in === "path").map(parameter => parameter.name),
+    parameters.filter((parameter) => parameter.in === "path").map((parameter) => parameter.name),
   )
 
   for (const placeholder of placeholders) {

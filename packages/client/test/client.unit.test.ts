@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest"
 import {
   createClient,
-  HttpError,
   type EndpointDescriptor,
   type EndpointTypes,
+  HttpError,
 } from "../src/index.js"
 
 type User = { id: string; name: string }
@@ -92,7 +92,7 @@ const api = { users: { getUser, createUser } }
 
 describe("createClient", () => {
   it("maps endpoint trees and sends normalized requests", async () => {
-    const fetchMock = vi.fn<typeof fetch>(async request => {
+    const fetchMock = vi.fn<typeof fetch>(async (request) => {
       const url = request instanceof Request ? request.url : String(request)
       return new Response(JSON.stringify({ id: url.split("/").at(-1), name: "Erwin" }), {
         status: 200,
@@ -149,7 +149,7 @@ describe("createClient", () => {
         }),
     })
 
-    const error = await client.users.getUser({ userId: "missing" }).catch(value => value)
+    const error = await client.users.getUser({ userId: "missing" }).catch((value) => value)
     expect(error).toBeInstanceOf(HttpError)
     expect(error).toMatchObject({ status: 404, body: { message: "missing" } })
   })
@@ -158,12 +158,13 @@ describe("createClient", () => {
     const controller = new AbortController()
     const client = createClient(api, {
       baseUrl: "https://example.test",
-      requestMiddleware: [context => ({ ...context, url: new URL("/rewritten", context.url) })],
-      responseMiddleware: [context =>
-        new Response(JSON.stringify({ id: "middleware", name: "Changed" }), {
-          status: context.response.status,
-          headers: { "content-type": "application/json" },
-        }),
+      requestMiddleware: [(context) => ({ ...context, url: new URL("/rewritten", context.url) })],
+      responseMiddleware: [
+        (context) =>
+          new Response(JSON.stringify({ id: "middleware", name: "Changed" }), {
+            status: context.response.status,
+            headers: { "content-type": "application/json" },
+          }),
       ],
       fetch: async (request, init) => {
         expect(String(request)).toBe("https://example.test/rewritten")
@@ -174,9 +175,9 @@ describe("createClient", () => {
       },
     })
 
-    await expect(client.users.getUser({ userId: "1" }, { signal: controller.signal })).resolves.toEqual(
-      { id: "middleware", name: "Changed" },
-    )
+    await expect(
+      client.users.getUser({ userId: "1" }, { signal: controller.signal }),
+    ).resolves.toEqual({ id: "middleware", name: "Changed" })
   })
 })
 

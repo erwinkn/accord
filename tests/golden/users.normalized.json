@@ -8,9 +8,7 @@
       "path": "/users",
       "operationId": "listUsers",
       "operationName": "listUsers",
-      "namespace": [
-        "users"
-      ],
+      "namespace": ["users"],
       "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
@@ -27,9 +25,7 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": [
-            "application/json"
-          ]
+          "contentTypes": ["application/json"]
         }
       ],
       "typeName": "UsersListUsers"
@@ -41,35 +37,24 @@
       "path": "/users",
       "operationId": "createUser",
       "operationName": "createUser",
-      "namespace": [
-        "users"
-      ],
+      "namespace": ["users"],
       "bodyMode": "merge",
       "operationKind": "mutation",
       "parameters": [],
       "requestBody": {
         "required": true,
         "contentType": "application/json",
-        "contentTypes": [
-          "application/json"
-        ],
-        "fields": [
-          "email",
-          "name"
-        ]
+        "contentTypes": ["application/json"],
+        "fields": ["email", "name"]
       },
       "responses": [
         {
           "status": 201,
-          "contentTypes": [
-            "application/json"
-          ]
+          "contentTypes": ["application/json"]
         },
         {
           "status": 400,
-          "contentTypes": [
-            "application/json"
-          ]
+          "contentTypes": ["application/json"]
         }
       ],
       "typeName": "UsersCreateUser"
@@ -81,9 +66,7 @@
       "path": "/users/{userId}",
       "operationId": "getUser",
       "operationName": "getUser",
-      "namespace": [
-        "users"
-      ],
+      "namespace": ["users"],
       "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
@@ -100,15 +83,11 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": [
-            "application/json"
-          ]
+          "contentTypes": ["application/json"]
         },
         {
           "status": 404,
-          "contentTypes": [
-            "application/json"
-          ]
+          "contentTypes": ["application/json"]
         }
       ],
       "typeName": "UsersGetUser"

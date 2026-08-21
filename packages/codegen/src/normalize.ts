@@ -1,34 +1,22 @@
 import type { CodegenDiagnostic } from "./diagnostics.js"
 import { AccordCodegenError, throwIfDiagnostics } from "./diagnostics.js"
 import { operationName, operationNamespace, sanitizeTypeIdentifier } from "./naming.js"
+import { resolveBodyMode, resolveOperationKind } from "./normalize/operation.js"
 import {
   mergeParameters,
   normalizeParameterList,
   validateFlattenedParameters,
   validatePathParameters,
 } from "./normalize/parameters.js"
-import { resolveBodyMode, resolveOperationKind } from "./normalize/operation.js"
 import { normalizeRequestBody, validateMergedBody } from "./normalize/request-body.js"
 import { normalizeResponses } from "./normalize/responses.js"
 import { validateEndpointTree } from "./normalize/tree.js"
 import { isObject, resolveObjectReference } from "./object.js"
 import type { AccordCodegenConfig, NormalizedApi, NormalizedOperation } from "./types.js"
 
-const HTTP_METHODS = [
-  "get",
-  "post",
-  "put",
-  "patch",
-  "delete",
-  "head",
-  "options",
-  "trace",
-] as const
+const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options", "trace"] as const
 
-export function normalizeOpenApi(
-  input: unknown,
-  config: AccordCodegenConfig = {},
-): NormalizedApi {
+export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {}): NormalizedApi {
   const diagnostics: CodegenDiagnostic[] = []
   if (!isObject(input)) {
     throw new AccordCodegenError([

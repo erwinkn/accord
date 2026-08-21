@@ -82,15 +82,11 @@ export interface EndpointDescriptor<
   readonly __types?: TTypes
 }
 
-type TypesOf<E> = E extends EndpointDescriptor<infer TTypes, BodyMode, OperationKind>
-  ? TTypes
-  : never
+type TypesOf<E> =
+  E extends EndpointDescriptor<infer TTypes, BodyMode, OperationKind> ? TTypes : never
 
-type FieldOf<E, TKey extends keyof EndpointTypes> = TypesOf<E> extends infer TTypes
-  ? TTypes extends EndpointTypes
-    ? TTypes[TKey]
-    : never
-  : never
+type FieldOf<E, TKey extends keyof EndpointTypes> =
+  TypesOf<E> extends infer TTypes ? (TTypes extends EndpointTypes ? TTypes[TKey] : never) : never
 
 type ObjectGroup<T> = [T] extends [never] ? {} : T extends object ? T : {}
 type Simplify<T> = T extends object ? { [TKey in keyof T]: T[TKey] } : T
@@ -126,9 +122,10 @@ export interface RequestOptions {
   readonly headers?: HeadersInit
 }
 
-type RequestArguments<E extends EndpointDescriptor> = {} extends InputOf<E>
-  ? [input?: InputOf<E>, options?: RequestOptions]
-  : [input: InputOf<E>, options?: RequestOptions]
+type RequestArguments<E extends EndpointDescriptor> =
+  {} extends InputOf<E>
+    ? [input?: InputOf<E>, options?: RequestOptions]
+    : [input: InputOf<E>, options?: RequestOptions]
 
 export type EndpointFunction<E extends EndpointDescriptor> = (
   ...args: RequestArguments<E>

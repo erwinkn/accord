@@ -1,17 +1,6 @@
 import {
-  mutationOptions,
-  queryOptions,
-  useMutation,
-  useQuery,
-  type QueryKey,
-  type UseMutationOptions,
-  type UseMutationResult,
-  type UseQueryOptions,
-  type UseQueryResult,
-} from "@tanstack/react-query"
-import {
-  createEndpointClient,
   type ClientOptions,
+  createEndpointClient,
   type EndpointDescriptor,
   type ErrorOf,
   type HttpError,
@@ -20,6 +9,17 @@ import {
   type QueryEndpoint,
   type ResponseOf,
 } from "@accord/client"
+import {
+  mutationOptions,
+  type QueryKey,
+  queryOptions,
+  type UseMutationOptions,
+  type UseMutationResult,
+  type UseQueryOptions,
+  type UseQueryResult,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query"
 
 export type ApiQueryKey = readonly [scope: "accord", endpoint: string, input: unknown]
 export type ApiMutationKey = readonly [scope: "accord", endpoint: string]
@@ -31,10 +31,7 @@ export type ApiQueryOptions<E extends QueryEndpoint, TData = ResponseOf<E>> = Om
   readonly clientOptions?: ClientOptions
 }
 
-export type ApiMutationOptions<
-  E extends MutationEndpoint,
-  TContext = unknown,
-> = Omit<
+export type ApiMutationOptions<E extends MutationEndpoint, TContext = unknown> = Omit<
   UseMutationOptions<ResponseOf<E>, HttpError<ErrorOf<E>>, InputOf<E>, TContext>,
   "mutationKey" | "mutationFn"
 > & {
@@ -45,10 +42,7 @@ export function endpointIdentity(endpoint: EndpointDescriptor): string {
   return endpoint.operationId ?? `${endpoint.method.toUpperCase()} ${endpoint.path}`
 }
 
-export function apiQueryKey<E extends QueryEndpoint>(
-  endpoint: E,
-  input: InputOf<E>,
-): ApiQueryKey {
+export function apiQueryKey<E extends QueryEndpoint>(endpoint: E, input: InputOf<E>): ApiQueryKey {
   return ["accord", endpointIdentity(endpoint), canonicalQueryValue(input)]
 }
 
@@ -105,7 +99,7 @@ function canonicalQueryValue(value: unknown, seen: WeakSet<object> = new WeakSet
   seen.add(value)
 
   if (Array.isArray(value)) {
-    const result = value.map(item => canonicalQueryValue(item, seen))
+    const result = value.map((item) => canonicalQueryValue(item, seen))
     seen.delete(value)
     return result
   }

@@ -82,7 +82,7 @@ describe("OpenAPI -> generated API -> client -> HTTP server", () => {
 
   it("throws a parsed, endpoint-aware HTTP error", async () => {
     const http = createClient(api, { baseUrl })
-    const error = await http.users.getUser({ userId: "missing" }).catch(value => value)
+    const error = await http.users.getUser({ userId: "missing" }).catch((value) => value)
     expect(error).toBeInstanceOf(HttpError)
     expect(error).toMatchObject({
       status: 404,

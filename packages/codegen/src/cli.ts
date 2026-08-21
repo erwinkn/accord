@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { pathToFileURL } from "node:url"
 import { resolve } from "node:path"
+import { pathToFileURL } from "node:url"
 import { generateFromFile, writeGeneratedFile } from "./generate.js"
 import type { AccordCodegenConfig, BodyMode, NamespaceStrategy } from "./types.js"
 
@@ -20,9 +20,7 @@ async function main(): Promise<void> {
     ...fileConfig,
     ...(args.namespace !== undefined ? { namespace: args.namespace } : {}),
     ...(args.basePath !== undefined ? { basePath: args.basePath } : {}),
-    ...(args.bodyMode !== undefined
-      ? { body: { ...fileConfig.body, mode: args.bodyMode } }
-      : {}),
+    ...(args.bodyMode !== undefined ? { body: { ...fileConfig.body, mode: args.bodyMode } } : {}),
   }
   const result = await generateFromFile(args.input, config)
   if (args.output) await writeGeneratedFile(args.output, result.source)
@@ -110,7 +108,9 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 }
 
 function printUsage(): void {
-  process.stdout.write(`Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge (default) or separate\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`)
+  process.stdout.write(
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge (default) or separate\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+  )
 }
 
 main().catch((error: unknown) => {

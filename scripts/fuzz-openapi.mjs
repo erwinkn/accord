@@ -36,9 +36,7 @@ const malformedCorpus = [
     paths: {
       "/x/{id}": {
         get: {
-          parameters: [
-            { in: "path", name: "id", required: false, schema: { type: "string" } },
-          ],
+          parameters: [{ in: "path", name: "id", required: false, schema: { type: "string" } }],
           responses: {},
         },
       },
@@ -96,8 +94,7 @@ function randomDocument(randomValue, run) {
     const method = ["get", "post", "put", "patch", "delete"][integer(randomValue, 5)]
     const parameterName = `id${run}_${index}`
     const path =
-      `/resources-${run}-${index}/{${parameterName}}/children-` +
-      integer(randomValue, 100)
+      `/resources-${run}-${index}/{${parameterName}}/children-` + integer(randomValue, 100)
     const operationId = `operation_${run}_${index}_${method}`
     const parameters = [
       {
@@ -192,7 +189,7 @@ function randomDocument(randomValue, run) {
 }
 
 function reorder(value, randomValue) {
-  if (Array.isArray(value)) return value.map(item => reorder(item, randomValue))
+  if (Array.isArray(value)) return value.map((item) => reorder(item, randomValue))
   if (!value || typeof value !== "object") return value
   const entries = Object.entries(value)
   for (let index = entries.length - 1; index > 0; index -= 1) {
@@ -213,19 +210,19 @@ function assertTypeScriptSyntax(source, run) {
     },
   })
   const errors = (output.diagnostics ?? []).filter(
-    diagnostic => diagnostic.category === ts.DiagnosticCategory.Error,
+    (diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error,
   )
   if (errors.length > 0) {
     throw new Error(
       `invalid generated TypeScript at run ${run}: ${errors
-        .map(diagnostic => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"))
+        .map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"))
         .join("; ")}`,
     )
   }
 }
 
 function assertUniqueEndpoints(operations, run) {
-  const paths = operations.map(operation =>
+  const paths = operations.map((operation) =>
     [...operation.namespace, operation.operationName].join("."),
   )
   assert(new Set(paths).size === paths.length, `silent endpoint overwrite at run ${run}`)

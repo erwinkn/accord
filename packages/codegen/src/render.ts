@@ -103,12 +103,12 @@ function renderOperationTypes(operation: NormalizedOperation): string[] {
   const headerMap = parameterRenameMap(operation.parameters, "header")
   const cookieMap = parameterRenameMap(operation.parameters, "cookie")
   const successStatuses = operation.responses
-    .map(response => response.status)
+    .map((response) => response.status)
     .filter(isSuccessStatus)
   const errorStatuses = operation.responses
-    .map(response => response.status)
-    .filter(status => !isSuccessStatus(status))
-  const allStatuses = operation.responses.map(response => response.status)
+    .map((response) => response.status)
+    .filter((status) => !isSuccessStatus(status))
+  const allStatuses = operation.responses.map((response) => response.status)
   const body = operation.requestBody
     ? `AccordRequestBody<${operationType}, ${JSON.stringify(operation.requestBody.contentType)}>`
     : "never"
@@ -135,8 +135,8 @@ function parameterRenameMap(
 ): Readonly<Record<string, string>> {
   return Object.fromEntries(
     parameters
-      .filter(parameter => parameter.in === location)
-      .map(parameter => [parameter.name, parameter.inputName]),
+      .filter((parameter) => parameter.in === location)
+      .map((parameter) => [parameter.name, parameter.inputName]),
   )
 }
 
@@ -153,7 +153,7 @@ function isSuccessStatus(status: number | string): boolean {
 function renderStatusUnion(statuses: readonly (number | string)[]): string {
   if (statuses.length === 0) return "never"
   return [...new Set(statuses)]
-    .map(status => (typeof status === "number" ? String(status) : JSON.stringify(status)))
+    .map((status) => (typeof status === "number" ? String(status) : JSON.stringify(status)))
     .join(" | ")
 }
 
@@ -181,7 +181,10 @@ function renderNode(node: RenderNode, depth: number): string {
   const entries = [...node.children.entries()].sort(([left], [right]) => left.localeCompare(right))
   if (entries.length === 0) return "{} as const"
   const body = entries
-    .map(([key, child]) => `${childIndentation}${JSON.stringify(key)}: ${renderNode(child, depth + 1)}`)
+    .map(
+      ([key, child]) =>
+        `${childIndentation}${JSON.stringify(key)}: ${renderNode(child, depth + 1)}`,
+    )
     .join(",\n")
   return `{\n${body},\n${indentation}} as const`
 }

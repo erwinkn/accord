@@ -70,7 +70,9 @@ describe("normalizeOpenApi", () => {
       }),
     )
 
-    expect(api.operations.map(operation => [...operation.namespace, operation.operationName])).toEqual([
+    expect(
+      api.operations.map((operation) => [...operation.namespace, operation.operationName]),
+    ).toEqual([
       ["users", "listUsers"],
       ["users", "createUser"],
       ["users", "getUser"],
@@ -295,9 +297,7 @@ describe("normalizeOpenApi", () => {
       throw new Error("expected normalizeOpenApi to fail")
     } catch (error) {
       expect(error).toBeInstanceOf(AccordCodegenError)
-      expect((error as AccordCodegenError).diagnostics[0]?.code).toBe(
-        "UNSUPPORTED_OPENAPI_VERSION",
-      )
+      expect((error as AccordCodegenError).diagnostics[0]?.code).toBe("UNSUPPORTED_OPENAPI_VERSION")
     }
   })
 })

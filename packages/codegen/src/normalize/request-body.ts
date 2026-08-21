@@ -66,12 +66,7 @@ export function normalizeRequestBody(
   }
 
   const mediaLocation = `${location}/content/${pointerSegment(contentType)}`
-  const shape = inspectBodyShape(
-    document,
-    media["schema"],
-    diagnostics,
-    `${mediaLocation}/schema`,
-  )
+  const shape = inspectBodyShape(document, media["schema"], diagnostics, `${mediaLocation}/schema`)
   const encoding = normalizeBodyEncoding(
     media["encoding"],
     diagnostics,
@@ -91,10 +86,10 @@ export function normalizeRequestBody(
 
 function preferredContentType(contentTypes: readonly string[]): string {
   for (const preferred of MEDIA_TYPE_PRIORITY) {
-    const exact = contentTypes.find(contentType => contentType.toLowerCase() === preferred)
+    const exact = contentTypes.find((contentType) => contentType.toLowerCase() === preferred)
     if (exact) return exact
   }
-  const json = contentTypes.find(contentType => contentType.toLowerCase().endsWith("+json"))
+  const json = contentTypes.find((contentType) => contentType.toLowerCase().endsWith("+json"))
   return json ?? contentTypes[0] ?? "application/json"
 }
 
@@ -147,9 +142,7 @@ function normalizeBodyEncoding(
         ? { contentType: rawEncoding["contentType"] }
         : {}),
       ...(normalizedStyle !== undefined ? { style: normalizedStyle } : {}),
-      ...(typeof rawEncoding["explode"] === "boolean"
-        ? { explode: rawEncoding["explode"] }
-        : {}),
+      ...(typeof rawEncoding["explode"] === "boolean" ? { explode: rawEncoding["explode"] } : {}),
       ...(typeof rawEncoding["allowReserved"] === "boolean"
         ? { allowReserved: rawEncoding["allowReserved"] }
         : {}),
@@ -204,9 +197,9 @@ function inspectBodyShape(
       ),
     )
     return {
-      object: shapes.every(shape => shape.object),
-      dynamic: shapes.some(shape => shape.dynamic),
-      fields: new Set(shapes.flatMap(shape => [...shape.fields])),
+      object: shapes.every((shape) => shape.object),
+      dynamic: shapes.some((shape) => shape.dynamic),
+      fields: new Set(shapes.flatMap((shape) => [...shape.fields])),
     }
   }
 
@@ -225,11 +218,13 @@ function inspectBodyShape(
 }
 
 function requestBodyShape(requestBody: NormalizedRequestBody): BodyShape {
-  return REQUEST_BODY_SHAPES.get(requestBody) ?? {
-    object: requestBody.fields.length > 0,
-    dynamic: false,
-    fields: new Set(requestBody.fields),
-  }
+  return (
+    REQUEST_BODY_SHAPES.get(requestBody) ?? {
+      object: requestBody.fields.length > 0,
+      dynamic: false,
+      fields: new Set(requestBody.fields),
+    }
+  )
 }
 
 export function validateMergedBody(
@@ -252,12 +247,13 @@ export function validateMergedBody(
   if (shape.dynamic) {
     diagnostics.push({
       code: "BODY_MERGE_DYNAMIC_PROPERTIES",
-      message: "Merged request bodies cannot use dynamic additionalProperties; use separate body mode",
+      message:
+        "Merged request bodies cannot use dynamic additionalProperties; use separate body mode",
       location: `${location}/requestBody`,
     })
   }
 
-  const parameterNames = new Map(parameters.map(parameter => [parameter.inputName, parameter]))
+  const parameterNames = new Map(parameters.map((parameter) => [parameter.inputName, parameter]))
   for (const field of shape.fields) {
     if (isDangerousInputName(field)) {
       diagnostics.push({

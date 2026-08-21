@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 
+import type { EndpointDescriptor } from "@accord/client"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { act, renderHook, waitFor } from "@testing-library/react"
 import { createElement, type PropsWithChildren } from "react"
 import { describe, expect, it, vi } from "vitest"
-import type { EndpointDescriptor } from "@accord/client"
 import {
   apiMutation,
   apiMutationKey,
@@ -97,16 +97,20 @@ describe("React Query adapter", () => {
   })
 
   it("works with QueryClient prefetch and cache APIs", async () => {
-    const fetchMock = vi.fn<typeof fetch>(async request => {
+    const fetchMock = vi.fn<typeof fetch>(async (request) => {
       const url = new URL(String(request))
       return new Response(JSON.stringify({ id: url.pathname.split("/").at(-1), name: "Erwin" }), {
         headers: { "content-type": "application/json" },
       })
     })
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    const options = apiQuery(getUser, { userId: "42" }, {
-      clientOptions: { baseUrl: "https://example.test", fetch: fetchMock },
-    })
+    const options = apiQuery(
+      getUser,
+      { userId: "42" },
+      {
+        clientOptions: { baseUrl: "https://example.test", fetch: fetchMock },
+      },
+    )
 
     await client.prefetchQuery(options)
     expect(client.getQueryData(options.queryKey)).toEqual({ id: "42", name: "Erwin" })
@@ -122,9 +126,13 @@ describe("React Query adapter", () => {
       })
     })
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    const options = apiQuery(getUser, { userId: "slow" }, {
-      clientOptions: { baseUrl: "https://example.test", fetch: fetchMock },
-    })
+    const options = apiQuery(
+      getUser,
+      { userId: "slow" },
+      {
+        clientOptions: { baseUrl: "https://example.test", fetch: fetchMock },
+      },
+    )
 
     const pending = client.fetchQuery(options)
     await waitFor(() => expect(observedSignal).toBeDefined())
@@ -172,10 +180,14 @@ describe("React Query adapter", () => {
       createElement(QueryClientProvider, { client }, children)
     const result = renderHook(
       () =>
-        useApiQuery(getUser, { userId: "disabled" }, {
-          enabled: false,
-          clientOptions: { baseUrl: "https://example.test", fetch: fetchMock },
-        }),
+        useApiQuery(
+          getUser,
+          { userId: "disabled" },
+          {
+            enabled: false,
+            clientOptions: { baseUrl: "https://example.test", fetch: fetchMock },
+          },
+        ),
       { wrapper },
     )
     expect(result.result.current.fetchStatus).toBe("idle")

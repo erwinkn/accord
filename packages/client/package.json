@@ -4,7 +4,9 @@
   "description": "Generic typed HTTP runtime for Accord endpoint descriptors",
   "type": "module",
   "sideEffects": false,
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

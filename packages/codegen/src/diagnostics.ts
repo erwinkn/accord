@@ -31,7 +31,7 @@ export class AccordCodegenError extends Error {
   constructor(diagnostics: readonly CodegenDiagnostic[]) {
     super(
       diagnostics
-        .map(diagnostic =>
+        .map((diagnostic) =>
           diagnostic.location
             ? `[${diagnostic.code}] ${diagnostic.location}: ${diagnostic.message}`
             : `[${diagnostic.code}] ${diagnostic.message}`,

@@ -21,7 +21,7 @@ export function sanitizeIdentifier(value: string): string {
   const [first = "_", ...rest] = parts
   const identifier =
     first.toLowerCase() +
-    rest.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join("")
+    rest.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join("")
   const prefixed = /^[A-Za-z_$]/.test(identifier) ? identifier : `_${identifier}`
   return DANGEROUS_KEYS.has(prefixed) ? `_${prefixed}` : prefixed
 }
@@ -29,7 +29,7 @@ export function sanitizeIdentifier(value: string): string {
 export function sanitizeTypeIdentifier(value: string): string {
   const parts = words(value)
   const identifier =
-    parts.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join("") || "_"
+    parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join("") || "_"
   const prefixed = /^[A-Za-z_$]/.test(identifier) ? identifier : `T${identifier}`
   return DANGEROUS_KEYS.has(prefixed.toLowerCase()) ? `T${prefixed}` : prefixed
 }
@@ -51,7 +51,7 @@ export function pathNamespace(path: string, basePath = ""): string[] {
   const namespace = relative
     .split("/")
     .filter(Boolean)
-    .filter(segment => !/^\{[^}]+\}$/.test(segment))
+    .filter((segment) => !/^\{[^}]+\}$/.test(segment))
     .map(sanitizeIdentifier)
   return namespace.length > 0 ? namespace : ["root"]
 }
@@ -63,13 +63,16 @@ export function operationNamespace(options: {
   readonly tags?: readonly unknown[]
 }): string[] {
   if (options.strategy === "tag") {
-    const tag = options.tags?.find(value => typeof value === "string" && value.trim().length > 0)
+    const tag = options.tags?.find((value) => typeof value === "string" && value.trim().length > 0)
     if (typeof tag === "string") return [sanitizeIdentifier(tag)]
   }
   return pathNamespace(options.path, options.basePath)
 }
 
-export function operationName(operation: Readonly<Record<string, unknown>>, method: string): string {
+export function operationName(
+  operation: Readonly<Record<string, unknown>>,
+  method: string,
+): string {
   const sdkName = operation["x-sdk-name"]
   if (typeof sdkName === "string" && sdkName.trim().length > 0) return sanitizeIdentifier(sdkName)
 

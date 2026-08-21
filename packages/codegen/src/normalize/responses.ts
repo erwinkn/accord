@@ -20,7 +20,12 @@ export function normalizeResponses(
   const responses: NormalizedResponse[] = []
   for (const rawStatus of Object.keys(rawValue).sort(compareStatus)) {
     const responseLocation = `${location}/${pointerSegment(rawStatus)}`
-    const response = resolveObjectReference(document, rawValue[rawStatus], diagnostics, responseLocation)
+    const response = resolveObjectReference(
+      document,
+      rawValue[rawStatus],
+      diagnostics,
+      responseLocation,
+    )
     if (!response) {
       if (!isObject(rawValue[rawStatus])) {
         diagnostics.push({

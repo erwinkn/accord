@@ -1,16 +1,16 @@
 export { defineConfig } from "./config.js"
 export {
   AccordCodegenError,
-  throwIfDiagnostics,
   type CodegenDiagnostic,
   type DiagnosticCode,
+  throwIfDiagnostics,
 } from "./diagnostics.js"
 export {
+  type GenerateResult,
   generate,
   generateFromFile,
   loadOpenApiFile,
   writeGeneratedFile,
-  type GenerateResult,
 } from "./generate.js"
 export {
   isDangerousInputName,

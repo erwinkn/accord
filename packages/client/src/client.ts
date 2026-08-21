@@ -37,7 +37,9 @@ function mapApi(value: unknown, options: ClientOptions): unknown {
   if (isEndpointDescriptor(value)) return createEndpointClient(value, options)
   if (!isRecord(value)) return value
 
-  return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, mapApi(child, options)]))
+  return Object.fromEntries(
+    Object.entries(value).map(([key, child]) => [key, mapApi(child, options)]),
+  )
 }
 
 export function createClient<const TApi extends object>(
@@ -67,8 +69,8 @@ export function createEndpointClient<E extends EndpointDescriptor>(
 
     const path = interpolatePath(endpoint.path, endpoint.parameters, input)
     const queryPairs = endpoint.parameters
-      .filter(parameter => parameter.in === "query")
-      .flatMap(parameter => {
+      .filter((parameter) => parameter.in === "query")
+      .flatMap((parameter) => {
         const inputName = parameter.inputName ?? parameter.name
         const value = input[inputName]
         if (value === undefined) {
@@ -88,7 +90,7 @@ export function createEndpointClient<E extends EndpointDescriptor>(
 
     const headers = await resolveHeaders(options, endpoint, input)
 
-    for (const parameter of endpoint.parameters.filter(item => item.in === "header")) {
+    for (const parameter of endpoint.parameters.filter((item) => item.in === "header")) {
       const inputName = parameter.inputName ?? parameter.name
       const value = input[inputName]
       if (value === undefined) {
@@ -101,8 +103,8 @@ export function createEndpointClient<E extends EndpointDescriptor>(
     }
 
     const cookies = endpoint.parameters
-      .filter(parameter => parameter.in === "cookie")
-      .flatMap(parameter => {
+      .filter((parameter) => parameter.in === "cookie")
+      .flatMap((parameter) => {
         const inputName = parameter.inputName ?? parameter.name
         const value = input[inputName]
         if (value === undefined) {
@@ -159,7 +161,9 @@ async function resolveHeaders(
   input: Readonly<Record<string, unknown>>,
 ): Promise<Headers> {
   const configured =
-    typeof options.headers === "function" ? await options.headers({ endpoint, input }) : options.headers
+    typeof options.headers === "function"
+      ? await options.headers({ endpoint, input })
+      : options.headers
   return new Headers(configured)
 }
 
