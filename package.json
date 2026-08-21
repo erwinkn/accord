@@ -16,7 +16,7 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "quality": "biome ci .",
+    "quality": "biome ci --diagnostic-level=error --max-diagnostics=1000 .",
     "typecheck": "pnpm build && pnpm generate:test-fixtures && pnpm -r --workspace-concurrency=1 typecheck && tsc -p tests/type/tsconfig.json --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --config vitest.unit.config.ts",
