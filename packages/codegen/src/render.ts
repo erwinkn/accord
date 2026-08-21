@@ -26,7 +26,10 @@ export function renderGeneratedModule(api: NormalizedApi, openApiTypesSource: st
   }
 
   lines.push(`export const api = ${renderApiTree(api)}`, "", ...renderExportedTypes(api), "")
-  return `${lines.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd()}\n`
+  return `${lines
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd()}\n`
 }
 
 export function renderNormalizedApi(api: NormalizedApi): string {
