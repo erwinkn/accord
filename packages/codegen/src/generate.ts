@@ -38,13 +38,10 @@ export async function generate(
   }
 
   // The document has been runtime-validated above; bridge the dependency's wider input union here.
-  const ast = await openapiTS(
-    canonicalDocument as unknown as Parameters<typeof openapiTS>[0],
-    {
-      alphabetize: true,
-      immutable: true,
-    },
-  )
+  const ast = await openapiTS(canonicalDocument as unknown as Parameters<typeof openapiTS>[0], {
+    alphabetize: true,
+    immutable: true,
+  })
   const schemaTypes = astToString(ast)
   return {
     source: renderGeneratedModule(normalized, schemaTypes),
