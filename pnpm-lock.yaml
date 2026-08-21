@@ -8,6 +8,15 @@ importers:
 
   .:
     devDependencies:
+      '@accord/client':
+        specifier: workspace:*
+        version: link:packages/client
+      '@accord/codegen':
+        specifier: workspace:*
+        version: link:packages/codegen
+      '@accord/react-query':
+        specifier: workspace:*
+        version: link:packages/react-query
       '@biomejs/biome':
         specifier: 2.5.8
         version: 2.5.8
