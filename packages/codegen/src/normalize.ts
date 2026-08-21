@@ -143,7 +143,7 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
       const bodyMode = resolveBodyMode(config, rawOperation, operationId, method, path, diagnostics)
       validateMergedBody(parameters, requestBody, bodyMode, diagnostics, operationLocation)
 
-      const name = operationName(rawOperation, methodKey)
+      const name = operationName(rawOperation, methodKey, path)
       const namespace = operationNamespace({
         strategy: namespaceStrategy === "tag" ? "tag" : "path",
         path,
