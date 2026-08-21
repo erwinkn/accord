@@ -18,26 +18,30 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
       - name: Enable pnpm
         run: corepack enable && corepack prepare pnpm@11.22.0 --activate
 
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+      - name: Locate pnpm store
+        id: pnpm-store
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
-      - name: Preserve generated lockfile
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Restore pnpm store
+        uses: actions/cache@v5
         with:
-          name: pnpm-lock
-          path: pnpm-lock.yaml
-          if-no-files-found: warn
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Lint and formatting
         run: pnpm quality
