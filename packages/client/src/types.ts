@@ -90,6 +90,7 @@ type FieldOf<E, TKey extends keyof EndpointTypes> =
 
 type ObjectGroup<T> = [T] extends [never] ? {} : T extends object ? T : {}
 type Simplify<T> = T extends object ? { [TKey in keyof T]: T[TKey] } : T
+type AbsentObject<T extends object> = { [TKey in keyof T]?: never }
 
 type BodyInput<E extends EndpointDescriptor> = [FieldOf<E, "body">] extends [never]
   ? {}
@@ -101,7 +102,7 @@ type BodyInput<E extends EndpointDescriptor> = [FieldOf<E, "body">] extends [nev
       : FieldOf<E, "body"> extends object
         ? FieldOf<E, "bodyRequired"> extends true
           ? FieldOf<E, "body">
-          : Partial<FieldOf<E, "body">>
+          : FieldOf<E, "body"> | AbsentObject<FieldOf<E, "body">>
         : never
     : never
 
