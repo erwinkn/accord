@@ -5,7 +5,7 @@
       "**",
       "!**/dist",
       "!**/coverage",
-      "!tests/generated/**",
+      "!tests/generated",
       "!tests/golden/**/*.ts",
       "!pnpm-lock.yaml"
     ]
@@ -19,7 +19,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "suspicious": {
         "noExplicitAny": "error"
       }
@@ -31,5 +31,17 @@
       "semicolons": "asNeeded",
       "trailingCommas": "all"
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["tests/type/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    }
+  ]
 }

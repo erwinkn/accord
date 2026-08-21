@@ -1,0 +1,35 @@
+name: Format snapshot
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    if: github.head_ref == 'init/typed-openapi-sdk'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@11.22.0 --activate
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Apply Biome safe fixes
+        run: pnpm exec biome check --write . || true
+      - name: Package changed files
+        run: |
+          git diff --name-only --diff-filter=ACMRT > /tmp/changed-files.txt
+          tar -czf /tmp/formatted-files.tar.gz --files-from=/tmp/changed-files.txt
+      - name: Upload formatted snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: biome-formatted-files
+          path: |
+            /tmp/changed-files.txt
+            /tmp/formatted-files.tar.gz
