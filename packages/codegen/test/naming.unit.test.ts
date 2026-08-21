@@ -40,9 +40,7 @@ describe("identifier generation", () => {
         "/users/{userId}",
       ),
     ).toBe("fetchOne")
-    expect(operationName({ operationId: "get-user" }, "get", "/users/{userId}")).toBe(
-      "getUser",
-    )
+    expect(operationName({ operationId: "get-user" }, "get", "/users/{userId}")).toBe("getUser")
     expect(operationName({}, "patch", "/users")).toBe("patch")
     expect(operationName({}, "get", "/users/{userId}")).toBe("getByUserId")
   })
