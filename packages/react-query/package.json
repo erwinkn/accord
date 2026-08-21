@@ -1,19 +1,31 @@
 {
   "name": "@accord/react-query",
   "version": "0.0.0",
-  "private": true,
+  "description": "TanStack React Query integration for Accord endpoint descriptors",
   "type": "module",
-  "exports": "./dist/index.js",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "types": "./dist/index.d.ts",
-  "peerDependencies": {
-    "@tanstack/react-query": "^5.0.0",
-    "react": ">=18"
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@accord/client": "workspace:*"
   },
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  }
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": ">=18"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT"
 }

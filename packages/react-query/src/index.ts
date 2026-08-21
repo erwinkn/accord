@@ -1,48 +1,122 @@
 import {
+  mutationOptions,
+  queryOptions,
   useMutation,
   useQuery,
+  type QueryKey,
   type UseMutationOptions,
+  type UseMutationResult,
   type UseQueryOptions,
+  type UseQueryResult,
 } from "@tanstack/react-query"
 import {
-  createClient,
+  createEndpointClient,
   type ClientOptions,
   type EndpointDescriptor,
+  type ErrorOf,
+  type HttpError,
   type InputOf,
+  type MutationEndpoint,
+  type QueryEndpoint,
+  type ResponseOf,
 } from "@accord/client"
 
-type ResponseOf<E> = E extends EndpointDescriptor<infer T>
-  ? T extends { response?: infer R } ? R : unknown
-  : never
+export type ApiQueryKey = readonly [scope: "accord", endpoint: string, input: unknown]
+export type ApiMutationKey = readonly [scope: "accord", endpoint: string]
 
-export interface ApiQueryContext {
+export type ApiQueryOptions<E extends QueryEndpoint, TData = ResponseOf<E>> = Omit<
+  UseQueryOptions<ResponseOf<E>, HttpError<ErrorOf<E>>, TData, ApiQueryKey>,
+  "queryKey" | "queryFn"
+> & {
   readonly clientOptions?: ClientOptions
 }
 
-export function useApiQuery<E extends EndpointDescriptor>(
+export type ApiMutationOptions<
+  E extends MutationEndpoint,
+  TContext = unknown,
+> = Omit<
+  UseMutationOptions<ResponseOf<E>, HttpError<ErrorOf<E>>, InputOf<E>, TContext>,
+  "mutationKey" | "mutationFn"
+> & {
+  readonly clientOptions?: ClientOptions
+}
+
+export function endpointIdentity(endpoint: EndpointDescriptor): string {
+  return endpoint.operationId ?? `${endpoint.method.toUpperCase()} ${endpoint.path}`
+}
+
+export function apiQueryKey<E extends QueryEndpoint>(
   endpoint: E,
   input: InputOf<E>,
-  options: Omit<UseQueryOptions<ResponseOf<E>>, "queryKey" | "queryFn"> = {},
-  context: ApiQueryContext = {},
-) {
-  const request = createClient({ endpoint }, context.clientOptions).endpoint
-
-  return useQuery({
-    ...options,
-    queryKey: [endpoint.operationId ?? endpoint.method, endpoint.path, input],
-    queryFn: () => request(input),
-  })
+): ApiQueryKey {
+  return ["accord", endpointIdentity(endpoint), canonicalQueryValue(input)]
 }
 
-export function useApiMutation<E extends EndpointDescriptor>(
+export function apiMutationKey<E extends MutationEndpoint>(endpoint: E): ApiMutationKey {
+  return ["accord", endpointIdentity(endpoint)]
+}
+
+export function apiQuery<E extends QueryEndpoint, TData = ResponseOf<E>>(
   endpoint: E,
-  options: Omit<UseMutationOptions<ResponseOf<E>, unknown, InputOf<E>>, "mutationFn"> = {},
-  context: ApiQueryContext = {},
+  input: InputOf<E>,
+  options: ApiQueryOptions<E, TData> = {},
 ) {
-  const request = createClient({ endpoint }, context.clientOptions).endpoint
-
-  return useMutation({
-    ...options,
-    mutationFn: input => request(input),
+  const { clientOptions, ...queryConfiguration } = options
+  const request = createEndpointClient(endpoint, clientOptions)
+  return queryOptions({
+    ...queryConfiguration,
+    queryKey: apiQueryKey(endpoint, input),
+    queryFn: ({ signal }) => request(input, { signal }),
   })
 }
+
+export function useApiQuery<E extends QueryEndpoint, TData = ResponseOf<E>>(
+  endpoint: E,
+  input: InputOf<E>,
+  options: ApiQueryOptions<E, TData> = {},
+): UseQueryResult<TData, HttpError<ErrorOf<E>>> {
+  return useQuery(apiQuery(endpoint, input, options))
+}
+
+export function apiMutation<E extends MutationEndpoint, TContext = unknown>(
+  endpoint: E,
+  options: ApiMutationOptions<E, TContext> = {},
+) {
+  const { clientOptions, ...mutationConfiguration } = options
+  const request = createEndpointClient(endpoint, clientOptions)
+  return mutationOptions({
+    ...mutationConfiguration,
+    mutationKey: apiMutationKey(endpoint),
+    mutationFn: (input: InputOf<E>) => request(input),
+  })
+}
+
+export function useApiMutation<E extends MutationEndpoint, TContext = unknown>(
+  endpoint: E,
+  options: ApiMutationOptions<E, TContext> = {},
+): UseMutationResult<ResponseOf<E>, HttpError<ErrorOf<E>>, InputOf<E>, TContext> {
+  return useMutation(apiMutation(endpoint, options))
+}
+
+function canonicalQueryValue(value: unknown, seen: WeakSet<object> = new WeakSet()): unknown {
+  if (value === null || typeof value !== "object") return value
+  if (value instanceof Date) return value.toISOString()
+  if (seen.has(value)) throw new TypeError("Accord query inputs must not contain cycles")
+  seen.add(value)
+
+  if (Array.isArray(value)) {
+    const result = value.map(item => canonicalQueryValue(item, seen))
+    seen.delete(value)
+    return result
+  }
+
+  const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>
+  for (const key of Object.keys(value).sort()) {
+    const item = (value as Readonly<Record<string, unknown>>)[key]
+    if (item !== undefined) result[key] = canonicalQueryValue(item, seen)
+  }
+  seen.delete(value)
+  return result
+}
+
+export type { QueryKey }
