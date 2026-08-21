@@ -95,12 +95,7 @@ describe("React Query adapter", () => {
     expect(apiQueryKey(getUser, { include: ["posts"], userId: "1" })).toEqual(
       apiQueryKey(getUser, { userId: "1", include: ["posts"] }),
     )
-    expect(apiMutationKey(createUser)).toEqual([
-      "accord",
-      "POST",
-      "/users",
-      "createUser",
-    ])
+    expect(apiMutationKey(createUser)).toEqual(["accord", "POST", "/users", "createUser"])
   })
 
   it("does not collide when unrelated APIs reuse an operationId", () => {
