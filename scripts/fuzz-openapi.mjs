@@ -190,7 +190,7 @@ function randomDocument(randomValue, run) {
 
 function reorder(value, randomValue) {
   if (Array.isArray(value)) return value.map((item) => reorder(item, randomValue))
-  if (!value || typeof value !== "object") return value
+  if (value === null || !(value instanceof Object)) return value
   const entries = Object.entries(value)
   for (let index = entries.length - 1; index > 0; index -= 1) {
     const target = integer(randomValue, index + 1)

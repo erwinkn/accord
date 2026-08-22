@@ -27,7 +27,21 @@ export type ApiEndpointKey = readonly [
   path: string,
   operationId: string | null,
 ]
-export type ApiQueryKey = readonly [...ApiEndpointKey, input: unknown]
+export type CanonicalQueryPrimitive = string | number | boolean | null | undefined
+export type CanonicalQueryValue =
+  | CanonicalQueryPrimitive
+  | readonly CanonicalQueryValue[]
+  | CanonicalQueryObject
+
+export interface CanonicalQueryObject {
+  readonly [key: string]: CanonicalQueryValue
+}
+
+interface MutableCanonicalQueryObject {
+  [key: string]: CanonicalQueryValue
+}
+
+export type ApiQueryKey = readonly [...ApiEndpointKey, input: CanonicalQueryValue]
 export type ApiMutationKey = ApiEndpointKey
 
 export type ApiQueryOptions<E extends QueryEndpoint, TData = ResponseOf<E>> = Omit<
@@ -98,25 +112,63 @@ export function useApiMutation<E extends MutationEndpoint, TContext = unknown>(
   return useMutation(apiMutation(endpoint, options))
 }
 
-function canonicalQueryValue(value: unknown, seen: WeakSet<object> = new WeakSet()): unknown {
-  if (value === null || typeof value !== "object") return value
+function isCanonicalPrimitive<TValue>(value: TValue): value is TValue & CanonicalQueryPrimitive {
+  return (
+    value === null ||
+    value === undefined ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  )
+}
+
+function isBigInt<TValue>(value: TValue): value is TValue & bigint {
+  return typeof value === "bigint"
+}
+
+function isPlainQueryObject<TValue>(value: TValue): value is TValue & object {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === Object.prototype || prototype === null
+}
+
+function canonicalQueryValue<TValue>(
+  value: TValue,
+  ancestors: WeakSet<object> = new WeakSet(),
+): CanonicalQueryValue {
+  if (isCanonicalPrimitive(value)) return value
+  if (isBigInt(value)) return value.toString()
   if (value instanceof Date) return value.toISOString()
-  if (seen.has(value)) throw new TypeError("Accord query inputs must not contain cycles")
-  seen.add(value)
 
   if (Array.isArray(value)) {
-    const result = value.map((item) => canonicalQueryValue(item, seen))
-    seen.delete(value)
-    return result
+    if (ancestors.has(value)) throw new TypeError("Accord query inputs must not contain cycles")
+    ancestors.add(value)
+    try {
+      return value.map((item) => canonicalQueryValue(item, ancestors))
+    } finally {
+      ancestors.delete(value)
+    }
   }
 
-  const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>
-  for (const key of Object.keys(value).sort()) {
-    const item = (value as Readonly<Record<string, unknown>>)[key]
-    if (item !== undefined) result[key] = canonicalQueryValue(item, seen)
+  if (!isPlainQueryObject(value)) {
+    throw new TypeError(
+      "Accord query inputs must contain only plain objects and serializable values",
+    )
   }
-  seen.delete(value)
-  return result
+  if (ancestors.has(value)) throw new TypeError("Accord query inputs must not contain cycles")
+
+  ancestors.add(value)
+  try {
+    const result: MutableCanonicalQueryObject = Object.create(null)
+    for (const [key, item] of Object.entries(value).sort(([left], [right]) =>
+      left.localeCompare(right),
+    )) {
+      if (item !== undefined) result[key] = canonicalQueryValue(item, ancestors)
+    }
+    return result
+  } finally {
+    ancestors.delete(value)
+  }
 }
 
 export type { QueryKey }

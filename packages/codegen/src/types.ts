@@ -77,4 +77,9 @@ export interface NormalizedApi {
   readonly operations: readonly NormalizedOperation[]
 }
 
-export type JsonObject = Record<string, unknown>
+export type JsonPrimitive = string | number | boolean | null
+export type JsonValue = JsonPrimitive | readonly JsonValue[] | JsonObject
+
+export interface JsonObject {
+  readonly [key: string]: JsonValue
+}

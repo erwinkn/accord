@@ -1,10 +1,10 @@
 import type { CodegenDiagnostic } from "../diagnostics.js"
 import { isObject, resolveObjectReference } from "../object.js"
-import type { JsonObject, NormalizedResponse } from "../types.js"
+import type { JsonObject, JsonValue, NormalizedResponse } from "../types.js"
 
 export function normalizeResponses(
   document: JsonObject,
-  rawValue: unknown,
+  rawValue: JsonValue | undefined,
   diagnostics: CodegenDiagnostic[],
   location: string,
 ): readonly NormalizedResponse[] {
