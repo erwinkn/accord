@@ -1,9 +1,9 @@
 name: Export refactor workspace
 
 on:
-  push:
+  pull_request:
     branches:
-      - refactor/remove-type-erasure
+      - main
     paths:
       - ".github/workflows/export-refactor-workspace.yml"
   workflow_dispatch:
