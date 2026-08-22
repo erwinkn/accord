@@ -1,15 +1,16 @@
 import type { CodegenDiagnostic } from "../diagnostics.js"
 import { isDangerousInputName, sanitizeIdentifier } from "../naming.js"
-import { isObject, resolveObjectReference } from "../object.js"
+import { isBoolean, isObject, isString, resolveObjectReference } from "../object.js"
 import type {
   BodyMode,
   JsonObject,
+  JsonValue,
   NormalizedBodyEncoding,
   NormalizedParameter,
   NormalizedRequestBody,
 } from "../types.js"
 
-const REQUEST_BODY_SHAPES = new WeakMap<object, BodyShape>()
+const REQUEST_BODY_PROFILES = new WeakMap<NormalizedRequestBody, BodySchemaProfile>()
 
 const MEDIA_TYPE_PRIORITY = [
   "application/json",
@@ -18,15 +19,30 @@ const MEDIA_TYPE_PRIORITY = [
   "text/plain",
 ] as const
 
-interface BodyShape {
+interface BodySchemaProfile {
   readonly object: boolean
   readonly dynamic: boolean
   readonly fields: ReadonlySet<string>
 }
 
+interface RequestBodyBuilder {
+  required: boolean
+  contentType: string
+  contentTypes: readonly string[]
+  fields: readonly string[]
+  encoding?: Readonly<Record<string, NormalizedBodyEncoding>>
+}
+
+interface BodyEncodingBuilder {
+  contentType?: string
+  style?: "form" | "spaceDelimited" | "pipeDelimited" | "deepObject"
+  explode?: boolean
+  allowReserved?: boolean
+}
+
 export function normalizeRequestBody(
   document: JsonObject,
-  rawValue: unknown,
+  rawValue: JsonValue | undefined,
   diagnostics: CodegenDiagnostic[],
   location: string,
 ): NormalizedRequestBody | undefined {
@@ -66,21 +82,26 @@ export function normalizeRequestBody(
   }
 
   const mediaLocation = `${location}/content/${pointerSegment(contentType)}`
-  const shape = inspectBodyShape(document, media["schema"], diagnostics, `${mediaLocation}/schema`)
+  const profile = inspectBodySchema(
+    document,
+    media["schema"],
+    diagnostics,
+    `${mediaLocation}/schema`,
+  )
   const encoding = normalizeBodyEncoding(
     media["encoding"],
     diagnostics,
     `${mediaLocation}/encoding`,
   )
 
-  const normalized: NormalizedRequestBody = {
+  const normalized: RequestBodyBuilder = {
     required: requestBody["required"] === true,
     contentType,
     contentTypes,
-    fields: [...shape.fields].sort(),
-    ...(encoding !== undefined ? { encoding } : {}),
+    fields: [...profile.fields].sort(),
   }
-  REQUEST_BODY_SHAPES.set(normalized, shape)
+  if (encoding !== undefined) normalized.encoding = encoding
+  REQUEST_BODY_PROFILES.set(normalized, profile)
   return normalized
 }
 
@@ -94,7 +115,7 @@ function preferredContentType(contentTypes: readonly string[]): string {
 }
 
 function normalizeBodyEncoding(
-  value: unknown,
+  value: JsonValue | undefined,
   diagnostics: CodegenDiagnostic[],
   location: string,
 ): Readonly<Record<string, NormalizedBodyEncoding>> | undefined {
@@ -108,10 +129,7 @@ function normalizeBodyEncoding(
     return undefined
   }
 
-  const result: Record<string, NormalizedBodyEncoding> = Object.create(null) as Record<
-    string,
-    NormalizedBodyEncoding
-  >
+  const result: Record<string, NormalizedBodyEncoding> = Object.create(null)
   for (const name of Object.keys(value).sort()) {
     const rawEncoding = value[name]
     if (!isObject(rawEncoding)) {
@@ -137,28 +155,28 @@ function normalizeBodyEncoding(
         location: `${location}/${pointerSegment(name)}/style`,
       })
     }
-    result[name] = {
-      ...(typeof rawEncoding["contentType"] === "string"
-        ? { contentType: rawEncoding["contentType"] }
-        : {}),
-      ...(normalizedStyle !== undefined ? { style: normalizedStyle } : {}),
-      ...(typeof rawEncoding["explode"] === "boolean" ? { explode: rawEncoding["explode"] } : {}),
-      ...(typeof rawEncoding["allowReserved"] === "boolean"
-        ? { allowReserved: rawEncoding["allowReserved"] }
-        : {}),
-    }
+
+    const entry: BodyEncodingBuilder = {}
+    const rawContentType = rawEncoding["contentType"]
+    const rawExplode = rawEncoding["explode"]
+    const rawAllowReserved = rawEncoding["allowReserved"]
+    if (isString(rawContentType)) entry.contentType = rawContentType
+    if (normalizedStyle !== undefined) entry.style = normalizedStyle
+    if (isBoolean(rawExplode)) entry.explode = rawExplode
+    if (isBoolean(rawAllowReserved)) entry.allowReserved = rawAllowReserved
+    result[name] = entry
   }
   return result
 }
 
-function inspectBodyShape(
+function inspectBodySchema(
   document: JsonObject,
-  rawSchema: unknown,
+  rawSchema: JsonValue | undefined,
   diagnostics: CodegenDiagnostic[],
   location: string,
   visited: ReadonlySet<string> = new Set(),
   depth = 0,
-): BodyShape {
+): BodySchemaProfile {
   if (depth > 128) {
     diagnostics.push({
       code: "MAXIMUM_DEPTH_EXCEEDED",
@@ -170,7 +188,7 @@ function inspectBodyShape(
   if (!isObject(rawSchema)) return { object: false, dynamic: true, fields: new Set() }
 
   const reference = rawSchema["$ref"]
-  if (typeof reference === "string") {
+  if (isString(reference)) {
     if (visited.has(reference)) {
       return { object: true, dynamic: false, fields: new Set() }
     }
@@ -178,7 +196,7 @@ function inspectBodyShape(
     nextVisited.add(reference)
     const resolved = resolveObjectReference(document, rawSchema, diagnostics, location)
     return resolved
-      ? inspectBodyShape(document, resolved, diagnostics, location, nextVisited, depth + 1)
+      ? inspectBodySchema(document, resolved, diagnostics, location, nextVisited, depth + 1)
       : { object: false, dynamic: true, fields: new Set() }
   }
 
@@ -186,8 +204,8 @@ function inspectBodyShape(
   for (const keyword of compositions) {
     const branches = rawSchema[keyword]
     if (!Array.isArray(branches)) continue
-    const shapes = branches.map((branch, index) =>
-      inspectBodyShape(
+    const profiles = branches.map((branch, index) =>
+      inspectBodySchema(
         document,
         branch,
         diagnostics,
@@ -197,9 +215,9 @@ function inspectBodyShape(
       ),
     )
     return {
-      object: shapes.every((shape) => shape.object),
-      dynamic: shapes.some((shape) => shape.dynamic),
-      fields: new Set(shapes.flatMap((shape) => [...shape.fields])),
+      object: profiles.every((profile) => profile.object),
+      dynamic: profiles.some((profile) => profile.dynamic),
+      fields: new Set(profiles.flatMap((profile) => [...profile.fields])),
     }
   }
 
@@ -217,9 +235,9 @@ function inspectBodyShape(
   return { object: true, dynamic, fields }
 }
 
-function requestBodyShape(requestBody: NormalizedRequestBody): BodyShape {
+function requestBodyProfile(requestBody: NormalizedRequestBody): BodySchemaProfile {
   return (
-    REQUEST_BODY_SHAPES.get(requestBody) ?? {
+    REQUEST_BODY_PROFILES.get(requestBody) ?? {
       object: requestBody.fields.length > 0,
       dynamic: false,
       fields: new Set(requestBody.fields),
@@ -235,8 +253,8 @@ export function validateMergedBody(
   location: string,
 ): void {
   if (!requestBody || bodyMode !== "merge") return
-  const shape = requestBodyShape(requestBody)
-  if (!shape.object) {
+  const profile = requestBodyProfile(requestBody)
+  if (!profile.object) {
     diagnostics.push({
       code: "BODY_MERGE_REQUIRES_OBJECT",
       message: "Merged request bodies require a statically known top-level object schema",
@@ -244,7 +262,7 @@ export function validateMergedBody(
     })
     return
   }
-  if (shape.dynamic) {
+  if (profile.dynamic) {
     diagnostics.push({
       code: "BODY_MERGE_DYNAMIC_PROPERTIES",
       message:
@@ -254,7 +272,7 @@ export function validateMergedBody(
   }
 
   const parameterNames = new Map(parameters.map((parameter) => [parameter.inputName, parameter]))
-  for (const field of shape.fields) {
+  for (const field of profile.fields) {
     if (isDangerousInputName(field)) {
       diagnostics.push({
         code: "DANGEROUS_INPUT_NAME",

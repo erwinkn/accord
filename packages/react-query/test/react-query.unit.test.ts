@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import type { EndpointDescriptor } from "@accord/client"
+import { defineEndpoint, type EndpointDescriptor } from "@accord/client"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { act, renderHook, waitFor } from "@testing-library/react"
 import { createElement, type PropsWithChildren } from "react"
@@ -38,7 +38,7 @@ type CreateUserTypes = {
   responses: { 201: User; 400: { message: string } }
 }
 
-const getUser = {
+const getUser = defineEndpoint<EndpointDescriptor<GetUserTypes, "merge", "query">>({
   kind: "endpoint",
   method: "GET",
   path: "/users/{userId}",
@@ -64,9 +64,9 @@ const getUser = {
     },
   ],
   responses: [{ status: 200, contentTypes: ["application/json"] }],
-} as EndpointDescriptor<GetUserTypes, "merge", "query">
+})
 
-const createUser = {
+const createUser = defineEndpoint<EndpointDescriptor<CreateUserTypes, "merge", "mutation">>({
   kind: "endpoint",
   method: "POST",
   path: "/users",
@@ -81,7 +81,7 @@ const createUser = {
     fields: ["name"],
   },
   responses: [{ status: 201, contentTypes: ["application/json"] }],
-} as EndpointDescriptor<CreateUserTypes, "merge", "mutation">
+})
 
 describe("React Query adapter", () => {
   it("builds stable endpoint-scoped query and mutation keys", () => {
@@ -99,10 +99,10 @@ describe("React Query adapter", () => {
   })
 
   it("does not collide when unrelated APIs reuse an operationId", () => {
-    const secondEndpoint = {
+    const secondEndpoint = defineEndpoint<EndpointDescriptor<GetUserTypes, "merge", "query">>({
       ...getUser,
       path: "/accounts/{userId}",
-    } as EndpointDescriptor<GetUserTypes, "merge", "query">
+    })
 
     expect(apiQueryKey(secondEndpoint, { userId: "1" })).not.toEqual(
       apiQueryKey(getUser, { userId: "1" }),
@@ -158,7 +158,7 @@ describe("React Query adapter", () => {
     const fetchMock = vi.fn<typeof fetch>(async (request, init) => {
       const url = new URL(String(request))
       if (init?.method === "POST") {
-        const input = JSON.parse(String(init.body)) as { name: string }
+        const input: { name: string } = JSON.parse(String(init.body))
         return new Response(JSON.stringify({ id: "created", ...input }), {
           status: 201,
           headers: { "content-type": "application/json" },

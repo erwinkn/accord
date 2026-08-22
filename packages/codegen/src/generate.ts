@@ -6,7 +6,7 @@ import { AccordCodegenError } from "./diagnostics.js"
 import { normalizeOpenApi } from "./normalize.js"
 import { canonicalize, isObject } from "./object.js"
 import { renderGeneratedModule } from "./render.js"
-import type { AccordCodegenConfig, NormalizedApi } from "./types.js"
+import type { AccordCodegenConfig, JsonValue, NormalizedApi } from "./types.js"
 
 export interface GenerateResult {
   readonly source: string
@@ -14,11 +14,11 @@ export interface GenerateResult {
 }
 
 export async function generate(
-  document: unknown,
+  document: JsonValue,
   config: AccordCodegenConfig = {},
 ): Promise<GenerateResult> {
   const normalized = normalizeOpenApi(document, config)
-  let canonicalDocument: unknown
+  let canonicalDocument: JsonValue
   try {
     canonicalDocument = canonicalize(document)
   } catch (error) {
@@ -37,8 +37,7 @@ export async function generate(
     ])
   }
 
-  // The document has been runtime-validated above; bridge the dependency's wider input union here.
-  const ast = await openapiTS(canonicalDocument as unknown as Parameters<typeof openapiTS>[0], {
+  const ast = await openapiTS(JSON.stringify(canonicalDocument), {
     alphabetize: true,
     immutable: true,
   })
@@ -49,14 +48,15 @@ export async function generate(
   }
 }
 
-export async function loadOpenApiFile(filePath: string): Promise<unknown> {
+export async function loadOpenApiFile(filePath: string): Promise<JsonValue> {
   const absolutePath = resolve(filePath)
   const source = await readFile(absolutePath, "utf8")
   const extension = extname(absolutePath).toLowerCase()
 
   if (extension === ".json") {
     try {
-      return JSON.parse(source) as unknown
+      const document: JsonValue = JSON.parse(source)
+      return document
     } catch (error) {
       throw new AccordCodegenError([
         {
@@ -69,7 +69,8 @@ export async function loadOpenApiFile(filePath: string): Promise<unknown> {
   }
 
   try {
-    return parseYaml(source) as unknown
+    const document: JsonValue = parseYaml(source)
+    return document
   } catch (error) {
     throw new AccordCodegenError([
       {

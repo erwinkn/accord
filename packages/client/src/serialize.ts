@@ -1,10 +1,18 @@
-import type { ParameterDescriptor } from "./types.js"
-
-type Primitive = string | number | boolean | bigint | null
+import type {
+  ParameterDescriptor,
+  ParameterObject,
+  ParameterValue,
+  RequestObject,
+  RequestValue,
+} from "./types.js"
 
 type QueryPair = readonly [name: string, value: string, allowReserved: boolean]
 
-const RESERVED_REPLACEMENTS: Readonly<Record<string, string>> = {
+interface ReservedReplacementMap {
+  readonly [key: string]: string
+}
+
+const RESERVED_REPLACEMENTS: ReservedReplacementMap = {
   "%3A": ":",
   "%2F": "/",
   "%3F": "?",
@@ -25,17 +33,40 @@ const RESERVED_REPLACEMENTS: Readonly<Record<string, string>> = {
   "%3D": "=",
 }
 
-function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
+function isParameterObject(value: RequestValue): value is ParameterObject {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
+  const prototype = Object.getPrototypeOf(value)
+  if (prototype !== Object.prototype && prototype !== null) return false
+  return Object.values(value).every((item) => item === undefined || isParameterValue(item))
 }
 
-function primitive(value: unknown): string {
+export function isParameterValue(value: RequestValue): value is ParameterValue {
+  if (
+    value === null ||
+    value instanceof Date ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    typeof value === "bigint"
+  ) {
+    return true
+  }
+  if (Array.isArray(value)) return value.every(isParameterValue)
+  return isParameterObject(value)
+}
+
+function requireParameterValue(value: RequestValue, name: string): ParameterValue {
+  if (isParameterValue(value)) return value
+  throw new TypeError(`Parameter ${name} must contain only OpenAPI parameter values`)
+}
+
+function primitive(value: ParameterValue): string {
   if (value === null) return ""
   if (value instanceof Date) return value.toISOString()
-  return String(value as Primitive)
+  return String(value)
 }
 
-export function encodeValue(value: unknown, allowReserved = false): string {
+export function encodeValue(value: ParameterValue, allowReserved = false): string {
   const encoded = encodeURIComponent(primitive(value))
   if (!allowReserved) return encoded
 
@@ -45,15 +76,20 @@ export function encodeValue(value: unknown, allowReserved = false): string {
   )
 }
 
-function objectEntries(
-  value: Readonly<Record<string, unknown>>,
-): readonly (readonly [string, unknown])[] {
-  return Object.entries(value).filter((entry): entry is [string, unknown] => entry[1] !== undefined)
+function objectEntries(value: ParameterObject): readonly (readonly [string, ParameterValue])[] {
+  const entries: [string, ParameterValue][] = []
+  for (const [key, item] of Object.entries(value)) {
+    if (item !== undefined) entries.push([key, item])
+  }
+  return entries
 }
 
-export function serializePathParameter(descriptor: ParameterDescriptor, value: unknown): string {
+export function serializePathParameter(
+  descriptor: ParameterDescriptor,
+  value: ParameterValue,
+): string {
   const name = encodeValue(descriptor.name)
-  const encode = (item: unknown) => encodeValue(item)
+  const encode = (item: ParameterValue) => encodeValue(item)
 
   if (descriptor.style === "matrix") {
     if (Array.isArray(value)) {
@@ -62,7 +98,7 @@ export function serializePathParameter(descriptor: ParameterDescriptor, value: u
         : `;${name}=${value.map(encode).join(",")}`
     }
 
-    if (isRecord(value)) {
+    if (isParameterObject(value)) {
       const entries = objectEntries(value)
       return descriptor.explode
         ? entries.map(([key, item]) => `;${encode(key)}=${encode(item)}`).join("")
@@ -77,7 +113,7 @@ export function serializePathParameter(descriptor: ParameterDescriptor, value: u
       return `.${value.map(encode).join(descriptor.explode ? "." : ",")}`
     }
 
-    if (isRecord(value)) {
+    if (isParameterObject(value)) {
       const entries = objectEntries(value)
       return descriptor.explode
         ? `.${entries.map(([key, item]) => `${encode(key)}=${encode(item)}`).join(".")}`
@@ -89,7 +125,7 @@ export function serializePathParameter(descriptor: ParameterDescriptor, value: u
 
   if (Array.isArray(value)) return value.map(encode).join(",")
 
-  if (isRecord(value)) {
+  if (isParameterObject(value)) {
     const entries = objectEntries(value)
     return descriptor.explode
       ? entries.map(([key, item]) => `${encode(key)}=${encode(item)}`).join(",")
@@ -101,17 +137,17 @@ export function serializePathParameter(descriptor: ParameterDescriptor, value: u
 
 export function serializeQueryParameter(
   descriptor: ParameterDescriptor,
-  value: unknown,
+  value: ParameterValue,
 ): readonly QueryPair[] {
   const inputName = descriptor.name
-  const pair = (name: string, item: unknown): QueryPair => [
+  const pair = (name: string, item: ParameterValue): QueryPair => [
     name,
     primitive(item),
     descriptor.allowReserved,
   ]
 
   if (descriptor.style === "deepObject") {
-    if (!isRecord(value)) {
+    if (!isParameterObject(value)) {
       throw new TypeError(
         `Query parameter ${descriptor.name} with deepObject style must be an object`,
       )
@@ -122,7 +158,7 @@ export function serializeQueryParameter(
   if (descriptor.style === "spaceDelimited" || descriptor.style === "pipeDelimited") {
     const delimiter = descriptor.style === "spaceDelimited" ? " " : "|"
     if (Array.isArray(value)) return [pair(inputName, value.map(primitive).join(delimiter))]
-    if (isRecord(value)) {
+    if (isParameterObject(value)) {
       return [
         pair(
           inputName,
@@ -141,7 +177,7 @@ export function serializeQueryParameter(
       : [pair(inputName, value.map(primitive).join(","))]
   }
 
-  if (isRecord(value)) {
+  if (isParameterObject(value)) {
     const entries = objectEntries(value)
     return descriptor.explode
       ? entries.map(([key, item]) => pair(key, item))
@@ -159,9 +195,12 @@ export function renderQueryString(pairs: readonly QueryPair[]): string {
     .join("&")
 }
 
-export function serializeHeaderParameter(descriptor: ParameterDescriptor, value: unknown): string {
+export function serializeHeaderParameter(
+  descriptor: ParameterDescriptor,
+  value: ParameterValue,
+): string {
   if (Array.isArray(value)) return value.map(primitive).join(",")
-  if (isRecord(value)) {
+  if (isParameterObject(value)) {
     const entries = objectEntries(value)
     return descriptor.explode
       ? entries.map(([key, item]) => `${key}=${primitive(item)}`).join(",")
@@ -172,7 +211,7 @@ export function serializeHeaderParameter(descriptor: ParameterDescriptor, value:
 
 export function serializeCookieParameter(
   descriptor: ParameterDescriptor,
-  value: unknown,
+  value: ParameterValue,
 ): readonly (readonly [string, string])[] {
   if (Array.isArray(value)) {
     return descriptor.explode
@@ -180,7 +219,7 @@ export function serializeCookieParameter(
       : [[descriptor.name, value.map(primitive).join(",")]]
   }
 
-  if (isRecord(value)) {
+  if (isParameterObject(value)) {
     const entries = objectEntries(value)
     return descriptor.explode
       ? entries.map(([key, item]) => [key, primitive(item)] as const)
@@ -193,7 +232,7 @@ export function serializeCookieParameter(
 export function interpolatePath(
   pathTemplate: string,
   descriptors: readonly ParameterDescriptor[],
-  input: Readonly<Record<string, unknown>>,
+  input: RequestObject,
 ): string {
   let path = pathTemplate
 
@@ -205,7 +244,9 @@ export function interpolatePath(
     }
 
     const token = `{${descriptor.name}}`
-    path = path.split(token).join(serializePathParameter(descriptor, value))
+    path = path
+      .split(token)
+      .join(serializePathParameter(descriptor, requireParameterValue(value, inputName)))
   }
 
   const unresolved = [...path.matchAll(/\{([^}]+)\}/g)].map((match) => match[1]).filter(Boolean)

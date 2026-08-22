@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 import {
   createClient,
+  defineEndpoint,
   type EndpointDescriptor,
   type EndpointTypes,
   HttpError,
@@ -32,7 +33,7 @@ type CreateEndpointTypes = {
   responses: { 201: User }
 }
 
-const getUser = {
+const getUser = defineEndpoint<EndpointDescriptor<UserEndpointTypes, "merge", "query">>({
   kind: "endpoint",
   method: "GET",
   path: "/users/{userId}",
@@ -69,9 +70,9 @@ const getUser = {
     { status: 200, contentTypes: ["application/json"] },
     { status: 404, contentTypes: ["application/json"] },
   ],
-} as EndpointDescriptor<UserEndpointTypes, "merge", "query">
+})
 
-const createUser = {
+const createUser = defineEndpoint<EndpointDescriptor<CreateEndpointTypes, "merge", "mutation">>({
   kind: "endpoint",
   method: "POST",
   path: "/users",
@@ -86,7 +87,7 @@ const createUser = {
     fields: ["name", "email"],
   },
   responses: [{ status: 201, contentTypes: ["application/json"] }],
-} as EndpointDescriptor<CreateEndpointTypes, "merge", "mutation">
+})
 
 const api = { users: { getUser, createUser } }
 

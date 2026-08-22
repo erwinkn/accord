@@ -1,6 +1,6 @@
 import { once } from "node:events"
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http"
-import { createClient, HttpError } from "@accord/client"
+import { createClient, HttpError, type JsonValue } from "@accord/client"
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
 import { api } from "../generated/users.js"
 
@@ -29,7 +29,7 @@ beforeAll(async () => {
   server.listen(0, "127.0.0.1")
   await once(server, "listening")
   const address = server.address()
-  if (!address || typeof address === "string") {
+  if (!(address instanceof Object)) {
     throw new Error("Test server did not expose a port")
   }
   baseUrl = `http://127.0.0.1:${address.port}/api/v1`
@@ -120,7 +120,7 @@ function route(request: IncomingMessage, response: ServerResponse, body: string)
   }
 
   if (request.method === "POST" && url.pathname === "/api/v1/users") {
-    const input = JSON.parse(body) as { name: string; email?: string }
+    const input: { name: string; email?: string } = JSON.parse(body)
     json(response, 201, { id: "2", ...input })
     return
   }
@@ -128,7 +128,7 @@ function route(request: IncomingMessage, response: ServerResponse, body: string)
   json(response, 404, { code: "unknown_route", message: "Unknown route" })
 }
 
-function json(response: ServerResponse, status: number, value: unknown): void {
+function json(response: ServerResponse, status: number, value: JsonValue): void {
   response.writeHead(status, { "content-type": "application/json" })
   response.end(JSON.stringify(value))
 }

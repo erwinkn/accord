@@ -1,4 +1,5 @@
-import type { NamespaceStrategy } from "./types.js"
+import { isNonEmptyString } from "./object.js"
+import type { JsonObject, JsonValue, NamespaceStrategy } from "./types.js"
 
 const DANGEROUS_KEYS = new Set(["__proto__", "prototype", "constructor"])
 
@@ -56,15 +57,17 @@ export function pathNamespace(path: string, basePath = ""): string[] {
   return namespace.length > 0 ? namespace : ["root"]
 }
 
-export function operationNamespace(options: {
+export interface OperationNamespaceOptions {
   readonly strategy: NamespaceStrategy
   readonly path: string
   readonly basePath?: string
-  readonly tags?: readonly unknown[]
-}): string[] {
+  readonly tags?: readonly JsonValue[]
+}
+
+export function operationNamespace(options: OperationNamespaceOptions): string[] {
   if (options.strategy === "tag") {
-    const tag = options.tags?.find((value) => typeof value === "string" && value.trim().length > 0)
-    if (typeof tag === "string") return [sanitizeIdentifier(tag)]
+    const tag = options.tags?.find(isNonEmptyString)
+    if (tag !== undefined) return [sanitizeIdentifier(tag)]
   }
   return pathNamespace(options.path, options.basePath)
 }
@@ -79,17 +82,11 @@ export function fallbackOperationName(method: string, path: string): string {
   return `${verb}By${parameters.map(sanitizeTypeIdentifier).join("And")}`
 }
 
-export function operationName(
-  operation: Readonly<Record<string, unknown>>,
-  method: string,
-  path = "",
-): string {
+export function operationName(operation: JsonObject, method: string, path = ""): string {
   const sdkName = operation["x-sdk-name"]
-  if (typeof sdkName === "string" && sdkName.trim().length > 0) return sanitizeIdentifier(sdkName)
+  if (isNonEmptyString(sdkName)) return sanitizeIdentifier(sdkName)
 
   const operationId = operation["operationId"]
-  if (typeof operationId === "string" && operationId.trim().length > 0) {
-    return sanitizeIdentifier(operationId)
-  }
+  if (isNonEmptyString(operationId)) return sanitizeIdentifier(operationId)
   return fallbackOperationName(method, path)
 }

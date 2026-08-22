@@ -1,6 +1,11 @@
 import type { CodegenDiagnostic } from "./diagnostics.js"
 import { AccordCodegenError, throwIfDiagnostics } from "./diagnostics.js"
-import { operationName, operationNamespace, sanitizeTypeIdentifier } from "./naming.js"
+import {
+  type OperationNamespaceOptions,
+  operationName,
+  operationNamespace,
+  sanitizeTypeIdentifier,
+} from "./naming.js"
 import { resolveBodyMode, resolveOperationKind } from "./normalize/operation.js"
 import {
   mergeParameters,
@@ -11,12 +16,33 @@ import {
 import { normalizeRequestBody, validateMergedBody } from "./normalize/request-body.js"
 import { normalizeResponses } from "./normalize/responses.js"
 import { validateEndpointTree } from "./normalize/tree.js"
-import { isObject, resolveObjectReference } from "./object.js"
-import type { AccordCodegenConfig, NormalizedApi, NormalizedOperation } from "./types.js"
+import { isNonEmptyString, isObject, isString, resolveObjectReference } from "./object.js"
+import type {
+  AccordCodegenConfig,
+  JsonValue,
+  NormalizedApi,
+  NormalizedOperation,
+  NormalizedRequestBody,
+} from "./types.js"
 
 const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options", "trace"] as const
 
-export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {}): NormalizedApi {
+type MutableNamespaceOptions = {
+  -readonly [TKey in keyof OperationNamespaceOptions]: OperationNamespaceOptions[TKey]
+}
+
+interface NormalizedOperationIdentity {
+  operationId?: string
+}
+
+interface NormalizedOperationBody {
+  requestBody?: NormalizedRequestBody
+}
+
+export function normalizeOpenApi(
+  input: JsonValue,
+  config: AccordCodegenConfig = {},
+): NormalizedApi {
   const diagnostics: CodegenDiagnostic[] = []
   if (!isObject(input)) {
     throw new AccordCodegenError([
@@ -25,19 +51,23 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
   }
 
   const document = input
-  const openapi = document["openapi"]
-  if (typeof openapi !== "string") {
+  const rawOpenapi = document["openapi"]
+  let openapiVersion = "3.1.0"
+  if (!isString(rawOpenapi)) {
     diagnostics.push({
       code: "INVALID_DOCUMENT",
       message: "The document must contain an OpenAPI version string",
       location: "#/openapi",
     })
-  } else if (!/^3\.(?:0|1)(?:\.|$)/.test(openapi)) {
-    diagnostics.push({
-      code: "UNSUPPORTED_OPENAPI_VERSION",
-      message: `Accord supports OpenAPI 3.0 and 3.1, received ${openapi}`,
-      location: "#/openapi",
-    })
+  } else {
+    openapiVersion = rawOpenapi
+    if (!/^3\.(?:0|1)(?:\.|$)/.test(rawOpenapi)) {
+      diagnostics.push({
+        code: "UNSUPPORTED_OPENAPI_VERSION",
+        message: `Accord supports OpenAPI 3.0 and 3.1, received ${rawOpenapi}`,
+        location: "#/openapi",
+      })
+    }
   }
 
   const paths = document["paths"]
@@ -100,10 +130,7 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
 
       const method = methodKey.toUpperCase()
       const rawOperationId = rawOperation["operationId"]
-      const operationId =
-        typeof rawOperationId === "string" && rawOperationId.trim().length > 0
-          ? rawOperationId
-          : undefined
+      const operationId = isNonEmptyString(rawOperationId) ? rawOperationId : undefined
       if (rawOperationId !== undefined && operationId === undefined) {
         diagnostics.push({
           code: "INVALID_OPERATION",
@@ -144,12 +171,14 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
       validateMergedBody(parameters, requestBody, bodyMode, diagnostics, operationLocation)
 
       const name = operationName(rawOperation, methodKey, path)
-      const namespace = operationNamespace({
+      const namespaceOptions: MutableNamespaceOptions = {
         strategy: namespaceStrategy === "tag" ? "tag" : "path",
         path,
-        ...(config.basePath !== undefined ? { basePath: config.basePath } : {}),
-        ...(Array.isArray(rawOperation["tags"]) ? { tags: rawOperation["tags"] } : {}),
-      })
+      }
+      if (config.basePath !== undefined) namespaceOptions.basePath = config.basePath
+      const rawTags = rawOperation["tags"]
+      if (Array.isArray(rawTags)) namespaceOptions.tags = rawTags
+      const namespace = operationNamespace(namespaceOptions)
       const typeName = sanitizeTypeIdentifier([...namespace, name].join(" "))
       const operationKey = operationId ?? `${method} ${path}`
       const previousType = typeNames.get(typeName)
@@ -163,12 +192,17 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
         typeNames.set(typeName, operationKey)
       }
 
+      const identity: NormalizedOperationIdentity = {}
+      if (operationId !== undefined) identity.operationId = operationId
+      const body: NormalizedOperationBody = {}
+      if (requestBody !== undefined) body.requestBody = requestBody
+
       operations.push({
         key: operationKey,
         method,
         methodKey,
         path,
-        ...(operationId !== undefined ? { operationId } : {}),
+        ...identity,
         operationName: name,
         namespace,
         bodyMode,
@@ -182,7 +216,7 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
           operationLocation,
         ),
         parameters,
-        ...(requestBody !== undefined ? { requestBody } : {}),
+        ...body,
         responses: normalizeResponses(
           document,
           rawOperation["responses"],
@@ -201,10 +235,7 @@ export function normalizeOpenApi(input: unknown, config: AccordCodegenConfig = {
   validateEndpointTree(operations, diagnostics)
   throwIfDiagnostics(diagnostics)
 
-  return {
-    openapi: typeof openapi === "string" ? openapi : "3.1.0",
-    operations,
-  }
+  return { openapi: openapiVersion, operations }
 }
 
 function pointerSegment(value: string): string {
