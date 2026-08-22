@@ -38,7 +38,7 @@ jobs:
             --output /tmp/cleanup.patch.enc
           echo "7683a889f8da4d10c52e17161106d7c6494cf43dee8b0a4d9706200f21c7babb  /tmp/cleanup.patch.enc" | sha256sum --check --strict
           printf '%s' "${PATCH_KEY}" > /tmp/cleanup.patch.key
-          openssl enc -decrypt -aes-256-cbc -pbkdf2 -iter 200000 \
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 \
             -pass file:/tmp/cleanup.patch.key \
             -in /tmp/cleanup.patch.enc \
             -out /tmp/cleanup.patch
