@@ -1,9 +1,7 @@
 name: Apply validated cleanup
 
 on:
-  push:
-    branches:
-      - chore/anti-slop-cleanup
+  pull_request:
     paths:
       - ".github/cleanup.patch.ready"
 
@@ -19,9 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out branch
+      - name: Check out branch head
         uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Verify and apply cleanup
