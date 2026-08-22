@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - refactor/remove-type-erasure
-    paths:
-      - ".github/refactor-patch/ready"
 
 permissions:
   contents: write
