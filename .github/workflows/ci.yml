@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@11.22.0 --activate
+
+      - name: Locate pnpm store
+        id: pnpm-store
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore pnpm store
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint and formatting
+        run: pnpm quality
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Generate integration fixtures
+        run: pnpm generate:test-fixtures
+
+      - name: Typecheck packages
+        run: pnpm -r --workspace-concurrency=1 typecheck
+
+      - name: Compile-time SDK tests
+        run: pnpm exec tsc -p tests/type/tsconfig.json --noEmit
+
+      - name: Unit tests
+        run: pnpm test:unit
+
+      - name: Golden codegen tests
+        run: pnpm test:golden
+
+      - name: Property tests
+        run: pnpm test:property
+
+      - name: Integration tests
+        run: pnpm test:integration
+
+      - name: Bounded fuzz smoke test
+        env:
+          ACCORD_FUZZ_RUNS: 50
+          ACCORD_FUZZ_SEED: 11321517
+        run: pnpm test:fuzz

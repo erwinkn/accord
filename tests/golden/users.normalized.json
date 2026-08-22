@@ -1,0 +1,117 @@
+{
+  "openapi": "3.1.0",
+  "operations": [
+    {
+      "key": "listUsers",
+      "method": "GET",
+      "methodKey": "get",
+      "path": "/users",
+      "operationId": "listUsers",
+      "operationName": "listUsers",
+      "namespace": [
+        "users"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "query",
+      "parameters": [
+        {
+          "name": "limit",
+          "inputName": "limit",
+          "in": "query",
+          "required": false,
+          "style": "form",
+          "explode": true,
+          "allowReserved": false
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "UsersListUsers"
+    },
+    {
+      "key": "createUser",
+      "method": "POST",
+      "methodKey": "post",
+      "path": "/users",
+      "operationId": "createUser",
+      "operationName": "createUser",
+      "namespace": [
+        "users"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "mutation",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "application/json",
+        "contentTypes": [
+          "application/json"
+        ],
+        "fields": [
+          "email",
+          "name"
+        ]
+      },
+      "responses": [
+        {
+          "status": 201,
+          "contentTypes": [
+            "application/json"
+          ]
+        },
+        {
+          "status": 400,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "UsersCreateUser"
+    },
+    {
+      "key": "getUser",
+      "method": "GET",
+      "methodKey": "get",
+      "path": "/users/{userId}",
+      "operationId": "getUser",
+      "operationName": "getUser",
+      "namespace": [
+        "users"
+      ],
+      "bodyMode": "merge",
+      "operationKind": "query",
+      "parameters": [
+        {
+          "name": "userId",
+          "inputName": "userId",
+          "in": "path",
+          "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "contentTypes": [
+            "application/json"
+          ]
+        },
+        {
+          "status": 404,
+          "contentTypes": [
+            "application/json"
+          ]
+        }
+      ],
+      "typeName": "UsersGetUser"
+    }
+  ]
+}

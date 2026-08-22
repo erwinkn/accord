@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: Accord feature fixture
+  version: 1.0.0
+paths:
+  /api/v1/organizations/{organization-id}/users:
+    parameters:
+      - in: path
+        name: organization-id
+        required: true
+        style: simple
+        schema:
+          type: string
+    get:
+      operationId: search-users
+      tags: [Directory]
+      parameters:
+        - in: query
+          name: roles
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: filter
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            properties:
+              active:
+                type: boolean
+              country:
+                type: string
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+        - in: cookie
+          name: session
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}:
+    get:
+      operationId: get-post
+      parameters:
+        - in: path
+          name: organization-id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: user-id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: post-id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+  /api/v1/uploads:
+    post:
+      operationId: uploadFile
+      x-sdk-body-mode: separate
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                metadata:
+                  $ref: "#/components/schemas/Metadata"
+            encoding:
+              metadata:
+                contentType: application/json
+      responses:
+        "201":
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id:
+                    type: string
+  /api/v1/health:
+    get:
+      responses:
+        "204":
+          description: Healthy
+  /api/v1/nodes:
+    post:
+      operationId: createNode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Node"
+      responses:
+        "201":
+          description: Node
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Node"
+components:
+  schemas:
+    Metadata:
+      type: object
+      properties:
+        description:
+          type: string
+        labels:
+          type: array
+          items:
+            type: string
+    UserBase:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+    User:
+      allOf:
+        - $ref: "#/components/schemas/UserBase"
+        - type: object
+          required: [status]
+          properties:
+            status:
+              type: string
+              enum: [active, disabled]
+            contact:
+              oneOf:
+                - type: string
+                  format: email
+                - type: "null"
+    Post:
+      type: object
+      required: [id, author]
+      properties:
+        id:
+          type: string
+        author:
+          $ref: "#/components/schemas/User"
+    Node:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/Node"
