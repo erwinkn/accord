@@ -1,0 +1,27 @@
+name: Export refactor workspace
+
+on:
+  push:
+    branches:
+      - refactor/remove-type-erasure
+    paths:
+      - ".github/workflows/export-refactor-workspace.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Package workspace
+        run: tar --exclude=.git -czf /tmp/accord-source.tgz .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: accord-refactor-source
+          path: /tmp/accord-source.tgz
+          if-no-files-found: error
+          retention-days: 1
