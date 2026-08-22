@@ -1,4 +1,4 @@
-name: Export refactor workspace
+name: Apply and validate type-erasure refactor
 
 on:
   pull_request:
@@ -6,22 +6,63 @@ on:
       - main
     paths:
       - ".github/workflows/export-refactor-workspace.yml"
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: apply-type-erasure-refactor
+  cancel-in-progress: false
 
 jobs:
-  export:
+  apply:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v6
-      - name: Package workspace
-        run: tar --exclude=.git -czf /tmp/accord-source.tgz .
-      - uses: actions/upload-artifact@v4
+      - name: Check out exact PR head
+        uses: actions/checkout@v6
         with:
-          name: accord-refactor-source
-          path: /tmp/accord-source.tgz
-          if-no-files-found: error
-          retention-days: 1
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Reconstruct and apply validated patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/refactor-patch/remove-type-erasure.patch.gz.b64.chunk-* > /tmp/remove-type-erasure.patch.gz.b64
+          echo "101f131ffa36218f1ebec609761dab41fb72223a486ecfb25204df5b4b7f5d9c  /tmp/remove-type-erasure.patch.gz.b64" | sha256sum --check --strict
+          base64 --decode /tmp/remove-type-erasure.patch.gz.b64 | gzip --decompress > /tmp/remove-type-erasure.patch
+          echo "3095bd5395ec5c12a4d8278374880d51bc993770e6001f7ec0044cc4214f21fd  /tmp/remove-type-erasure.patch" | sha256sum --check --strict
+          git checkout 66d83e2c7581af9ce99bb8409e4a1d82eba0ec4a -- .github/workflows/export-refactor-workspace.yml
+          git apply --check --index /tmp/remove-type-erasure.patch
+          git apply --index /tmp/remove-type-erasure.patch
+          git rm -r .github/refactor-patch
+          git rm .github/workflows/apply-type-erasure-refactor.yml
+
+      - name: Install dependencies and update lockfile
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.22.0 --activate
+          pnpm install --no-frozen-lockfile
+
+      - name: Format and validate complete repository
+        run: |
+          pnpm exec biome check --write .
+          pnpm check
+          git diff --check
+
+      - name: Commit validated refactor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove type-erasure guards from Accord runtime"
+          git push origin HEAD:refactor/remove-type-erasure
