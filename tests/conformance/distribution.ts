@@ -3,26 +3,32 @@ import { execFile } from "node:child_process"
 import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { promisify } from "node:util"
 import { endpoint } from "./fixture.js"
 import { root } from "./harness.js"
-
-const exec = promisify(execFile)
 
 async function main(): Promise<void> {
   const temporary = await mkdtemp(join(tmpdir(), "accord-package-test-"))
   const reportDirectory = join(root, "artifacts", "distribution")
   await mkdir(reportDirectory, { recursive: true })
   const log: string[] = []
-  const command = async (cwd: string, executable: string, args: string[]) => {
+  const command = (cwd: string, executable: string, args: string[]): Promise<string> => {
     log.push(`$ ${executable} ${args.join(" ")}`)
-    const result = await exec(executable, args, {
-      cwd,
-      timeout: 120_000,
-      maxBuffer: 4 * 1024 * 1024,
+    return new Promise((resolve, reject) => {
+      execFile(
+        executable,
+        args,
+        { cwd, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 },
+        (error, stdout, stderr) => {
+          log.push(stdout, stderr)
+          if (error) {
+            console.error(stdout, stderr)
+            reject(error)
+          } else {
+            resolve(stdout)
+          }
+        },
+      )
     })
-    log.push(result.stdout, result.stderr)
-    return result.stdout
   }
   try {
     const tarballs = join(temporary, "tarballs")
@@ -33,17 +39,20 @@ async function main(): Promise<void> {
       await command(join(root, "packages", name), "pnpm", ["pack", "--pack-destination", tarballs])
     }
     const files = await readdir(tarballs)
-    const dependencies: Record<string, string> = {
+    const packageTarball = (name: string): string => {
+      const file = files.find((item) => item.startsWith(`accord-${name}-`) && item.endsWith(".tgz"))
+      assert(file, `Missing ${name} tarball`)
+      return `file:${join(tarballs, file)}`
+    }
+    const dependencies = {
+      "@accord/client": packageTarball("client"),
+      "@accord/codegen": packageTarball("codegen"),
+      "@accord/react-query": packageTarball("react-query"),
       "@tanstack/react-query": "5.101.4",
       react: "19.2.8",
       typescript: "5.9.3",
       "@types/node": "26.2.0",
       "@types/react": "^19.2.0",
-    }
-    for (const name of ["client", "codegen", "react-query"]) {
-      const file = files.find((item) => item.startsWith(`accord-${name}-`) && item.endsWith(".tgz"))
-      assert(file, `Missing ${name} tarball`)
-      dependencies[`@accord/${name}`] = `file:${join(tarballs, file)}`
     }
     await writeFile(
       join(installed, "package.json"),

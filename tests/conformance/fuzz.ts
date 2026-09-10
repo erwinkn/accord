@@ -34,7 +34,7 @@ const word = fc
   .map((letters) => letters.join(""))
 const scenario = fc.record({
   version: fc.constantFrom("3.0.3", "3.1.0"),
-  shape: fc.constantFrom("inline", "reference", "allOf", "oneOf"),
+  composition: fc.constantFrom("inline", "reference", "allOf", "oneOf"),
   mode: fc.constantFrom("merge", "separate"),
   id: word.map((value) => `id-${value}`),
   query: word,
@@ -66,9 +66,9 @@ async function main(): Promise<void> {
         required: ["name", "count", "enabled"],
       }
       let schema: JsonValue = leaf
-      if (sample.shape === "reference") schema = { $ref: "#/components/schemas/Payload" }
-      if (sample.shape === "allOf") schema = { allOf: [leaf] }
-      if (sample.shape === "oneOf")
+      if (sample.composition === "reference") schema = { $ref: "#/components/schemas/Payload" }
+      if (sample.composition === "allOf") schema = { allOf: [leaf] }
+      if (sample.composition === "oneOf")
         schema = {
           oneOf: [
             leaf,
