@@ -356,7 +356,10 @@ wireCases.push(
         Object.defineProperty(globalThis, "location", { configurable: true, value: { href: baseUrl + "/page" } })
         const client = createClient(api, { baseUrl: "/api" })
         let error: Error | undefined
-        try { await client.probe.call() } catch (cause) { error = cause instanceof Error ? cause : new Error(String(cause)) }
+        try { await client.probe.call() } catch (cause) {
+          if (!(cause instanceof TypeError) || cause.message !== "Invalid URL") throw cause
+          error = cause
+        }
         assert.equal(error, undefined, "ACCORD_RELATIVE_BASE")
         assert.equal(requests[0]?.url, "/api/probe")
       })

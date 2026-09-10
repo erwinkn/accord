@@ -267,10 +267,12 @@ export async function verifyFixture(fixture: Fixture): Promise<Failure | undefin
             signature: "UNEXPECTED_EXCEPTION",
             message: error instanceof Error ? (error.stack ?? error.message) : String(error),
           }
-    await mkdir(join(reportRoot, "failures", fixture.id), { recursive: true })
+    const failureDirectory = join(reportRoot, "failures", fixture.id)
+    await rm(failureDirectory, { recursive: true, force: true })
+    await mkdir(failureDirectory, { recursive: true })
     // Synthetic specs only. Preserve sources and diagnostics, not node_modules or environment variables.
     const { cp } = await import("node:fs/promises")
-    await cp(directory, join(reportRoot, "failures", fixture.id), { recursive: true })
+    await cp(directory, failureDirectory, { recursive: true })
     await writeFile(
       join(reportRoot, "failures", fixture.id, "failure.json"),
       JSON.stringify(failure, null, 2),

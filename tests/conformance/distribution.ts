@@ -6,6 +6,12 @@ import { join } from "node:path"
 import { endpoint } from "./fixture.js"
 import { root } from "./harness.js"
 
+interface PackedManifest {
+  readonly name: string
+  readonly version: string
+  readonly dependencies?: Readonly<Record<string, string>>
+}
+
 async function main(): Promise<void> {
   const temporary = await mkdtemp(join(tmpdir(), "accord-package-test-"))
   const reportDirectory = join(root, "artifacts", "distribution")
@@ -57,6 +63,34 @@ async function main(): Promise<void> {
     await writeFile(
       join(installed, "package.json"),
       JSON.stringify({ name: "accord-install-smoke", private: true, type: "module", dependencies }),
+    )
+    const clientManifest: PackedManifest = JSON.parse(
+      await command(installed, "tar", [
+        "-xOf",
+        dependencies["@accord/client"].slice(5),
+        "package/package.json",
+      ]),
+    )
+    const queryManifest: PackedManifest = JSON.parse(
+      await command(installed, "tar", [
+        "-xOf",
+        dependencies["@accord/react-query"].slice(5),
+        "package/package.json",
+      ]),
+    )
+    assert.equal(clientManifest.name, "@accord/client")
+    assert.equal(
+      queryManifest.dependencies?.["@accord/client"],
+      clientManifest.version,
+      "Packed workspace dependency must reference the actual client release version",
+    )
+    // Resolve the unpublished sibling release to its real tarball. Do not add missing dependencies
+    // or rewrite package contents; the manifest assertion above protects that publication contract.
+    await writeFile(
+      join(installed, "pnpm-workspace.yaml"),
+      JSON.stringify({
+        overrides: { [`@accord/client@${clientManifest.version}`]: dependencies["@accord/client"] },
+      }),
     )
     // Outside the repository: workspace links, root imports, and source aliases cannot rescue broken packages.
     await command(installed, "pnpm", ["install", "--ignore-scripts", "--no-frozen-lockfile"])
@@ -120,6 +154,7 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"])
           passed: true,
           packages: files,
           checks: [
+            "packed-sibling-dependency-manifest",
             "clean-install",
             "cli-help",
             "cli-generation",
