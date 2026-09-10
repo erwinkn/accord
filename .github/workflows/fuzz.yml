@@ -1,4 +1,4 @@
-name: Fuzz
+name: Nightly SDK conformance
 
 on:
   schedule:
@@ -6,40 +6,63 @@ on:
   workflow_dispatch:
     inputs:
       runs:
-        description: Number of generated OpenAPI documents
+        description: Number of complete generate/compile/HTTP property cases
         required: false
-        default: "1000"
+        default: "100"
+      seed:
+        description: Optional signed 32-bit replay seed
+        required: false
+      path:
+        description: Optional fast-check shrink path from a previous failure
+        required: false
 
 permissions:
   contents: read
 
+concurrency:
+  group: conformance-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  fuzz:
+  conformance:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - name: Enable pnpm
-        run: corepack enable && corepack prepare pnpm@11.22.0 --activate
-      - name: Locate pnpm store
-        id: pnpm-store
-        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-      - name: Restore pnpm store
-        uses: actions/cache@v5
-        with:
-          path: ${{ steps.pnpm-store.outputs.path }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build packages
-        run: pnpm build
-      - name: Run deterministic corpus and randomized generation
+      - run: corepack enable && corepack prepare pnpm@11.22.0 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Choose and record a bounded replayable seed
         env:
-          ACCORD_FUZZ_RUNS: ${{ inputs.runs || '1000' }}
-          ACCORD_FUZZ_SEED: ${{ github.run_id }}
+          INPUT_SEED: ${{ inputs.seed }}
+          RUN_ID: ${{ github.run_id }}
+          INPUT_PATH: ${{ inputs.path }}
+        run: |
+          node --input-type=module -e '
+            import { appendFileSync } from "node:fs";
+            const seed = process.env.INPUT_SEED || String(Number(BigInt(process.env.RUN_ID) % 2147483647n));
+            if (!/^-?[0-9]+$/.test(seed)) throw new Error("Invalid replay seed");
+            if (process.env.INPUT_PATH && !/^[0-9:]+$/.test(process.env.INPUT_PATH)) throw new Error("Invalid shrink path");
+            appendFileSync(process.env.GITHUB_ENV, `ACCORD_FUZZ_SEED=${seed}\n`);
+            if (process.env.INPUT_PATH) appendFileSync(process.env.GITHUB_ENV, `ACCORD_FUZZ_PATH=${process.env.INPUT_PATH}\n`);
+          '
+      - name: Shrinking semantic and wire property campaign
+        env:
+          ACCORD_FUZZ_RUNS: ${{ inputs.runs || '100' }}
         run: pnpm test:fuzz
+      - name: Strict target conformance (known gaps fail this gate)
+        if: ${{ !cancelled() }}
+        run: pnpm test:conformance:strict
+      - name: Preserve failure corpus, replay instructions, and contract reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conformance-nightly
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 14

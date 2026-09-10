@@ -64,3 +64,7 @@ updateUser.mutate({ userId, name: "Erwin" })
 ## Status
 
 Initial architecture scaffold. The next implementation milestone is the normalized endpoint descriptor and OpenAPI-to-descriptor generator.
+
+## Testing and conformance
+
+See [the testing architecture and invariant contracts](docs/testing.md). After installing dependencies and building, run `pnpm test:conformance` for the regression gate or `pnpm test:conformance:strict` to require every registered contract to pass. Known implementation gaps are executed and reported explicitly, not skipped.
