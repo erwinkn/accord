@@ -1,7 +1,14 @@
 import { defineConfig } from "oxlint"
 
 export default defineConfig({
-  ignorePatterns: [".agents/**", ".claude/**", "tools/oxlint/anti-slop/**", "tests/generated/**"],
+  ignorePatterns: [
+    ".agents/**",
+    ".claude/**",
+    "tools/oxlint/anti-slop/**",
+    "tests/generated/**",
+    ".accord-test-work/**",
+    "artifacts/**",
+  ],
   jsPlugins: [
     {
       name: "anti-slop",

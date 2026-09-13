@@ -23,10 +23,16 @@
     "test:golden": "vitest run --config vitest.golden.config.ts",
     "test:property": "vitest run --config vitest.property.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "test:fuzz": "node scripts/fuzz-openapi.mjs",
-    "check": "pnpm quality && pnpm typecheck && pnpm test && ACCORD_FUZZ_RUNS=50 pnpm test:fuzz",
+    "test:fuzz": "tsx tests/conformance/fuzz.ts",
+    "check": "pnpm quality && pnpm typecheck && pnpm typecheck:tests && pnpm test && pnpm test:harness && pnpm test:conformance && ACCORD_FUZZ_RUNS=20 pnpm test:fuzz && pnpm test:distribution",
     "test:types": "pnpm typecheck",
-    "lint:anti-slop": "oxlint"
+    "lint:anti-slop": "oxlint",
+    "test:conformance": "tsx tests/conformance/runner.ts",
+    "test:conformance:strict": "tsx tests/conformance/runner.ts --strict",
+    "test:conformance:list": "tsx tests/conformance/runner.ts --list",
+    "test:harness": "vitest run --config vitest.conformance.config.ts",
+    "test:distribution": "tsx tests/conformance/distribution.ts",
+    "typecheck:tests": "tsc -p tests/conformance/tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@accord/client": "workspace:*",

@@ -5,3 +5,7 @@ coverage/
 .DS_Store
 tests/generated/
 .fuzz-corpus/
+
+# Ephemeral conformance consumers and diagnostic artifacts
+.accord-test-work/
+artifacts/

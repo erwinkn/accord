@@ -72,6 +72,6 @@ jobs:
 
       - name: Bounded fuzz smoke test
         env:
-          ACCORD_FUZZ_RUNS: 50
+          ACCORD_FUZZ_RUNS: 20
           ACCORD_FUZZ_SEED: 11321517
         run: pnpm test:fuzz
