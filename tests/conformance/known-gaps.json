@@ -84,13 +84,6 @@
     "since": "779f3d3"
   },
   {
-    "id": "types.published-declarations",
-    "phase": "compile",
-    "signature": "TS2304:packages/react-query/dist/index.d.ts:Cannot find name 'dataTagErrorSymbol'.|TS2304:packages/react-query/dist/index.d.ts:Cannot find name 'dataTagSymbol'.",
-    "reason": "Emitted apiQuery return declarations reference TanStack data-tag symbols without importing them. Ordinary consumer checks skip .d.ts revalidation, but this independent audit does not.",
-    "since": "779f3d3"
-  },
-  {
     "id": "types.ref-siblings",
     "phase": "compile",
     "signature": "ACCORD_REF_SIBLING_TYPE:TS2344",
