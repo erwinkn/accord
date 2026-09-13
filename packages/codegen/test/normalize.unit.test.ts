@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { AccordCodegenError } from "../src/diagnostics.js"
 import { normalizeOpenApi } from "../src/normalize.js"
+import type { JsonObject } from "../src/types.js"
 
 const userSchema = {
   type: "object",
@@ -8,7 +9,7 @@ const userSchema = {
   properties: { id: { type: "string" }, name: { type: "string" } },
 }
 
-function document(paths: Record<string, unknown>, components: Record<string, unknown> = {}) {
+function document(paths: JsonObject, components: JsonObject = {}): JsonObject {
   return {
     openapi: "3.1.0",
     info: { title: "test", version: "1" },
@@ -296,9 +297,10 @@ describe("normalizeOpenApi", () => {
     try {
       normalizeOpenApi({ openapi: "2.0", paths: {} })
       throw new Error("expected normalizeOpenApi to fail")
-    } catch (error) {
-      expect(error).toBeInstanceOf(AccordCodegenError)
-      expect((error as AccordCodegenError).diagnostics[0]?.code).toBe("UNSUPPORTED_OPENAPI_VERSION")
+    } catch (cause) {
+      expect(cause).toBeInstanceOf(AccordCodegenError)
+      if (!(cause instanceof AccordCodegenError)) throw cause
+      expect(cause.diagnostics[0]?.code).toBe("UNSUPPORTED_OPENAPI_VERSION")
     }
   })
 })

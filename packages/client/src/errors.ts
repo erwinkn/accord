@@ -26,6 +26,6 @@ export class HttpError<TBody = unknown> extends Error {
   }
 }
 
-export function isHttpError(value: unknown): value is HttpError {
+export function isHttpError<TValue>(value: TValue): value is TValue & HttpError {
   return value instanceof HttpError
 }

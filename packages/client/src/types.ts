@@ -143,9 +143,44 @@ export type MutationEndpoint = EndpointDescriptor<EndpointTypes, BodyMode, "muta
 
 export type MaybePromise<T> = T | Promise<T>
 
+export type RequestPrimitive = string | number | boolean | bigint | null | undefined
+export type RequestBinary =
+  | Blob
+  | FormData
+  | URLSearchParams
+  | ArrayBuffer
+  | ArrayBufferView
+  | ReadableStream<Uint8Array>
+export type RequestValue =
+  | RequestPrimitive
+  | Date
+  | RequestBinary
+  | readonly RequestValue[]
+  | RequestObject
+
+export interface RequestObject {
+  readonly [key: string]: RequestValue
+}
+
+export type ParameterPrimitive = string | number | boolean | bigint | null | Date
+export type ParameterValue = ParameterPrimitive | readonly ParameterValue[] | ParameterObject
+
+export interface ParameterObject {
+  readonly [key: string]: ParameterValue | undefined
+}
+
+export type JsonPrimitive = string | number | boolean | null
+export type JsonValue = JsonPrimitive | readonly JsonValue[] | JsonObject
+
+export interface JsonObject {
+  readonly [key: string]: JsonValue
+}
+
+export type ResponsePayload = JsonValue | ArrayBuffer | undefined
+
 export interface HeaderResolverContext {
   readonly endpoint: EndpointDescriptor
-  readonly input: Readonly<Record<string, unknown>>
+  readonly input: RequestObject
 }
 
 export type HeaderResolver = (
@@ -154,7 +189,7 @@ export type HeaderResolver = (
 
 export interface RequestMiddlewareContext {
   readonly endpoint: EndpointDescriptor
-  readonly input: Readonly<Record<string, unknown>>
+  readonly input: RequestObject
   readonly url: URL
   readonly init: RequestInit
 }

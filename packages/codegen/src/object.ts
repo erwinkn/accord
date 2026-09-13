@@ -1,27 +1,37 @@
 import type { CodegenDiagnostic } from "./diagnostics.js"
-import type { JsonObject } from "./types.js"
+import type { JsonObject, JsonValue } from "./types.js"
 
-export function isObject(value: unknown): value is JsonObject {
+export function isObject(value: JsonValue | undefined): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
-export function canonicalize(value: unknown, depth = 0): unknown {
-  if (depth > 256) {
-    throw new Error("Maximum canonicalization depth exceeded")
-  }
+export function isString(value: JsonValue | undefined): value is string {
+  return typeof value === "string"
+}
+
+export function isBoolean(value: JsonValue | undefined): value is boolean {
+  return typeof value === "boolean"
+}
+
+export function isNonEmptyString(value: JsonValue | undefined): value is string {
+  return isString(value) && value.trim().length > 0
+}
+
+export function canonicalize(value: JsonValue, depth = 0): JsonValue {
+  if (depth > 256) throw new Error("Maximum canonicalization depth exceeded")
   if (Array.isArray(value)) return value.map((item) => canonicalize(item, depth + 1))
   if (!isObject(value)) return value
 
   return Object.fromEntries(
     Object.keys(value)
       .sort((left, right) => left.localeCompare(right))
-      .map((key) => [key, canonicalize(value[key], depth + 1)]),
+      .map((key) => [key, canonicalize(value[key] ?? null, depth + 1)] as const),
   )
 }
 
 export function resolveObjectReference(
   document: JsonObject,
-  value: unknown,
+  value: JsonValue | undefined,
   diagnostics: CodegenDiagnostic[],
   location: string,
   maximumDepth = 128,
@@ -32,7 +42,7 @@ export function resolveObjectReference(
   for (let depth = 0; depth <= maximumDepth; depth += 1) {
     if (!isObject(current)) return undefined
     const reference = current["$ref"]
-    if (typeof reference !== "string") return current
+    if (!isString(reference)) return current
 
     if (!reference.startsWith("#/")) {
       diagnostics.push({
@@ -72,11 +82,11 @@ export function resolveObjectReference(
   return undefined
 }
 
-export function resolveJsonPointer(document: JsonObject, reference: string): unknown {
+export function resolveJsonPointer(document: JsonObject, reference: string): JsonValue | undefined {
   if (reference === "#") return document
   if (!reference.startsWith("#/")) return undefined
 
-  let current: unknown = document
+  let current: JsonValue | undefined = document
   for (const rawSegment of reference.slice(2).split("/")) {
     const segment = decodeURIComponent(rawSegment).replace(/~1/g, "/").replace(/~0/g, "~")
     if (Array.isArray(current)) {

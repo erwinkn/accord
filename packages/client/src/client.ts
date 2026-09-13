@@ -1,6 +1,7 @@
 import { HttpError } from "./errors.js"
 import {
   interpolatePath,
+  isParameterValue,
   renderQueryString,
   serializeCookieParameter,
   serializeHeaderParameter,
@@ -11,59 +12,160 @@ import type {
   ClientOptions,
   EndpointDescriptor,
   EndpointFunction,
+  HeaderResolver,
+  JsonPrimitive,
+  JsonValue,
+  ParameterValue,
+  RequestBinary,
   RequestBodyDescriptor,
   RequestMiddlewareContext,
-  RequestOptions,
+  RequestObject,
+  RequestPrimitive,
+  RequestValue,
   ResponseMiddlewareContext,
+  ResponseOf,
+  ResponsePayload,
 } from "./types.js"
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
+interface MutableRequestObject {
+  [key: string]: RequestValue
 }
 
-export function isEndpointDescriptor(value: unknown): value is EndpointDescriptor {
-  if (!isRecord(value)) return false
+interface MutableJsonObject {
+  [key: string]: JsonValue
+}
+
+function isPlainObject<TValue>(value: TValue): value is TValue & object {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === Object.prototype || prototype === null
+}
+
+function isRequestPrimitive<TValue>(value: TValue): value is TValue & RequestPrimitive {
   return (
-    typeof value["method"] === "string" &&
-    typeof value["path"] === "string" &&
-    (value["operationKind"] === "query" || value["operationKind"] === "mutation") &&
-    (value["bodyMode"] === "merge" || value["bodyMode"] === "separate") &&
-    Array.isArray(value["parameters"]) &&
-    Array.isArray(value["responses"])
+    value === null ||
+    value === undefined ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    typeof value === "bigint"
   )
 }
 
-function mapApi(value: unknown, options: ClientOptions): unknown {
-  if (isEndpointDescriptor(value)) return createEndpointClient(value, options)
-  if (!isRecord(value)) return value
+function isRequestBinary<TValue>(value: TValue): value is TValue & RequestBinary {
+  return (
+    value instanceof Blob ||
+    value instanceof FormData ||
+    value instanceof URLSearchParams ||
+    value instanceof ArrayBuffer ||
+    ArrayBuffer.isView(value) ||
+    value instanceof ReadableStream
+  )
+}
 
-  return Object.fromEntries(
+function parseRequestValue<TValue>(
+  value: TValue,
+  path: string,
+  ancestors: WeakSet<object>,
+): RequestValue {
+  if (isRequestPrimitive(value) || value instanceof Date || isRequestBinary(value)) return value
+
+  if (Array.isArray(value)) {
+    if (ancestors.has(value)) throw new TypeError(`Circular request value at ${path}`)
+    ancestors.add(value)
+    try {
+      return value.map((item, index) => parseRequestValue(item, `${path}[${index}]`, ancestors))
+    } finally {
+      ancestors.delete(value)
+    }
+  }
+
+  if (!isPlainObject(value)) {
+    throw new TypeError(`Unsupported request value at ${path}`)
+  }
+  if (ancestors.has(value)) throw new TypeError(`Circular request value at ${path}`)
+
+  ancestors.add(value)
+  try {
+    const parsed: MutableRequestObject = Object.create(null)
+    for (const [key, item] of Object.entries(value)) {
+      parsed[key] = parseRequestValue(item, `${path}.${key}`, ancestors)
+    }
+    return parsed
+  } finally {
+    ancestors.delete(value)
+  }
+}
+
+function isRequestObject(value: RequestValue): value is RequestObject {
+  return isPlainObject(value)
+}
+
+function parseRequestInput<TValue>(value: TValue, endpoint: EndpointDescriptor): RequestObject {
+  const parsed = parseRequestValue(value, "$", new WeakSet())
+  if (!isRequestObject(parsed)) {
+    throw new TypeError(`Input for ${endpoint.method} ${endpoint.path} must be an object`)
+  }
+  return parsed
+}
+
+export function isEndpointDescriptor<TValue>(value: TValue): value is TValue & EndpointDescriptor {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
+  return (
+    "method" in value &&
+    typeof value.method === "string" &&
+    "path" in value &&
+    typeof value.path === "string" &&
+    "operationKind" in value &&
+    (value.operationKind === "query" || value.operationKind === "mutation") &&
+    "bodyMode" in value &&
+    (value.bodyMode === "merge" || value.bodyMode === "separate") &&
+    "parameters" in value &&
+    Array.isArray(value.parameters) &&
+    "responses" in value &&
+    Array.isArray(value.responses)
+  )
+}
+
+function mapApi<TValue>(value: TValue, options: ClientOptions): ClientFor<TValue> {
+  if (isEndpointDescriptor(value)) {
+    const endpointClient = createEndpointClient(value, options)
+    // SAFETY: the descriptor predicate establishes the endpoint branch of ClientFor<TValue>.
+    return endpointClient as ClientFor<TValue>
+  }
+  if (!isPlainObject(value)) {
+    throw new TypeError("Accord API trees may contain only namespaces and endpoint descriptors")
+  }
+
+  const mapped = Object.fromEntries(
     Object.entries(value).map(([key, child]) => [key, mapApi(child, options)]),
   )
+  // SAFETY: every source key is preserved and recursively mapped through the same ClientFor contract.
+  return mapped as ClientFor<TValue>
+}
+
+export function defineEndpoint<TEndpoint extends EndpointDescriptor>(
+  descriptor: TEndpoint,
+): TEndpoint {
+  return descriptor
 }
 
 export function createClient<const TApi extends object>(
   api: TApi,
   options: ClientOptions = {},
 ): ClientFor<TApi> {
-  return mapApi(api, options) as ClientFor<TApi>
+  return mapApi(api, options)
 }
 
 export function createEndpointClient<E extends EndpointDescriptor>(
   endpoint: E,
   options: ClientOptions = {},
 ): EndpointFunction<E> {
-  const request = async (
-    inputValue: unknown = {},
-    requestOptions: RequestOptions = {},
-  ): Promise<unknown> => {
-    if (!isRecord(inputValue)) {
-      throw new TypeError(`Input for ${endpoint.method} ${endpoint.path} must be an object`)
-    }
-
-    const input = inputValue
+  const request = async (...args: Parameters<EndpointFunction<E>>): Promise<ResponseOf<E>> => {
+    const input = parseRequestInput(args[0] ?? {}, endpoint)
+    const requestOptions = args[1] ?? {}
     const fetchImplementation = options.fetch ?? globalThis.fetch
-    if (typeof fetchImplementation !== "function") {
+    if (!isFetchImplementation(fetchImplementation)) {
       throw new TypeError("No fetch implementation is available")
     }
 
@@ -72,14 +174,8 @@ export function createEndpointClient<E extends EndpointDescriptor>(
       .filter((parameter) => parameter.in === "query")
       .flatMap((parameter) => {
         const inputName = parameter.inputName ?? parameter.name
-        const value = input[inputName]
-        if (value === undefined) {
-          if (parameter.required) {
-            throw new TypeError(`Missing required query parameter: ${inputName}`)
-          }
-          return []
-        }
-        return serializeQueryParameter(parameter, value)
+        const value = parameterInput(input, inputName, parameter.required, "query")
+        return value === undefined ? [] : serializeQueryParameter(parameter, value)
       })
 
     const url = resolveUrl(path, options.baseUrl)
@@ -92,28 +188,18 @@ export function createEndpointClient<E extends EndpointDescriptor>(
 
     for (const parameter of endpoint.parameters.filter((item) => item.in === "header")) {
       const inputName = parameter.inputName ?? parameter.name
-      const value = input[inputName]
-      if (value === undefined) {
-        if (parameter.required) {
-          throw new TypeError(`Missing required header parameter: ${inputName}`)
-        }
-        continue
+      const value = parameterInput(input, inputName, parameter.required, "header")
+      if (value !== undefined) {
+        headers.set(parameter.name, serializeHeaderParameter(parameter, value))
       }
-      headers.set(parameter.name, serializeHeaderParameter(parameter, value))
     }
 
     const cookies = endpoint.parameters
       .filter((parameter) => parameter.in === "cookie")
       .flatMap((parameter) => {
         const inputName = parameter.inputName ?? parameter.name
-        const value = input[inputName]
-        if (value === undefined) {
-          if (parameter.required) {
-            throw new TypeError(`Missing required cookie parameter: ${inputName}`)
-          }
-          return []
-        }
-        return serializeCookieParameter(parameter, value)
+        const value = parameterInput(input, inputName, parameter.required, "cookie")
+        return value === undefined ? [] : serializeCookieParameter(parameter, value)
       })
 
     if (cookies.length > 0) {
@@ -149,28 +235,51 @@ export function createEndpointClient<E extends EndpointDescriptor>(
     if (!response.ok) {
       throw new HttpError({ response, endpoint, body: parsedBody })
     }
-    return parsedBody
+    // SAFETY: generated endpoint response types are derived from the same status/content metadata decoded here.
+    return parsedBody as ResponseOf<E>
   }
 
-  return request as EndpointFunction<E>
+  return request
+}
+
+function isFetchImplementation<TValue>(value: TValue): value is TValue & typeof globalThis.fetch {
+  return typeof value === "function"
+}
+
+function isHeaderResolver<TValue>(value: TValue): value is TValue & HeaderResolver {
+  return typeof value === "function"
+}
+
+function parameterInput(
+  input: RequestObject,
+  inputName: string,
+  required: boolean,
+  location: "query" | "header" | "cookie",
+): ParameterValue | undefined {
+  const value = input[inputName]
+  if (value === undefined) {
+    if (required) throw new TypeError(`Missing required ${location} parameter: ${inputName}`)
+    return undefined
+  }
+  if (!isParameterValue(value)) {
+    throw new TypeError(`${location} parameter ${inputName} contains an unsupported value`)
+  }
+  return value
 }
 
 async function resolveHeaders(
   options: ClientOptions,
   endpoint: EndpointDescriptor,
-  input: Readonly<Record<string, unknown>>,
+  input: RequestObject,
 ): Promise<Headers> {
-  const configured =
-    typeof options.headers === "function"
-      ? await options.headers({ endpoint, input })
-      : options.headers
+  const configured = isHeaderResolver(options.headers)
+    ? await options.headers({ endpoint, input })
+    : options.headers
   return new Headers(configured)
 }
 
 function resolveUrl(path: string, configuredBaseUrl?: string): URL {
-  const baseUrl =
-    configuredBaseUrl ??
-    (typeof globalThis.location === "object" ? globalThis.location.href : "http://localhost/")
+  const baseUrl = configuredBaseUrl ?? globalThis.location?.href ?? "http://localhost/"
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`
   const normalizedPath = path.startsWith("/") ? path.slice(1) : path
   return new URL(normalizedPath, normalizedBase)
@@ -178,16 +287,17 @@ function resolveUrl(path: string, configuredBaseUrl?: string): URL {
 
 function bodyValue(
   endpoint: EndpointDescriptor,
-  input: Readonly<Record<string, unknown>>,
+  input: RequestObject,
   descriptor: RequestBodyDescriptor,
-): unknown {
+): RequestValue {
   if (endpoint.bodyMode === "separate") return input["body"]
 
-  const body: Record<string, unknown> = Object.create(null) as Record<string, unknown>
+  const body: MutableRequestObject = Object.create(null)
   let hasValue = false
   for (const field of descriptor.fields) {
-    if (Object.hasOwn(input, field) && input[field] !== undefined) {
-      body[field] = input[field]
+    const value = input[field]
+    if (value !== undefined) {
+      body[field] = value
       hasValue = true
     }
   }
@@ -196,7 +306,7 @@ function bodyValue(
 
 function buildRequestBody(
   endpoint: EndpointDescriptor,
-  input: Readonly<Record<string, unknown>>,
+  input: RequestObject,
   headers: Headers,
 ): BodyInit | null | undefined {
   const descriptor = endpoint.requestBody
@@ -227,27 +337,38 @@ function buildRequestBody(
   }
 
   if (!headers.has("content-type")) headers.set("content-type", descriptor.contentType)
-  if (typeof value === "string" || value instanceof Blob || value instanceof FormData) return value
-  if (value instanceof ArrayBuffer || ArrayBuffer.isView(value)) return value as BodyInit
+  if (isDirectBodyInit(value)) return value
   return JSON.stringify(value)
 }
 
-function serializeFormBody(value: unknown, descriptor: RequestBodyDescriptor): string {
-  if (!isRecord(value)) return encodeURIComponent(String(value))
+function isDirectBodyInit(value: RequestValue): value is RequestValue & BodyInit {
+  return (
+    typeof value === "string" ||
+    value instanceof Blob ||
+    value instanceof FormData ||
+    value instanceof URLSearchParams ||
+    value instanceof ArrayBuffer ||
+    ArrayBuffer.isView(value) ||
+    value instanceof ReadableStream
+  )
+}
+
+function serializeFormBody(value: RequestValue, descriptor: RequestBodyDescriptor): string {
+  if (!isRequestObject(value)) return encodeURIComponent(String(value ?? ""))
   const parts: string[] = []
 
   for (const [name, fieldValue] of Object.entries(value)) {
     if (fieldValue === undefined) continue
     const encoding = descriptor.encoding?.[name]
     const explode = encoding?.explode ?? true
-    const append = (entryName: string, entryValue: unknown) => {
+    const append = (entryName: string, entryValue: RequestValue) => {
       parts.push(`${encodeURIComponent(entryName)}=${encodeURIComponent(String(entryValue ?? ""))}`)
     }
 
     if (Array.isArray(fieldValue)) {
       if (explode) for (const item of fieldValue) append(name, item)
       else append(name, fieldValue.join(","))
-    } else if (isRecord(fieldValue)) {
+    } else if (isRequestObject(fieldValue)) {
       if (encoding?.style === "deepObject") {
         for (const [key, item] of Object.entries(fieldValue)) append(`${name}[${key}]`, item)
       } else if (explode) {
@@ -263,9 +384,9 @@ function serializeFormBody(value: unknown, descriptor: RequestBodyDescriptor): s
   return parts.join("&")
 }
 
-function serializeMultipartBody(value: unknown, descriptor: RequestBodyDescriptor): FormData {
+function serializeMultipartBody(value: RequestValue, descriptor: RequestBodyDescriptor): FormData {
   const form = new FormData()
-  if (!isRecord(value)) {
+  if (!isRequestObject(value)) {
     form.append("body", multipartValue(value))
     return form
   }
@@ -275,7 +396,7 @@ function serializeMultipartBody(value: unknown, descriptor: RequestBodyDescripto
     const encoding = descriptor.encoding?.[name]
     const values = Array.isArray(fieldValue) ? fieldValue : [fieldValue]
     for (const item of values) {
-      if (encoding?.contentType && isRecord(item)) {
+      if (encoding?.contentType && isRequestObject(item)) {
         form.append(name, new Blob([JSON.stringify(item)], { type: encoding.contentType }))
       } else {
         form.append(name, multipartValue(item))
@@ -285,9 +406,9 @@ function serializeMultipartBody(value: unknown, descriptor: RequestBodyDescripto
   return form
 }
 
-function multipartValue(value: unknown): string | Blob {
+function multipartValue(value: RequestValue): string | Blob {
   if (value instanceof Blob) return value
-  if (isRecord(value)) return JSON.stringify(value)
+  if (isRequestObject(value) || Array.isArray(value)) return JSON.stringify(value)
   return String(value ?? "")
 }
 
@@ -314,7 +435,48 @@ async function runResponseMiddleware(
   return context.response
 }
 
-async function parseResponseBody(response: Response, method: string): Promise<unknown> {
+function isJsonPrimitive<TValue>(value: TValue): value is TValue & JsonPrimitive {
+  return (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  )
+}
+
+function parseJsonValue<TValue>(
+  value: TValue,
+  path: string,
+  ancestors: WeakSet<object>,
+): JsonValue {
+  if (isJsonPrimitive(value)) return value
+
+  if (Array.isArray(value)) {
+    if (ancestors.has(value)) throw new TypeError(`Circular JSON value at ${path}`)
+    ancestors.add(value)
+    try {
+      return value.map((item, index) => parseJsonValue(item, `${path}[${index}]`, ancestors))
+    } finally {
+      ancestors.delete(value)
+    }
+  }
+
+  if (!isPlainObject(value)) throw new TypeError(`Invalid JSON value at ${path}`)
+  if (ancestors.has(value)) throw new TypeError(`Circular JSON value at ${path}`)
+
+  ancestors.add(value)
+  try {
+    const parsed: MutableJsonObject = Object.create(null)
+    for (const [key, item] of Object.entries(value)) {
+      parsed[key] = parseJsonValue(item, `${path}.${key}`, ancestors)
+    }
+    return parsed
+  } finally {
+    ancestors.delete(value)
+  }
+}
+
+async function parseResponseBody(response: Response, method: string): Promise<ResponsePayload> {
   if (
     method.toUpperCase() === "HEAD" ||
     response.status === 204 ||
@@ -327,7 +489,8 @@ async function parseResponseBody(response: Response, method: string): Promise<un
   const contentType = (response.headers.get("content-type") ?? "").toLowerCase()
   if (contentType.includes("application/json") || contentType.includes("+json")) {
     const text = await response.text()
-    return text.length === 0 ? undefined : JSON.parse(text)
+    if (text.length === 0) return undefined
+    return parseJsonValue(JSON.parse(text), "$", new WeakSet())
   }
   if (contentType.startsWith("text/") || contentType.includes("xml") || contentType === "") {
     const text = await response.text()

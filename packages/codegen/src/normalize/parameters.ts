@@ -1,32 +1,50 @@
 import type { CodegenDiagnostic } from "../diagnostics.js"
 import { isDangerousInputName, sanitizeIdentifier } from "../naming.js"
-import { isObject, resolveObjectReference } from "../object.js"
+import {
+  isBoolean,
+  isNonEmptyString,
+  isObject,
+  isString,
+  resolveObjectReference,
+} from "../object.js"
 import type {
   JsonObject,
+  JsonValue,
   NormalizedParameter,
   ParameterLocation,
   ParameterStyle,
 } from "../types.js"
 
-const PARAMETER_LOCATIONS = new Set<ParameterLocation>(["path", "query", "header", "cookie"])
+const PARAMETER_LOCATIONS = new Set<string>(["path", "query", "header", "cookie"])
 
-const STYLES_BY_LOCATION: Readonly<Record<ParameterLocation, ReadonlySet<ParameterStyle>>> = {
-  path: new Set(["simple", "label", "matrix"]),
-  query: new Set(["form", "spaceDelimited", "pipeDelimited", "deepObject"]),
-  header: new Set(["simple"]),
-  cookie: new Set(["form"]),
-}
+const STYLES_BY_LOCATION = {
+  path: new Set<string>(["simple", "label", "matrix"]),
+  query: new Set<string>(["form", "spaceDelimited", "pipeDelimited", "deepObject"]),
+  header: new Set<string>(["simple"]),
+  cookie: new Set<string>(["form"]),
+} satisfies Readonly<Record<ParameterLocation, ReadonlySet<string>>>
 
-const DEFAULT_STYLE: Readonly<Record<ParameterLocation, ParameterStyle>> = {
+const DEFAULT_STYLE = {
   path: "simple",
   query: "form",
   header: "simple",
   cookie: "form",
+} satisfies Readonly<Record<ParameterLocation, ParameterStyle>>
+
+function isParameterLocation(value: JsonValue | undefined): value is ParameterLocation {
+  return isString(value) && PARAMETER_LOCATIONS.has(value)
+}
+
+function isParameterStyle(
+  value: JsonValue | undefined,
+  location: ParameterLocation,
+): value is ParameterStyle {
+  return isString(value) && STYLES_BY_LOCATION[location].has(value)
 }
 
 export function normalizeParameterList(
   document: JsonObject,
-  value: unknown,
+  value: JsonValue | undefined,
   diagnostics: CodegenDiagnostic[],
   location: string,
 ): readonly NormalizedParameter[] {
@@ -57,7 +75,7 @@ export function normalizeParameterList(
 
     const name = parameter["name"]
     const rawLocation = parameter["in"]
-    if (typeof name !== "string" || name.length === 0) {
+    if (!isNonEmptyString(name)) {
       diagnostics.push({
         code: "INVALID_PARAMETER",
         message: "Parameter name must be a non-empty string",
@@ -65,10 +83,7 @@ export function normalizeParameterList(
       })
       continue
     }
-    if (
-      typeof rawLocation !== "string" ||
-      !PARAMETER_LOCATIONS.has(rawLocation as ParameterLocation)
-    ) {
+    if (!isParameterLocation(rawLocation)) {
       diagnostics.push({
         code: "INVALID_PARAMETER",
         message: `Unsupported parameter location ${String(rawLocation)}`,
@@ -76,9 +91,9 @@ export function normalizeParameterList(
       })
       continue
     }
-    const parameterLocation = rawLocation as ParameterLocation
+
     const required = parameter["required"] === true
-    if (parameterLocation === "path" && !required) {
+    if (rawLocation === "path" && !required) {
       diagnostics.push({
         code: "INVALID_PARAMETER",
         message: "OpenAPI path parameters must set required: true",
@@ -87,14 +102,17 @@ export function normalizeParameterList(
     }
 
     const rawStyle = parameter["style"]
-    const style = typeof rawStyle === "string" ? rawStyle : DEFAULT_STYLE[parameterLocation]
-    if (!STYLES_BY_LOCATION[parameterLocation].has(style as ParameterStyle)) {
-      diagnostics.push({
-        code: "UNSUPPORTED_PARAMETER_STYLE",
-        message: `Style ${String(style)} is not supported for ${parameterLocation} parameters`,
-        location: `${itemLocation}/style`,
-      })
-      continue
+    let style: ParameterStyle = DEFAULT_STYLE[rawLocation]
+    if (rawStyle !== undefined) {
+      if (!isParameterStyle(rawStyle, rawLocation)) {
+        diagnostics.push({
+          code: "UNSUPPORTED_PARAMETER_STYLE",
+          message: `Style ${String(rawStyle)} is not supported for ${rawLocation} parameters`,
+          location: `${itemLocation}/style`,
+        })
+        continue
+      }
+      style = rawStyle
     }
 
     const inputName = sanitizeIdentifier(name)
@@ -106,14 +124,15 @@ export function normalizeParameterList(
       })
     }
 
+    const rawExplode = parameter["explode"]
     parameters.push({
       name,
       inputName,
-      in: parameterLocation,
+      in: rawLocation,
       required,
-      style: style as ParameterStyle,
-      explode: typeof parameter["explode"] === "boolean" ? parameter["explode"] : style === "form",
-      allowReserved: parameterLocation === "query" && parameter["allowReserved"] === true,
+      style,
+      explode: isBoolean(rawExplode) ? rawExplode : style === "form",
+      allowReserved: rawLocation === "query" && parameter["allowReserved"] === true,
     })
   }
   return parameters

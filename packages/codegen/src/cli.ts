@@ -5,23 +5,33 @@ import { generateFromFile, writeGeneratedFile } from "./generate.js"
 import type { AccordCodegenConfig, BodyMode, NamespaceStrategy } from "./types.js"
 
 interface CliArguments {
-  readonly input: string
-  readonly output?: string
-  readonly configPath?: string
-  readonly namespace?: NamespaceStrategy
-  readonly bodyMode?: BodyMode
-  readonly basePath?: string
+  input: string
+  output?: string
+  configPath?: string
+  namespace?: NamespaceStrategy
+  bodyMode?: BodyMode
+  basePath?: string
+}
+
+interface ConfigModule {
+  readonly default?: AccordCodegenConfig
+}
+
+interface MutableCodegenConfig {
+  namespace?: NamespaceStrategy
+  basePath?: string
+  body?: NonNullable<AccordCodegenConfig["body"]>
+  operationKinds?: NonNullable<AccordCodegenConfig["operationKinds"]>
 }
 
 async function main(): Promise<void> {
   const args = parseArguments(process.argv.slice(2))
   const fileConfig = args.configPath ? await importConfig(args.configPath) : {}
-  const config: AccordCodegenConfig = {
-    ...fileConfig,
-    ...(args.namespace !== undefined ? { namespace: args.namespace } : {}),
-    ...(args.basePath !== undefined ? { basePath: args.basePath } : {}),
-    ...(args.bodyMode !== undefined ? { body: { ...fileConfig.body, mode: args.bodyMode } } : {}),
-  }
+  const config: MutableCodegenConfig = { ...fileConfig }
+  if (args.namespace !== undefined) config.namespace = args.namespace
+  if (args.basePath !== undefined) config.basePath = args.basePath
+  if (args.bodyMode !== undefined) config.body = { ...fileConfig.body, mode: args.bodyMode }
+
   const result = await generateFromFile(args.input, config)
   if (args.output) await writeGeneratedFile(args.output, result.source)
   else process.stdout.write(result.source)
@@ -81,14 +91,13 @@ function parseArguments(values: readonly string[]): CliArguments {
   }
 
   if (!input) throw new TypeError("An OpenAPI input file is required")
-  return {
-    input,
-    ...(output !== undefined ? { output } : {}),
-    ...(configPath !== undefined ? { configPath } : {}),
-    ...(namespace !== undefined ? { namespace } : {}),
-    ...(bodyMode !== undefined ? { bodyMode } : {}),
-    ...(basePath !== undefined ? { basePath } : {}),
-  }
+  const parsed: CliArguments = { input }
+  if (output !== undefined) parsed.output = output
+  if (configPath !== undefined) parsed.configPath = configPath
+  if (namespace !== undefined) parsed.namespace = namespace
+  if (bodyMode !== undefined) parsed.bodyMode = bodyMode
+  if (basePath !== undefined) parsed.basePath = basePath
+  return parsed
 }
 
 function requireValue(option: string, value: string | undefined): string {
@@ -97,14 +106,12 @@ function requireValue(option: string, value: string | undefined): string {
 }
 
 async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
-  const module = (await import(pathToFileURL(resolve(configPath)).href)) as {
-    readonly default?: unknown
-  }
+  const module: ConfigModule = await import(pathToFileURL(resolve(configPath)).href)
   const config = module.default
-  if (!config || typeof config !== "object" || Array.isArray(config)) {
+  if (config === undefined) {
     throw new TypeError("Accord config must default-export an object")
   }
-  return config as AccordCodegenConfig
+  return config
 }
 
 function printUsage(): void {
@@ -113,7 +120,7 @@ function printUsage(): void {
   )
 }
 
-main().catch((error: unknown) => {
-  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`)
+main().catch((cause: unknown) => {
+  process.stderr.write(`${cause instanceof Error ? cause.message : String(cause)}\n`)
   process.exitCode = 1
 })

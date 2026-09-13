@@ -30,6 +30,8 @@ export type {
   BodyCodegenConfig,
   BodyMode,
   JsonObject,
+  JsonPrimitive,
+  JsonValue,
   NamespaceStrategy,
   NormalizedApi,
   NormalizedBodyEncoding,

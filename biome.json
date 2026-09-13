@@ -7,7 +7,12 @@
       "!**/coverage",
       "!tests/generated",
       "!tests/golden",
-      "!pnpm-lock.yaml"
+      "!pnpm-lock.yaml",
+      "!**/.agents/**",
+      "!**/.claude/**",
+      "!tools/oxlint/anti-slop/**",
+      "!.accord-test-work",
+      "!artifacts"
     ]
   },
   "formatter": {
