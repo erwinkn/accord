@@ -300,7 +300,7 @@ function validate2(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.category !== void 0 && func0.call(data, "category")) {
       let data0 = data.category;
       if (typeof data0 !== "string") {
-        const err5 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema8/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err5 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema8/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -309,7 +309,7 @@ function validate2(data, { instancePath = "", parentData, parentDataProperty, ro
         errors++;
       }
       if (!(data0 === "terms" || data0 === "prospectus" || data0 === "other")) {
-        const err6 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema8/enum", keyword: "enum", params: { allowedValues: schema3.enum }, message: "must be equal to one of the allowed values" };
+        const err6 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema8/enum", keyword: "enum", params: { allowedValues: schema3.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -451,7 +451,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -460,7 +460,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -469,7 +469,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -479,7 +479,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -494,7 +494,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -504,7 +504,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -515,7 +515,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -527,7 +527,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -537,7 +537,7 @@ function validate4(data, { instancePath = "", parentData, parentDataProperty, ro
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema23/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema23/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -562,7 +562,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -571,7 +571,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -580,7 +580,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -590,7 +590,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -605,7 +605,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -615,7 +615,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -626,7 +626,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -638,7 +638,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -648,7 +648,7 @@ function validate5(data, { instancePath = "", parentData, parentDataProperty, ro
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema24/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema24/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -673,7 +673,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -682,7 +682,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -691,7 +691,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -701,7 +701,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -716,7 +716,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -726,7 +726,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -737,7 +737,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -749,7 +749,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -759,7 +759,7 @@ function validate6(data, { instancePath = "", parentData, parentDataProperty, ro
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema25/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema25/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -784,7 +784,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -793,7 +793,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -802,7 +802,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -812,7 +812,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -827,7 +827,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -837,7 +837,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -848,7 +848,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -860,7 +860,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -870,7 +870,7 @@ function validate7(data, { instancePath = "", parentData, parentDataProperty, ro
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema27/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema27/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -895,7 +895,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -904,7 +904,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -913,7 +913,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -923,7 +923,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -938,7 +938,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -948,7 +948,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -959,7 +959,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -971,7 +971,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -981,7 +981,7 @@ function validate8(data, { instancePath = "", parentData, parentDataProperty, ro
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema28/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema28/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1006,7 +1006,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1015,7 +1015,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1024,7 +1024,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1034,7 +1034,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1049,7 +1049,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1059,7 +1059,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1070,7 +1070,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -1082,7 +1082,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -1092,7 +1092,7 @@ function validate9(data, { instancePath = "", parentData, parentDataProperty, ro
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema29/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema29/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1152,7 +1152,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1161,7 +1161,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1170,7 +1170,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1180,7 +1180,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1195,7 +1195,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1205,7 +1205,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1216,7 +1216,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -1228,7 +1228,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -1238,7 +1238,7 @@ function validate11(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema33/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema33/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1263,7 +1263,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1272,7 +1272,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1281,7 +1281,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1291,7 +1291,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1306,7 +1306,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1316,7 +1316,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1327,7 +1327,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -1339,7 +1339,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -1349,7 +1349,7 @@ function validate12(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema34/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema34/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1374,7 +1374,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1383,7 +1383,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1392,7 +1392,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1402,7 +1402,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1417,7 +1417,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1427,7 +1427,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1438,7 +1438,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -1450,7 +1450,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -1460,7 +1460,7 @@ function validate13(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema35/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema35/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1488,7 +1488,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.displayName === void 0 || !func0.call(data, "displayName")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1497,7 +1497,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.email === void 0 || !func0.call(data, "email")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1506,7 +1506,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.country === void 0 || !func0.call(data, "country")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1515,7 +1515,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.kind === void 0 || !func0.call(data, "kind")) {
-      const err3 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
+      const err3 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
       if (vErrors === null) {
         vErrors = [err3];
       } else {
@@ -1524,7 +1524,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.registrationNumber === void 0 || !func0.call(data, "registrationNumber")) {
-      const err4 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "registrationNumber" }, message: "must have required property 'registrationNumber'" };
+      const err4 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "registrationNumber" }, message: "must have required property 'registrationNumber'" };
       if (vErrors === null) {
         vErrors = [err4];
       } else {
@@ -1533,7 +1533,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.id === void 0 || !func0.call(data, "id")) {
-      const err5 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
+      const err5 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
       if (vErrors === null) {
         vErrors = [err5];
       } else {
@@ -1545,7 +1545,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       let data0 = data.country;
       if (typeof data0 === "string") {
         if (func81(data0) > 2) {
-          const err6 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
+          const err6 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
           if (vErrors === null) {
             vErrors = [err6];
           } else {
@@ -1554,7 +1554,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
         if (func81(data0) < 2) {
-          const err7 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err7 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err7];
           } else {
@@ -1563,7 +1563,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err8 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err8 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err8];
         } else {
@@ -1576,7 +1576,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       let data1 = data.displayName;
       if (typeof data1 === "string") {
         if (func81(data1) < 2) {
-          const err9 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err9 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err9];
           } else {
@@ -1585,7 +1585,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err10 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err10 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err10];
         } else {
@@ -1598,7 +1598,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       let data2 = data.email;
       if (typeof data2 === "string") {
         if (!formats4.test(data2)) {
-          const err11 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
+          const err11 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
           if (vErrors === null) {
             vErrors = [err11];
           } else {
@@ -1607,7 +1607,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err12 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err12 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err12];
         } else {
@@ -1620,7 +1620,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       let data3 = data.id;
       if (typeof data3 === "string") {
         if (!formats0.test(data3)) {
-          const err13 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
+          const err13 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
           if (vErrors === null) {
             vErrors = [err13];
           } else {
@@ -1629,7 +1629,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err14 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err14 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err14];
         } else {
@@ -1641,7 +1641,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.kind !== void 0 && func0.call(data, "kind")) {
       let data4 = data.kind;
       if (typeof data4 !== "string") {
-        const err15 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err15 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err15];
         } else {
@@ -1650,7 +1650,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "company")) {
-        const err16 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/kind/enum", keyword: "enum", params: { allowedValues: schema24.properties.kind.enum }, message: "must be equal to one of the allowed values" };
+        const err16 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/kind/enum", keyword: "enum", params: { allowedValues: schema24.properties.kind.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err16];
         } else {
@@ -1663,7 +1663,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       let data5 = data.registrationNumber;
       if (typeof data5 === "string") {
         if (func81(data5) < 3) {
-          const err17 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/registrationNumber/minLength", keyword: "minLength", params: { limit: 3 }, message: "must NOT have fewer than 3 characters" };
+          const err17 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/registrationNumber/minLength", keyword: "minLength", params: { limit: 3 }, message: "must NOT have fewer than 3 characters" };
           if (vErrors === null) {
             vErrors = [err17];
           } else {
@@ -1672,7 +1672,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err18 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/properties/registrationNumber/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err18 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/properties/registrationNumber/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err18];
         } else {
@@ -1682,7 +1682,7 @@ function validate14(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err19 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema37/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err19 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema37/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err19];
     } else {
@@ -1707,7 +1707,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1716,7 +1716,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1725,7 +1725,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1735,7 +1735,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1750,7 +1750,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1760,7 +1760,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1771,7 +1771,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -1783,7 +1783,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -1793,7 +1793,7 @@ function validate15(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema38/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema38/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1818,7 +1818,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1827,7 +1827,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1836,7 +1836,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1846,7 +1846,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1861,7 +1861,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1871,7 +1871,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1882,7 +1882,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -1894,7 +1894,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -1904,7 +1904,7 @@ function validate16(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema39/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema39/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -1929,7 +1929,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -1938,7 +1938,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -1947,7 +1947,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -1957,7 +1957,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -1972,7 +1972,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -1982,7 +1982,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -1993,7 +1993,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -2005,7 +2005,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -2015,7 +2015,7 @@ function validate17(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema40/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema40/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -2041,7 +2041,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.displayName === void 0 || !func0.call(data, "displayName")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -2050,7 +2050,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.email === void 0 || !func0.call(data, "email")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -2059,7 +2059,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.country === void 0 || !func0.call(data, "country")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -2068,7 +2068,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.kind === void 0 || !func0.call(data, "kind")) {
-      const err3 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
+      const err3 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
       if (vErrors === null) {
         vErrors = [err3];
       } else {
@@ -2077,7 +2077,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.id === void 0 || !func0.call(data, "id")) {
-      const err4 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
+      const err4 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
       if (vErrors === null) {
         vErrors = [err4];
       } else {
@@ -2089,7 +2089,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       let data0 = data.country;
       if (typeof data0 === "string") {
         if (func81(data0) > 2) {
-          const err5 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
+          const err5 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
           if (vErrors === null) {
             vErrors = [err5];
           } else {
@@ -2098,7 +2098,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
         if (func81(data0) < 2) {
-          const err6 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err6 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err6];
           } else {
@@ -2107,7 +2107,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err7 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err7 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -2120,7 +2120,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       let data1 = data.displayName;
       if (typeof data1 === "string") {
         if (func81(data1) < 2) {
-          const err8 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err8 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err8];
           } else {
@@ -2129,7 +2129,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err9 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err9 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err9];
         } else {
@@ -2142,7 +2142,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       let data2 = data.email;
       if (typeof data2 === "string") {
         if (!formats4.test(data2)) {
-          const err10 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
+          const err10 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
           if (vErrors === null) {
             vErrors = [err10];
           } else {
@@ -2151,7 +2151,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err11 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err11 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err11];
         } else {
@@ -2164,7 +2164,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       let data3 = data.id;
       if (typeof data3 === "string") {
         if (!formats0.test(data3)) {
-          const err12 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
+          const err12 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
           if (vErrors === null) {
             vErrors = [err12];
           } else {
@@ -2173,7 +2173,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err13 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err13 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err13];
         } else {
@@ -2185,7 +2185,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.kind !== void 0 && func0.call(data, "kind")) {
       let data4 = data.kind;
       if (typeof data4 !== "string") {
-        const err14 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err14 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err14];
         } else {
@@ -2194,7 +2194,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "individual")) {
-        const err15 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/properties/kind/enum", keyword: "enum", params: { allowedValues: schema32.properties.kind.enum }, message: "must be equal to one of the allowed values" };
+        const err15 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/properties/kind/enum", keyword: "enum", params: { allowedValues: schema32.properties.kind.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err15];
         } else {
@@ -2204,7 +2204,7 @@ function validate18(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err16 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema42/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err16 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema42/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err16];
     } else {
@@ -2229,7 +2229,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -2238,7 +2238,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -2247,7 +2247,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -2257,7 +2257,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -2272,7 +2272,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -2282,7 +2282,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -2293,7 +2293,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -2305,7 +2305,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -2315,7 +2315,7 @@ function validate19(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema43/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema43/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -2340,7 +2340,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -2349,7 +2349,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -2358,7 +2358,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -2368,7 +2368,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -2383,7 +2383,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -2393,7 +2393,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -2404,7 +2404,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -2416,7 +2416,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -2426,7 +2426,7 @@ function validate20(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema44/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema44/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -2451,7 +2451,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -2460,7 +2460,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -2469,7 +2469,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -2479,7 +2479,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -2494,7 +2494,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -2504,7 +2504,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -2515,7 +2515,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -2527,7 +2527,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -2537,7 +2537,7 @@ function validate21(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema45/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema45/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -2566,7 +2566,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
   const _errs1 = errors;
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.displayName === void 0 || !func0.call(data, "displayName")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -2575,7 +2575,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.email === void 0 || !func0.call(data, "email")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -2584,7 +2584,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.country === void 0 || !func0.call(data, "country")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -2593,7 +2593,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.kind === void 0 || !func0.call(data, "kind")) {
-      const err3 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
+      const err3 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
       if (vErrors === null) {
         vErrors = [err3];
       } else {
@@ -2602,7 +2602,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.id === void 0 || !func0.call(data, "id")) {
-      const err4 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
+      const err4 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
       if (vErrors === null) {
         vErrors = [err4];
       } else {
@@ -2614,7 +2614,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data0 = data.country;
       if (typeof data0 === "string") {
         if (func81(data0) > 2) {
-          const err5 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
+          const err5 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
           if (vErrors === null) {
             vErrors = [err5];
           } else {
@@ -2623,7 +2623,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
         if (func81(data0) < 2) {
-          const err6 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err6 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err6];
           } else {
@@ -2632,7 +2632,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err7 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err7 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -2645,7 +2645,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data1 = data.displayName;
       if (typeof data1 === "string") {
         if (func81(data1) < 2) {
-          const err8 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err8 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err8];
           } else {
@@ -2654,7 +2654,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err9 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err9 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err9];
         } else {
@@ -2667,7 +2667,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data2 = data.email;
       if (typeof data2 === "string") {
         if (!formats4.test(data2)) {
-          const err10 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
+          const err10 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
           if (vErrors === null) {
             vErrors = [err10];
           } else {
@@ -2676,7 +2676,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err11 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err11 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err11];
         } else {
@@ -2689,7 +2689,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data3 = data.id;
       if (typeof data3 === "string") {
         if (!formats0.test(data3)) {
-          const err12 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
+          const err12 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
           if (vErrors === null) {
             vErrors = [err12];
           } else {
@@ -2698,7 +2698,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err13 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err13 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err13];
         } else {
@@ -2710,7 +2710,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.kind !== void 0 && func0.call(data, "kind")) {
       let data4 = data.kind;
       if (typeof data4 !== "string") {
-        const err14 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err14 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err14];
         } else {
@@ -2719,7 +2719,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "individual")) {
-        const err15 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/properties/kind/enum", keyword: "enum", params: { allowedValues: schema32.properties.kind.enum }, message: "must be equal to one of the allowed values" };
+        const err15 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/properties/kind/enum", keyword: "enum", params: { allowedValues: schema32.properties.kind.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err15];
         } else {
@@ -2729,7 +2729,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err16 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema10/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err16 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema10/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err16];
     } else {
@@ -2751,7 +2751,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
   const _errs14 = errors;
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.displayName === void 0 || !func0.call(data, "displayName")) {
-      const err17 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
+      const err17 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "displayName" }, message: "must have required property 'displayName'" };
       if (vErrors === null) {
         vErrors = [err17];
       } else {
@@ -2760,7 +2760,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.email === void 0 || !func0.call(data, "email")) {
-      const err18 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
+      const err18 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "email" }, message: "must have required property 'email'" };
       if (vErrors === null) {
         vErrors = [err18];
       } else {
@@ -2769,7 +2769,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.country === void 0 || !func0.call(data, "country")) {
-      const err19 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
+      const err19 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "country" }, message: "must have required property 'country'" };
       if (vErrors === null) {
         vErrors = [err19];
       } else {
@@ -2778,7 +2778,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.kind === void 0 || !func0.call(data, "kind")) {
-      const err20 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
+      const err20 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "kind" }, message: "must have required property 'kind'" };
       if (vErrors === null) {
         vErrors = [err20];
       } else {
@@ -2787,7 +2787,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.registrationNumber === void 0 || !func0.call(data, "registrationNumber")) {
-      const err21 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "registrationNumber" }, message: "must have required property 'registrationNumber'" };
+      const err21 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "registrationNumber" }, message: "must have required property 'registrationNumber'" };
       if (vErrors === null) {
         vErrors = [err21];
       } else {
@@ -2796,7 +2796,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.id === void 0 || !func0.call(data, "id")) {
-      const err22 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
+      const err22 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/required", keyword: "required", params: { missingProperty: "id" }, message: "must have required property 'id'" };
       if (vErrors === null) {
         vErrors = [err22];
       } else {
@@ -2808,7 +2808,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data5 = data.country;
       if (typeof data5 === "string") {
         if (func81(data5) > 2) {
-          const err23 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
+          const err23 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 }, message: "must NOT have more than 2 characters" };
           if (vErrors === null) {
             vErrors = [err23];
           } else {
@@ -2817,7 +2817,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
         if (func81(data5) < 2) {
-          const err24 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err24 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/country/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err24];
           } else {
@@ -2826,7 +2826,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err25 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err25 = { instancePath: instancePath + "/country", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/country/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err25];
         } else {
@@ -2839,7 +2839,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data6 = data.displayName;
       if (typeof data6 === "string") {
         if (func81(data6) < 2) {
-          const err26 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
+          const err26 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 }, message: "must NOT have fewer than 2 characters" };
           if (vErrors === null) {
             vErrors = [err26];
           } else {
@@ -2848,7 +2848,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err27 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err27 = { instancePath: instancePath + "/displayName", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/displayName/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err27];
         } else {
@@ -2861,7 +2861,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data7 = data.email;
       if (typeof data7 === "string") {
         if (!formats4.test(data7)) {
-          const err28 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
+          const err28 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/email/format", keyword: "format", params: { format: "email" }, message: 'must match format "email"' };
           if (vErrors === null) {
             vErrors = [err28];
           } else {
@@ -2870,7 +2870,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err29 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err29 = { instancePath: instancePath + "/email", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/email/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err29];
         } else {
@@ -2883,7 +2883,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data8 = data.id;
       if (typeof data8 === "string") {
         if (!formats0.test(data8)) {
-          const err30 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
+          const err30 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/id/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
           if (vErrors === null) {
             vErrors = [err30];
           } else {
@@ -2892,7 +2892,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err31 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err31 = { instancePath: instancePath + "/id", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/id/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err31];
         } else {
@@ -2904,7 +2904,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.kind !== void 0 && func0.call(data, "kind")) {
       let data9 = data.kind;
       if (typeof data9 !== "string") {
-        const err32 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err32 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/kind/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err32];
         } else {
@@ -2913,7 +2913,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data9 === "company")) {
-        const err33 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/kind/enum", keyword: "enum", params: { allowedValues: schema24.properties.kind.enum }, message: "must be equal to one of the allowed values" };
+        const err33 = { instancePath: instancePath + "/kind", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/kind/enum", keyword: "enum", params: { allowedValues: schema24.properties.kind.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err33];
         } else {
@@ -2926,7 +2926,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       let data10 = data.registrationNumber;
       if (typeof data10 === "string") {
         if (func81(data10) < 3) {
-          const err34 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/registrationNumber/minLength", keyword: "minLength", params: { limit: 3 }, message: "must NOT have fewer than 3 characters" };
+          const err34 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/registrationNumber/minLength", keyword: "minLength", params: { limit: 3 }, message: "must NOT have fewer than 3 characters" };
           if (vErrors === null) {
             vErrors = [err34];
           } else {
@@ -2935,7 +2935,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
           errors++;
         }
       } else {
-        const err35 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/properties/registrationNumber/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err35 = { instancePath: instancePath + "/registrationNumber", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/properties/registrationNumber/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err35];
         } else {
@@ -2945,7 +2945,7 @@ function validate23(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err36 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema1/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err36 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema1/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err36];
     } else {
@@ -3029,7 +3029,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -3038,7 +3038,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -3047,7 +3047,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -3057,7 +3057,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -3072,7 +3072,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -3082,7 +3082,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -3093,7 +3093,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -3105,7 +3105,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -3115,7 +3115,7 @@ function validate25(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema48/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema48/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -3140,7 +3140,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -3149,7 +3149,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -3158,7 +3158,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -3168,7 +3168,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -3183,7 +3183,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -3193,7 +3193,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -3204,7 +3204,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -3216,7 +3216,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -3226,7 +3226,7 @@ function validate26(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema49/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema49/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -3251,7 +3251,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -3260,7 +3260,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -3269,7 +3269,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -3279,7 +3279,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -3294,7 +3294,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -3304,7 +3304,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -3315,7 +3315,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -3327,7 +3327,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -3337,7 +3337,7 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema50/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema50/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -3350,8 +3350,8 @@ function validate27(data, { instancePath = "", parentData, parentDataProperty, r
 }
 validate27.evaluated = { "props": { "code": true, "details": true, "message": true, "statusCode": true }, "dynamicProps": false, "dynamicItems": false };
 var check23 = validate28;
-var schema50 = { "properties": { "id": { "format": "uuid", "type": "string" }, "result": { "$ref": "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema17" }, "state": { "enum": ["completed"], "type": "string" } }, "required": ["id", "state", "result"], "type": "object" };
-var schema51 = { "properties": { "amount": { "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" }, "id": { "format": "uuid", "readOnly": true, "type": "string" }, "investorId": { "format": "uuid", "type": "string" }, "metadata": { "additionalProperties": { "type": "string" }, "type": "object" }, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" }, "status": { "$ref": "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18" }, "submittedAt": { "format": "date-time", "readOnly": true, "type": ["string", "null"] } }, "required": ["investorId", "amount", "id", "offeringId", "status", "submittedAt"], "type": "object" };
+var schema50 = { "properties": { "id": { "format": "uuid", "type": "string" }, "result": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema17" }, "state": { "enum": ["completed"], "type": "string" } }, "required": ["id", "state", "result"], "type": "object" };
+var schema51 = { "properties": { "amount": { "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" }, "id": { "format": "uuid", "readOnly": true, "type": "string" }, "investorId": { "format": "uuid", "type": "string" }, "metadata": { "additionalProperties": { "type": "string" }, "type": "object" }, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" }, "status": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18" }, "submittedAt": { "format": "date-time", "readOnly": true, "type": ["string", "null"] } }, "required": ["investorId", "amount", "id", "offeringId", "status", "submittedAt"], "type": "object" };
 var schema52 = { "enum": ["draft", "submitted"], "type": "string" };
 var pattern0 = new RegExp("^[0-9]+\\.[0-9]{2}$", "u");
 var formats28 = require_formats().fullFormats["date-time"];
@@ -3535,7 +3535,7 @@ function validate30(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data6 = data.status;
       if (typeof data6 !== "string") {
-        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err16];
         } else {
@@ -3544,7 +3544,7 @@ function validate30(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data6 === "draft" || data6 === "submitted")) {
-        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
+        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err17];
         } else {
@@ -3720,7 +3720,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -3729,7 +3729,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -3738,7 +3738,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -3748,7 +3748,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -3763,7 +3763,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -3773,7 +3773,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -3784,7 +3784,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -3796,7 +3796,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -3806,7 +3806,7 @@ function validate33(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema53/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema53/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -3831,7 +3831,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -3840,7 +3840,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -3849,7 +3849,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -3859,7 +3859,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -3874,7 +3874,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -3884,7 +3884,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -3895,7 +3895,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -3907,7 +3907,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -3917,7 +3917,7 @@ function validate34(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema54/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema54/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -3942,7 +3942,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -3951,7 +3951,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -3960,7 +3960,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -3970,7 +3970,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -3985,7 +3985,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -3995,7 +3995,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -4006,7 +4006,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -4018,7 +4018,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -4028,7 +4028,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema55/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema55/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -4041,7 +4041,7 @@ function validate35(data, { instancePath = "", parentData, parentDataProperty, r
 }
 validate35.evaluated = { "props": { "code": true, "details": true, "message": true, "statusCode": true }, "dynamicProps": false, "dynamicItems": false };
 var check27 = validate36;
-var schema62 = { "properties": { "createdAt": { "format": "date-time", "readOnly": true, "type": "string" }, "description": { "type": ["string", "null"] }, "id": { "format": "uuid", "readOnly": true, "type": "string" }, "name": { "minLength": 3, "type": "string" }, "status": { "$ref": "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12" }, "tags": { "items": { "type": "string" }, "type": "array" }, "terms": { "$ref": "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema5" } }, "required": ["name", "terms", "id", "status", "createdAt"], "type": "object" };
+var schema62 = { "properties": { "createdAt": { "format": "date-time", "readOnly": true, "type": "string" }, "description": { "type": ["string", "null"] }, "id": { "format": "uuid", "readOnly": true, "type": "string" }, "name": { "minLength": 3, "type": "string" }, "status": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12" }, "tags": { "items": { "type": "string" }, "type": "array" }, "terms": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema5" } }, "required": ["name", "terms", "id", "status", "createdAt"], "type": "object" };
 var schema63 = { "enum": ["draft", "open", "closed"], "type": "string" };
 var schema65 = { "enum": ["EUR", "USD"], "type": "string" };
 function validate39(data, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} } = {}) {
@@ -4082,32 +4082,31 @@ function validate39(data, { instancePath = "", parentData, parentDataProperty, r
       }
       errors++;
     }
-    if (data.closesAt !== void 0 && func0.call(data, "closesAt")) {
-      let data0 = data.closesAt;
-      if (typeof data0 === "string") {
-        if (!formats28.validate(data0)) {
-          const err3 = { instancePath: instancePath + "/closesAt", schemaPath: "#/properties/closesAt/format", keyword: "format", params: { format: "date-time" }, message: 'must match format "date-time"' };
-          if (vErrors === null) {
-            vErrors = [err3];
-          } else {
-            vErrors.push(err3);
-          }
-          errors++;
-        }
-      } else {
-        const err4 = { instancePath: instancePath + "/closesAt", schemaPath: "#/properties/closesAt/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+    for (const key0 of Object.keys(data)) {
+      if (!(key0 === "closesAt" || key0 === "currency" || key0 === "minimumInvestment")) {
+        const err3 = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 }, message: "must NOT have additional properties" };
         if (vErrors === null) {
-          vErrors = [err4];
+          vErrors = [err3];
         } else {
-          vErrors.push(err4);
+          vErrors.push(err3);
         }
         errors++;
       }
     }
-    if (data.currency !== void 0 && func0.call(data, "currency")) {
-      let data1 = data.currency;
-      if (typeof data1 !== "string") {
-        const err5 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema6/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+    if (data.closesAt !== void 0 && func0.call(data, "closesAt")) {
+      let data0 = data.closesAt;
+      if (typeof data0 === "string") {
+        if (!formats28.validate(data0)) {
+          const err4 = { instancePath: instancePath + "/closesAt", schemaPath: "#/properties/closesAt/format", keyword: "format", params: { format: "date-time" }, message: 'must match format "date-time"' };
+          if (vErrors === null) {
+            vErrors = [err4];
+          } else {
+            vErrors.push(err4);
+          }
+          errors++;
+        }
+      } else {
+        const err5 = { instancePath: instancePath + "/closesAt", schemaPath: "#/properties/closesAt/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -4115,12 +4114,24 @@ function validate39(data, { instancePath = "", parentData, parentDataProperty, r
         }
         errors++;
       }
-      if (!(data1 === "EUR" || data1 === "USD")) {
-        const err6 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema6/enum", keyword: "enum", params: { allowedValues: schema65.enum }, message: "must be equal to one of the allowed values" };
+    }
+    if (data.currency !== void 0 && func0.call(data, "currency")) {
+      let data1 = data.currency;
+      if (typeof data1 !== "string") {
+        const err6 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema6/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
           vErrors.push(err6);
+        }
+        errors++;
+      }
+      if (!(data1 === "EUR" || data1 === "USD")) {
+        const err7 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema6/enum", keyword: "enum", params: { allowedValues: schema65.enum }, message: "must be equal to one of the allowed values" };
+        if (vErrors === null) {
+          vErrors = [err7];
+        } else {
+          vErrors.push(err7);
         }
         errors++;
       }
@@ -4129,37 +4140,37 @@ function validate39(data, { instancePath = "", parentData, parentDataProperty, r
       let data2 = data.minimumInvestment;
       if (typeof data2 === "string") {
         if (!pattern0.test(data2)) {
-          const err7 = { instancePath: instancePath + "/minimumInvestment", schemaPath: "#/properties/minimumInvestment/pattern", keyword: "pattern", params: { pattern: "^[0-9]+\\.[0-9]{2}$" }, message: 'must match pattern "^[0-9]+\\.[0-9]{2}$"' };
+          const err8 = { instancePath: instancePath + "/minimumInvestment", schemaPath: "#/properties/minimumInvestment/pattern", keyword: "pattern", params: { pattern: "^[0-9]+\\.[0-9]{2}$" }, message: 'must match pattern "^[0-9]+\\.[0-9]{2}$"' };
           if (vErrors === null) {
-            vErrors = [err7];
+            vErrors = [err8];
           } else {
-            vErrors.push(err7);
+            vErrors.push(err8);
           }
           errors++;
         }
       } else {
-        const err8 = { instancePath: instancePath + "/minimumInvestment", schemaPath: "#/properties/minimumInvestment/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err9 = { instancePath: instancePath + "/minimumInvestment", schemaPath: "#/properties/minimumInvestment/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
-          vErrors = [err8];
+          vErrors = [err9];
         } else {
-          vErrors.push(err8);
+          vErrors.push(err9);
         }
         errors++;
       }
     }
   } else {
-    const err9 = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err10 = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
-      vErrors = [err9];
+      vErrors = [err10];
     } else {
-      vErrors.push(err9);
+      vErrors.push(err10);
     }
     errors++;
   }
   validate39.errors = vErrors;
   return errors === 0;
 }
-validate39.evaluated = { "props": { "closesAt": true, "currency": true, "minimumInvestment": true }, "dynamicProps": false, "dynamicItems": false };
+validate39.evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false };
 function validate38(data, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} } = {}) {
   let vErrors = null;
   let errors = 0;
@@ -4297,7 +4308,7 @@ function validate38(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data4 = data.status;
       if (typeof data4 !== "string") {
-        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err12];
         } else {
@@ -4306,7 +4317,7 @@ function validate38(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "draft" || data4 === "open" || data4 === "closed")) {
-        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
+        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err13];
         } else {
@@ -4371,7 +4382,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.page === void 0 || !func0.call(data, "page")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "page" }, message: "must have required property 'page'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "page" }, message: "must have required property 'page'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -4380,7 +4391,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.limit === void 0 || !func0.call(data, "limit")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "limit" }, message: "must have required property 'limit'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "limit" }, message: "must have required property 'limit'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -4389,7 +4400,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.total === void 0 || !func0.call(data, "total")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "total" }, message: "must have required property 'total'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "total" }, message: "must have required property 'total'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -4400,7 +4411,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.limit !== void 0 && func0.call(data, "limit")) {
       let data0 = data.limit;
       if (!(typeof data0 == "number" && (!(data0 % 1) && !isNaN(data0)))) {
-        const err3 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/limit/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err3 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/limit/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -4410,7 +4421,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
       }
       if (typeof data0 == "number") {
         if (data0 < 1 || isNaN(data0)) {
-          const err4 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
+          const err4 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
           if (vErrors === null) {
             vErrors = [err4];
           } else {
@@ -4423,7 +4434,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.page !== void 0 && func0.call(data, "page")) {
       let data1 = data.page;
       if (!(typeof data1 == "number" && (!(data1 % 1) && !isNaN(data1)))) {
-        const err5 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/page/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err5 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/page/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -4433,7 +4444,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
       }
       if (typeof data1 == "number") {
         if (data1 < 1 || isNaN(data1)) {
-          const err6 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
+          const err6 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
           if (vErrors === null) {
             vErrors = [err6];
           } else {
@@ -4446,7 +4457,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.total !== void 0 && func0.call(data, "total")) {
       let data2 = data.total;
       if (!(typeof data2 == "number" && (!(data2 % 1) && !isNaN(data2)))) {
-        const err7 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/total/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/total/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -4456,7 +4467,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
       }
       if (typeof data2 == "number") {
         if (data2 < 0 || isNaN(data2)) {
-          const err8 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 }, message: "must be >= 0" };
+          const err8 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 }, message: "must be >= 0" };
           if (vErrors === null) {
             vErrors = [err8];
           } else {
@@ -4467,7 +4478,7 @@ function validate37(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err9 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err9 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err9];
     } else {
@@ -4549,7 +4560,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -4558,7 +4569,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -4567,7 +4578,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -4577,7 +4588,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -4592,7 +4603,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -4602,7 +4613,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -4613,7 +4624,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -4625,7 +4636,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -4635,7 +4646,7 @@ function validate43(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema60/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema60/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -4660,7 +4671,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -4669,7 +4680,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -4678,7 +4689,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -4688,7 +4699,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -4703,7 +4714,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -4713,7 +4724,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -4724,7 +4735,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -4736,7 +4747,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -4746,7 +4757,7 @@ function validate44(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema61/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema61/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -4771,7 +4782,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -4780,7 +4791,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -4789,7 +4800,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -4799,7 +4810,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -4814,7 +4825,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -4824,7 +4835,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -4835,7 +4846,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -4847,7 +4858,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -4857,7 +4868,7 @@ function validate45(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema62/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema62/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -5007,7 +5018,7 @@ function validate47(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data4 = data.status;
       if (typeof data4 !== "string") {
-        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err12];
         } else {
@@ -5016,7 +5027,7 @@ function validate47(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "draft" || data4 === "open" || data4 === "closed")) {
-        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
+        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err13];
         } else {
@@ -5100,7 +5111,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -5109,7 +5120,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -5118,7 +5129,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -5128,7 +5139,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -5143,7 +5154,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -5153,7 +5164,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -5164,7 +5175,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -5176,7 +5187,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -5186,7 +5197,7 @@ function validate50(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema65/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema65/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -5211,7 +5222,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -5220,7 +5231,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -5229,7 +5240,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -5239,7 +5250,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -5254,7 +5265,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -5264,7 +5275,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -5275,7 +5286,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -5287,7 +5298,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -5297,7 +5308,7 @@ function validate51(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema66/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema66/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -5322,7 +5333,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -5331,7 +5342,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -5340,7 +5351,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -5350,7 +5361,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -5365,7 +5376,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -5375,7 +5386,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -5386,7 +5397,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -5398,7 +5409,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -5408,7 +5419,7 @@ function validate52(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema67/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema67/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -5558,7 +5569,7 @@ function validate54(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data4 = data.status;
       if (typeof data4 !== "string") {
-        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err12];
         } else {
@@ -5567,7 +5578,7 @@ function validate54(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "draft" || data4 === "open" || data4 === "closed")) {
-        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
+        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err13];
         } else {
@@ -5651,7 +5662,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -5660,7 +5671,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -5669,7 +5680,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -5679,7 +5690,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -5694,7 +5705,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -5704,7 +5715,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -5715,7 +5726,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -5727,7 +5738,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -5737,7 +5748,7 @@ function validate57(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema70/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema70/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -5762,7 +5773,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -5771,7 +5782,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -5780,7 +5791,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -5790,7 +5801,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -5805,7 +5816,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -5815,7 +5826,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -5826,7 +5837,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -5838,7 +5849,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -5848,7 +5859,7 @@ function validate58(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema71/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema71/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -5873,7 +5884,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -5882,7 +5893,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -5891,7 +5902,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -5901,7 +5912,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -5916,7 +5927,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -5926,7 +5937,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -5937,7 +5948,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -5949,7 +5960,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -5959,7 +5970,7 @@ function validate59(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema72/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema72/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6109,7 +6120,7 @@ function validate61(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data4 = data.status;
       if (typeof data4 !== "string") {
-        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err12 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err12];
         } else {
@@ -6118,7 +6129,7 @@ function validate61(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data4 === "draft" || data4 === "open" || data4 === "closed")) {
-        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
+        const err13 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12/enum", keyword: "enum", params: { allowedValues: schema63.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err13];
         } else {
@@ -6202,7 +6213,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6211,7 +6222,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6220,7 +6231,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6230,7 +6241,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6245,7 +6256,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6255,7 +6266,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6266,7 +6277,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6278,7 +6289,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6288,7 +6299,7 @@ function validate64(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema76/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema76/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6313,7 +6324,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6322,7 +6333,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6331,7 +6342,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6341,7 +6352,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6356,7 +6367,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6366,7 +6377,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6377,7 +6388,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6389,7 +6400,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6399,7 +6410,7 @@ function validate65(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema77/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema77/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6424,7 +6435,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6433,7 +6444,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6442,7 +6453,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6452,7 +6463,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6467,7 +6478,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6477,7 +6488,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6488,7 +6499,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6500,7 +6511,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6510,7 +6521,7 @@ function validate66(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema78/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema78/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6535,7 +6546,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6544,7 +6555,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6553,7 +6564,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6563,7 +6574,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6578,7 +6589,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6588,7 +6599,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6599,7 +6610,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6611,7 +6622,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6621,7 +6632,7 @@ function validate67(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema80/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema80/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6646,7 +6657,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6655,7 +6666,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6664,7 +6675,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6674,7 +6685,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6689,7 +6700,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6699,7 +6710,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6710,7 +6721,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6722,7 +6733,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6732,7 +6743,7 @@ function validate68(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema81/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema81/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6757,7 +6768,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6766,7 +6777,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6775,7 +6786,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6785,7 +6796,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6800,7 +6811,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6810,7 +6821,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6821,7 +6832,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6833,7 +6844,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6843,7 +6854,7 @@ function validate69(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema82/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema82/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -6868,7 +6879,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -6877,7 +6888,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -6886,7 +6897,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -6896,7 +6907,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -6911,7 +6922,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -6921,7 +6932,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -6932,7 +6943,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -6944,7 +6955,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -6954,7 +6965,7 @@ function validate70(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema83/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema83/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -7026,7 +7037,7 @@ function validate72(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.category !== void 0 && func0.call(data, "category")) {
       let data0 = data.category;
       if (typeof data0 !== "string") {
-        const err5 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema8/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err5 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema8/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7035,7 +7046,7 @@ function validate72(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data0 === "terms" || data0 === "prospectus" || data0 === "other")) {
-        const err6 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema8/enum", keyword: "enum", params: { allowedValues: schema3.enum }, message: "must be equal to one of the allowed values" };
+        const err6 = { instancePath: instancePath + "/category", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema8/enum", keyword: "enum", params: { allowedValues: schema3.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7177,7 +7188,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -7186,7 +7197,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -7195,7 +7206,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -7205,7 +7216,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7220,7 +7231,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -7230,7 +7241,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7241,7 +7252,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7253,7 +7264,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -7263,7 +7274,7 @@ function validate74(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema87/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema87/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -7288,7 +7299,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -7297,7 +7308,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -7306,7 +7317,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -7316,7 +7327,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7331,7 +7342,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -7341,7 +7352,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7352,7 +7363,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7364,7 +7375,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -7374,7 +7385,7 @@ function validate75(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema88/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema88/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -7399,7 +7410,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -7408,7 +7419,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -7417,7 +7428,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -7427,7 +7438,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7442,7 +7453,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -7452,7 +7463,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7463,7 +7474,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7475,7 +7486,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -7485,7 +7496,7 @@ function validate76(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema89/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema89/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -7510,7 +7521,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -7519,7 +7530,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -7528,7 +7539,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -7538,7 +7549,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7553,7 +7564,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -7563,7 +7574,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7574,7 +7585,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7586,7 +7597,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -7596,7 +7607,7 @@ function validate77(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema90/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema90/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -7650,7 +7661,7 @@ function validate79(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.currency !== void 0 && func0.call(data, "currency")) {
       let data0 = data.currency;
       if (typeof data0 !== "string") {
-        const err3 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema6/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema6/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7659,7 +7670,7 @@ function validate79(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data0 === "EUR" || data0 === "USD")) {
-        const err4 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema6/enum", keyword: "enum", params: { allowedValues: schema65.enum }, message: "must be equal to one of the allowed values" };
+        const err4 = { instancePath: instancePath + "/currency", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema6/enum", keyword: "enum", params: { allowedValues: schema65.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err4];
         } else {
@@ -7756,7 +7767,7 @@ function validate81(data, { instancePath = "", parentData, parentDataProperty, r
     evaluated0.items = void 0;
   }
   if (typeof data !== "string") {
-    const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema93/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+    const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema93/type", keyword: "type", params: { type: "string" }, message: "must be string" };
     if (vErrors === null) {
       vErrors = [err0];
     } else {
@@ -7781,7 +7792,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -7790,7 +7801,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -7799,7 +7810,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -7809,7 +7820,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7824,7 +7835,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -7834,7 +7845,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7845,7 +7856,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7857,7 +7868,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -7867,7 +7878,7 @@ function validate82(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema94/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema94/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -7892,7 +7903,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -7901,7 +7912,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -7910,7 +7921,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -7920,7 +7931,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -7935,7 +7946,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -7945,7 +7956,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -7956,7 +7967,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -7968,7 +7979,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -7978,7 +7989,7 @@ function validate83(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema95/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema95/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -8003,7 +8014,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8012,7 +8023,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -8021,7 +8032,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -8031,7 +8042,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -8046,7 +8057,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -8056,7 +8067,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -8067,7 +8078,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -8079,7 +8090,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -8089,7 +8100,7 @@ function validate84(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema96/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema96/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -8114,7 +8125,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.page === void 0 || !func0.call(data, "page")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "page" }, message: "must have required property 'page'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "page" }, message: "must have required property 'page'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8123,7 +8134,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.limit === void 0 || !func0.call(data, "limit")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "limit" }, message: "must have required property 'limit'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "limit" }, message: "must have required property 'limit'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -8132,7 +8143,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.total === void 0 || !func0.call(data, "total")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "total" }, message: "must have required property 'total'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/required", keyword: "required", params: { missingProperty: "total" }, message: "must have required property 'total'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -8143,7 +8154,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.limit !== void 0 && func0.call(data, "limit")) {
       let data0 = data.limit;
       if (!(typeof data0 == "number" && (!(data0 % 1) && !isNaN(data0)))) {
-        const err3 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/limit/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err3 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/limit/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -8153,7 +8164,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
       }
       if (typeof data0 == "number") {
         if (data0 < 1 || isNaN(data0)) {
-          const err4 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
+          const err4 = { instancePath: instancePath + "/limit", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
           if (vErrors === null) {
             vErrors = [err4];
           } else {
@@ -8166,7 +8177,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.page !== void 0 && func0.call(data, "page")) {
       let data1 = data.page;
       if (!(typeof data1 == "number" && (!(data1 % 1) && !isNaN(data1)))) {
-        const err5 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/page/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err5 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/page/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -8176,7 +8187,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
       }
       if (typeof data1 == "number") {
         if (data1 < 1 || isNaN(data1)) {
-          const err6 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
+          const err6 = { instancePath: instancePath + "/page", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 }, message: "must be >= 1" };
           if (vErrors === null) {
             vErrors = [err6];
           } else {
@@ -8189,7 +8200,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.total !== void 0 && func0.call(data, "total")) {
       let data2 = data.total;
       if (!(typeof data2 == "number" && (!(data2 % 1) && !isNaN(data2)))) {
-        const err7 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/total/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/total/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -8199,7 +8210,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
       }
       if (typeof data2 == "number") {
         if (data2 < 0 || isNaN(data2)) {
-          const err8 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 }, message: "must be >= 0" };
+          const err8 = { instancePath: instancePath + "/total", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 }, message: "must be >= 0" };
           if (vErrors === null) {
             vErrors = [err8];
           } else {
@@ -8210,7 +8221,7 @@ function validate86(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err9 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema14/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err9 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema14/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err9];
     } else {
@@ -8292,7 +8303,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8301,7 +8312,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -8310,7 +8321,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -8320,7 +8331,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -8335,7 +8346,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -8345,7 +8356,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -8356,7 +8367,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -8368,7 +8379,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -8378,7 +8389,7 @@ function validate89(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema102/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema102/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -8403,7 +8414,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8412,7 +8423,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -8421,7 +8432,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -8431,7 +8442,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -8446,7 +8457,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -8456,7 +8467,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -8467,7 +8478,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -8479,7 +8490,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -8489,7 +8500,7 @@ function validate90(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema103/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema103/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -8514,7 +8525,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8523,7 +8534,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -8532,7 +8543,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -8542,7 +8553,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -8557,7 +8568,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -8567,7 +8578,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -8578,7 +8589,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -8590,7 +8601,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -8600,7 +8611,7 @@ function validate91(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema104/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema104/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -8793,7 +8804,7 @@ function validate93(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data6 = data.status;
       if (typeof data6 !== "string") {
-        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err16];
         } else {
@@ -8802,7 +8813,7 @@ function validate93(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data6 === "draft" || data6 === "submitted")) {
-        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
+        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err17];
         } else {
@@ -8878,7 +8889,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8887,7 +8898,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -8896,7 +8907,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -8906,7 +8917,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -8921,7 +8932,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -8931,7 +8942,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -8942,7 +8953,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -8954,7 +8965,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -8964,7 +8975,7 @@ function validate95(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema108/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema108/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -8989,7 +9000,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -8998,7 +9009,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -9007,7 +9018,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -9017,7 +9028,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -9032,7 +9043,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -9042,7 +9053,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -9053,7 +9064,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -9065,7 +9076,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -9075,7 +9086,7 @@ function validate96(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema109/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema109/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -9100,7 +9111,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -9109,7 +9120,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -9118,7 +9129,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -9128,7 +9139,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -9143,7 +9154,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -9153,7 +9164,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -9164,7 +9175,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -9176,7 +9187,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -9186,7 +9197,7 @@ function validate97(data, { instancePath = "", parentData, parentDataProperty, r
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema110/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema110/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -9379,7 +9390,7 @@ function validate99(data, { instancePath = "", parentData, parentDataProperty, r
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data6 = data.status;
       if (typeof data6 !== "string") {
-        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err16];
         } else {
@@ -9388,7 +9399,7 @@ function validate99(data, { instancePath = "", parentData, parentDataProperty, r
         errors++;
       }
       if (!(data6 === "draft" || data6 === "submitted")) {
-        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
+        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err17];
         } else {
@@ -9464,7 +9475,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -9473,7 +9484,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -9482,7 +9493,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -9492,7 +9503,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -9507,7 +9518,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -9517,7 +9528,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -9528,7 +9539,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -9540,7 +9551,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -9550,7 +9561,7 @@ function validate101(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema113/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema113/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -9575,7 +9586,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -9584,7 +9595,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -9593,7 +9604,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -9603,7 +9614,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -9618,7 +9629,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -9628,7 +9639,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -9639,7 +9650,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -9651,7 +9662,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -9661,7 +9672,7 @@ function validate102(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema114/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema114/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -9686,7 +9697,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -9695,7 +9706,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -9704,7 +9715,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -9714,7 +9725,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -9729,7 +9740,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -9739,7 +9750,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -9750,7 +9761,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -9762,7 +9773,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -9772,7 +9783,7 @@ function validate103(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema115/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema115/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -9965,7 +9976,7 @@ function validate105(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.status !== void 0 && func0.call(data, "status")) {
       let data6 = data.status;
       if (typeof data6 !== "string") {
-        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err16 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err16];
         } else {
@@ -9974,7 +9985,7 @@ function validate105(data, { instancePath = "", parentData, parentDataProperty, 
         errors++;
       }
       if (!(data6 === "draft" || data6 === "submitted")) {
-        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
+        const err17 = { instancePath: instancePath + "/status", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18/enum", keyword: "enum", params: { allowedValues: schema52.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err17];
         } else {
@@ -10051,7 +10062,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.state === void 0 || !func0.call(data, "state")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/required", keyword: "required", params: { missingProperty: "state" }, message: "must have required property 'state'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/required", keyword: "required", params: { missingProperty: "state" }, message: "must have required property 'state'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -10060,7 +10071,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.jobId === void 0 || !func0.call(data, "jobId")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/required", keyword: "required", params: { missingProperty: "jobId" }, message: "must have required property 'jobId'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/required", keyword: "required", params: { missingProperty: "jobId" }, message: "must have required property 'jobId'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -10072,7 +10083,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
       let data0 = data.jobId;
       if (typeof data0 === "string") {
         if (!formats0.test(data0)) {
-          const err2 = { instancePath: instancePath + "/jobId", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/properties/jobId/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
+          const err2 = { instancePath: instancePath + "/jobId", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/properties/jobId/format", keyword: "format", params: { format: "uuid" }, message: 'must match format "uuid"' };
           if (vErrors === null) {
             vErrors = [err2];
           } else {
@@ -10081,7 +10092,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
           errors++;
         }
       } else {
-        const err3 = { instancePath: instancePath + "/jobId", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/properties/jobId/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/jobId", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/properties/jobId/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -10093,7 +10104,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.state !== void 0 && func0.call(data, "state")) {
       let data1 = data.state;
       if (typeof data1 !== "string") {
-        const err4 = { instancePath: instancePath + "/state", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/properties/state/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err4 = { instancePath: instancePath + "/state", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/properties/state/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err4];
         } else {
@@ -10102,7 +10113,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
         errors++;
       }
       if (!(data1 === "accepted")) {
-        const err5 = { instancePath: instancePath + "/state", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/properties/state/enum", keyword: "enum", params: { allowedValues: schema160.properties.state.enum }, message: "must be equal to one of the allowed values" };
+        const err5 = { instancePath: instancePath + "/state", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/properties/state/enum", keyword: "enum", params: { allowedValues: schema160.properties.state.enum }, message: "must be equal to one of the allowed values" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -10112,7 +10123,7 @@ function validate107(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err6 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema120/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err6 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema120/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err6];
     } else {
@@ -10137,7 +10148,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -10146,7 +10157,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -10155,7 +10166,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -10165,7 +10176,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -10180,7 +10191,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -10190,7 +10201,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -10201,7 +10212,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -10213,7 +10224,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -10223,7 +10234,7 @@ function validate108(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema121/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema121/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -10248,7 +10259,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -10257,7 +10268,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -10266,7 +10277,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -10276,7 +10287,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -10291,7 +10302,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -10301,7 +10312,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -10312,7 +10323,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -10324,7 +10335,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -10334,7 +10345,7 @@ function validate109(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema122/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema122/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {
@@ -10359,7 +10370,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
   }
   if (data && typeof data == "object" && !Array.isArray(data)) {
     if (data.statusCode === void 0 || !func0.call(data, "statusCode")) {
-      const err0 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
+      const err0 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/required", keyword: "required", params: { missingProperty: "statusCode" }, message: "must have required property 'statusCode'" };
       if (vErrors === null) {
         vErrors = [err0];
       } else {
@@ -10368,7 +10379,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.code === void 0 || !func0.call(data, "code")) {
-      const err1 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
+      const err1 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/required", keyword: "required", params: { missingProperty: "code" }, message: "must have required property 'code'" };
       if (vErrors === null) {
         vErrors = [err1];
       } else {
@@ -10377,7 +10388,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
       errors++;
     }
     if (data.message === void 0 || !func0.call(data, "message")) {
-      const err2 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
+      const err2 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/required", keyword: "required", params: { missingProperty: "message" }, message: "must have required property 'message'" };
       if (vErrors === null) {
         vErrors = [err2];
       } else {
@@ -10387,7 +10398,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.code !== void 0 && func0.call(data, "code")) {
       if (typeof data.code !== "string") {
-        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err3 = { instancePath: instancePath + "/code", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/properties/code/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err3];
         } else {
@@ -10402,7 +10413,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
         const len0 = data1.length;
         for (let i0 = 0; i0 < len0; i0++) {
           if (typeof data1[i0] !== "string") {
-            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+            const err4 = { instancePath: instancePath + "/details/" + i0, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/properties/details/items/type", keyword: "type", params: { type: "string" }, message: "must be string" };
             if (vErrors === null) {
               vErrors = [err4];
             } else {
@@ -10412,7 +10423,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
           }
         }
       } else {
-        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
+        const err5 = { instancePath: instancePath + "/details", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/properties/details/type", keyword: "type", params: { type: "array" }, message: "must be array" };
         if (vErrors === null) {
           vErrors = [err5];
         } else {
@@ -10423,7 +10434,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
     }
     if (data.message !== void 0 && func0.call(data, "message")) {
       if (typeof data.message !== "string") {
-        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
+        const err6 = { instancePath: instancePath + "/message", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/properties/message/type", keyword: "type", params: { type: "string" }, message: "must be string" };
         if (vErrors === null) {
           vErrors = [err6];
         } else {
@@ -10435,7 +10446,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
     if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
       let data4 = data.statusCode;
       if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
+        const err7 = { instancePath: instancePath + "/statusCode", schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/properties/statusCode/type", keyword: "type", params: { type: "integer" }, message: "must be integer" };
         if (vErrors === null) {
           vErrors = [err7];
         } else {
@@ -10445,7 +10456,7 @@ function validate110(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
   } else {
-    const err8 = { instancePath, schemaPath: "urn:accord:e3cd8f89f5083235:base:resource0#/$defs/schema123/type", keyword: "type", params: { type: "object" }, message: "must be object" };
+    const err8 = { instancePath, schemaPath: "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema123/type", keyword: "type", params: { type: "object" }, message: "must be object" };
     if (vErrors === null) {
       vErrors = [err8];
     } else {

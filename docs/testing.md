@@ -19,7 +19,7 @@ pnpm test:scale
 | `pnpm quality` | Biome and the repository's custom Oxlint rules |
 | `pnpm typecheck` | All packages, generated fixtures, positive and negative consumer types |
 | `pnpm test` | Unit/property tests, real generated goldens, HTTP integration, React hooks, committed example SDKs |
-| `pnpm test:nest` | Real NestJS server, raw Swagger document regeneration, SDK/validator reproducibility, 18 operations, Multer binary uploads, and React Query calls |
+| `pnpm test:nest` | Real NestJS server, exported OpenAPI regeneration, SDK/validator reproducibility, flat inputs and optional bodies, 18 operations, Multer binary uploads, and React Query calls |
 | `pnpm typecheck:tests` | Strict checking of the conformance harness itself |
 | `pnpm test:harness` | Diagnostic matching, isolation, registry integrity, source-format equivalence, input immutability |
 | `pnpm test:conformance:strict` | Every registered type/wire/response/cache invariant must pass |

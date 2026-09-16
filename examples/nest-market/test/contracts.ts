@@ -12,11 +12,12 @@ export async function callerContract(client: MarketClient) {
   const offering: OfferingDto | undefined = page.items[0]
   void offering
   // @ts-expect-error nested terms are required
-  client.offerings.createOffering({ body: { name: "Incomplete" } })
+  client.offerings.createOffering({ name: "Incomplete" })
   // @ts-expect-error money is a decimal string
   client.subscriptions.createSubscription({
     offeringId: "id",
-    body: { investorId: "id", amount: 2500 },
+    investorId: "id",
+    amount: 2500,
   })
   // @ts-expect-error unsupported enum member
   client.offerings.listOfferings({ status: ["paused"] })
@@ -25,8 +26,13 @@ export async function callerContract(client: MarketClient) {
   // @ts-expect-error uploads accept bytes, not a local filesystem path
   client.documents.uploadDocument({
     offeringId: "id",
-    body: { category: "terms", file: "/tmp/file.pdf" },
+    category: "terms",
+    file: "/tmp/file.pdf",
   })
+  // @ts-expect-error an optional whole body stays separate from path parameters
+  client.offerings.updateOffering({ offeringId: "id", description: null })
+  await client.offerings.updateOffering({ offeringId: "id" })
+  await client.offerings.updateOffering({ offeringId: "id", body: {} })
 
   const investor = await client.investors.getInvestor({ investorId: "id" })
   if (investor.kind === "company") investor satisfies CompanyInvestorDto

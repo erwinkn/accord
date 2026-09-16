@@ -17,34 +17,29 @@ export function openOfferings(client: MarketClient) {
 /** A complete workflow using only types and calls generated from Nest's OpenAPI output. */
 export async function runInvestmentWorkflow(client: MarketClient) {
   const offering = await client.offerings.createOffering({
-    body: {
-      name: "Harbor Growth Fund",
-      terms: { minimumInvestment: "1000.00", currency: "EUR", closesAt: "2027-12-31T23:59:59Z" },
-      description: "Private market investments",
-      tags: ["growth", "europe"],
-    },
+    name: "Harbor Growth Fund",
+    terms: { minimumInvestment: "1000.00", currency: "EUR", closesAt: "2027-12-31T23:59:59Z" },
+    description: "Private market investments",
+    tags: ["growth", "europe"],
   })
+  // This endpoint's whole body is optional: omit `body` for no payload, or supply a patch.
   await client.offerings.updateOffering({ offeringId: offering.id, body: { description: null } })
   const investor = await client.investors.createCompanyInvestor({
-    body: {
-      kind: "company",
-      displayName: "North Star Partners",
-      email: "investments@example.test",
-      country: "FR",
-      registrationNumber: "REG-123456",
-      onboardingNote: "Shown only during onboarding",
-    },
+    kind: "company",
+    displayName: "North Star Partners",
+    email: "investments@example.test",
+    country: "FR",
+    registrationNumber: "REG-123456",
+    onboardingNote: "Shown only during onboarding",
   })
   const profile = await client.investors.getInvestor({ investorId: investor.id })
   const label = profile.kind === "company" ? profile.registrationNumber : profile.displayName
 
   const draft = await client.subscriptions.createSubscription({
     offeringId: offering.id,
-    body: {
-      investorId: investor.id,
-      amount: "2500.00",
-      metadata: { advisor: "demo", campaign: "autumn" },
-    },
+    investorId: investor.id,
+    amount: "2500.00",
+    metadata: { advisor: "demo", campaign: "autumn" },
   })
   const outcome = await client.subscriptions.submitSubscription(
     { subscriptionId: draft.id, background: true },
@@ -57,11 +52,9 @@ export async function runInvestmentWorkflow(client: MarketClient) {
 
   const document = await client.documents.uploadDocument({
     offeringId: offering.id,
-    body: {
-      file: new File(["Harbor offering terms\n"], "terms.txt", { type: "text/plain" }),
-      category: "terms",
-      note: "For investor review",
-    },
+    file: new File(["Harbor offering terms\n"], "terms.txt", { type: "text/plain" }),
+    category: "terms",
+    note: "For investor review",
   })
   const download = await client.documents.downloadDocument.withResponse({ documentId: document.id })
   const report = await client.offerings.exportOffering.withResponse(

@@ -15,6 +15,7 @@ import {
 } from "@nestjs/common"
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiExtraModels,
@@ -66,11 +67,12 @@ export class OfferingsController {
 
   @Patch(":offeringId")
   @ApiParam({ name: "offeringId", format: "uuid" })
+  @ApiBody({ type: UpdateOfferingDto, required: false })
   @ApiOperation({ summary: "Update supplied fields; clear description explicitly with null" })
   @ApiOkResponse({ type: OfferingDto })
   updateOffering(
     @Param("offeringId", ParseUUIDPipe) offeringId: string,
-    @Body() input: UpdateOfferingDto,
+    @Body() input: UpdateOfferingDto = {},
   ): OfferingDto {
     return this.store.updateOffering(offeringId, input)
   }

@@ -35,12 +35,27 @@ function httpError(status: number, code: string) {
   }
 }
 
-test("Nest's raw document and Accord output match the committed artifacts", async () => {
+test("Nest's exported document and Accord output match the committed artifacts", async () => {
   const document = createOpenApiDocument(app)
   assert.equal(`${JSON.stringify(document, null, 2)}\n`, await readFile("openapi.json", "utf8"))
   const generated = await generateFromFile("openapi.json", { namespace: "tag", validators: true })
   assert.equal(generated.model.operations.length, 18)
   assert.equal(Object.keys(document.components?.schemas ?? {}).length, 21)
+  assert.deepEqual(
+    Object.fromEntries(
+      generated.model.operations
+        .filter((operation) => operation.body)
+        .map((operation) => [operation.key, operation.body?.mode]),
+    ),
+    {
+      createOffering: "merge",
+      updateOffering: "separate",
+      createIndividualInvestor: "merge",
+      createCompanyInvestor: "merge",
+      createSubscription: "merge",
+      uploadDocument: "merge",
+    },
+  )
   assert.equal(generated.source, await readFile("sdk/sdk.ts", "utf8"))
   const companions = (await readdir("sdk")).filter((file) => file.includes(".validators."))
   assert.deepEqual(companions.sort(), Object.keys(generated.files).sort())
@@ -69,11 +84,9 @@ test("query arrays, pagination, mapped DTOs and nullable updates agree with Nest
   const first = await client.offerings.listOfferings({ status: ["open"], page: 1, limit: 1 })
   assert.equal(first.items[0]?.id, SAMPLE_OFFERING_ID)
   const created = await client.offerings.createOffering({
-    body: {
-      name: "Update Test Fund",
-      terms: { currency: "USD", minimumInvestment: "100.00", closesAt: "2027-01-01T00:00:00Z" },
-      description: "Before",
-    },
+    name: "Update Test Fund",
+    terms: { currency: "USD", minimumInvestment: "100.00", closesAt: "2027-01-01T00:00:00Z" },
+    description: "Before",
   })
   const combined = await client.offerings.listOfferings({ status: ["open", "draft"], limit: 100 })
   assert(combined.items.some((item) => item.id === created.id && item.status === "draft"))
@@ -84,6 +97,11 @@ test("query arrays, pagination, mapped DTOs and nullable updates agree with Nest
   assert.equal(updated.description, null)
   assert.equal(updated.name, created.name)
   assert.deepEqual(updated.terms, created.terms)
+  assert.deepEqual(await client.offerings.updateOffering({ offeringId: created.id }), updated)
+  assert.deepEqual(
+    await client.offerings.updateOffering({ offeringId: created.id, body: {} }),
+    updated,
+  )
   const full = await client.offerings.getOffering.withResponse(
     { offeringId: created.id },
     { headers: { "x-request-id": "test-trace" } },
@@ -99,18 +117,17 @@ test("query arrays, pagination, mapped DTOs and nullable updates agree with Nest
 test("polymorphic investors and both submission statuses stay correlated", async () => {
   const client = createMarketClient(baseUrl, DEMO_TOKEN)
   const investor = await client.investors.createIndividualInvestor({
-    body: {
-      kind: "individual",
-      displayName: "Alex Morgan",
-      email: "alex@example.test",
-      country: "FR",
-    },
+    kind: "individual",
+    displayName: "Alex Morgan",
+    email: "alex@example.test",
+    country: "FR",
   })
   const profile = await client.investors.getInvestor({ investorId: investor.id })
   assert.equal(profile.kind, "individual")
   const subscription = await client.subscriptions.createSubscription({
     offeringId: SAMPLE_OFFERING_ID,
-    body: { investorId: investor.id, amount: "1500.00" },
+    investorId: investor.id,
+    amount: "1500.00",
   })
   assert.equal(subscription.submittedAt, null)
   const instant = await client.subscriptions.submitSubscription({ subscriptionId: subscription.id })
@@ -147,7 +164,9 @@ test("multipart survives real Multer parsing and binary download preserves every
   const bytes = new Uint8Array([0, 1, 127, 128, 255, 10, 13])
   const uploaded = await client.documents.uploadDocument({
     offeringId: SAMPLE_OFFERING_ID,
-    body: { file: new File([bytes], "proof.bin"), category: "other", note: "Exact bytes" },
+    file: new File([bytes], "proof.bin"),
+    category: "other",
+    note: "Exact bytes",
   })
   const metadata = await client.documents.getDocument({ documentId: uploaded.id })
   assert.equal(metadata.note, "Exact bytes")
@@ -185,7 +204,8 @@ test("all binary upload input types work with Multer, including empty and unname
   for (const file of [bytes, bytes.buffer, new Blob([bytes]), new File([], "empty.bin")]) {
     const uploaded = await client.documents.uploadDocument({
       offeringId: SAMPLE_OFFERING_ID,
-      body: { file, category: "other" },
+      file,
+      category: "other",
     })
     const downloaded = await client.documents.downloadDocument({ documentId: uploaded.id })
     assert.deepEqual(new Uint8Array(downloaded), file instanceof File ? new Uint8Array() : bytes)
@@ -202,12 +222,10 @@ test("authentication and request validation run on Nest and retain typed HTTP er
   // A string satisfies the caller type; its format is the server's responsibility.
   await assert.rejects(
     client.investors.createIndividualInvestor({
-      body: {
-        kind: "individual",
-        displayName: "Alex Morgan",
-        email: "not-an-email",
-        country: "FR",
-      },
+      kind: "individual",
+      displayName: "Alex Morgan",
+      email: "not-an-email",
+      country: "FR",
     }),
     httpError(400, "BAD_REQUEST"),
   )
@@ -215,6 +233,23 @@ test("authentication and request validation run on Nest and retain typed HTTP er
     client.offerings.listOfferings({ limit: 101 }),
     httpError(400, "BAD_REQUEST"),
   )
+})
+
+test("the server enforces the closed DTOs declared in OpenAPI", async () => {
+  const terms = { currency: "EUR", minimumInvestment: "1000.00", closesAt: "2027-01-01T00:00:00Z" }
+  for (const body of [
+    { name: "Invalid Fund", terms, unexpected: "rejected" },
+    { name: "Invalid Fund", terms: { ...terms, unexpected: "rejected" } },
+  ]) {
+    // Bypass the typed SDK to exercise invalid input at the actual HTTP boundary.
+    const response = await fetch(`${baseUrl}/api/v1/offerings`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${DEMO_TOKEN}`, "content-type": "application/json" },
+      body: JSON.stringify(body),
+    })
+    assert.equal(response.status, 400)
+    assert.match(await response.text(), /property unexpected should not exist/)
+  }
 })
 
 test("generated response validators reject a corrupted response after a real HTTP exchange", async () => {

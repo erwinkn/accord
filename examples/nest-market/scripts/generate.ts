@@ -5,7 +5,7 @@ import { createApplication, createOpenApiDocument } from "../src/app.js"
 const app = await createApplication()
 try {
   const document = createOpenApiDocument(app)
-  // Commit the unmodified Swagger output. Schema omissions must be fixed at their Nest source.
+  // Use the same documented contract as Swagger UI, including strict request DTOs.
   await writeFile("openapi.json", `${JSON.stringify(document, null, 2)}\n`)
   const generated = await generateFromFile("openapi.json", { namespace: "tag", validators: true })
   await mkdir("sdk", { recursive: true })

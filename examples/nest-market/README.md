@@ -8,12 +8,12 @@ This example models a financial marketplace using Nest 10 and Swagger 7, with re
 
 1. [Typed SDK workflow](usage.ts): create an offering and investor, subscribe, submit, upload/download a document, export CSV.
 2. [Offering controller](src/offerings/offerings.controller.ts) and [DTOs](src/offerings/offering.dto.ts): the Nest source of the contract.
-3. [Generated OpenAPI](openapi.json): unmodified output from `SwaggerModule.createDocument`.
+3. [Generated OpenAPI](openapi.json): Swagger output with explicit closed request DTOs, also served by Swagger UI.
 4. [Generated SDK](sdk/sdk.ts): public types, endpoint plans, and Standard Schema validators.
 
 ```text
 Nest controllers + DTO decorators
-       ↓ SwaggerModule.createDocument
+       ↓ SwaggerModule.createDocument + request DTO closure
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
    sdk/sdk.ts + validator companions
@@ -63,8 +63,14 @@ const page = await client.offerings.listOfferings({
   status: ["open", "draft"], page: 1, limit: 20,
 })
 
+// Path and body fields share one input object; Accord handles their wire locations.
+const subscription = await client.subscriptions.createSubscription({
+  offeringId, investorId, amount: "2500.00",
+  metadata: { advisor: "demo" },
+})
+
 const outcome = await client.subscriptions.submitSubscription(
-  { subscriptionId, background: true },
+  { subscriptionId: subscription.id, background: true },
   { headers: { "x-request-id": "submit-42" } },
 )
 if (outcome.status === 202) {
@@ -80,9 +86,11 @@ if (report.mediaType === "text/csv") console.log(report.data.trim())
 else console.log(report.data.subscriptionCount)
 ```
 
-Nest's DTO schemas leave `additionalProperties` unspecified. Accord therefore keeps request bodies under `body` instead of assuming it may flatten a closed set of fields. For example: `client.offerings.updateOffering({ offeringId, body: { description: null } })`. There is no post-generation rewrite to force a different calling convention.
+Creates and uploads use **flat inputs**, including nested terms, metadata dictionaries, and files. Nest Swagger 7 leaves DTOs open to arbitrary properties by default. The [document factory](src/app.ts) explicitly sets `additionalProperties: false` on the fixed request DTOs to describe the server's strict validation policy. It leaves response composition and nested dictionaries alone. Both Swagger UI and Accord use this same exported contract; the SDK needs no body-mode overrides.
 
-The backend's `ValidationPipe` validates and whitelists DTO fields. Accord performs no request schema validation; generated TypeScript checks callers, and generated Standard Schema checks decoded responses. Money remains a decimal string end to end.
+The one explicit `body` example is the optional PATCH payload: `client.offerings.updateOffering({ offeringId, body: { description: null } })`. Its whole body can be omitted, so Accord preserves the distinction between no payload and `body: {}`. Both are no-ops on this server; supplied fields update the offering.
+
+The backend's `ValidationPipe` validates DTO fields and rejects unknown properties. Accord performs no request schema validation; generated TypeScript checks callers, and generated Standard Schema checks decoded responses. Money remains a decimal string end to end.
 
 ## Adapting to a real backend
 
@@ -94,7 +102,7 @@ References: [Nest OpenAPI generation](https://docs.nestjs.com/openapi/introducti
 
 ## Verification and a bug found
 
-[HTTP tests](test/market.test.ts) cover all 18 operations, both submission branches, error responses, actual Multer parsing, byte preservation, response validation, and a real `QueryClient`. They also regenerate the document and SDK and compare every committed artifact. [Compile-time checks](test/contracts.ts) include rejected inputs and union narrowing. Both are included in the root checks.
+[HTTP tests](test/market.test.ts) cover all 18 operations, flat JSON/multipart inputs, absent and empty PATCH bodies, rejection of unknown DTO fields, both submission branches, error responses, actual Multer parsing, byte preservation, response validation, and a real `QueryClient`. They also regenerate the document and SDK and compare every committed artifact. [Compile-time checks](test/contracts.ts) include rejected inputs and union narrowing. Both are included in the root checks.
 
 The real server exposed a multipart bug: unnamed byte buffers had no filename, so Multer did not accept them as uploaded files. Accord now gives binary parts a default filename, preserving explicit `File` names. A regression checks all supported binary input types, including empty files.
 
