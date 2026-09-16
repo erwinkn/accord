@@ -54,7 +54,7 @@ Executable consumers run in isolated Node subprocesses with timeouts and ephemer
 
 Most conformance cases skip rechecking dependency declarations to isolate type/wire defects; the separate declaration audit, example compilation, scale test, and clean-install test use `skipLibCheck: false`. A successful generation followed by failed TypeScript checking remains a generation defect, not successful SDK execution.
 
-Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, JSON/multipart/URL-form encodings, Unicode/reserved characters, numeric/boolean values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Object-key reordering must preserve generated source and semantic metadata. Failures retain a minimized executable reproduction.
+Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, JSON/multipart/URL-form encodings, Unicode/reserved characters, numeric/boolean values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Consumers compile and execute the modular SDK. Object-key reordering must preserve every generated module, the single-file rendering, and semantic metadata. Failures retain a minimized executable reproduction.
 
 Generated snapshots and schemas are excluded from handwritten-code lint rules; they are compiled, executed, and compared against regeneration. Narrow inline lint exceptions explain genuine runtime dispatch and external validation boundaries. Request inputs are not reparsed to satisfy a lint rule.
 
@@ -68,7 +68,7 @@ Advanced `$dynamicRef` specialization, arbitrary conditional/negation type preci
 
 XML decoding uses declared names/prefixes and rejects document type/entity declarations. Browser bundling is verified; a browser/CORS/credential interoperability matrix is separate work. Fetch controls redirects and transport restrictions. Full response wrappers expose the original `Response`, whose body may have been consumed by decoding.
 
-Response validators check decoded bodies. They preserve values rather than transforming/coercing them. They cannot validate an undeclared success status/media pairing, which instead raises a decode error. HTTP error status/headers survive malformed error bodies. Native Zod schemas are emitted in the single generated SDK file and compile under the same strict settings as its public types.
+Response validators check decoded bodies. They preserve values rather than transforming/coercing them. They cannot validate an undeclared success status/media pairing, which instead raises a decode error. HTTP error status/headers survive malformed error bodies. Native Zod schemas are emitted in `schemas.ts` and compile under the same strict settings as the SDK’s public types. Distribution checks exercise the modular CLI output, single-file escape hatch, stdout, and browser bundling. Regeneration tests cover obsolete-module cleanup and preservation of handwritten files.
 
 ## Reports
 

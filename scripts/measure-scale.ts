@@ -81,7 +81,12 @@ await writeFile(
     {
       passed: true,
       operations: count,
-      sourceBytes: Buffer.byteLength(generated.source),
+      moduleCount: Object.keys(generated.files).length,
+      sourceBytes: Object.values(generated.files).reduce(
+        (total, source) => total + Buffer.byteLength(source),
+        0,
+      ),
+      singleFileBytes: Buffer.byteLength(generated.source),
       generationMs,
       compiler: result.stdout,
     },

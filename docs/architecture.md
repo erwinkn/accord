@@ -30,7 +30,9 @@ The type emitter reads the schema graph and representation decision directly int
 
 ## Generated endpoints
 
-The output combines ordinary exported TypeScript types with `defineEndpoint<Contract, "query" | "mutation">({ method, path, ... })`. The contract has the argument tuple, input, successful result, error payload, per-status payloads, and full-response union. It exists only in TypeScript: the object has no `contract` or `plan` wrapper; `kind` is `query` or `mutation`, and `id` is the operation ID. `defineEndpoint` adds an internal symbol so the client can distinguish an endpoint from a namespace. Validation lives in optional response `schema` entries. `createEndpointFactory(scope)` attaches one stable SDK identity through a symbol without repeating a public `apiId` field. A batch allocator gives schemas short names, qualifying every participant in a conflict.
+The output separates shared model types (`models.ts`), optional native validators (`schemas.ts`), and each namespace’s operation types (`types/<group>.ts`) and endpoint metadata (`endpoints/<group>.ts`). A small entry assembles `api` and re-exports public types and schemas. The two shared modules preserve recursive definitions without runtime import cycles. Endpoint modules import contracts only as types and reference schemas directly.
+
+Endpoint definitions use `defineEndpoint<Contract, "query" | "mutation">({ method, path, ... })`. The contract has the argument tuple, input, successful result, error payload, per-status payloads, and full-response union. It exists only in TypeScript: the object has no `contract` or `plan` wrapper; `kind` is `query` or `mutation`, and `id` is the operation ID. `defineEndpoint` adds an internal symbol so the client can distinguish an endpoint from a namespace. Validation lives in optional response `schema` entries. `createEndpointFactory(scope)` attaches one stable SDK identity through a symbol without repeating a public `apiId` field. A batch allocator gives schemas short names, qualifying every participant in a conflict.
 
 The plan describes how to bind inputs, serialize request representations, select status/media, decode responses, and choose payload versus status-envelope results. Status selectors stay compact (`200`, `2XX`, `default`); runtime and type generation share exact/range/default precedence.
 
@@ -94,7 +96,7 @@ The runtime reconstructs flattened closed bodies using the model's fields and pr
 
 Validation is disabled by default. Core projects decoded response schemas from the same semantic graph used for types and metadata, then delegates to an explicit `ValidationAdapter`. Its stable interface receives normalized JSON Schema documents, export names/types, reference types, and a batch name allocator; it returns TypeScript imports and declarations.
 
-`@accord/zod` generates native Zod schemas. Simple objects expose `.shape` directly; arrays, unions, references and constraints become ordinary constructors or refinements. Shared models have named definitions and recursion uses `z.lazy`. The schemas already implement Standard Schema v1, so the client needs no library-specific validation integration. There are no numbered checks, registry factories, or validator sidecar files.
+`@accord/zod` generates native Zod schemas. Simple objects expose `.shape` directly; arrays, unions, references and constraints become ordinary constructors or refinements. Shared models have named definitions and recursion uses `z.lazy`. The schemas already implement Standard Schema v1, so the client needs no library-specific validation integration. Schemas live in the readable `schemas.ts` module; there are no numbered checks or registry factories.
 
 The adapter fails generation on features it cannot represent faithfully, including dynamic references and branch-dependent unevaluated properties. See [its exact support boundary](../packages/zod/README.md). A small optional refinement module supports complex constraints without interpreting schema documents. The client preserves the original decoded value after validation; consumers calling native `.parse()` get normal Zod semantics, including copying.
 
@@ -105,4 +107,4 @@ The adapter fails generation on features it cannot represent faithfully, includi
 - `@accord/zod`: optional native Zod emitter and shared refinement helpers.
 - `@accord/react-query`: option factories/hooks and cache identity. It consumes endpoints rather than reinterpreting OpenAPI.
 
-The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,request-plan,type-emitter,render-sdk,validators}.ts`, `packages/client/src/{types,client,request-body,codecs}.ts`, and `packages/react-query/src/index.ts`.
+The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,request-plan,type-emitter,render-sdk,render-modules,write-sdk,validators}.ts`, `packages/client/src/{types,client,request-body,codecs}.ts`, and `packages/react-query/src/index.ts`.

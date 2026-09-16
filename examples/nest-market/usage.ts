@@ -1,6 +1,6 @@
 import { createClient } from "@accord/client"
 import { apiQuery } from "@accord/react-query"
-import { api } from "./sdk/sdk.js"
+import { api } from "./sdk/index.js"
 
 export function createMarketClient(baseUrl: string, token: string) {
   return createClient(api, { baseUrl, token, cacheScope: "demo-account" })

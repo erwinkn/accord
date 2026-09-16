@@ -8,7 +8,7 @@ import { QueryClient } from "@tanstack/react-query"
 import { createApplication, createOpenApiDocument } from "../dist/src/app.js"
 import { DEMO_TOKEN } from "../dist/src/common.js"
 import { SAMPLE_OFFERING_ID } from "../dist/src/market.store.js"
-import { api } from "../sdk/sdk.js"
+import { api } from "../sdk/index.js"
 import { createMarketClient, openOfferings, runInvestmentWorkflow } from "../usage.js"
 
 const app = await createApplication()
@@ -60,8 +60,12 @@ test("Nest's exported document and Accord output match the committed artifacts",
       uploadDocument: "merge",
     },
   )
-  assert.equal(generated.source, await readFile("sdk/sdk.ts", "utf8"))
-  assert.deepEqual(await readdir("sdk"), ["sdk.ts"])
+  for (const [file, source] of Object.entries(generated.files))
+    assert.equal(source, await readFile(`sdk/${file}`, "utf8"), `Generated module differs: ${file}`)
+  assert.deepEqual(
+    (await readdir("sdk", { recursive: true })).filter((file) => file.endsWith(".ts")).sort(),
+    Object.keys(generated.files).sort(),
+  )
 })
 
 test("the generated SDK completes the real HTTP investment workflow", async () => {

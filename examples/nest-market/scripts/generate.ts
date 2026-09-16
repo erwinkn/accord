@@ -12,7 +12,7 @@ try {
     namespace: "tag",
     validators: zodAdapter(),
   })
-  await writeGeneratedSdk("sdk/sdk.ts", generated)
+  await writeGeneratedSdk("sdk", generated)
   console.log(
     `Nest → OpenAPI → Accord: ${generated.model.operations.length} endpoints; ${Object.keys(document.components?.schemas ?? {}).length} schemas`,
   )

@@ -29,6 +29,7 @@ components: {}
       const yaml = await generateFromFile(join(directory, "openapi.yaml"))
       const json = await generateFromFile(join(directory, "openapi.json"))
       expect(yaml.source).toEqual(json.source)
+      expect(yaml.files).toEqual(json.files)
       expect(yaml.model.operations.map((operation) => operation.plan)).toEqual(
         json.model.operations.map((operation) => operation.plan),
       )

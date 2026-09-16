@@ -9,17 +9,23 @@ This example models a financial marketplace using Nest 10 and Swagger 7, with re
 1. [Typed SDK workflow](usage.ts): create an offering and investor, subscribe, submit, upload/download a document, export CSV.
 2. [Offering controller](src/offerings/offerings.controller.ts) and [DTOs](src/offerings/offering.dto.ts): the Nest source of the contract.
 3. [Generated OpenAPI](openapi.json): Swagger output with explicit closed DTOs, also served by Swagger UI.
-4. [Generated SDK](sdk/sdk.ts): public types, endpoint plans, and Standard Schema validators.
+4. [Generated SDK](sdk/index.ts): public types, endpoint plans, and Standard Schema validators.
 
 ```text
 Nest controllers + DTO decorators
        ↓ SwaggerModule.createDocument + DTO closure
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
-   sdk/sdk.ts                     ← types, plans and validators in one file
+   sdk/index.ts                    ← api and public exports
+   sdk/models.ts                   ← shared request/response model types
+   sdk/schemas.ts                  ← native Zod schemas
+   sdk/types/<group>.ts            ← each group's call types
+   sdk/endpoints/<group>.ts        ← each group's endpoint metadata
        ↓ createClient / React Query
    real Nest server
 ```
+
+For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [call types](sdk/types/offerings.ts). The [model types](sdk/models.ts) and [Zod schemas](sdk/schemas.ts) hold the definitions reused across groups. The entry re-exports public types and schemas, so callers can keep one import source.
 
 ## Run it
 

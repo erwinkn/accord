@@ -133,6 +133,11 @@ async function main(): Promise<void> {
       ])
       assert.equal(first.source, second.source, "Reordering object keys changed generated source")
       assert.deepEqual(
+        first.files,
+        second.files,
+        "Reordering object keys changed generated modules",
+      )
+      assert.deepEqual(
         first.model,
         second.model,
         "Reordering object keys changed endpoint metadata",

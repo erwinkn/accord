@@ -161,7 +161,24 @@ async function main(): Promise<void> {
       "--validators",
       "@accord/zod",
     ])
-    assert.equal(stdoutSdk, await readFile(join(installed, "generated.ts"), "utf8"))
+    await command(installed, "pnpm", [
+      "exec",
+      "accord",
+      "generate",
+      "openapi.json",
+      "--validators",
+      "@accord/zod",
+      "--single-file",
+      "--output",
+      "single.ts",
+    ])
+    assert.equal(stdoutSdk, await readFile(join(installed, "single.ts"), "utf8"))
+    assert.match(
+      await readFile(join(installed, "generated.ts"), "utf8"),
+      /generated\/endpoints\/probe\.js/,
+    )
+    for (const file of ["models.ts", "schemas.ts", "types/probe.ts", "endpoints/probe.ts"])
+      assert((await readFile(join(installed, "generated", file), "utf8")).length > 0)
     assert(!(await readdir(installed)).some((name) => name.includes(".validators.")))
     await writeFile(join(installed, "config.mjs"), 'export default { namespace: "tag" }\n')
     await command(installed, "pnpm", [
@@ -235,7 +252,8 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", 
             "clean-install",
             "cli-help",
             "cli-generation",
-            "single-file-validators-and-stdout",
+            "modular-sdk-with-native-schemas",
+            "single-file-option-and-stdout",
             "config-import",
             "semantic-consumer-compile-with-declaration-checking",
             "native-zod-generation-and-execution",

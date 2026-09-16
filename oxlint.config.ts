@@ -8,6 +8,7 @@ export default defineConfig({
     "tests/generated/**",
     "tests/golden/**",
     "examples/**/sdk.ts",
+    "examples/**/sdk/**",
     "examples/**/*.validators.*",
     ".accord-test-work/**",
     "artifacts/**",

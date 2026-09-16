@@ -1,8 +1,8 @@
 import { execFile } from "node:child_process"
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
-import { dirname, isAbsolute, join, relative, resolve } from "node:path"
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { promisify } from "node:util"
-import { AccordCodegenError, generateFromFile } from "@accord/codegen"
+import { AccordCodegenError, generateFromFile, writeGeneratedSdk } from "@accord/codegen"
 import ts from "typescript"
 import type { Consumer, Failure, Fixture, KnownGap, Result } from "./model.js"
 import { ContractFailure } from "./model.js"
@@ -196,6 +196,8 @@ export function safeFixturePath(directory: string, file: string): string {
     )
   }
   if (
+    rel === "generated" ||
+    rel.startsWith(`generated${sep}`) ||
     [
       "package.json",
       "consumer.ts",
@@ -245,7 +247,7 @@ export async function verifyFixture(fixture: Fixture): Promise<Failure | undefin
         `Accepted invalid document; expected ${fixture.rejection}`,
       )
     }
-    await writeFile(join(directory, "generated.ts"), generated.source)
+    await writeGeneratedSdk(join(directory, "generated.ts"), generated)
     await writeFile(
       join(directory, "endpoint-plans.json"),
       JSON.stringify(

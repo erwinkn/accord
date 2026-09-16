@@ -36,16 +36,26 @@ describe("owned generation goldens", () => {
       validators: zodAdapter(),
     })
     expect(first.source).toBe(second.source)
+    expect(first.files).toEqual(second.files)
   })
-  it("writes a complete single-file SDK, including optional validators", async () => {
-    const directory = await mkdtemp(join(tmpdir(), "accord-single-file-"))
+  it("writes SDK modules with a compatible entry file and optional schemas", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "accord-modules-"))
     try {
       const result = await generateFromFile(fixture("users.openapi.yaml"), {
         validators: zodAdapter(),
       })
       await writeGeneratedSdk(join(directory, "sdk.ts"), result)
-      expect(await readdir(directory)).toEqual(["sdk.ts"])
-      expect(await readFile(join(directory, "sdk.ts"), "utf8")).toBe(result.source)
+      expect(await readdir(directory)).toEqual(["sdk", "sdk.ts"])
+      expect(await readFile(join(directory, "sdk.ts"), "utf8")).toContain(
+        'from "./sdk/endpoints/users.js"',
+      )
+      for (const [path, source] of Object.entries(result.files)) {
+        if (path !== "index.ts")
+          expect(await readFile(join(directory, "sdk", path), "utf8")).toBe(source)
+      }
+      expect(result.files["endpoints/users.ts"]).not.toContain("export type")
+      expect(result.files["endpoints/users.ts"]).toContain("import {\n    ListUsers200Schema,")
+      expect(result.files["schemas.ts"]).toContain("export const GetUser200Schema = UserSchema")
       expect(result.source).not.toMatch(/@ts-(?:ignore|nocheck)|\.validators\.js/)
     } finally {
       await rm(directory, { recursive: true, force: true })

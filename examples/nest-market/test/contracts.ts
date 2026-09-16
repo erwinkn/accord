@@ -3,7 +3,7 @@ import type {
   IndividualInvestorDto,
   OfferingDto,
   SubscriptionDto,
-} from "../sdk/sdk.js"
+} from "../sdk/index.js"
 import type { MarketClient } from "../usage.js"
 
 // Compiled, never executed: negative assertions must remain rejected by the generated SDK.

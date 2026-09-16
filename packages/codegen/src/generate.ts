@@ -1,5 +1,3 @@
-import { mkdir, rename, writeFile } from "node:fs/promises"
-import { dirname, resolve } from "node:path"
 import { compileApi } from "./compile.js"
 import { DocumentStore, readDocument, sourceUri } from "./loader.js"
 import type { ApiModel } from "./model.js"
@@ -8,8 +6,13 @@ import { renderSdk } from "./render-sdk.js"
 import type { AccordCodegenConfig, JsonValue } from "./types.js"
 import { generateValidators } from "./validators.js"
 
+export { writeGeneratedFile, writeGeneratedSdk } from "./write-sdk.js"
+
 export interface GenerateResult {
+  /** Complete single-file rendering, suitable for stdout. */
   readonly source: string
+  /** SDK modules, with index.ts as the public entry point. */
+  readonly files: Readonly<Record<string, string>>
   readonly model: ApiModel
 }
 
@@ -27,7 +30,7 @@ export async function generate(
     ? await generateValidators(compilation, store, config.validators)
     : undefined
   return {
-    source: renderSdk(compilation, validators),
+    ...renderSdk(compilation, validators),
     model: compilation.model,
   }
 }
@@ -40,14 +43,4 @@ export async function generateFromFile(
   config: AccordCodegenConfig = {},
 ): Promise<GenerateResult> {
   return generate(await loadOpenApiFile(filePath), { ...config, sourceUrl: sourceUri(filePath) })
-}
-export async function writeGeneratedFile(outputPath: string, source: string): Promise<void> {
-  const absolute = resolve(outputPath)
-  await mkdir(dirname(absolute), { recursive: true })
-  const temporary = `${absolute}.accord-${process.pid}-${crypto.randomUUID()}.tmp`
-  await writeFile(temporary, source, "utf8")
-  await rename(temporary, absolute)
-}
-export async function writeGeneratedSdk(outputPath: string, result: GenerateResult): Promise<void> {
-  await writeGeneratedFile(outputPath, result.source)
 }

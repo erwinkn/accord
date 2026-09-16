@@ -2,7 +2,7 @@
 import { resolve } from "node:path"
 import { pathToFileURL } from "node:url"
 import { resolve as resolveModule } from "import-meta-resolve"
-import { generateFromFile, writeGeneratedSdk } from "./generate.js"
+import { generateFromFile, writeGeneratedFile, writeGeneratedSdk } from "./generate.js"
 import type { AccordCodegenConfig, BodyMode, NamespaceStrategy } from "./types.js"
 import type { ValidationAdapterModule } from "./validation-adapter.js"
 
@@ -14,6 +14,7 @@ interface CliArguments {
   bodyMode?: BodyMode
   basePath?: string
   validators?: string
+  singleFile?: boolean
 }
 
 interface ConfigModule {
@@ -43,8 +44,10 @@ async function main(): Promise<void> {
   if (args.bodyMode !== undefined) config.body = { ...fileConfig.body, mode: args.bodyMode }
 
   const result = await generateFromFile(args.input, config)
-  if (args.output) await writeGeneratedSdk(args.output, result)
-  else process.stdout.write(result.source)
+  if (args.output) {
+    if (args.singleFile) await writeGeneratedFile(args.output, result.source)
+    else await writeGeneratedSdk(args.output, result)
+  } else process.stdout.write(result.source)
 }
 
 function parseArguments(values: readonly string[]): CliArguments {
@@ -61,6 +64,7 @@ function parseArguments(values: readonly string[]): CliArguments {
   let namespace: NamespaceStrategy | undefined
   let bodyMode: BodyMode | undefined
   let basePath: string | undefined
+  let singleFile = false
 
   for (let index = 0; index < args.length; index += 1) {
     const value = args[index]
@@ -71,6 +75,10 @@ function parseArguments(values: readonly string[]): CliArguments {
       continue
     }
 
+    if (value === "--single-file") {
+      singleFile = true
+      continue
+    }
     if (value === "--validators") {
       index += 1
       continue
@@ -105,7 +113,7 @@ function parseArguments(values: readonly string[]): CliArguments {
   }
 
   if (!input) throw new TypeError("An OpenAPI input file is required")
-  const parsed: CliArguments = { input }
+  const parsed: CliArguments = { input, singleFile }
   const adapterIndex = values.indexOf("--validators")
   if (adapterIndex >= 0) parsed.validators = requireValue("--validators", values[adapterIndex + 1])
   if (output !== undefined) parsed.output = output
@@ -132,7 +140,7 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 
 function printUsage(): void {
   process.stdout.write(
-    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
   )
 }
 

@@ -17,7 +17,7 @@ const { source } = await generateFromFile("openapi.yaml", {
 })
 ```
 
-The single generated TypeScript file contains actual schemas:
+The generated `schemas.ts` module contains actual schemas, also re-exported from the SDK entry:
 
 ```ts
 import { z } from "zod"

@@ -32,7 +32,7 @@ Inputs are trusted: no request schema validation, reparsing, defaults, coercion,
 
 | Example | Spec | Generated SDK | Usage |
 | --- | --- | --- | --- |
-| Nest investment API: 18 endpoints, generated from controllers/DTOs | [OpenAPI](../examples/nest-market/openapi.json) | [SDK](../examples/nest-market/sdk/sdk.ts) | [Calls](../examples/nest-market/usage.ts) |
+| Nest investment API: 18 endpoints, generated from controllers/DTOs | [OpenAPI](../examples/nest-market/openapi.json) | [SDK](../examples/nest-market/sdk/index.ts) | [Calls](../examples/nest-market/usage.ts) |
 | Tasks: four endpoints, read/write projections, patch, validation, React Query | [OpenAPI](../examples/tasks/openapi.yaml) | [SDK](../examples/tasks/sdk.ts) | [Calls](../examples/tasks/usage.ts) |
 | Imports: three endpoints, JSON/CSV, 200/202 unions, binary downloads | [OpenAPI](../examples/imports/openapi.yaml) | [SDK](../examples/imports/sdk.ts) | [Calls](../examples/imports/usage.ts) |
 | Assets: three endpoints, external schemas, multipart, collisions, API keys | [OpenAPI](../examples/assets/openapi.yaml) | [SDK](../examples/assets/sdk.ts) | [Calls](../examples/assets/usage.ts) |

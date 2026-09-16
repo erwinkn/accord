@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "files": {
+    "models.ts": "6c2468f2df4798212bb542afb0806144f599b06faf217359f8cd241800da72e5",
+    "schemas.ts": "06ace189c75faca1c0e14e2c03f08fb664b4634dbf989ebb8045e59e6129e6d2",
+    "types/documents.ts": "dc793b54a40dfcfaef19d9250450fb39dfb4b2c0e0482708f2b06974d35f2abe",
+    "endpoints/documents.ts": "31f30248b1aed7033bcb8fa46c2e1a5e6e49285b3522289cefe7362cccb05f9f",
+    "types/investors.ts": "b38a18c09dcd2850834e2ab19ab4805b3d0fbef932fdc52b27bf415c3a50d204",
+    "endpoints/investors.ts": "c9e8a0360454e22dbc3bfc0eb18aafae3aa27c8ee87b978a7c306193d66f2dc9",
+    "types/jobs.ts": "3730494883f7f7274e30830d98f2530e104f6525b4498f591d02a765758c17fa",
+    "endpoints/jobs.ts": "73ba3fd523348ce4dfa02103721755452fe6738bb6ca917360d5efa5255e043f",
+    "types/offerings.ts": "83d4950fa9ced45242fdfe700b7aabbda88ffd1c49340c2d8123441357b92fa0",
+    "endpoints/offerings.ts": "5a89c6ff91c0f9b30499dfdc7828608f22907b996a82719d3a522c07fceb1a94",
+    "types/subscriptions.ts": "57e034cdb094d682f28579af3d1e81ad5b4feaf9baf99bd6f246e65a704b9c5a",
+    "endpoints/subscriptions.ts": "068de2fb903d10f26a8a0931a1dcdeb1a0623e6092e1ab7d6b6ae45a3b9d78ec",
+    "index.ts": "f9b53c3d37db973bb53172441216acfef4de2ae63b8731e43283b86f60b65f4c"
+  }
+}

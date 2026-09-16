@@ -96,11 +96,28 @@ export default {
 pnpm exec accord generate openapi.yaml -c accord.config.mjs -o src/api.ts
 ```
 
-Generation produces one TypeScript file, including when `--validators` is enabled. Types are exported directly by name; no namespace or duplicate type aliases are needed. The optional `@accord/zod` adapter emits native `z.object`/`z.strictObject`, arrays, unions, and refinements, sharing referenced models. The schemas expose native Zod APIs and implement Standard Schema directly. Core codegen and client have no Ajv/Zod dependency. See the [adapter contract and supported schema features](packages/zod/README.md). File and HTTP references resolve relative to their source document, including embedded `$id` resources and anchors.
+Generation splits the SDK into readable TypeScript modules. With `-o src/api.ts`, that file remains the public entry point and the supporting modules live in `src/api/`. With a directory target such as `-o src/sdk`, the entry is `src/sdk/index.ts`. Types are exported directly by name; no namespace or duplicate type aliases are needed. The optional `@accord/zod` adapter emits native `z.object`/`z.strictObject`, arrays, unions, and refinements, sharing referenced models. The schemas expose native Zod APIs and implement Standard Schema directly. Core codegen and client have no Ajv/Zod dependency. See the [adapter contract and supported schema features](packages/zod/README.md). File and HTTP references resolve relative to their source document, including embedded `$id` resources and anchors.
+
+For example, a tag-grouped SDK has this layout:
+
+```text
+sdk/
+  index.ts             # api and public type/schema exports
+  models.ts            # shared request/response model types
+  schemas.ts           # native validation schemas (only when enabled)
+  types/
+    users.ts           # inputs, results, errors and contracts
+    documents.ts
+  endpoints/
+    users.ts           # endpoint metadata, referencing types and schemas
+    documents.ts
+```
+
+Groups follow the configured path or tag namespaces. Shared models and schemas stay together to support reuse and recursion. Import from the entry as before: `import { api, type User } from "./sdk/index.js"`.
 
 Response media entries reference their generated schemas directly, so the selected status and content type also select validation. Ordinary JSON, text and binary formats need no explicit codec metadata. Schema-dependent encodings such as XML, multipart and numeric text retain their codec details.
 
-The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, model }`. Use `writeGeneratedSdk` to write the file, or consume `source` directly. The CLI can also print the complete SDK to stdout, with or without validators.
+The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, files, model }`. `files` contains the modules with relative paths and `index.ts` as their entry. `writeGeneratedSdk` writes them, tracks ownership in `.accord-manifest.json`, and removes obsolete generated files on regeneration if their contents are unchanged. Handwritten files outside the generated layout and edited obsolete files are preserved. Active generated files are replaced. `source` remains a complete single-file rendering; use `writeGeneratedFile` or CLI `--single-file -o sdk.ts` for that layout. With no output argument, the CLI prints that complete rendering to stdout.
 
 ## Develop
 
