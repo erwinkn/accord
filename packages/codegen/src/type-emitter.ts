@@ -250,15 +250,12 @@ export class TypeEmitter {
             "unevaluatedProperties",
           ].some((key) => rules[key] !== undefined)
         ) {
-          target = typeReference("AccordObjectConstraints", [
-            target,
-            this.object(id, direction, form),
-          ])
+          target = typeReference("ObjectConstraints", [target, this.object(id, direction, form)])
         }
         if (
           ["items", "prefixItems", "minItems", "maxItems"].some((key) => rules[key] !== undefined)
         ) {
-          target = typeReference("AccordArrayConstraints", [target, this.array(id, direction)])
+          target = typeReference("ArrayConstraints", [target, this.array(id, direction)])
         }
       }
       parts.push(target)

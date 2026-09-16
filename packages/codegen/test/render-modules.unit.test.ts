@@ -66,7 +66,7 @@ it("places DTOs by use, keeps projections together, and imports domain types acr
     expect(shared).toContain(`export type ${name} =`)
   expect(shared).not.toContain("export type Subscription")
   expect(shared).not.toContain("export type Job")
-  expect(shared).not.toContain("AccordObjectConstraints")
+  expect(shared).not.toContain("ObjectConstraints")
   expect(Object.keys(files)).not.toContain("types/models.ts")
   expect(files["index.ts"]).toContain('export type * from "./types/shared.js"')
 })
@@ -90,9 +90,9 @@ it("emits local helpers only where needed and avoids a shared module for one dom
     },
     components: { schemas: { User: record({ name: { type: "string" } }) } },
   })
-  expect(files["types/users.ts"]).toContain("type AccordObjectConstraints<T, R>")
-  expect(files["types/users.ts"]).not.toContain("export type AccordObjectConstraints")
-  expect(files["types/users.ts"]).not.toContain("AccordArrayConstraints")
+  expect(files["types/users.ts"]).toContain("type ObjectConstraints<T, R>")
+  expect(files["types/users.ts"]).not.toContain("export type ObjectConstraints")
+  expect(files["types/users.ts"]).not.toContain("ArrayConstraints")
   expect(files["types/users.ts"]).toContain("export type User =")
   expect(Object.keys(files)).not.toContain("types/shared.ts")
 })
