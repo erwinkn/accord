@@ -2,150 +2,150 @@
 import type { HttpResult, RequestOptions, RequestOptionsFor } from "@accord/client";
 import type { ErrorDto } from "./shared.js";
 export type AcceptedSubmissionDto = {
-    readonly "jobId": string;
-    readonly "state": "accepted" & string;
+    "jobId": string;
+    "state": "accepted" & string;
 };
 export type CreateSubscriptionDto = {
-    readonly "amount": string;
-    readonly "investorId": string;
-    readonly "metadata"?: {
-        readonly [key: string]: string;
+    "amount": string;
+    "investorId": string;
+    "metadata"?: {
+        [key: string]: string;
     };
 };
 export type SubscriptionStatus = ("draft" | "submitted") & string;
 export type SubscriptionDto = {
-    readonly "amount": string;
-    readonly "id": string;
-    readonly "investorId": string;
-    readonly "metadata"?: {
-        readonly [key: string]: string;
+    "amount": string;
+    "id": string;
+    "investorId": string;
+    "metadata"?: {
+        [key: string]: string;
     };
-    readonly "offeringId": string;
-    readonly "status": SubscriptionStatus;
-    readonly "submittedAt": string | null;
+    "offeringId": string;
+    "status": SubscriptionStatus;
+    "submittedAt": string | null;
 };
 export type SubscriptionDtoPage = {
-    readonly "items": ReadonlyArray<SubscriptionDto>;
-    readonly "limit": number;
-    readonly "page": number;
-    readonly "total": number;
+    "items": SubscriptionDto[];
+    "limit": number;
+    "page": number;
+    "total": number;
 };
 export type ListSubscriptionsInput = {
-    readonly "offeringId": string;
-    readonly "page"?: number;
-    readonly "limit"?: number;
-    readonly "investorId"?: string;
+    "offeringId": string;
+    "page"?: number;
+    "limit"?: number;
+    "investorId"?: string;
 };
 export type ListSubscriptionsArguments = [
     input: {
-        readonly "offeringId": string;
-        readonly "page"?: number;
-        readonly "limit"?: number;
-        readonly "investorId"?: string;
+        "offeringId": string;
+        "page"?: number;
+        "limit"?: number;
+        "investorId"?: string;
     },
     options?: RequestOptions
 ];
 export type ListSubscriptionsResponse = SubscriptionDtoPage;
 export type ListSubscriptionsError = ErrorDto;
 export type ListSubscriptionsResponses = {
-    readonly "200": SubscriptionDtoPage;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": SubscriptionDtoPage;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type ListSubscriptionsFullResponse = HttpResult<200, SubscriptionDtoPage>;
 export type ListSubscriptionsContract = {
-    readonly "args": ListSubscriptionsArguments;
-    readonly "input": ListSubscriptionsInput;
-    readonly "response": ListSubscriptionsResponse;
-    readonly "error": ListSubscriptionsError;
-    readonly "responses": ListSubscriptionsResponses;
-    readonly "fullResponse": ListSubscriptionsFullResponse;
+    "args": ListSubscriptionsArguments;
+    "input": ListSubscriptionsInput;
+    "response": ListSubscriptionsResponse;
+    "error": ListSubscriptionsError;
+    "responses": ListSubscriptionsResponses;
+    "fullResponse": ListSubscriptionsFullResponse;
 };
 export type CreateSubscriptionInput = {
-    readonly "offeringId": string;
+    "offeringId": string;
 } & CreateSubscriptionDto;
 export type CreateSubscriptionArguments = [
     input: {
-        readonly "offeringId": string;
+        "offeringId": string;
     } & CreateSubscriptionDto,
     options?: RequestOptionsFor<"application/json">
 ];
 export type CreateSubscriptionResponse = SubscriptionDto;
 export type CreateSubscriptionError = ErrorDto;
 export type CreateSubscriptionResponses = {
-    readonly "201": SubscriptionDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "201": SubscriptionDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type CreateSubscriptionFullResponse = HttpResult<201, SubscriptionDto>;
 export type CreateSubscriptionContract = {
-    readonly "args": CreateSubscriptionArguments;
-    readonly "input": CreateSubscriptionInput;
-    readonly "response": CreateSubscriptionResponse;
-    readonly "error": CreateSubscriptionError;
-    readonly "responses": CreateSubscriptionResponses;
-    readonly "fullResponse": CreateSubscriptionFullResponse;
+    "args": CreateSubscriptionArguments;
+    "input": CreateSubscriptionInput;
+    "response": CreateSubscriptionResponse;
+    "error": CreateSubscriptionError;
+    "responses": CreateSubscriptionResponses;
+    "fullResponse": CreateSubscriptionFullResponse;
 };
 export type GetSubscriptionInput = {
-    readonly "subscriptionId": string;
+    "subscriptionId": string;
 };
 export type GetSubscriptionArguments = [
     input: {
-        readonly "subscriptionId": string;
+        "subscriptionId": string;
     },
     options?: RequestOptions
 ];
 export type GetSubscriptionResponse = SubscriptionDto;
 export type GetSubscriptionError = ErrorDto;
 export type GetSubscriptionResponses = {
-    readonly "200": SubscriptionDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": SubscriptionDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type GetSubscriptionFullResponse = HttpResult<200, SubscriptionDto>;
 export type GetSubscriptionContract = {
-    readonly "args": GetSubscriptionArguments;
-    readonly "input": GetSubscriptionInput;
-    readonly "response": GetSubscriptionResponse;
-    readonly "error": GetSubscriptionError;
-    readonly "responses": GetSubscriptionResponses;
-    readonly "fullResponse": GetSubscriptionFullResponse;
+    "args": GetSubscriptionArguments;
+    "input": GetSubscriptionInput;
+    "response": GetSubscriptionResponse;
+    "error": GetSubscriptionError;
+    "responses": GetSubscriptionResponses;
+    "fullResponse": GetSubscriptionFullResponse;
 };
 export type SubmitSubscriptionInput = {
-    readonly "subscriptionId": string;
-    readonly "background"?: boolean;
+    "subscriptionId": string;
+    "background"?: boolean;
 };
 export type SubmitSubscriptionArguments = [
     input: {
-        readonly "subscriptionId": string;
-        readonly "background"?: boolean;
+        "subscriptionId": string;
+        "background"?: boolean;
     },
     options?: RequestOptions
 ];
 export type SubmitSubscriptionResponse = {
-    readonly "status": 200;
-    readonly "data": SubscriptionDto;
+    "status": 200;
+    "data": SubscriptionDto;
 } | {
-    readonly "status": 202;
-    readonly "data": AcceptedSubmissionDto;
+    "status": 202;
+    "data": AcceptedSubmissionDto;
 };
 export type SubmitSubscriptionError = ErrorDto;
 export type SubmitSubscriptionResponses = {
-    readonly "200": SubscriptionDto;
-    readonly "202": AcceptedSubmissionDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": SubscriptionDto;
+    "202": AcceptedSubmissionDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type SubmitSubscriptionFullResponse = HttpResult<200, SubscriptionDto> | HttpResult<202, AcceptedSubmissionDto>;
 export type SubmitSubscriptionContract = {
-    readonly "args": SubmitSubscriptionArguments;
-    readonly "input": SubmitSubscriptionInput;
-    readonly "response": SubmitSubscriptionResponse;
-    readonly "error": SubmitSubscriptionError;
-    readonly "responses": SubmitSubscriptionResponses;
-    readonly "fullResponse": SubmitSubscriptionFullResponse;
+    "args": SubmitSubscriptionArguments;
+    "input": SubmitSubscriptionInput;
+    "response": SubmitSubscriptionResponse;
+    "error": SubmitSubscriptionError;
+    "responses": SubmitSubscriptionResponses;
+    "fullResponse": SubmitSubscriptionFullResponse;
 };

@@ -17,6 +17,95 @@ const roundTrip = (root: string) => ({
 
 export const projectionCases: Fixture[] = [
   {
+    id: "types.mutable-dtos-readonly-calls",
+    title:
+      "Mutable DTOs retain constraints while deeply frozen requests round-trip without mutation",
+    area: "types",
+    reference: references.accord,
+    document: document(roundTrip("Payload"), {
+      schemas: {
+        Payload: {
+          type: "object",
+          additionalProperties: false,
+          required: ["name", "items", "lookup", "pair", "fixed"],
+          properties: {
+            name: { type: "string" },
+            note: { type: "string" },
+            items: { type: "array", items: ref("Item") },
+            lookup: { type: "object", additionalProperties: ref("Item") },
+            pair: {
+              type: "array",
+              minItems: 2,
+              prefixItems: [{ type: "string" }, { type: "integer" }],
+              items: false,
+            },
+            fixed: { const: [1, 2] },
+          },
+        },
+        Item: {
+          type: "object",
+          additionalProperties: false,
+          required: ["name"],
+          properties: { name: { type: "string" }, children: { type: "array", items: ref("Item") } },
+        },
+      },
+    }),
+    config: { validators: zodAdapter() },
+    consumer: {
+      source: consumer(`import type { Payload, Item } from "./generated.js"
+      function invalid(value: Payload) {
+        // @negative ARRAY_ELEMENT
+        value.items.push({ name: 42 })
+        // @negative TUPLE_ELEMENT
+        value.pair[1] = "wrong"
+        // @negative CONST_ELEMENT
+        value.fixed[0] = 3
+      }
+      export async function run() {
+        const draft: Payload = { name: "draft", items: [], lookup: {}, pair: ["first", 1], fixed: [1, 2] }
+        draft.name = "revised"
+        draft.note = "added later"
+        draft.items.push({ name: "leaf", children: [] })
+        draft.items[0]!.children!.push({ name: "nested" })
+        draft.lookup["new"] = { name: "entry" }
+        draft.pair[0] = "second"
+        draft.fixed[0] = 1
+        const input = Object.freeze({
+          name: "frozen",
+          items: Object.freeze([Object.freeze({ name: "leaf", children: Object.freeze([]) })]),
+          lookup: Object.freeze({ first: Object.freeze({ name: "entry" }) }),
+          pair: Object.freeze(["pair", 2] as const),
+          fixed: Object.freeze([1, 2] as const)
+        })
+        await withServer(async (baseUrl, requests) => {
+          const client = createClient(api, { baseUrl })
+          const result: Payload = await client.probe.call(input)
+          // Compare a snapshot: Node's assertion otherwise narrows result to input's literal types.
+          assert.deepEqual({ ...result }, input)
+          assert.deepEqual(JSON.parse(requests[0]!.body.toString()), input)
+          result.name = "local edit"
+          result.items.push({ name: "added" })
+          result.items[0]!.children!.push({ name: "child" })
+          result.lookup["new"] = { name: "added" }
+          result.pair[1] = 3
+          function sort(items: Item[]) { items.sort((a, b) => a.name.localeCompare(b.name)) }
+          sort(result.items)
+          const full = await client.probe.call.withResponse(input)
+          full.data = draft
+          full.data.items.push({ name: "added" })
+          assert.equal(input.name, "frozen")
+          assert.equal(input.items.length, 1)
+          assert.equal(input.items[0]!.children.length, 0)
+        }, { status: 200, headers: { "content-type": "application/json" }, body: JSON.stringify(input) })
+      }`),
+      diagnostics: [
+        { marker: "ARRAY_ELEMENT", codes: [2322] },
+        { marker: "TUPLE_ELEMENT", codes: [2322] },
+        { marker: "CONST_ELEMENT", codes: [2322] },
+      ],
+    },
+  },
+  {
     id: "types.recursive-domain-slices",
     title: "Domain DTO imports support mutual recursion, shared types and native validators",
     area: "types",

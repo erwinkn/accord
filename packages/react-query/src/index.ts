@@ -14,10 +14,16 @@ import {
   type HttpError,
   type MutationEndpoint,
   type QueryEndpoint,
+  type ReadonlyInput,
   type ResponseOf,
   resolveBaseUrl,
 } from "@accord/client"
-import type { DataTag, UndefinedInitialDataOptions } from "@tanstack/react-query"
+import type {
+  DataTag,
+  MutationKey,
+  UndefinedInitialDataOptions,
+  UseMutationOptions,
+} from "@tanstack/react-query"
 import {
   mutationOptions,
   type QueryKey,
@@ -313,7 +319,7 @@ export function apiMutation<T extends MutationTarget>(target: T) {
   return mutationOptions<
     ResponseOf<EndpointOf<T>>,
     ClientError<EndpointOf<T>>,
-    DefaultInputOf<EndpointOf<T>>
+    ReadonlyInput<DefaultInputOf<EndpointOf<T>>>
   >({
     mutationKey: apiMutationKey(target),
     mutationFn: (input) => {
@@ -328,7 +334,13 @@ export function apiMutation<T extends MutationTarget>(target: T) {
   })
 }
 
-export function apiMutationCall<T extends MutationTarget>(target: T) {
+export function apiMutationCall<T extends MutationTarget>(
+  target: T,
+): UseMutationOptions<
+  ResponseOf<EndpointOf<T>>,
+  ClientError<EndpointOf<T>>,
+  ArgumentsOf<EndpointOf<T>>
+> & { mutationKey: MutationKey } {
   const bound = unpack(target)
   const request = createEndpointClient(bound.endpoint, bound.context)
   return mutationOptions<
@@ -359,7 +371,7 @@ export function useApiMutation<T extends MutationTarget>(
 ): UseMutationResult<
   ResponseOf<EndpointOf<T>>,
   ClientError<EndpointOf<T>>,
-  DefaultInputOf<EndpointOf<T>>
+  ReadonlyInput<DefaultInputOf<EndpointOf<T>>>
 > {
   const options = useContext(Context)
   return useMutation(apiMutation(unpack(target, options)))

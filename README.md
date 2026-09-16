@@ -115,6 +115,8 @@ sdk/
 
 Groups follow the configured path or tag namespaces. Each type slice includes its DTOs and their request/response variants. Direct endpoint uses determine a model’s slice; nested models follow their parent unless they have their own slice. Cross-slice references use type-only imports. Models directly used by multiple slices, and public components with no endpoint owner, go in `types/shared.ts`. Validators stay together in `schemas.ts` to support recursive schemas without runtime import cycles. Import from the entry as before: `import { api, type User } from "./sdk/index.js"`.
 
+Public DTOs, input aliases, and response data use mutable properties, arrays, tuples, and dictionaries, so callers can build requests incrementally and edit local results. Request calls also accept readonly values, including nested `as const` arrays; the client only reads caller input. Endpoint metadata stays readonly. OpenAPI `readOnly`/`writeOnly` still controls which fields belong in requests and responses; it does not make returned objects immutable.
+
 Generated body call options use the shared `RequestOptionsFor<"application/json">` helper from `@accord/client`. It preserves authentication, cancellation and custom headers while constraining `content-type`, including parameters such as `charset`. Non-default formats use `RequestOptionsFor<"text/csv", true>` to require an explicit selector. Merged path/body inputs use ordinary intersections.
 
 Response media entries reference their generated schemas directly, so the selected status and content type also select validation. Ordinary JSON, text and binary formats need no explicit codec metadata. Schema-dependent encodings such as XML, multipart and numeric text retain their codec details.

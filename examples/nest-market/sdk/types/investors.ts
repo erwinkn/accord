@@ -2,49 +2,49 @@
 import type { HttpResult, RequestOptions, RequestOptionsFor } from "@accord/client";
 import type { ErrorDto } from "./shared.js";
 export type CompanyInvestorDto = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "id": string;
-    readonly "kind": "company" & string;
-    readonly "registrationNumber": string;
+    "country": string;
+    "displayName": string;
+    "email": string;
+    "id": string;
+    "kind": "company" & string;
+    "registrationNumber": string;
 };
 export type CreateCompanyInvestorDto = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "kind": "company" & string;
-    readonly "onboardingNote"?: never;
-    readonly "registrationNumber": string;
+    "country": string;
+    "displayName": string;
+    "email": string;
+    "kind": "company" & string;
+    "onboardingNote"?: never;
+    "registrationNumber": string;
 };
 export type CreateCompanyInvestorDtoRequest = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "kind": "company" & string;
-    readonly "onboardingNote"?: string;
-    readonly "registrationNumber": string;
+    "country": string;
+    "displayName": string;
+    "email": string;
+    "kind": "company" & string;
+    "onboardingNote"?: string;
+    "registrationNumber": string;
 };
 export type CreateIndividualInvestorDto = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "kind": "individual" & string;
-    readonly "onboardingNote"?: never;
+    "country": string;
+    "displayName": string;
+    "email": string;
+    "kind": "individual" & string;
+    "onboardingNote"?: never;
 };
 export type CreateIndividualInvestorDtoRequest = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "kind": "individual" & string;
-    readonly "onboardingNote"?: string;
+    "country": string;
+    "displayName": string;
+    "email": string;
+    "kind": "individual" & string;
+    "onboardingNote"?: string;
 };
 export type IndividualInvestorDto = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "id": string;
-    readonly "kind": "individual" & string;
+    "country": string;
+    "displayName": string;
+    "email": string;
+    "id": string;
+    "kind": "individual" & string;
 };
 export type CreateCompanyInvestorInput = CreateCompanyInvestorDtoRequest;
 export type CreateCompanyInvestorArguments = [
@@ -54,19 +54,19 @@ export type CreateCompanyInvestorArguments = [
 export type CreateCompanyInvestorResponse = CompanyInvestorDto;
 export type CreateCompanyInvestorError = ErrorDto;
 export type CreateCompanyInvestorResponses = {
-    readonly "201": CompanyInvestorDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "201": CompanyInvestorDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type CreateCompanyInvestorFullResponse = HttpResult<201, CompanyInvestorDto>;
 export type CreateCompanyInvestorContract = {
-    readonly "args": CreateCompanyInvestorArguments;
-    readonly "input": CreateCompanyInvestorInput;
-    readonly "response": CreateCompanyInvestorResponse;
-    readonly "error": CreateCompanyInvestorError;
-    readonly "responses": CreateCompanyInvestorResponses;
-    readonly "fullResponse": CreateCompanyInvestorFullResponse;
+    "args": CreateCompanyInvestorArguments;
+    "input": CreateCompanyInvestorInput;
+    "response": CreateCompanyInvestorResponse;
+    "error": CreateCompanyInvestorError;
+    "responses": CreateCompanyInvestorResponses;
+    "fullResponse": CreateCompanyInvestorFullResponse;
 };
 export type CreateIndividualInvestorInput = CreateIndividualInvestorDtoRequest;
 export type CreateIndividualInvestorArguments = [
@@ -76,43 +76,43 @@ export type CreateIndividualInvestorArguments = [
 export type CreateIndividualInvestorResponse = IndividualInvestorDto;
 export type CreateIndividualInvestorError = ErrorDto;
 export type CreateIndividualInvestorResponses = {
-    readonly "201": IndividualInvestorDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "201": IndividualInvestorDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type CreateIndividualInvestorFullResponse = HttpResult<201, IndividualInvestorDto>;
 export type CreateIndividualInvestorContract = {
-    readonly "args": CreateIndividualInvestorArguments;
-    readonly "input": CreateIndividualInvestorInput;
-    readonly "response": CreateIndividualInvestorResponse;
-    readonly "error": CreateIndividualInvestorError;
-    readonly "responses": CreateIndividualInvestorResponses;
-    readonly "fullResponse": CreateIndividualInvestorFullResponse;
+    "args": CreateIndividualInvestorArguments;
+    "input": CreateIndividualInvestorInput;
+    "response": CreateIndividualInvestorResponse;
+    "error": CreateIndividualInvestorError;
+    "responses": CreateIndividualInvestorResponses;
+    "fullResponse": CreateIndividualInvestorFullResponse;
 };
 export type GetInvestorInput = {
-    readonly "investorId": string;
+    "investorId": string;
 };
 export type GetInvestorArguments = [
     input: {
-        readonly "investorId": string;
+        "investorId": string;
     },
     options?: RequestOptions
 ];
 export type GetInvestorResponse = IndividualInvestorDto | CompanyInvestorDto;
 export type GetInvestorError = ErrorDto;
 export type GetInvestorResponses = {
-    readonly "200": IndividualInvestorDto | CompanyInvestorDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": IndividualInvestorDto | CompanyInvestorDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type GetInvestorFullResponse = HttpResult<200, IndividualInvestorDto | CompanyInvestorDto>;
 export type GetInvestorContract = {
-    readonly "args": GetInvestorArguments;
-    readonly "input": GetInvestorInput;
-    readonly "response": GetInvestorResponse;
-    readonly "error": GetInvestorError;
-    readonly "responses": GetInvestorResponses;
-    readonly "fullResponse": GetInvestorFullResponse;
+    "args": GetInvestorArguments;
+    "input": GetInvestorInput;
+    "response": GetInvestorResponse;
+    "error": GetInvestorError;
+    "responses": GetInvestorResponses;
+    "fullResponse": GetInvestorFullResponse;
 };

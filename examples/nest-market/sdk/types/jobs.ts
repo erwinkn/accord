@@ -3,33 +3,33 @@ import type { HttpResult, RequestOptions } from "@accord/client";
 import type { SubscriptionDto } from "./subscriptions.js";
 import type { ErrorDto } from "./shared.js";
 export type SubmissionJobDto = {
-    readonly "id": string;
-    readonly "result": SubscriptionDto;
-    readonly "state": "completed" & string;
+    "id": string;
+    "result": SubscriptionDto;
+    "state": "completed" & string;
 };
 export type GetSubmissionJobInput = {
-    readonly "jobId": string;
+    "jobId": string;
 };
 export type GetSubmissionJobArguments = [
     input: {
-        readonly "jobId": string;
+        "jobId": string;
     },
     options?: RequestOptions
 ];
 export type GetSubmissionJobResponse = SubmissionJobDto;
 export type GetSubmissionJobError = ErrorDto;
 export type GetSubmissionJobResponses = {
-    readonly "200": SubmissionJobDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": SubmissionJobDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type GetSubmissionJobFullResponse = HttpResult<200, SubmissionJobDto>;
 export type GetSubmissionJobContract = {
-    readonly "args": GetSubmissionJobArguments;
-    readonly "input": GetSubmissionJobInput;
-    readonly "response": GetSubmissionJobResponse;
-    readonly "error": GetSubmissionJobError;
-    readonly "responses": GetSubmissionJobResponses;
-    readonly "fullResponse": GetSubmissionJobFullResponse;
+    "args": GetSubmissionJobArguments;
+    "input": GetSubmissionJobInput;
+    "response": GetSubmissionJobResponse;
+    "error": GetSubmissionJobError;
+    "responses": GetSubmissionJobResponses;
+    "fullResponse": GetSubmissionJobFullResponse;
 };

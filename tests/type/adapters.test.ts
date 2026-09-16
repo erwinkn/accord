@@ -9,6 +9,6 @@ type PresentValues<T> = { [K in keyof T]: Exclude<T[K], undefined> }
 type _ZodOutput = Expect<Assignable<PresentValues<ZodTask>, Task>>
 type _ArkTypeOutput = Expect<Assignable<PresentValues<ArkTask>, Task>>
 
-// Native parsers produce mutable objects; Accord response types retain readonly projections.
+// Native parsers and Accord DTOs both expose mutable data.
 type _ZodInput = Expect<Assignable<Task, ZodTask>>
 type _ArkInput = Expect<Assignable<Task, ArkTask>>

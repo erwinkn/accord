@@ -3,125 +3,125 @@ import type { BinaryUpload, HttpResult, RequestOptions, RequestOptionsFor } from
 import type { ErrorDto } from "./shared.js";
 export type DocumentCategory = ("terms" | "prospectus" | "other") & string;
 export type DocumentDto = {
-    readonly "category": DocumentCategory;
-    readonly "filename": string;
-    readonly "id": string;
-    readonly "note"?: string;
-    readonly "offeringId": string;
-    readonly "size": number;
+    "category": DocumentCategory;
+    "filename": string;
+    "id": string;
+    "note"?: string;
+    "offeringId": string;
+    "size": number;
 };
 export type UploadDocumentDto = {
-    readonly "category": DocumentCategory;
-    readonly "file": string;
-    readonly "note"?: string;
+    "category": DocumentCategory;
+    "file": string;
+    "note"?: string;
 };
 export type UploadDocumentDtoForm = {
-    readonly "category": DocumentCategory;
-    readonly "file": BinaryUpload;
-    readonly "note"?: string;
+    "category": DocumentCategory;
+    "file": BinaryUpload;
+    "note"?: string;
 };
 export type GetDocumentInput = {
-    readonly "documentId": string;
+    "documentId": string;
 };
 export type GetDocumentArguments = [
     input: {
-        readonly "documentId": string;
+        "documentId": string;
     },
     options?: RequestOptions
 ];
 export type GetDocumentResponse = DocumentDto;
 export type GetDocumentError = ErrorDto;
 export type GetDocumentResponses = {
-    readonly "200": DocumentDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": DocumentDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type GetDocumentFullResponse = HttpResult<200, DocumentDto>;
 export type GetDocumentContract = {
-    readonly "args": GetDocumentArguments;
-    readonly "input": GetDocumentInput;
-    readonly "response": GetDocumentResponse;
-    readonly "error": GetDocumentError;
-    readonly "responses": GetDocumentResponses;
-    readonly "fullResponse": GetDocumentFullResponse;
+    "args": GetDocumentArguments;
+    "input": GetDocumentInput;
+    "response": GetDocumentResponse;
+    "error": GetDocumentError;
+    "responses": GetDocumentResponses;
+    "fullResponse": GetDocumentFullResponse;
 };
 export type DeleteDocumentInput = {
-    readonly "documentId": string;
+    "documentId": string;
 };
 export type DeleteDocumentArguments = [
     input: {
-        readonly "documentId": string;
+        "documentId": string;
     },
     options?: RequestOptions
 ];
 export type DeleteDocumentResponse = undefined;
 export type DeleteDocumentError = ErrorDto;
 export type DeleteDocumentResponses = {
-    readonly "204": undefined;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "204": undefined;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type DeleteDocumentFullResponse = HttpResult<204, undefined>;
 export type DeleteDocumentContract = {
-    readonly "args": DeleteDocumentArguments;
-    readonly "input": DeleteDocumentInput;
-    readonly "response": DeleteDocumentResponse;
-    readonly "error": DeleteDocumentError;
-    readonly "responses": DeleteDocumentResponses;
-    readonly "fullResponse": DeleteDocumentFullResponse;
+    "args": DeleteDocumentArguments;
+    "input": DeleteDocumentInput;
+    "response": DeleteDocumentResponse;
+    "error": DeleteDocumentError;
+    "responses": DeleteDocumentResponses;
+    "fullResponse": DeleteDocumentFullResponse;
 };
 export type DownloadDocumentInput = {
-    readonly "documentId": string;
+    "documentId": string;
 };
 export type DownloadDocumentArguments = [
     input: {
-        readonly "documentId": string;
+        "documentId": string;
     },
     options?: RequestOptions
 ];
 export type DownloadDocumentResponse = ArrayBuffer;
 export type DownloadDocumentError = ErrorDto;
 export type DownloadDocumentResponses = {
-    readonly "200": ArrayBuffer;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": ArrayBuffer;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type DownloadDocumentFullResponse = HttpResult<200, ArrayBuffer>;
 export type DownloadDocumentContract = {
-    readonly "args": DownloadDocumentArguments;
-    readonly "input": DownloadDocumentInput;
-    readonly "response": DownloadDocumentResponse;
-    readonly "error": DownloadDocumentError;
-    readonly "responses": DownloadDocumentResponses;
-    readonly "fullResponse": DownloadDocumentFullResponse;
+    "args": DownloadDocumentArguments;
+    "input": DownloadDocumentInput;
+    "response": DownloadDocumentResponse;
+    "error": DownloadDocumentError;
+    "responses": DownloadDocumentResponses;
+    "fullResponse": DownloadDocumentFullResponse;
 };
 export type UploadDocumentInput = {
-    readonly "offeringId": string;
+    "offeringId": string;
 } & UploadDocumentDtoForm;
 export type UploadDocumentArguments = [
     input: {
-        readonly "offeringId": string;
+        "offeringId": string;
     } & UploadDocumentDtoForm,
     options?: RequestOptionsFor<"multipart/form-data">
 ];
 export type UploadDocumentResponse = DocumentDto;
 export type UploadDocumentError = ErrorDto;
 export type UploadDocumentResponses = {
-    readonly "201": DocumentDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
-    readonly "413": ErrorDto;
+    "201": DocumentDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
+    "413": ErrorDto;
 };
 export type UploadDocumentFullResponse = HttpResult<201, DocumentDto>;
 export type UploadDocumentContract = {
-    readonly "args": UploadDocumentArguments;
-    readonly "input": UploadDocumentInput;
-    readonly "response": UploadDocumentResponse;
-    readonly "error": UploadDocumentError;
-    readonly "responses": UploadDocumentResponses;
-    readonly "fullResponse": UploadDocumentFullResponse;
+    "args": UploadDocumentArguments;
+    "input": UploadDocumentInput;
+    "response": UploadDocumentResponse;
+    "error": UploadDocumentError;
+    "responses": UploadDocumentResponses;
+    "fullResponse": UploadDocumentFullResponse;
 };

@@ -453,7 +453,7 @@ export const responseCases: Fixture[] = [
     }),
     consumer: {
       source:
-        consumer(`type ResponseContract = Expect<Equal<ResponseOf<typeof api.probe.call>, { readonly id: number }>>
+        consumer(`type ResponseContract = Expect<Equal<ResponseOf<typeof api.probe.call>, { id: number }>>
       export async function run() { await withServer(async baseUrl => {
         const value = await createClient(api, { baseUrl }).probe.call()
         assert.equal(value.id, 42, "ACCORD_JSON_RESPONSE")

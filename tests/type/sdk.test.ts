@@ -19,10 +19,10 @@ const listPromise = http.users.listUsers({ limit: 20 })
 const getPromise = http.users.getUser({ userId: "123" })
 const createPromise = http.users.createUser({ body: { name: "Alice" } })
 
-type _ListResponse = Expect<Equal<Awaited<typeof listPromise>, readonly User[]>>
+type _ListResponse = Expect<Equal<Awaited<typeof listPromise>, User[]>>
 type _GetResponse = Expect<Equal<Awaited<typeof getPromise>, User>>
 type _CreateResponse = Expect<Equal<Awaited<typeof createPromise>, User>>
-type _GeneratedInput = Expect<Equal<GetUserInput, { readonly userId: string }>>
+type _GeneratedInput = Expect<Equal<GetUserInput, { userId: string }>>
 type _TypedError = Expect<Equal<GetUserError, ApiError>>
 
 // @ts-expect-error userId is required

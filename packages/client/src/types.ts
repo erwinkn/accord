@@ -198,13 +198,23 @@ export type ResponseOf<E extends EndpointDefinition> = ContractOf<E>["response"]
 export type ErrorOf<E extends EndpointDefinition> = ContractOf<E>["error"]
 export type ResponsesOf<E extends EndpointDefinition> = ContractOf<E>["responses"]
 export type FullResponseOf<E extends EndpointDefinition> = ContractOf<E>["fullResponse"]
-export type ArgumentsOf<E extends EndpointDefinition> = ContractOf<E>["args"]
+/** Accept caller-owned immutable data without changing the mutable DTO or native upload types. */
+export type ReadonlyInput<T> = T extends Date | RequestBinary
+  ? T
+  : T extends object
+    ? { readonly [K in keyof T]: ReadonlyInput<T[K]> }
+    : T
+type RequestArguments<A extends EndpointContract["args"]> = {
+  [K in keyof A]: K extends "0" ? ReadonlyInput<A[K]> : A[K]
+}
+/** Accepted call arguments; named generated argument tuples remain mutable for construction. */
+export type ArgumentsOf<E extends EndpointDefinition> = RequestArguments<ContractOf<E>["args"]>
 type DefaultInput<A extends readonly unknown[]> = A extends readonly unknown[]
   ? [input: A[0]] extends A
     ? A[0]
     : never
   : never
-export type DefaultInputOf<E extends EndpointDefinition> = DefaultInput<ArgumentsOf<E>>
+export type DefaultInputOf<E extends EndpointDefinition> = DefaultInput<ContractOf<E>["args"]>
 type KeysOf<T> = T extends unknown ? keyof T : never
 type InvalidHeaderKeys<H> = {
   [K in keyof H]: K extends string
@@ -273,12 +283,12 @@ export type RequestOptionsFor<
       })
 
 export interface HttpResult<Status extends number = number, Data = unknown> {
-  readonly status: Status
-  readonly data: Data
-  readonly headers: Headers
-  readonly mediaType: string | null
+  status: Status
+  data: Data
+  headers: Headers
+  mediaType: string | null
   /** Decoding may already have consumed this response's body. */
-  readonly response: Response
+  response: Response
 }
 
 export type MaybePromise<T> = T | Promise<T>

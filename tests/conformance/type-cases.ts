@@ -48,7 +48,7 @@ export const typeCases: Fixture[] = [
     },
     consumer: {
       source: consumer(`// @contract ACCORD_REF_SIBLING_TYPE
-type InputContract = Expect<Equal<Pick<InputOf<typeof api.probe.call>["body"], "a" | "b">, { readonly a: string; readonly b: string }>>`),
+type InputContract = Expect<Equal<Pick<InputOf<typeof api.probe.call>["body"], "a" | "b">, { a: string; b: string }>>`),
     },
   },
   {
@@ -59,7 +59,7 @@ type InputContract = Expect<Equal<Pick<InputOf<typeof api.probe.call>["body"], "
     document: queryInput,
     consumer: {
       source: consumer(`type Input = InputOf<typeof api.probe.call>
-      type InputContract = Expect<Equal<Input, { readonly userId: string; readonly limit?: number; readonly xSession: string }>>
+      type InputContract = Expect<Equal<Input, { userId: string; limit?: number; xSession: string }>>
       const accepted: Input = { userId: "u", xSession: "s" }
       const client = createClient(api, { baseUrl: "http://localhost" })
       function examples() {

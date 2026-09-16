@@ -367,7 +367,7 @@ export const rewriteCases: Fixture[] = [
     config: { validators: zodAdapter() },
     consumer: {
       source: consumer(
-        'type Contract = Expect<Equal<ResponseOf<typeof api.probe.call>, { readonly value: "ok" }>>',
+        'type Contract = Expect<Equal<ResponseOf<typeof api.probe.call>, { value: "ok" }>>',
       ),
     },
   },
@@ -387,7 +387,7 @@ export const rewriteCases: Fixture[] = [
     config: { validators: zodAdapter() },
     consumer: {
       source: consumer(
-        'type Contract = Expect<Equal<ResponseOf<typeof api.probe.call>, { readonly name: "Ada" }>>',
+        'type Contract = Expect<Equal<ResponseOf<typeof api.probe.call>, { name: "Ada" }>>',
       ),
     },
   },

@@ -1,12 +1,12 @@
 {
   "version": 1,
   "files": {
-    "types/documents.ts": "cabcdbfab005790a0db85e158a58a8c180593b2412e5534bc68253cdd2c9e8d5",
-    "types/investors.ts": "34442e3a9768a0e5183edeb5ea1e87ddc497f984121dd7fcb9ea4afdce413ce9",
-    "types/jobs.ts": "bad980b312f868f75eb973151f7cd04b373e4941bf9e9afb76fc439d4297fac8",
-    "types/offerings.ts": "36b31383a651edf5ac2b545569d8b0c6c76d2af064d2dd559c379100883a3bed",
-    "types/subscriptions.ts": "2860e93ae79e4b35f551f9a2b6d6d42f1ad7f77579f10ee659eb2e3c6cd48738",
-    "types/shared.ts": "c27d07b79f92552394322295602777970d90860c6be64fbec8731e3f30605d9c",
+    "types/documents.ts": "2b80df50fdc32738e5c5113d1160ec379132e3092a960e08685e5421d6e67db9",
+    "types/investors.ts": "3b165ca9954ba3d7c33da4696bad0f45573b42f8eb76ab83f38ccabe275b3697",
+    "types/jobs.ts": "b2d639ee08b2000eeec42a5eac6839d2c5fb5e79daa81c166d5c40dc166cf6e1",
+    "types/offerings.ts": "8c6d33978f0a53ad9b841458cea8ff221adb0ea40b5f140612fa0af0a42c7b07",
+    "types/subscriptions.ts": "61ffbe3e68c92f029bd6f74612194fab7fa0e20ed8f25c542f1b2dbb88802905",
+    "types/shared.ts": "228f086644f08e0aa5064966fa5981096d1babcef0101c41bb4fc0ae5197de79",
     "schemas.ts": "eac5ef5b1960d24175ee214cff1c3a28faa0e2eba289386eeb11af4af388d43e",
     "endpoints/documents.ts": "b4d156d14e3071fce3f7cf6a1b491e2aae38253b72518f61c066231daed176ab",
     "endpoints/investors.ts": "1680a11b77de9d439bbc65b425df5efb0dc1a527c89d6b40239c2ee7cf252d87",

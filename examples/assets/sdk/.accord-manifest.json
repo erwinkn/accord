@@ -1,7 +1,7 @@
 {
   "version": 1,
   "files": {
-    "types/assets.ts": "6c5531568e303e2d92f49bb71173bc078316715ed63801fe8bec47a75c435b56",
+    "types/assets.ts": "e5251812d25e35297a824ddd2557366cedbaa64ee25121f19aee06c8a4093a9a",
     "endpoints/assets.ts": "44b2d56fa33d8273836388a62f9fb294619917812a11c3812cf5ae53fc183b10"
   }
 }

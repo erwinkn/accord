@@ -9,7 +9,6 @@ import { renameTypeReferences, typeReferences } from "./type-projections.js"
 import type { JsonValue } from "./types.js"
 
 const f = ts.factory
-const readonly = [f.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
 export const unknownType = (): ts.TypeNode => f.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword)
 export const neverType = (): ts.TypeNode => f.createKeywordTypeNode(ts.SyntaxKind.NeverKeyword)
 export const undefinedType = (): ts.TypeNode =>
@@ -18,7 +17,7 @@ export const typeReference = (name: string, args?: readonly ts.TypeNode[]): ts.T
   f.createTypeReferenceNode(name, args)
 export const property = (name: string, type: ts.TypeNode, optional = false): ts.PropertySignature =>
   f.createPropertySignature(
-    readonly,
+    undefined,
     f.createStringLiteral(name),
     optional ? f.createToken(ts.SyntaxKind.QuestionToken) : undefined,
     type,
@@ -216,11 +215,7 @@ export class TypeEmitter {
   }
 
   private constant(value: JsonValue): ts.TypeNode {
-    if (isJsonArray(value))
-      return f.createTypeOperatorNode(
-        ts.SyntaxKind.ReadonlyKeyword,
-        f.createTupleTypeNode(value.map((item) => this.constant(item))),
-      )
+    if (isJsonArray(value)) return f.createTupleTypeNode(value.map((item) => this.constant(item)))
     if (isObject(value))
       return typeLiteral(
         Object.entries(value).map(([key, item]) => property(key, this.constant(item))),
@@ -289,7 +284,7 @@ export class TypeEmitter {
             f.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
             f.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
             f.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-            hasArray ? this.array(id, direction) : typeReference("ReadonlyArray", [unknownType()]),
+            hasArray ? this.array(id, direction) : f.createArrayTypeNode(unknownType()),
             hasObject
               ? this.object(id, direction, form)
               : typeReference("Record", [
@@ -357,9 +352,9 @@ export class TypeEmitter {
         const field = form?.fields[name] ?? form?.additional
         const valueCodec = field?.codec.kind === "bytes" ? field.codec : undefined
         const valueType = field?.multiple
-          ? typeReference("ReadonlyArray", [
+          ? f.createArrayTypeNode(
               this.emit(this.graph.edge(schema, "items"), direction, valueCodec),
-            ])
+            )
           : this.emit(schema, direction, valueCodec)
         elements.push(property(name, valueType, !required.has(name)))
       }
@@ -383,7 +378,7 @@ export class TypeEmitter {
         ])
       elements.push(
         f.createIndexSignature(
-          readonly,
+          undefined,
           [
             f.createParameterDeclaration(
               undefined,
@@ -409,7 +404,7 @@ export class TypeEmitter {
         ])
         elements.push(
           f.createIndexSignature(
-            readonly,
+            undefined,
             [f.createParameterDeclaration(undefined, undefined, "key", undefined, key)],
             this.emit(child, direction),
           ),
@@ -431,7 +426,7 @@ export class TypeEmitter {
     const item = node.edges.get("items") ?? this.graph.any
     const closed = this.graph.get(item).rules === false
     if (!prefix.length && minimum === 0 && max === undefined && !closed)
-      return typeReference("ReadonlyArray", [this.emit(item, direction)])
+      return f.createArrayTypeNode(this.emit(item, direction))
     // eslint-disable-next-line anti-slop/no-runtime-typeof -- maxItems is an optional numeric schema keyword.
     const limit = closed
       ? prefix.length
@@ -447,7 +442,7 @@ export class TypeEmitter {
     }
     if (!closed && max === undefined)
       elements.push(f.createRestTypeNode(f.createArrayTypeNode(this.emit(item, direction))))
-    return f.createTypeOperatorNode(ts.SyntaxKind.ReadonlyKeyword, f.createTupleTypeNode(elements))
+    return f.createTupleTypeNode(elements)
   }
 }
 

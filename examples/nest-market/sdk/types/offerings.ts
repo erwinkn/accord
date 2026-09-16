@@ -3,72 +3,72 @@ import type { HttpResult, RequestOptions, RequestOptionsFor } from "@accord/clie
 import type { ErrorDto } from "./shared.js";
 export type Currency = ("EUR" | "USD") & string;
 export type TermsDto = {
-    readonly "closesAt": string;
-    readonly "currency": Currency;
-    readonly "minimumInvestment": string;
+    "closesAt": string;
+    "currency": Currency;
+    "minimumInvestment": string;
 };
 export type CreateOfferingDto = {
-    readonly "description"?: string | null;
-    readonly "name": string;
-    readonly "tags"?: ReadonlyArray<string>;
-    readonly "terms": TermsDto;
+    "description"?: string | null;
+    "name": string;
+    "tags"?: string[];
+    "terms": TermsDto;
 };
 export type OfferingStatus = ("draft" | "open" | "closed") & string;
 export type OfferingDto = {
-    readonly "createdAt": string;
-    readonly "description"?: string | null;
-    readonly "id": string;
-    readonly "name": string;
-    readonly "status": OfferingStatus;
-    readonly "tags"?: ReadonlyArray<string>;
-    readonly "terms": TermsDto;
+    "createdAt": string;
+    "description"?: string | null;
+    "id": string;
+    "name": string;
+    "status": OfferingStatus;
+    "tags"?: string[];
+    "terms": TermsDto;
 };
 export type OfferingDtoPage = {
-    readonly "items": ReadonlyArray<OfferingDto>;
-    readonly "limit": number;
-    readonly "page": number;
-    readonly "total": number;
+    "items": OfferingDto[];
+    "limit": number;
+    "page": number;
+    "total": number;
 };
 export type OfferingReportDto = {
-    readonly "currency": Currency;
-    readonly "offeringId": string;
-    readonly "subscriptionCount": number;
+    "currency": Currency;
+    "offeringId": string;
+    "subscriptionCount": number;
 };
 export type UpdateOfferingDto = {
-    readonly "description"?: string | null;
-    readonly "name"?: string;
-    readonly "tags"?: ReadonlyArray<string>;
-    readonly "terms"?: TermsDto;
+    "description"?: string | null;
+    "name"?: string;
+    "tags"?: string[];
+    "terms"?: TermsDto;
 };
 export type ListOfferingsInput = {
-    readonly "page"?: number;
-    readonly "limit"?: number;
-    readonly "status"?: ReadonlyArray<OfferingStatus>;
+    "page"?: number;
+    "limit"?: number;
+    "status"?: OfferingStatus[];
 };
 export type ListOfferingsArguments = [
     input?: {
-        readonly "page"?: number;
-        readonly "limit"?: number;
-        readonly "status"?: ReadonlyArray<OfferingStatus>;
+        "page"?: number;
+        "limit"?: number;
+        "status"?: OfferingStatus[];
     },
     options?: RequestOptions
 ];
 export type ListOfferingsResponse = OfferingDtoPage;
 export type ListOfferingsError = ErrorDto;
 export type ListOfferingsResponses = {
-    readonly "200": OfferingDtoPage;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": OfferingDtoPage;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type ListOfferingsFullResponse = HttpResult<200, OfferingDtoPage>;
 export type ListOfferingsContract = {
-    readonly "args": ListOfferingsArguments;
-    readonly "input": ListOfferingsInput;
-    readonly "response": ListOfferingsResponse;
-    readonly "error": ListOfferingsError;
-    readonly "responses": ListOfferingsResponses;
-    readonly "fullResponse": ListOfferingsFullResponse;
+    "args": ListOfferingsArguments;
+    "input": ListOfferingsInput;
+    "response": ListOfferingsResponse;
+    "error": ListOfferingsError;
+    "responses": ListOfferingsResponses;
+    "fullResponse": ListOfferingsFullResponse;
 };
 export type CreateOfferingInput = CreateOfferingDto;
 export type CreateOfferingArguments = [
@@ -78,128 +78,128 @@ export type CreateOfferingArguments = [
 export type CreateOfferingResponse = OfferingDto;
 export type CreateOfferingError = ErrorDto;
 export type CreateOfferingResponses = {
-    readonly "201": OfferingDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "201": OfferingDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type CreateOfferingFullResponse = HttpResult<201, OfferingDto>;
 export type CreateOfferingContract = {
-    readonly "args": CreateOfferingArguments;
-    readonly "input": CreateOfferingInput;
-    readonly "response": CreateOfferingResponse;
-    readonly "error": CreateOfferingError;
-    readonly "responses": CreateOfferingResponses;
-    readonly "fullResponse": CreateOfferingFullResponse;
+    "args": CreateOfferingArguments;
+    "input": CreateOfferingInput;
+    "response": CreateOfferingResponse;
+    "error": CreateOfferingError;
+    "responses": CreateOfferingResponses;
+    "fullResponse": CreateOfferingFullResponse;
 };
 export type GetOfferingInput = {
-    readonly "offeringId": string;
+    "offeringId": string;
 };
 export type GetOfferingArguments = [
     input: {
-        readonly "offeringId": string;
+        "offeringId": string;
     },
     options?: RequestOptions
 ];
 export type GetOfferingResponse = OfferingDto;
 export type GetOfferingError = ErrorDto;
 export type GetOfferingResponses = {
-    readonly "200": OfferingDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": OfferingDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type GetOfferingFullResponse = HttpResult<200, OfferingDto>;
 export type GetOfferingContract = {
-    readonly "args": GetOfferingArguments;
-    readonly "input": GetOfferingInput;
-    readonly "response": GetOfferingResponse;
-    readonly "error": GetOfferingError;
-    readonly "responses": GetOfferingResponses;
-    readonly "fullResponse": GetOfferingFullResponse;
+    "args": GetOfferingArguments;
+    "input": GetOfferingInput;
+    "response": GetOfferingResponse;
+    "error": GetOfferingError;
+    "responses": GetOfferingResponses;
+    "fullResponse": GetOfferingFullResponse;
 };
 export type UpdateOfferingInput = {
-    readonly "offeringId": string;
-    readonly "body"?: UpdateOfferingDto;
+    "offeringId": string;
+    "body"?: UpdateOfferingDto;
 };
 export type UpdateOfferingArguments = [
     input: {
-        readonly "offeringId": string;
-        readonly "body"?: UpdateOfferingDto;
+        "offeringId": string;
+        "body"?: UpdateOfferingDto;
     },
     options?: RequestOptionsFor<"application/json">
 ];
 export type UpdateOfferingResponse = OfferingDto;
 export type UpdateOfferingError = ErrorDto;
 export type UpdateOfferingResponses = {
-    readonly "200": OfferingDto;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": OfferingDto;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type UpdateOfferingFullResponse = HttpResult<200, OfferingDto>;
 export type UpdateOfferingContract = {
-    readonly "args": UpdateOfferingArguments;
-    readonly "input": UpdateOfferingInput;
-    readonly "response": UpdateOfferingResponse;
-    readonly "error": UpdateOfferingError;
-    readonly "responses": UpdateOfferingResponses;
-    readonly "fullResponse": UpdateOfferingFullResponse;
+    "args": UpdateOfferingArguments;
+    "input": UpdateOfferingInput;
+    "response": UpdateOfferingResponse;
+    "error": UpdateOfferingError;
+    "responses": UpdateOfferingResponses;
+    "fullResponse": UpdateOfferingFullResponse;
 };
 export type DeleteOfferingInput = {
-    readonly "offeringId": string;
+    "offeringId": string;
 };
 export type DeleteOfferingArguments = [
     input: {
-        readonly "offeringId": string;
+        "offeringId": string;
     },
     options?: RequestOptions
 ];
 export type DeleteOfferingResponse = undefined;
 export type DeleteOfferingError = ErrorDto;
 export type DeleteOfferingResponses = {
-    readonly "204": undefined;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
-    readonly "409": ErrorDto;
+    "204": undefined;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
+    "409": ErrorDto;
 };
 export type DeleteOfferingFullResponse = HttpResult<204, undefined>;
 export type DeleteOfferingContract = {
-    readonly "args": DeleteOfferingArguments;
-    readonly "input": DeleteOfferingInput;
-    readonly "response": DeleteOfferingResponse;
-    readonly "error": DeleteOfferingError;
-    readonly "responses": DeleteOfferingResponses;
-    readonly "fullResponse": DeleteOfferingFullResponse;
+    "args": DeleteOfferingArguments;
+    "input": DeleteOfferingInput;
+    "response": DeleteOfferingResponse;
+    "error": DeleteOfferingError;
+    "responses": DeleteOfferingResponses;
+    "fullResponse": DeleteOfferingFullResponse;
 };
 export type ExportOfferingInput = {
-    readonly "offeringId": string;
+    "offeringId": string;
 };
 export type ExportOfferingArguments = [
     input: {
-        readonly "offeringId": string;
+        "offeringId": string;
     },
     options?: RequestOptions
 ];
 export type ExportOfferingResponse = OfferingReportDto | string;
 export type ExportOfferingError = ErrorDto;
 export type ExportOfferingResponses = {
-    readonly "200": OfferingReportDto | string;
-    readonly "400": ErrorDto;
-    readonly "401": ErrorDto;
-    readonly "404": ErrorDto;
+    "200": OfferingReportDto | string;
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
 };
 export type ExportOfferingFullResponse = (HttpResult<200, OfferingReportDto> & {
-    readonly "mediaType": "application/json";
+    "mediaType": "application/json";
 }) | (HttpResult<200, string> & {
-    readonly "mediaType": "text/csv";
+    "mediaType": "text/csv";
 });
 export type ExportOfferingContract = {
-    readonly "args": ExportOfferingArguments;
-    readonly "input": ExportOfferingInput;
-    readonly "response": ExportOfferingResponse;
-    readonly "error": ExportOfferingError;
-    readonly "responses": ExportOfferingResponses;
-    readonly "fullResponse": ExportOfferingFullResponse;
+    "args": ExportOfferingArguments;
+    "input": ExportOfferingInput;
+    "response": ExportOfferingResponse;
+    "error": ExportOfferingError;
+    "responses": ExportOfferingResponses;
+    "fullResponse": ExportOfferingFullResponse;
 };

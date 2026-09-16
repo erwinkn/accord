@@ -3,91 +3,91 @@ import { createEndpointFactory, type BinaryUpload, type HttpResult, type Request
 type ObjectConstraints<T, R> = T extends readonly unknown[] ? T : T extends object ? T & R : T;
 type ArrayConstraints<T, R> = T extends readonly unknown[] ? T & R : T;
 export type ApiError = {
-    readonly "code": string;
-    readonly "message": string;
-    readonly [key: string]: unknown;
+    "code": string;
+    "message": string;
+    [key: string]: unknown;
 };
 export type CreateUser = {
-    readonly "email"?: string;
-    readonly "name": string;
-    readonly [key: string]: unknown;
+    "email"?: string;
+    "name": string;
+    [key: string]: unknown;
 };
 export type User = {
-    readonly "email"?: string | null;
-    readonly "id": string;
-    readonly "name": string;
-    readonly [key: string]: unknown;
+    "email"?: string | null;
+    "id": string;
+    "name": string;
+    [key: string]: unknown;
 };
 export type ListUsersInput = {
-    readonly "limit"?: number;
+    "limit"?: number;
 };
 export type ListUsersArguments = [
     input?: {
-        readonly "limit"?: number;
+        "limit"?: number;
     },
     options?: RequestOptions
 ];
-export type ListUsersResponse = ReadonlyArray<User>;
+export type ListUsersResponse = User[];
 export type ListUsersError = never;
 export type ListUsersResponses = {
-    readonly "200": ReadonlyArray<User>;
+    "200": User[];
 };
-export type ListUsersFullResponse = HttpResult<200, ReadonlyArray<User>>;
+export type ListUsersFullResponse = HttpResult<200, User[]>;
 export type ListUsersContract = {
-    readonly "args": ListUsersArguments;
-    readonly "input": ListUsersInput;
-    readonly "response": ListUsersResponse;
-    readonly "error": ListUsersError;
-    readonly "responses": ListUsersResponses;
-    readonly "fullResponse": ListUsersFullResponse;
+    "args": ListUsersArguments;
+    "input": ListUsersInput;
+    "response": ListUsersResponse;
+    "error": ListUsersError;
+    "responses": ListUsersResponses;
+    "fullResponse": ListUsersFullResponse;
 };
 export type CreateUserInput = {
-    readonly "body": CreateUser;
+    "body": CreateUser;
 };
 export type CreateUserArguments = [
     input: {
-        readonly "body": CreateUser;
+        "body": CreateUser;
     },
     options?: RequestOptionsFor<"application/json">
 ];
 export type CreateUserResponse = User;
 export type CreateUserError = ApiError;
 export type CreateUserResponses = {
-    readonly "201": User;
-    readonly "400": ApiError;
+    "201": User;
+    "400": ApiError;
 };
 export type CreateUserFullResponse = HttpResult<201, User>;
 export type CreateUserContract = {
-    readonly "args": CreateUserArguments;
-    readonly "input": CreateUserInput;
-    readonly "response": CreateUserResponse;
-    readonly "error": CreateUserError;
-    readonly "responses": CreateUserResponses;
-    readonly "fullResponse": CreateUserFullResponse;
+    "args": CreateUserArguments;
+    "input": CreateUserInput;
+    "response": CreateUserResponse;
+    "error": CreateUserError;
+    "responses": CreateUserResponses;
+    "fullResponse": CreateUserFullResponse;
 };
 export type GetUserInput = {
-    readonly "userId": string;
+    "userId": string;
 };
 export type GetUserArguments = [
     input: {
-        readonly "userId": string;
+        "userId": string;
     },
     options?: RequestOptions
 ];
 export type GetUserResponse = User;
 export type GetUserError = ApiError;
 export type GetUserResponses = {
-    readonly "200": User;
-    readonly "404": ApiError;
+    "200": User;
+    "404": ApiError;
 };
 export type GetUserFullResponse = HttpResult<200, User>;
 export type GetUserContract = {
-    readonly "args": GetUserArguments;
-    readonly "input": GetUserInput;
-    readonly "response": GetUserResponse;
-    readonly "error": GetUserError;
-    readonly "responses": GetUserResponses;
-    readonly "fullResponse": GetUserFullResponse;
+    "args": GetUserArguments;
+    "input": GetUserInput;
+    "response": GetUserResponse;
+    "error": GetUserError;
+    "responses": GetUserResponses;
+    "fullResponse": GetUserFullResponse;
 };
 const defineEndpoint = createEndpointFactory("ff1dd6251c42ed1a");
 export const api = {

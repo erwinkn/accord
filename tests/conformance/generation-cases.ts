@@ -134,7 +134,7 @@ export const generationCases: Fixture[] = [
     }),
     consumer: {
       source: consumer(
-        "type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly id: string }>>",
+        "type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { id: string }>>",
       ),
     },
   },
