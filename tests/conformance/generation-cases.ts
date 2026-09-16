@@ -49,6 +49,7 @@ export const generationCases: Fixture[] = [
           assert.equal(Object.hasOwn(endpoint, field), false, field)
         assert.deepEqual(endpoint.pathParams, [{ name: "id" }])
         assert.deepEqual(endpoint.queryParams, [{ name: "tags" }])
+        assert.deepEqual(endpoint.responses, { 204: {} })
         assert.equal(endpoint.requestBody?.mode, undefined)
         assert.equal(endpoint.requestBody?.defaultMediaType, undefined)
         await withServer(async (baseUrl, requests) => {

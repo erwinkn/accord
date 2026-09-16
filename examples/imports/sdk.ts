@@ -145,7 +145,7 @@ export const Create400Schema = z.looseObject({
 });
 export const Get200Schema = z.xor([ImportJobSchema, ImportResultSchema]);
 export const Download200Schema = z.instanceof(ArrayBuffer);
-const defineEndpoint = createEndpointFactory("711c73f8c1bfee2a");
+const defineEndpoint = createEndpointFactory("584b2675fb5234a8");
 export const api = {
     "imports": {
         "create": defineEndpoint<CreateContract, "mutation">({
@@ -166,35 +166,20 @@ export const api = {
                 "required": true,
                 "mode": "separate"
             },
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Create200Schema
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json",
+                    "schema": Create200Schema
                 },
-                {
-                    "status": 202,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Create202Schema
-                        }
-                    ]
+                "202": {
+                    "mediaType": "application/json",
+                    "schema": Create202Schema
                 },
-                {
-                    "status": 400,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Create400Schema
-                        }
-                    ]
+                "400": {
+                    "mediaType": "application/json",
+                    "schema": Create400Schema
                 }
-            ]
+            }
         }),
         "get": defineEndpoint<GetContract, "query">({
             "method": "GET",
@@ -206,17 +191,12 @@ export const api = {
                     "name": "jobId"
                 }
             ],
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Get200Schema
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json",
+                    "schema": Get200Schema
                 }
-            ]
+            }
         }),
         "report": {
             "download": defineEndpoint<DownloadContract, "query">({
@@ -229,17 +209,12 @@ export const api = {
                         "name": "jobId"
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/octet-stream",
-                                "schema": Download200Schema
-                            }
-                        ]
+                "responses": {
+                    "200": {
+                        "mediaType": "application/octet-stream",
+                        "schema": Download200Schema
                     }
-                ]
+                }
             })
         }
     }

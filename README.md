@@ -36,7 +36,7 @@ console.log(full.data, full.status, full.headers.get("x-request-id"))
 
 Endpoint and namespace names come from the spec. The example above uses the [Tasks API](examples/tasks/openapi.yaml).
 
-`baseUrl` controls routing; the SDK does not select from OpenAPI `servers`. Without it, requests use the browser origin (or `http://localhost` outside a browser). `token` accepts a value or async callback. `auth` accepts pluggable providers, optionally keyed by security scheme name, including managed OAuth client credentials. See [authentication](docs/authentication.md) for examples, security alternatives, and token caching.
+`baseUrl` controls routing; the SDK does not select from OpenAPI `servers`. Without it, requests use the browser origin (or `http://localhost` outside a browser). `token` accepts a value or async callback. `auth` accepts a provider or an ordered array of providers, including managed OAuth client credentials. Configured auth applies to every call; pass `{ auth: false }` in the second argument to skip it. See [authentication](docs/authentication.md) for examples and token caching.
 
 ## Request and response conventions
 

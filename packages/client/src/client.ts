@@ -1,11 +1,4 @@
-import {
-  ApiKeyAuth,
-  type AuthProvider,
-  BasicAuth,
-  BearerAuth,
-  CustomAuth,
-  isAuthProvider,
-} from "./auth.js"
+import { BearerAuth, getAuthProviders } from "./auth.js"
 import {
   decodeBody,
   defaultCodec,
@@ -26,7 +19,6 @@ import type {
   ArgumentsOf,
   ClientFor,
   ClientOptions,
-  Credential,
   EndpointContract,
   EndpointDefinition,
   EndpointFunction,
@@ -42,7 +34,8 @@ import type {
   RequestObject,
   RequestOptions,
   RequestValue,
-  ResponseDescriptor,
+  ResponseMap,
+  ResponseMetadata,
   ResponseOf,
   StatusSelector,
 } from "./types.js"
@@ -128,20 +121,39 @@ export function statusMatches(selector: StatusSelector, status: number): boolean
   return Math.floor(status / 100) === Number(selector[0])
 }
 
-export function selectResponse(
-  responses: readonly ResponseDescriptor[],
+export function selectResponseStatus(
+  responses: ResponseMap,
   status: number,
-): ResponseDescriptor | undefined {
-  return (
-    responses.find((response) => response.status === status) ??
-    responses.find(
-      (response) => response.status !== "default" && statusMatches(response.status, status),
-    ) ??
-    responses.find((response) => response.status === "default")
-  )
+): StatusSelector | undefined {
+  if (Object.hasOwn(responses, status)) return status
+  for (const range of ["1XX", "2XX", "3XX", "4XX", "5XX"] as const)
+    if (statusMatches(range, status) && Object.hasOwn(responses, range)) return range
+  return statusMatches("default", status) && Object.hasOwn(responses, "default")
+    ? "default"
+    : undefined
+}
+export function selectResponse(
+  responses: ResponseMap,
+  status: number,
+): ResponseMetadata | readonly ResponseMetadata[] | undefined {
+  const selected = selectResponseStatus(responses, status)
+  return selected === undefined ? undefined : responses[selected]
+}
+function isResponseList(
+  value: ResponseMetadata | readonly ResponseMetadata[],
+): value is readonly ResponseMetadata[] {
+  return Array.isArray(value)
+}
+export function responseVariants(
+  value: ResponseMetadata | readonly ResponseMetadata[] | undefined,
+): readonly ResponseMetadata[] {
+  return value === undefined ? [] : isResponseList(value) ? value : [value]
 }
 
-function selectMedia(content: readonly MediaPlan[], actual: string | null): MediaPlan | undefined {
+function selectMedia<T extends { readonly mediaType: string }>(
+  content: readonly T[],
+  actual: string | null,
+): T | undefined {
   if (!actual) return content.length === 1 ? content[0] : undefined
   return (
     content.find((item) => mediaType(item.mediaType) === mediaType(actual)) ??
@@ -269,7 +281,8 @@ async function execute<E extends EndpointDefinition>(
       if (body !== undefined) init.body = body
     }
   }
-  await applyAuthentication(endpoint, options, headers, url, init)
+  if (requestOptions.auth !== false)
+    await applyAuthentication(endpoint, options, headers, url, init)
   // Explicit per-call headers have the final say, including Authorization.
   for (const [name, value] of new Headers(requestOptions.headers))
     if (name !== "content-type") headers.set(name, value)
@@ -284,23 +297,21 @@ async function execute<E extends EndpointDefinition>(
   }
   for (const middleware of options.responseMiddleware ?? [])
     response = (await middleware({ ...context, response })) ?? response
-  const selectedResponse = selectResponse(plan.responses, response.status)
+  const matchedStatus = selectResponse(plan.responses, response.status)
   const actualMedia = mediaType(response.headers.get("content-type")) || null
-  const selectedMedia = selectedResponse
-    ? selectMedia(selectedResponse.content, actualMedia)
-    : undefined
+  const variants = responseVariants(matchedStatus)
+  const candidates = variants.filter(hasMediaType)
+  const selectedResponse = candidates.length ? selectMedia(candidates, actualMedia) : variants[0]
   const noBody = plan.method === "HEAD" || [204, 205, 304].includes(response.status)
-  const codec = selectedMedia
-    ? (selectedMedia.codec ?? defaultCodec(selectedMedia.mediaType, "response"))
-    : selectedResponse?.content.length === 0
-      ? { kind: "empty" as const }
-      : fallbackCodec(actualMedia)
+  const codec = selectedResponse
+    ? (selectedResponse.codec ??
+      (selectedResponse.mediaType === undefined
+        ? { kind: "empty" as const }
+        : defaultCodec(selectedResponse.mediaType, "response")))
+    : fallbackCodec(actualMedia)
   let data: RequestValue | Response
   try {
-    if (
-      response.ok &&
-      (!selectedResponse || (!noBody && selectedResponse.content.length > 0 && !selectedMedia))
-    ) {
+    if (response.ok && (!matchedStatus || (!noBody && !selectedResponse))) {
       throw new TypeError(
         `Undeclared response ${response.status} ${actualMedia ?? "(missing content-type)"} for ${plan.id}`,
       )
@@ -311,7 +322,7 @@ async function execute<E extends EndpointDefinition>(
     if (!response.ok) throw new HttpError({ response, endpoint, body: undefined, cause: error })
     throw error
   }
-  const validator = !noBody && selectedMedia?.schema
+  const validator = !noBody && selectedResponse?.schema
   if (validator) {
     try {
       const validation = await validator["~standard"].validate(data)
@@ -332,26 +343,10 @@ async function execute<E extends EndpointDefinition>(
   }
 }
 
-function legacyProvider(
-  credential: Credential,
-  scheme: NonNullable<EndpointDefinition["securitySchemes"]>[string],
-): AuthProvider {
-  if (scheme.type === "mutualTLS") return CustomAuth(() => {})
-  if (scheme.type === "apiKey") return ApiKeyAuth(String(credential))
-  if (scheme.type === "http" && scheme.scheme.toLowerCase() === "basic") {
-    // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch the existing typed credential union.
-    if (typeof credential !== "string") return BasicAuth(credential.username, credential.password)
-    const colon = credential.indexOf(":")
-    return BasicAuth(
-      colon < 0 ? credential : credential.slice(0, colon),
-      colon < 0 ? "" : credential.slice(colon + 1),
-    )
-  }
-  if (scheme.type === "http" && scheme.scheme.toLowerCase() !== "bearer")
-    return CustomAuth(({ headers }) => {
-      headers.set("authorization", `${scheme.scheme} ${String(credential)}`)
-    })
-  return BearerAuth(String(credential))
+function hasMediaType<T extends { readonly mediaType?: string }>(
+  value: T,
+): value is T & { readonly mediaType: string } {
+  return value.mediaType !== undefined
 }
 async function applyAuthentication(
   endpoint: EndpointDefinition,
@@ -360,41 +355,12 @@ async function applyAuthentication(
   url: URL,
   init: RequestInit,
 ): Promise<void> {
-  const providers = new Map<string, AuthProvider>()
-  for (const [name, scheme] of Object.entries(endpoint.securitySchemes ?? {})) {
-    const auth = options.auth
-    const configured = auth
-      ? isAuthProvider(auth)
-        ? auth
-        : Object.hasOwn(auth, name)
-          ? auth[name]
-          : undefined
-      : undefined
-    const credential =
-      options.credentials && Object.hasOwn(options.credentials, name)
-        ? options.credentials[name]
-        : undefined
-    const bearer =
-      scheme.type === "oauth2" ||
-      scheme.type === "openIdConnect" ||
-      (scheme.type === "http" && scheme.scheme.toLowerCase() === "bearer")
-    const provider =
-      configured ??
-      (credential !== undefined
-        ? legacyProvider(credential, scheme)
-        : bearer && options.token !== undefined
-          ? BearerAuth(options.token)
-          : undefined)
-    if (provider) providers.set(name, provider)
-  }
-  const requirement = endpoint.security?.find((entry) =>
-    Object.keys(entry).every((name) => providers.has(name)),
-  )
-  if (!requirement) return
-  for (const [name, scopes] of Object.entries(requirement)) {
-    const scheme = endpoint.securitySchemes![name]!
-    await providers
-      .get(name)!
-      .apply({ endpoint, url, headers, init, scopes, scheme, baseUrl: resolveBaseUrl(options) })
-  }
+  const providers =
+    options.auth !== undefined
+      ? getAuthProviders(options.auth)
+      : options.token !== undefined
+        ? [BearerAuth(options.token)]
+        : []
+  for (const provider of providers)
+    await provider.apply({ endpoint, url, headers, init, baseUrl: resolveBaseUrl(options) })
 }

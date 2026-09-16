@@ -112,7 +112,7 @@ export type GetUserContract = {
     readonly "responses": GetUserResponses;
     readonly "fullResponse": GetUserFullResponse;
 };
-const defineEndpoint = createEndpointFactory("bac02874962d44ce");
+const defineEndpoint = createEndpointFactory("85518fe54993967e");
 export const api = {
     "users": {
         "listUsers": defineEndpoint<ListUsersContract, "query">({
@@ -125,16 +125,11 @@ export const api = {
                     "name": "limit"
                 }
             ],
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json"
                 }
-            ]
+            }
         }),
         "createUser": defineEndpoint<CreateUserContract, "mutation">({
             "method": "POST",
@@ -150,24 +145,14 @@ export const api = {
                 "required": true,
                 "mode": "separate"
             },
-            "responses": [
-                {
-                    "status": 201,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+            "responses": {
+                "201": {
+                    "mediaType": "application/json"
                 },
-                {
-                    "status": 400,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+                "400": {
+                    "mediaType": "application/json"
                 }
-            ]
+            }
         }),
         "getUser": defineEndpoint<GetUserContract, "query">({
             "method": "GET",
@@ -179,24 +164,14 @@ export const api = {
                     "name": "userId"
                 }
             ],
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json"
                 },
-                {
-                    "status": 404,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+                "404": {
+                    "mediaType": "application/json"
                 }
-            ]
+            }
         })
     }
 };

@@ -33,8 +33,9 @@ Use `ACCORD_CONFORMANCE_CASE=representation.xml-roundtrip pnpm test:conformance`
 
 The original corpus remains, with corrections for the agreed rewrite rather than compatibility with the old implementation:
 
-- Collision-free, required closed bodies can flatten. Optional bodies, dictionaries, and collisions use `body`. Explicit unsafe merge tests now explicitly request merge instead of assuming it is the default.
-- Endpoint metadata is under `.plan`; consumer tests inspect the new public API.
+- Collision-free closed bodies can flatten, including optional bodies. Dictionaries and collisions use `body`. Explicit unsafe merge tests now explicitly request merge instead of assuming it is the default.
+- Endpoint metadata is passed directly to `defineEndpoint`. Responses are status-keyed records, with arrays only for multiple media types at one status.
+- Configured client auth applies to every call, independent of source security declarations. Tests cover per-call opt-out, header overrides, provider order, and secret-safe cache separation.
 - Multiple successful statuses return status/data unions. A `2XX` group includes bodyless 204/205 responses, whose data is `undefined`.
 - Headers and request options occupy the second argument. React Query's own options are composed with its option factories.
 - Goldens contain the actual owned types and plans. The old mocked openapi-typescript output and old generation pipeline have been removed.

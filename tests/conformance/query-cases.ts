@@ -11,8 +11,7 @@ import type { Fixture } from "./model.js"
 export const queryCases: Fixture[] = [
   {
     id: "query.auth-routing-and-redaction",
-    title:
-      "Shared auth metadata preserves alternatives, explicit URLs, overrides, and private query keys",
+    title: "Client auth applies to every call with explicit opt-out and private query keys",
     area: "query",
     reference: references.accord,
     document: {
@@ -67,37 +66,52 @@ export const queryCases: Fixture[] = [
       security: [{ bearer: [], queryKey: [], headerKey: [] }, { basic: [] }],
     },
     consumer: {
-      source: consumer(`export async function run() {
-        assert.equal(api.probe.call.securitySchemes, api.other.call.securitySchemes)
-        assert.equal(api.public.call.security, undefined)
-        const anonymousKey = JSON.stringify(apiQueryKey(api.public.call, {}, { headers: { "x-unused-key": "unused-header-secret" } }))
-        assert.equal(anonymousKey.includes("unused-header-secret"), false)
-        const input = { token: "input-query-secret", xKey: "input-header-secret", session: "input-cookie-secret" }
-        const key = JSON.stringify(apiQueryKey(api.probe.call, input))
-        for (const secret of Object.values(input)) assert.equal(key.includes(secret), false)
-        assert.notDeepEqual(apiQueryKey(api.probe.call, input), apiQueryKey(api.probe.call, { ...input, token: "another-secret" }))
+      source:
+        consumer(`import { ApiKeyAuth, BasicAuth, BearerAuth, CustomAuth } from "@accord/client"
+      export async function run() {
+        for (const descriptor of [api.probe.call, api.other.call, api.public.call, api.optional.call]) {
+          assert.equal(Object.hasOwn(descriptor, "security"), false)
+          assert.equal(Object.hasOwn(descriptor, "securitySchemes"), false)
+        }
         await withServer(async (baseUrl, requests) => {
-          const credentials = { bearer: "access-token", queryKey: "query-secret", headerKey: "header-secret" }
-          const client = createClient(api, { baseUrl, credentials })
+          const client = createClient(api, { baseUrl, auth: [
+            BearerAuth("access-token"),
+            ApiKeyAuth("query-secret", { in: "query", name: "token" }),
+            ApiKeyAuth("header-secret", { in: "header", name: "x-key" }),
+            CustomAuth(() => {}, [{ in: "header", name: "x-unused-key" }]),
+          ] })
+          const input = { token: "input-query-secret", xKey: "input-header-secret", session: "input-cookie-secret" }
+          const key = JSON.stringify(apiQueryKey(client.probe.call, input))
+          for (const secret of Object.values(input)) assert.equal(key.includes(secret), false)
+          assert.notDeepEqual(apiQueryKey(client.probe.call, input), apiQueryKey(client.probe.call, { ...input, token: "another-secret" }))
+          const headerKey = JSON.stringify(apiQueryKey(client.public.call, {}, { headers: { "x-unused-key": "unused-header-secret" } }))
+          assert.equal(headerKey.includes("unused-header-secret"), false)
+          const emptyInput = {}
+          assert.notDeepEqual(apiQueryKey(client.probe.call, emptyInput), apiQueryKey(client.probe.call, emptyInput, { auth: false }))
+          assert.deepEqual(apiQueryKey(client.probe.call, {}), apiQueryKey(client.probe.call, {}, { auth: true }))
           await client.probe.call({})
           assert.equal(requests[0]?.url, "/base/probe?token=query-secret")
           assert.equal(requests[0]?.headers.authorization, "Bearer access-token")
           assert.equal(requests[0]?.headers["x-key"], "header-secret")
           const scopedKey = JSON.stringify(apiQueryKey(client.probe.call, {}))
-          for (const secret of Object.values(credentials)) assert.equal(scopedKey.includes(secret), false)
+          for (const secret of ["access-token", "query-secret", "header-secret"]) assert.equal(scopedKey.includes(secret), false)
           await client.probe.call({}, { headers: { authorization: "Custom override" } })
           assert.equal(requests[1]?.headers.authorization, "Custom override")
           await client.public.call()
           await client.optional.call()
           for (const index of [2, 3]) {
-            assert.equal(requests[index]?.headers.authorization, undefined)
-            assert.equal(requests[index]?.headers["x-key"], undefined)
-            assert.equal(requests[index]?.url.includes("token="), false)
+            assert.equal(requests[index]?.headers.authorization, "Bearer access-token")
+            assert.equal(requests[index]?.headers["x-key"], "header-secret")
+            assert.equal(requests[index]?.url.includes("token=query-secret"), true)
           }
-          await createClient(api, { baseUrl, credentials: { bearer: "incomplete" } }).probe.call({})
+          await client.probe.call({}, { auth: false })
           assert.equal(requests[4]?.headers.authorization, undefined)
-          await createClient(api, { baseUrl, credentials: { basic: { username: "u", password: "p" } } }).probe.call({})
-          assert.equal(requests[5]?.headers.authorization, "Basic dTpw")
+          assert.equal(requests[4]?.headers["x-key"], undefined)
+          assert.equal(requests[4]?.url, "/base/probe")
+          await createClient(api, { baseUrl, token: "shortcut" }).probe.call({})
+          assert.equal(requests[5]?.headers.authorization, "Bearer shortcut")
+          await createClient(api, { baseUrl, auth: BasicAuth("u", "p") }).probe.call({})
+          assert.equal(requests[6]?.headers.authorization, "Basic dTpw")
         })
       }`),
     },

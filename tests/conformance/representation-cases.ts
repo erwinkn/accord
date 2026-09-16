@@ -47,6 +47,16 @@ export const representationCases: Fixture[] = [
     consumer: {
       source: consumer(`import { ValidationError } from "@accord/client"
       export async function run() {
+        const metadata = api.probe.call.responses
+        assert.deepEqual(Object.keys(metadata), ["200", "2XX", "default"])
+        assert(Array.isArray(metadata[200]))
+        assert.deepEqual(metadata[200].map(item => item.mediaType), ["application/json", "text/plain"])
+        assert.equal(Array.isArray(metadata["2XX"]), false)
+        for (const entry of metadata[200]) {
+          assert(entry.schema?.["~standard"])
+          assert.equal(Object.hasOwn(entry, "status"), false)
+          assert.equal(Object.hasOwn(entry, "content"), false)
+        }
         for (const [status, mediaType, body, expected] of [
           [200, "application/json", '{"ready":true}', { ready: true }],
           [200, "text/plain", "7", 7],

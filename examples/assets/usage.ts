@@ -1,8 +1,8 @@
-import { createClient } from "@accord/client"
+import { ApiKeyAuth, createClient } from "@accord/client"
 import { api } from "./sdk.js"
 export const assets = createClient(api, {
   baseUrl: "https://assets.example.test/us/v1",
-  credentials: { apiKey: "replace-with-your-api-key" },
+  auth: ApiKeyAuth("replace-with-your-api-key", { in: "header", name: "X-API-Key" }),
 })
 export async function upload(file: File) {
   const created = await assets.assets.upload({

@@ -1,4 +1,4 @@
-import { createClient, HttpError, ValidationError } from "@accord/client"
+import { ApiKeyAuth, createClient, HttpError, ValidationError } from "@accord/client"
 import { type } from "arktype"
 import { describe, expect, it } from "vitest"
 import { arkTask, zodTask } from "../../examples/adapters/schemas.js"
@@ -25,7 +25,7 @@ describe("committed example SDKs", () => {
     if (checked.issues) throw new Error("Expected valid task")
     expect(checked.value).toEqual(task)
     const client = createClient(taskApi, {
-      credentials: { bearer: "token" },
+      token: "token",
       fetch: async (_url, init) => {
         expect(new Headers(init?.headers).get("authorization")).toBe("Bearer token")
         expect(JSON.parse(String(init?.body))).toEqual({ title: "Review", status: "open" })
@@ -96,7 +96,7 @@ describe("committed example SDKs", () => {
   })
   it("encodes multipart bytes, repeated fields, JSON parts and security headers", async () => {
     const client = createClient(assetApi, {
-      credentials: { apiKey: "secret" },
+      auth: ApiKeyAuth("secret", { in: "header", name: "X-API-Key" }),
       baseUrl: "https://assets.example.test/us/v1",
       fetch: async (url, init) => {
         expect(String(url)).toBe("https://assets.example.test/us/v1/assets")

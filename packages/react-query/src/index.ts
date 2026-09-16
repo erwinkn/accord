@@ -9,6 +9,7 @@ import {
   type EndpointFunction,
   type ErrorOf,
   type FullResponseOf,
+  getAuthProviders,
   getEndpointScope,
   type HttpError,
   type MutationEndpoint,
@@ -108,7 +109,6 @@ export function endpointIdentity(endpoint: EndpointDefinition): ApiEndpointKey {
 function contextKey(bound: BoundEndpoint<EndpointDefinition>): CanonicalQueryValue {
   const context = bound.context
   const credentialIdentity =
-    context.credentials ||
     context.auth ||
     context.token ||
     context.headers ||
@@ -149,14 +149,16 @@ function canonical<T>(value: T, ancestors = new Set<object>()): CanonicalQueryVa
 }
 
 function argumentKey<E extends EndpointDefinition>(
-  endpoint: E,
+  bound: BoundEndpoint<E>,
   args: ArgumentsOf<E>,
 ): CanonicalQueryValue {
+  const endpoint = bound.endpoint
+  const fields = getAuthProviders(bound.context.auth).flatMap(
+    (provider) => provider.sensitiveFields ?? [],
+  )
   const headers = new Headers(args[1]?.headers)
   const secretNames = new Set(["authorization", "proxy-authorization", "cookie", "set-cookie"])
-  for (const scheme of Object.values(endpoint.securitySchemes ?? {}))
-    if (scheme.type === "apiKey" && scheme.in === "header")
-      secretNames.add(scheme.name.toLowerCase())
+  for (const field of fields) if (field.in === "header") secretNames.add(field.name.toLowerCase())
   const publicHeaders: { [key: string]: string } = Object.create(null)
   let hasSecret = false
   for (const [name, value] of headers) {
@@ -171,30 +173,36 @@ function argumentKey<E extends EndpointDefinition>(
   for (const parameter of endpoint.headerParams ?? [])
     if (secretNames.has(parameter.name.toLowerCase()))
       secretInputs.add(parameter.inputName ?? parameter.name)
-  for (const scheme of Object.values(endpoint.securitySchemes ?? {})) {
-    if (scheme.type !== "apiKey") continue
+  for (const field of fields) {
     const parameters =
-      scheme.in === "query"
+      field.in === "query"
         ? endpoint.queryParams
-        : scheme.in === "header"
+        : field.in === "header"
           ? endpoint.headerParams
           : endpoint.cookieParams
     for (const parameter of parameters ?? [])
       if (
-        scheme.in === "header"
-          ? parameter.name.toLowerCase() === scheme.name.toLowerCase()
-          : parameter.name === scheme.name
+        field.in === "header"
+          ? parameter.name.toLowerCase() === field.name.toLowerCase()
+          : parameter.name === field.name
       )
         secretInputs.add(parameter.inputName ?? parameter.name)
   }
   // eslint-disable-next-line anti-slop/no-runtime-typeof -- Identify an input object solely to redact credential fields in cache keys.
   if (secretInputs.size && input !== null && typeof input === "object") {
-    const publicInput = Object.fromEntries(
-      Object.entries(input).filter(([key]) => !secretInputs.has(key)),
-    )
-    return canonical([publicInput, publicHeaders, secretIdentity, identity(input)])
+    const entries = Object.entries(input)
+    if (entries.some(([key, value]) => secretInputs.has(key) && value !== undefined)) {
+      const publicInput = Object.fromEntries(entries.filter(([key]) => !secretInputs.has(key)))
+      return canonical([
+        publicInput,
+        publicHeaders,
+        secretIdentity,
+        identity(input),
+        args[1]?.auth !== false,
+      ])
+    }
   }
-  return canonical([input, publicHeaders, secretIdentity])
+  return canonical([input, publicHeaders, secretIdentity, args[1]?.auth !== false])
 }
 
 export function apiQueryKey<T extends QueryTarget>(
@@ -206,7 +214,7 @@ export function apiQueryKey<T extends QueryTarget>(
     ...endpointIdentity(bound.endpoint),
     contextKey(bound),
     "payload",
-    argumentKey(bound.endpoint, args),
+    argumentKey(bound, args),
   ]
 }
 export function apiMutationKey<T extends MutationTarget>(target: T): ApiMutationKey {
@@ -278,7 +286,7 @@ function queryResponseImplementation<T extends QueryTarget>(
     ...endpointIdentity(bound.endpoint),
     contextKey(bound),
     "response",
-    argumentKey(bound.endpoint, args),
+    argumentKey(bound, args),
   ]
   // SAFETY: this cache mode always executes withResponse and therefore has the full-result data tag.
   const queryKey = key as DataTag<

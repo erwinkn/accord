@@ -169,8 +169,7 @@ export const Create422Schema = ProblemSchema;
 export const Get200Schema = TaskSchema;
 export const Get404Schema = ProblemSchema;
 export const Update200Schema = TaskSchema;
-const accordSecuritySchemes0 = { "bearer": { "type": "http", "scheme": "bearer" } } as const;
-const defineEndpoint = createEndpointFactory("e152060e1d3b6ec2");
+const defineEndpoint = createEndpointFactory("73d49ce23725a9b2");
 export const api = {
     "tasks": {
         "list": defineEndpoint<ListContract, "query">({
@@ -186,34 +185,18 @@ export const api = {
                     "name": "limit"
                 }
             ],
-            "security": [
-                {
-                    "bearer": []
+            "responses": {
+                "200": {
+                    "mediaType": "application/json",
+                    "schema": List200Schema
                 }
-            ],
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": List200Schema
-                        }
-                    ]
-                }
-            ]
+            }
         }),
         "create": defineEndpoint<CreateContract, "mutation">({
             "method": "POST",
             "path": "/tasks",
             "id": "create",
             "kind": "mutation",
-            "security": [
-                {
-                    "bearer": []
-                }
-            ],
             "requestBody": {
                 "content": [
                     {
@@ -227,27 +210,16 @@ export const api = {
                     "title"
                 ]
             },
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 201,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Create201Schema
-                        }
-                    ]
+            "responses": {
+                "201": {
+                    "mediaType": "application/json",
+                    "schema": Create201Schema
                 },
-                {
-                    "status": 422,
-                    "content": [
-                        {
-                            "mediaType": "application/problem+json",
-                            "schema": Create422Schema
-                        }
-                    ]
+                "422": {
+                    "mediaType": "application/problem+json",
+                    "schema": Create422Schema
                 }
-            ]
+            }
         }),
         "get": defineEndpoint<GetContract, "query">({
             "method": "GET",
@@ -259,32 +231,16 @@ export const api = {
                     "name": "id"
                 }
             ],
-            "security": [
-                {
-                    "bearer": []
-                }
-            ],
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Get200Schema
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json",
+                    "schema": Get200Schema
                 },
-                {
-                    "status": 404,
-                    "content": [
-                        {
-                            "mediaType": "application/problem+json",
-                            "schema": Get404Schema
-                        }
-                    ]
+                "404": {
+                    "mediaType": "application/problem+json",
+                    "schema": Get404Schema
                 }
-            ]
+            }
         }),
         "update": defineEndpoint<UpdateContract, "mutation">({
             "method": "PATCH",
@@ -296,11 +252,6 @@ export const api = {
                     "name": "id"
                 }
             ],
-            "security": [
-                {
-                    "bearer": []
-                }
-            ],
             "requestBody": {
                 "content": [
                     {
@@ -309,18 +260,12 @@ export const api = {
                 ],
                 "mode": "separate"
             },
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json",
-                            "schema": Update200Schema
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json",
+                    "schema": Update200Schema
                 }
-            ]
+            }
         })
     }
 };

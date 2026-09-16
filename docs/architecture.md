@@ -34,7 +34,18 @@ The output combines ordinary exported TypeScript types with `defineEndpoint<Cont
 
 The plan describes how to bind inputs, serialize request representations, select status/media, decode responses, and choose payload versus status-envelope results. Status selectors stay compact (`200`, `2XX`, `default`); runtime and type generation share exact/range/default precedence.
 
-Each response media entry optionally references its Standard Schema directly: `{ mediaType: "application/json", schema: UserSchema }`. Status and media selection also select validation, with no parallel registry or ordinal keys. `codec` is omitted when the shared `defaultCodec(mediaType, direction)` determines JSON, ordinary text, or bytes. Schema-dependent cases such as numeric text, XML names and form field encodings retain an explicit codec. Inference uses the declared media type, including wildcard declarations, so it agrees with generated types.
+Responses form one record keyed by status:
+
+```ts
+responses: {
+  200: { mediaType: "application/json", schema: GetUser200Schema },
+  204: {},
+  "4XX": { mediaType: "application/json", schema: ClientErrorSchema },
+  default: { mediaType: "application/json", schema: ErrorSchema },
+}
+```
+
+A status with multiple media types uses an array only for that value: `200: [{ mediaType: "application/json", schema: UserSchema }, { mediaType: "text/csv" }]`. A bodyless response uses `{}`. Schema entries appear only when validation is generated. Status and media selection also select validation, with no parallel registry or ordinal keys. `codec` is omitted when the shared `defaultCodec(mediaType, direction)` determines JSON, ordinary text, or bytes. Schema-dependent cases such as numeric text, XML names and form field encodings retain an explicit codec. Inference uses the declared media type, including wildcard declarations, so it agrees with generated types.
 
 Request parameters are grouped into `pathParams`, `queryParams`, `headerParams`, and `cookieParams`, each with location-specific options. The usual entry is just `{ name: "id" }`; `inputName` is emitted only for a rename. Requiredness stays in the semantic model and public TypeScript input, not in the runtime binding. Defaults follow the [OpenAPI parameter rules](https://spec.openapis.org/oas/v3.1.1.html#parameter-object): simple path/header encoding, form query/cookie encoding, exploded form values, and reserved-character escaping. Only overrides are emitted. Empty parameter groups are omitted.
 
@@ -44,9 +55,9 @@ Request bodies default to `mode: "merge"`, optional requiredness, and JSON when 
 
 `createClient(api, { baseUrl })` controls routing. Generated endpoints do not contain OpenAPI `servers`, and there are no `server` or `serverVariables` client options. A regional or operation-specific origin belongs in a separate client or request middleware. Without `baseUrl`, the client uses the browser origin, or `http://localhost` outside a browser.
 
-Authentication is a runtime extension point. `token` accepts a static string or callback; `auth` accepts an `AuthProvider` or a map keyed by security scheme name. Providers receive mutable headers/URL and selected scheme/scopes. Generated `security` alternatives retain OR/AND semantics; public/anonymous operations do not acquire tokens. Per-call headers override provider headers. Shared scheme metadata controls API-key placement and cache-key redaction.
+Authentication is a runtime extension point. `token` accepts a static string or callback; `auth` accepts an `AuthProvider` or an ordered array of providers. Providers receive mutable headers/URL, Fetch init, endpoint metadata, and the base URL. Configured auth applies to every call unless its second argument sets `auth: false`. Generated endpoints contain no security metadata. API-key placement is explicit provider configuration; provider `sensitiveFields` declarations guide cache-key redaction. Per-call headers override provider headers.
 
-Built-ins cover Bearer, Basic, API keys, custom callbacks, and OAuth client credentials. The client-credentials provider can use declared token URL/scopes, caches by token URL and scope set, and shares in-flight acquisitions. Authorization-code/PKCE/device flows remain application concerns behind callbacks. React Query uses opaque auth context identity and a public `cacheScope`. See [authentication](authentication.md) for the complete contract.
+Built-ins cover Bearer, Basic, API keys, custom callbacks, and OAuth client credentials. The client-credentials provider requires an explicit token URL and accepts optional scopes, caches by token URL and scope set, and shares in-flight acquisitions. Authorization-code/PKCE/device flows remain application concerns behind callbacks. React Query uses opaque auth context identity and a public `cacheScope`. See [authentication](authentication.md) for the complete contract.
 
 The runtime reconstructs flattened closed bodies using the model's fields and preserves nested bodies whole. It delegates serialization to shared codecs and does not reparse caller inputs. Generated validators execute only on responses. Full results and errors retain Fetch response metadata.
 

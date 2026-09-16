@@ -1,4 +1,4 @@
-import type { EndpointDefinition, MaybePromise, SecurityScheme } from "./types.js"
+import type { EndpointDefinition, MaybePromise } from "./types.js"
 
 export interface AuthRequest {
   readonly endpoint: EndpointDefinition
@@ -6,10 +6,14 @@ export interface AuthRequest {
   readonly baseUrl: string
   readonly headers: Headers
   readonly init: RequestInit
-  readonly scopes: readonly string[]
-  readonly scheme?: SecurityScheme
+}
+/** Header/query/cookie placement, also used to keep credentials out of query-cache keys. */
+export interface AuthField {
+  readonly in: "header" | "query" | "cookie"
+  readonly name: string
 }
 export interface AuthProvider {
+  readonly sensitiveFields?: readonly AuthField[]
   apply(request: AuthRequest): MaybePromise<void>
 }
 export type TokenSource = string | (() => MaybePromise<string | undefined>)
@@ -19,10 +23,15 @@ function isCallback(source: TokenSource): source is Exclude<TokenSource, string>
 export async function resolveToken(source: TokenSource): Promise<string | undefined> {
   return isCallback(source) ? source() : source
 }
-export function isAuthProvider(
-  value: AuthProvider | Readonly<Record<string, AuthProvider>>,
-): value is AuthProvider {
-  return typeof value["apply"] === "function"
+function isAuthList(
+  value: AuthProvider | readonly AuthProvider[],
+): value is readonly AuthProvider[] {
+  return Array.isArray(value)
+}
+export function getAuthProviders(
+  auth: AuthProvider | readonly AuthProvider[] | undefined,
+): readonly AuthProvider[] {
+  return auth === undefined ? [] : isAuthList(auth) ? auth : [auth]
 }
 
 export function BearerAuth(token: TokenSource): AuthProvider {
@@ -43,25 +52,20 @@ export function BasicAuth(username: string, password: string): AuthProvider {
     },
   }
 }
-export function ApiKeyAuth(
-  key: TokenSource,
-  placement?: { readonly in: "header" | "query" | "cookie"; readonly name: string },
-): AuthProvider {
+export function ApiKeyAuth(key: TokenSource, placement: AuthField): AuthProvider {
   return {
+    sensitiveFields: [placement],
     async apply(request) {
-      const target = placement ?? (request.scheme?.type === "apiKey" ? request.scheme : undefined)
-      if (!target)
-        throw new TypeError("ApiKeyAuth requires an API-key security scheme or explicit placement")
       const value = await resolveToken(key)
       if (value === undefined) return
-      if (target.in === "header") request.headers.set(target.name, value)
-      else if (target.in === "query") request.url.searchParams.set(target.name, value)
+      if (placement.in === "header") request.headers.set(placement.name, value)
+      else if (placement.in === "query") request.url.searchParams.set(placement.name, value)
       else
         request.headers.set(
           "cookie",
           [
             request.headers.get("cookie"),
-            `${encodeURIComponent(target.name)}=${encodeURIComponent(value)}`,
+            `${encodeURIComponent(placement.name)}=${encodeURIComponent(value)}`,
           ]
             .filter(Boolean)
             .join("; "),
@@ -69,8 +73,11 @@ export function ApiKeyAuth(
     },
   }
 }
-export function CustomAuth(apply: AuthProvider["apply"]): AuthProvider {
-  return { apply }
+export function CustomAuth(
+  apply: AuthProvider["apply"],
+  sensitiveFields: readonly AuthField[] = [],
+): AuthProvider {
+  return sensitiveFields.length ? { apply, sensitiveFields } : { apply }
 }
 function base64(value: string): string {
   return btoa(
@@ -84,9 +91,9 @@ function formEncode(value: string): string {
 export interface OAuthClientCredentialsOptions {
   readonly clientId: string
   readonly clientSecret: string
-  /** Overrides the OpenAPI clientCredentials tokenUrl, or supplies one for custom APIs. */
-  readonly tokenUrl?: string
-  /** Defaults to scopes required by the selected endpoint security requirement. */
+  /** Absolute token endpoint URL, or relative to the client baseUrl. */
+  readonly tokenUrl: string
+  /** Defaults to an empty scope set. */
   readonly scopes?: readonly string[]
   readonly authentication?: "client_secret_basic" | "client_secret_post"
   readonly fetch?: typeof globalThis.fetch
@@ -129,11 +136,7 @@ export function OAuthClientCredentialsAuth(options: OAuthClientCredentialsOption
     )
   return {
     async apply(request) {
-      const declared =
-        request.scheme?.type === "oauth2" ? request.scheme.clientCredentials : undefined
-      const target = options.tokenUrl ?? declared?.tokenUrl
-      if (!target) throw new TypeError("OAuth client credentials requires a tokenUrl")
-      const url = new URL(target, request.baseUrl)
+      const url = new URL(options.tokenUrl, request.baseUrl)
       if (
         url.protocol !== "https:" &&
         !(url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname))
@@ -141,7 +144,7 @@ export function OAuthClientCredentialsAuth(options: OAuthClientCredentialsOption
         throw new TypeError("OAuth token endpoints must use HTTPS (except local development)")
       if (url.username || url.password || url.hash)
         throw new TypeError("OAuth tokenUrl cannot contain credentials or a fragment")
-      const scopes = [...new Set(options.scopes ?? request.scopes)].sort()
+      const scopes = [...new Set(options.scopes ?? [])].sort()
       const key = JSON.stringify([url.href, scopes])
       let token = cache.get(key)
       if (!token || Date.now() >= token.expiresAt) {

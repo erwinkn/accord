@@ -291,9 +291,7 @@ describe("compile", () => {
     expect(operation?.parameters[0]?.name).toBe("id")
     expect(operation?.body?.fields).toEqual(["id", "name"])
     expect(operation?.plan.requestBody?.fields).toBeUndefined()
-    expect(operation?.plan.responses[0]?.content.map((media) => media.mediaType)).toEqual([
-      "application/json",
-    ])
+    expect(operation?.plan.responses).toEqual({ 200: { mediaType: "application/json" } })
   })
 
   it("returns structured diagnostics", () => {

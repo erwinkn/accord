@@ -14,16 +14,11 @@
           "name": "limit"
         }
       ],
-      "responses": [
-        {
-          "status": 200,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "200": {
+          "mediaType": "application/json"
         }
-      ]
+      }
     }
   },
   {
@@ -36,24 +31,14 @@
       "path": "/users",
       "id": "createUser",
       "kind": "mutation",
-      "responses": [
-        {
-          "status": 201,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "201": {
+          "mediaType": "application/json"
         },
-        {
-          "status": 400,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+        "400": {
+          "mediaType": "application/json"
         }
-      ],
+      },
       "requestBody": {
         "content": [
           {
@@ -80,24 +65,14 @@
           "name": "userId"
         }
       ],
-      "responses": [
-        {
-          "status": 200,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "200": {
+          "mediaType": "application/json"
         },
-        {
-          "status": 404,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+        "404": {
+          "mediaType": "application/json"
         }
-      ]
+      }
     }
   }
 ]

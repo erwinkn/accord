@@ -3,10 +3,13 @@ import {
   createClient,
   DecodeError,
   defineEndpoint,
+  type EndpointContract,
   HttpError,
   type HttpResult,
   NetworkError,
   type RequestOptions,
+  type ResponseMap,
+  selectResponse,
 } from "../src/index.js"
 
 type User = { id: string; name: string }
@@ -28,10 +31,10 @@ const getUser = defineEndpoint<Contract<GetInput>, "query">({
   pathParams: [{ name: "userId" }],
   queryParams: [{ name: "includePosts" }],
   headerParams: [{ name: "x-request-id" }],
-  responses: [
-    { status: 200, content: [{ mediaType: "application/json" }] },
-    { status: 404, content: [{ mediaType: "application/json" }] },
-  ],
+  responses: {
+    200: { mediaType: "application/json" },
+    404: { mediaType: "application/json" },
+  },
 })
 const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
   method: "POST",
@@ -43,7 +46,7 @@ const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
     content: [{ mediaType: "application/json" }],
     fields: ["name", "email"],
   },
-  responses: [{ status: 201, content: [{ mediaType: "application/json" }] }],
+  responses: { 201: { mediaType: "application/json" } },
 })
 const api = { users: { getUser, createUser } }
 
@@ -139,6 +142,41 @@ describe("createClient", () => {
 })
 
 describe("response boundaries", () => {
+  it("matches response records by exact status, then range, then default", () => {
+    const responses: ResponseMap = {
+      default: { mediaType: "text/plain" },
+      "2XX": { mediaType: "application/json" },
+      204: {},
+      200: [{ mediaType: "application/json" }, { mediaType: "text/csv" }],
+    }
+    expect(selectResponse(responses, 200)).toBe(responses[200])
+    expect(selectResponse(responses, 204)).toBe(responses[204])
+    expect(selectResponse(responses, 201)).toBe(responses["2XX"])
+    expect(selectResponse(responses, 404)).toBe(responses.default)
+    expect(selectResponse(responses, 0)).toBeUndefined()
+    expect(selectResponse({}, 200)).toBeUndefined()
+  })
+  it("does not fall back to another status when the exact status declares a different media type", async () => {
+    const endpoint = defineEndpoint<EndpointContract>({
+      id: "read",
+      kind: "query",
+      method: "GET",
+      path: "/resource",
+      responses: {
+        200: { mediaType: "application/json" },
+        "2XX": { mediaType: "text/plain" },
+        default: { mediaType: "text/plain" },
+      },
+    })
+    const client = createClient(
+      { read: endpoint },
+      {
+        fetch: async () =>
+          new Response("range payload", { headers: { "content-type": "text/plain" } }),
+      },
+    )
+    await expect(client.read()).rejects.toBeInstanceOf(DecodeError)
+  })
   it("retains HTTP status when the error body cannot be decoded", async () => {
     const call = createClient(api, {
       fetch: async () =>

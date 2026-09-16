@@ -112,20 +112,12 @@ export interface RequestBodyDescriptor {
   readonly defaultMediaType?: string
 }
 
-export interface ResponseDescriptor {
-  readonly status: StatusSelector
-  readonly content: readonly MediaPlan[]
-}
-
-export type SecurityRequirement = Readonly<Record<string, readonly string[]>>
-export type SecurityScheme =
-  | { readonly type: "apiKey"; readonly name: string; readonly in: "header" | "query" | "cookie" }
-  | { readonly type: "http"; readonly scheme: string }
-  | {
-      readonly type: "oauth2"
-      readonly clientCredentials?: { readonly tokenUrl: string; readonly scopes: readonly string[] }
-    }
-  | { readonly type: "openIdConnect" | "mutualTLS" }
+/** Omit mediaType for a response with no declared body. */
+export type ResponseMetadata = Partial<MediaPlan>
+/** A single metadata object normally; an array only when a status declares multiple media types. */
+export type ResponseMap = Readonly<
+  Partial<Record<StatusSelector, ResponseMetadata | readonly ResponseMetadata[]>>
+>
 
 export interface EndpointPlan<K extends OperationKind = OperationKind> {
   readonly method: HttpMethod
@@ -137,12 +129,10 @@ export interface EndpointPlan<K extends OperationKind = OperationKind> {
   readonly headerParams?: readonly HeaderParameter[]
   readonly cookieParams?: readonly CookieParameter[]
   readonly requestBody?: RequestBodyDescriptor
-  /** Status groups are ordered exact, range, default. Match the status before matching media. */
-  readonly responses: readonly ResponseDescriptor[]
+  /** Match exact/range/default status first, then select that status's media. */
+  readonly responses: ResponseMap
   /** Default: payload. */
   readonly resultMode?: "payload" | "status"
-  readonly security?: readonly SecurityRequirement[]
-  readonly securitySchemes?: Readonly<Record<string, SecurityScheme>>
 }
 
 export interface EndpointContract {
@@ -227,6 +217,8 @@ export type ClientFor<TApi> = TApi extends EndpointDefinition
     }
 
 export interface RequestOptions {
+  /** Set false to skip client token/auth providers for this call. */
+  readonly auth?: boolean
   readonly signal?: AbortSignal
   readonly headers?: Readonly<Record<string, string>>
 }
@@ -290,17 +282,15 @@ export interface ResponseMiddlewareContext extends RequestMiddlewareContext {
 export type ResponseMiddleware = (
   context: ResponseMiddlewareContext,
 ) => MaybePromise<Response | void>
-export type Credential = string | { readonly username: string; readonly password: string }
 export interface ClientOptions {
   /** Defaults to the browser origin, or http://localhost outside a browser. OpenAPI servers are not used. */
   readonly baseUrl?: string
   readonly fetch?: typeof globalThis.fetch
   readonly headers?: HeadersInit | HeaderResolver
-  readonly credentials?: Readonly<Record<string, Credential>>
-  /** Bearer shortcut for secured endpoints; callbacks run for each request. */
+  /** Bearer shortcut for every request; callbacks run for each authenticated call. */
   readonly token?: TokenSource
-  /** One provider, or providers keyed by OpenAPI security scheme name. */
-  readonly auth?: AuthProvider | Readonly<Record<string, AuthProvider>>
+  /** One provider, or an ordered list of providers applied to every request. Overrides token. */
+  readonly auth?: AuthProvider | readonly AuthProvider[]
   /** Public account/tenant identity for cache isolation. Never put credentials here. */
   readonly cacheScope?: string
   readonly requestMiddleware?: readonly RequestMiddleware[]

@@ -10,36 +10,26 @@ import {
   defineEndpoint,
   type EndpointContract,
   OAuthClientCredentialsAuth,
-  type SecurityRequirement,
-  type SecurityScheme,
 } from "../src/index.js"
 
-function api(
-  security: readonly SecurityRequirement[] = [{ bearer: [] }],
-  securitySchemes: Readonly<Record<string, SecurityScheme>> = {
-    bearer: { type: "http", scheme: "bearer" },
-  },
-) {
+function api() {
   return {
     get: defineEndpoint<EndpointContract>({
       id: "get",
       kind: "query",
       method: "GET",
       path: "/resource",
-      security,
-      securitySchemes,
-      responses: [{ status: 200, content: [{ mediaType: "application/json" }] }],
+      responses: { 200: { mediaType: "application/json" } },
     }),
   }
 }
-function context(scopes: readonly string[] = []): AuthRequest {
+function context(): AuthRequest {
   return {
     endpoint: api().get,
     url: new URL("https://api.test/resource"),
     baseUrl: "https://api.test/",
     headers: new Headers(),
     init: {},
-    scopes,
   }
 }
 afterEach(() => vi.restoreAllMocks())
@@ -66,44 +56,41 @@ describe("client authentication", () => {
     ])
     expect(callback).toHaveBeenCalledTimes(3)
   })
-  it("does not acquire or send tokens for public/anonymous endpoints", async () => {
+  it("skips configured authentication only when the call opts out", async () => {
     const token = vi.fn(async () => "secret")
-    for (const security of [[], [{}]])
-      await createClient(api(security), {
-        token,
+    const apply = vi.fn()
+    for (const options of [{ token }, { auth: CustomAuth(apply) }]) {
+      const client = createClient(api(), {
+        ...options,
         fetch: async (_url, init) => {
-          expect(new Headers(init?.headers).has("authorization")).toBe(false)
+          expect(new Headers(init?.headers).get("authorization")).toBe("Explicit header")
           return Response.json({})
         },
-      }).get()
+      })
+      await client.get({}, { auth: false, headers: { authorization: "Explicit header" } })
+    }
     expect(token).not.toHaveBeenCalled()
+    expect(apply).not.toHaveBeenCalled()
   })
-  it("selects a complete OR alternative and applies all of its AND providers", async () => {
-    const skipped = vi.fn()
-    const definitions = api(
-      [
-        { missing: [], key: [] },
-        { key: [], basic: [] },
+  it("applies every provider in order with explicit API-key placement", async () => {
+    const last = vi.fn((request: AuthRequest) => {
+      expect(request.url.searchParams.get("api_key")).toBe("a+b")
+      expect(request.headers.get("authorization")).toBe(`Basic ${btoa("user:pass")}`)
+      request.headers.set("x-custom", "last")
+    })
+    await createClient(api(), {
+      auth: [
+        ApiKeyAuth("a+b", { in: "query", name: "api_key" }),
+        BasicAuth("user", "pass"),
+        CustomAuth(last),
       ],
-      {
-        missing: { type: "http", scheme: "bearer" },
-        key: { type: "apiKey", in: "query", name: "api_key" },
-        basic: { type: "http", scheme: "basic" },
-      },
-    )
-    await createClient(definitions, {
-      auth: {
-        key: ApiKeyAuth("a+b"),
-        basic: BasicAuth("user", "pass"),
-        unused: CustomAuth(skipped),
-      },
       fetch: async (url, init) => {
         expect(new URL(String(url)).searchParams.get("api_key")).toBe("a+b")
-        expect(new Headers(init?.headers).get("authorization")).toBe(`Basic ${btoa("user:pass")}`)
+        expect(new Headers(init?.headers).get("x-custom")).toBe("last")
         return Response.json({})
       },
     }).get()
-    expect(skipped).not.toHaveBeenCalled()
+    expect(last).toHaveBeenCalledOnce()
   })
   it("supports custom providers and fails before fetch on provider errors", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>(async () => Response.json({}))
@@ -122,7 +109,7 @@ describe("client authentication", () => {
   })
 })
 describe("OAuth client credentials", () => {
-  it("shares acquisition, caches until expiry, and separates scope sets", async () => {
+  it("shares acquisition, caches until expiry, and isolates provider configurations", async () => {
     const now = vi.spyOn(Date, "now").mockReturnValue(100_000)
     const fetch = vi.fn<typeof globalThis.fetch>(async (_url, init) => {
       expect(init?.redirect).toBe("error")
@@ -140,23 +127,33 @@ describe("OAuth client credentials", () => {
       clientId: "client:id",
       clientSecret: "secret value",
       tokenUrl: "https://auth.test/token",
+      scopes: ["read"],
       fetch,
     })
-    const requests = Array.from({ length: 10 }, () => context(["read"]))
+    const requests = Array.from({ length: 10 }, () => context())
     await Promise.all(requests.map((request) => auth.apply(request)))
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(
       requests.every((request) => request.headers.get("authorization") === "Bearer token1"),
     ).toBe(true)
-    await auth.apply(context(["read"]))
+    await auth.apply(context())
     expect(fetch).toHaveBeenCalledTimes(1)
-    await auth.apply(context(["write"]))
+    const writer = OAuthClientCredentialsAuth({
+      clientId: "client:id",
+      clientSecret: "secret value",
+      tokenUrl: "https://auth.test/token",
+      scopes: ["write"],
+      fetch,
+    })
+    await writer.apply(context())
+    expect(new URLSearchParams(String(fetch.mock.calls[0]![1]?.body)).get("scope")).toBe("read")
+    expect(new URLSearchParams(String(fetch.mock.calls[1]![1]?.body)).get("scope")).toBe("write")
     expect(fetch).toHaveBeenCalledTimes(2)
     now.mockReturnValue(191_000)
-    await auth.apply(context(["read"]))
+    await auth.apply(context())
     expect(fetch).toHaveBeenCalledTimes(3)
   })
-  it("derives token URL and required scopes from metadata and retries after acquisition failure", async () => {
+  it("resolves an explicit relative token URL and retries after acquisition failure", async () => {
     const fetch = vi
       .fn<typeof globalThis.fetch>()
       .mockResolvedValueOnce(new Response("private detail", { status: 503 }))
@@ -166,13 +163,12 @@ describe("OAuth client credentials", () => {
     const auth = OAuthClientCredentialsAuth({
       clientId: "id",
       clientSecret: "secret",
+      tokenUrl: "/oauth/token",
+      scopes: ["read"],
       authentication: "client_secret_post",
       fetch,
     })
-    const request: AuthRequest = {
-      ...context(["read"]),
-      scheme: { type: "oauth2", clientCredentials: { tokenUrl: "/oauth/token", scopes: ["read"] } },
-    }
+    const request = context()
     await expect(auth.apply(request)).rejects.toThrow("HTTP 503")
     await auth.apply(request)
     expect(String(fetch.mock.calls[1]![0])).toBe("https://api.test/oauth/token")
@@ -200,13 +196,18 @@ describe("OAuth client credentials", () => {
   })
 })
 
-it("leaves mutual TLS credentials to the configured Fetch transport", async () => {
-  const secured = api([{ certificate: [] }], { certificate: { type: "mutualTLS" } })
-  await createClient(secured, {
-    credentials: { certificate: "transport-owned" },
-    fetch: async (_url, init) => {
-      expect(new Headers(init?.headers).has("authorization")).toBe(false)
-      return Response.json({})
-    },
-  }).get()
+it("explicit auth configuration takes precedence over the token shortcut", async () => {
+  const token = vi.fn(async () => "unused")
+  const headers: Headers[] = []
+  for (const auth of [BearerAuth("explicit"), []])
+    await createClient(api(), {
+      token,
+      auth,
+      fetch: async (_url, init) => {
+        headers.push(new Headers(init?.headers))
+        return Response.json({})
+      },
+    }).get()
+  expect(token).not.toHaveBeenCalled()
+  expect(headers.map((header) => header.get("authorization"))).toEqual(["Bearer explicit", null])
 })

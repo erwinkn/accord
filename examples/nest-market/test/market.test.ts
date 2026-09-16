@@ -256,7 +256,7 @@ test("the server enforces the closed DTOs declared in OpenAPI", async () => {
 test("generated response validators reject a corrupted response after a real HTTP exchange", async () => {
   const client = createClient(api, {
     baseUrl,
-    credentials: { bearer: DEMO_TOKEN },
+    token: DEMO_TOKEN,
     fetch: async (url, init) => {
       const response = await fetch(url, init)
       const offering = await response.json()
@@ -275,7 +275,7 @@ test("generated response validators reject a corrupted response after a real HTT
 test("closed response DTOs reject undeclared server fields", async () => {
   const client = createClient(api, {
     baseUrl,
-    credentials: { bearer: DEMO_TOKEN },
+    token: DEMO_TOKEN,
     fetch: async (url, init) => {
       const response = await fetch(url, init)
       return Response.json(

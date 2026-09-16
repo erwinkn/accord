@@ -1,4 +1,5 @@
 export type {
+  AuthField,
   AuthProvider,
   AuthRequest,
   OAuthClientCredentialsOptions,
@@ -9,6 +10,7 @@ export {
   BasicAuth,
   BearerAuth,
   CustomAuth,
+  getAuthProviders,
   OAuthClientCredentialsAuth,
   StaticBearerAuth,
 } from "./auth.js"
@@ -21,7 +23,9 @@ export {
   getEndpointScope,
   isEndpointDescriptor,
   resolveBaseUrl,
+  responseVariants,
   selectResponse,
+  selectResponseStatus,
   statusMatches,
 } from "./client.js"
 export { defaultCodec, mediaMatches, mediaType } from "./codecs.js"

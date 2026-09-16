@@ -124,8 +124,7 @@ export type RemoveContract = {
     readonly "responses": RemoveResponses;
     readonly "fullResponse": RemoveFullResponse;
 };
-const accordSecuritySchemes0 = { "apiKey": { "type": "apiKey", "name": "X-API-Key", "in": "header" } } as const;
-const defineEndpoint = createEndpointFactory("fc81a28e0f07838f");
+const defineEndpoint = createEndpointFactory("582fb1aea7c8bea6");
 export const api = {
     "assets": {
         "upload": defineEndpoint<UploadContract, "mutation">({
@@ -133,11 +132,6 @@ export const api = {
             "path": "/assets",
             "id": "upload",
             "kind": "mutation",
-            "security": [
-                {
-                    "apiKey": []
-                }
-            ],
             "requestBody": {
                 "content": [
                     {
@@ -192,17 +186,11 @@ export const api = {
                     "tags"
                 ]
             },
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 201,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+            "responses": {
+                "201": {
+                    "mediaType": "application/json"
                 }
-            ]
+            }
         }),
         "rename": defineEndpoint<RenameContract, "mutation">({
             "method": "PATCH",
@@ -214,11 +202,6 @@ export const api = {
                     "name": "id"
                 }
             ],
-            "security": [
-                {
-                    "apiKey": []
-                }
-            ],
             "requestBody": {
                 "content": [
                     {
@@ -228,17 +211,11 @@ export const api = {
                 "required": true,
                 "mode": "separate"
             },
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 200,
-                    "content": [
-                        {
-                            "mediaType": "application/json"
-                        }
-                    ]
+            "responses": {
+                "200": {
+                    "mediaType": "application/json"
                 }
-            ]
+            }
         }),
         "remove": defineEndpoint<RemoveContract, "mutation">({
             "method": "DELETE",
@@ -250,18 +227,9 @@ export const api = {
                     "name": "id"
                 }
             ],
-            "security": [
-                {
-                    "apiKey": []
-                }
-            ],
-            "securitySchemes": accordSecuritySchemes0,
-            "responses": [
-                {
-                    "status": 204,
-                    "content": []
-                }
-            ]
+            "responses": {
+                "204": {}
+            }
         })
     }
 };

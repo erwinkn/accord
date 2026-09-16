@@ -9,12 +9,9 @@
       "path": "/api/v1/health",
       "id": "GET /api/v1/health",
       "kind": "query",
-      "responses": [
-        {
-          "status": 204,
-          "content": []
-        }
-      ]
+      "responses": {
+        "204": {}
+      }
     }
   },
   {
@@ -27,16 +24,11 @@
       "path": "/api/v1/nodes",
       "id": "createNode",
       "kind": "mutation",
-      "responses": [
-        {
-          "status": 201,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "201": {
+          "mediaType": "application/json"
         }
-      ],
+      },
       "requestBody": {
         "content": [
           {
@@ -86,16 +78,11 @@
           "name": "session"
         }
       ],
-      "responses": [
-        {
-          "status": 200,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "200": {
+          "mediaType": "application/json"
         }
-      ]
+      }
     }
   },
   {
@@ -124,16 +111,11 @@
           "inputName": "postId"
         }
       ],
-      "responses": [
-        {
-          "status": 200,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "200": {
+          "mediaType": "application/json"
         }
-      ]
+      }
     }
   },
   {
@@ -146,16 +128,11 @@
       "path": "/api/v1/uploads",
       "id": "uploadFile",
       "kind": "mutation",
-      "responses": [
-        {
-          "status": 201,
-          "content": [
-            {
-              "mediaType": "application/json"
-            }
-          ]
+      "responses": {
+        "201": {
+          "mediaType": "application/json"
         }
-      ],
+      },
       "requestBody": {
         "content": [
           {

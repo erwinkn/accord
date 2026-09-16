@@ -9,9 +9,8 @@ import {
   type PathParameter,
   type QueryParameter,
   type RequestBodyDescriptor,
-  type ResponseDescriptor,
-  type SecurityRequirement,
-  type SecurityScheme,
+  type ResponseMap,
+  type StatusSelector,
   selectResponse,
 } from "@accord/client"
 import { type DocumentStore, fail, list, object, string } from "./loader.js"
@@ -33,7 +32,7 @@ import {
 } from "./naming.js"
 import { isObject, isString } from "./object.js"
 import { SchemaGraph, styleEncoding } from "./schema.js"
-import type { AccordCodegenConfig, JsonValue } from "./types.js"
+import type { AccordCodegenConfig } from "./types.js"
 
 export interface Compilation {
   readonly model: ApiModel
@@ -48,31 +47,6 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
   const components = object(root["components"])
   for (const name of Object.keys(object(components["schemas"])).sort())
     graph.named.set(name, graph.add(store.child(store.root, "components", "schemas", name)))
-  const securitySchemes: { [key: string]: SecurityScheme } = Object.create(null)
-  for (const name of Object.keys(object(components["securitySchemes"]))) {
-    const at = store.dereference(store.child(store.root, "components", "securitySchemes", name))
-    const scheme = object(at.value)
-    const type = scheme["type"]
-    if (type === "apiKey") {
-      const location = scheme["in"]
-      if (location !== "header" && location !== "query" && location !== "cookie")
-        fail("INVALID_DOCUMENT", `Invalid security location for ${name}`, at.source)
-      securitySchemes[name] = { type, name: string(scheme["name"]), in: location }
-    } else if (type === "http") securitySchemes[name] = { type, scheme: string(scheme["scheme"]) }
-    else if (type === "oauth2") {
-      const flow = object(object(scheme["flows"])["clientCredentials"])
-      securitySchemes[name] = flow["tokenUrl"]
-        ? {
-            type,
-            clientCredentials: {
-              tokenUrl: string(flow["tokenUrl"]),
-              scopes: Object.keys(object(flow["scopes"])),
-            },
-          }
-        : { type }
-    } else if (type === "openIdConnect" || type === "mutualTLS") securitySchemes[name] = { type }
-    else fail("INVALID_DOCUMENT", `Invalid security scheme ${name}`, at.source)
-  }
   const operations: OperationModel[] = []
   const operationIds = new Set<string>()
   const exportPaths: string[][] = []
@@ -157,11 +131,13 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
       const responses = responseModels(at, graph).map((response) =>
         method === "head" ? { ...response, media: [] } : response,
       )
-      const responsePlans: ResponseDescriptor[] = responses.map((response) => ({
-        status: statusSelector(response.status, at),
-        content: response.media.map((media) => mediaPlan(media, "response")),
-      }))
-      responsePlans.sort((left, right) => statusOrder(left.status) - statusOrder(right.status))
+      const responsePlans: ResponseMap = Object.fromEntries(
+        responses.map((response) => {
+          const status = statusSelector(response.status, at)
+          const variants = response.media.map((media) => mediaPlan(media, "response"))
+          return [status, variants.length > 1 ? variants : (variants[0] ?? {})]
+        }),
+      )
       const successful = Array.from({ length: 100 }, (_, index) => index + 200).filter((status) =>
         selectResponse(responsePlans, status),
       )
@@ -175,7 +151,6 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
         fail("INVALID_EXTENSION", "Invalid operation kind", at.source)
       const operationKind =
         override ?? (method === "get" || method === "head" ? "query" : "mutation")
-      const security = securityRequirements(value["security"] ?? root["security"])
       let plan: EndpointPlan = {
         // SAFETY: method comes from the exhaustive HTTP method list.
         method: method.toUpperCase() as HttpMethod,
@@ -186,14 +161,6 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
         responses: responsePlans,
       }
       if (successful.length > 1) plan = { ...plan, resultMode: "status" }
-      if (security.length) {
-        for (const name of new Set(security.flatMap((entry) => Object.keys(entry))))
-          if (!securitySchemes[name])
-            fail("INVALID_DOCUMENT", `Unknown security scheme ${name}`, at.source)
-        plan = { ...plan, security }
-      }
-      // Keep API-wide schemes for cache-key redaction even on anonymous operations.
-      if (Object.keys(securitySchemes).length) plan = { ...plan, securitySchemes }
       if (body) {
         const preferred =
           config.defaultMediaTypes?.[id] ??
@@ -523,7 +490,7 @@ function responseModels(at: LocatedValue, graph: SchemaGraph): ResponseModel[] {
   return responses
 }
 
-function statusSelector(status: string, at: LocatedValue): ResponseDescriptor["status"] {
+function statusSelector(status: string, at: LocatedValue): StatusSelector {
   if (status === "default") return status
   if (/^[1-5]XX$/.test(status)) {
     // SAFETY: the status range grammar is validated above.
@@ -531,14 +498,4 @@ function statusSelector(status: string, at: LocatedValue): ResponseDescriptor["s
   }
   if (/^[1-5][0-9][0-9]$/.test(status)) return Number(status)
   fail("INVALID_RESPONSE", `Invalid response status ${status}`, at.source)
-}
-function statusOrder(status: ResponseDescriptor["status"]): number {
-  return status === "default" ? 1000 : isString(status) ? 700 + Number(status[0]) : status
-}
-function securityRequirements(value: JsonValue | undefined): SecurityRequirement[] {
-  return list(value).map((entry) =>
-    Object.fromEntries(
-      Object.entries(object(entry)).map(([name, scopes]) => [name, list(scopes).filter(isString)]),
-    ),
-  )
 }
