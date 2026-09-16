@@ -22,12 +22,13 @@ import type {
   EndpointContract,
   EndpointDefinition,
   EndpointFunction,
+  EndpointPlan,
   FullResponseOf,
   HeaderResolver,
   HttpResult,
   MediaPlan,
   OperationKind,
-  ParameterDescriptor,
+  ParameterBinding,
   ParameterValue,
   RequestMiddlewareContext,
   RequestObject,
@@ -38,6 +39,8 @@ import type {
   StatusSelector,
 } from "./types.js"
 
+import { endpointMarker } from "./types.js"
+
 function isRecord<T>(value: T): value is T & object {
   return value !== null && typeof value === "object" && !Array.isArray(value)
 }
@@ -47,19 +50,13 @@ function isHeaderResolver<T>(value: T): value is T & HeaderResolver {
 }
 
 export function isEndpointDescriptor<T>(value: T): value is T & EndpointDefinition {
-  return (
-    isRecord(value) &&
-    "kind" in value &&
-    value.kind === "endpoint" &&
-    "plan" in value &&
-    isRecord(value.plan)
-  )
+  return isRecord(value) && endpointMarker in value && value[endpointMarker] === true
 }
 
 export function defineEndpoint<C extends EndpointContract, K extends OperationKind = OperationKind>(
-  definition: EndpointDefinition<C, K>,
+  definition: EndpointPlan<K>,
 ): EndpointDefinition<C, K> {
-  return definition
+  return { ...definition, [endpointMarker]: true }
 }
 
 export function createClient<const TApi extends object>(
@@ -88,9 +85,7 @@ export function createEndpointClient<E extends EndpointDefinition>(
   const request = async (...args: ArgumentsOf<E>): Promise<ResponseOf<E>> => {
     const result = await execute(endpoint, options, args)
     const data =
-      endpoint.plan.resultMode === "status"
-        ? { status: result.status, data: result.data }
-        : result.data
+      endpoint.resultMode === "status" ? { status: result.status, data: result.data } : result.data
     // SAFETY: the generated contract and execution plan share one representation projection; validation is optional by design.
     return data as ResponseOf<E>
   }
@@ -133,26 +128,26 @@ function selectMedia(content: readonly MediaPlan[], actual: string | null): Medi
   )
 }
 
-export function resolveBaseUrl(endpoint: EndpointDefinition, options: ClientOptions): string {
-  let base = options.baseUrl
-  if (base === undefined) {
-    const server = endpoint.plan.servers[options.server ?? 0]
-    if (server)
-      base = server.url.replace(/\{([^}]+)\}/g, (_match, name: string) => {
-        const variable = server.variables[name]
-        const value = options.serverVariables?.[name] ?? variable?.default
-        if (value === undefined) throw new TypeError(`Missing server variable ${name}`)
-        if (variable?.enum && !variable.enum.includes(value))
-          throw new TypeError(`Invalid server variable ${name}`)
-        return value
-      })
-  }
+/** Routing is a client concern, independent of the OpenAPI document's server list. */
+export function resolveBaseUrl(options: ClientOptions): string {
   const origin = globalThis.location?.href ?? "http://localhost/"
-  return new URL(base ?? "/", origin).href
+  return new URL(options.baseUrl ?? "/", origin).href
 }
 
-function resolveUrl(endpoint: EndpointDefinition, options: ClientOptions, path: string): URL {
-  const base = new URL(resolveBaseUrl(endpoint, options))
+export function defaultRequestMediaType(body: {
+  readonly defaultMediaType?: string
+  readonly content: readonly Pick<MediaPlan, "mediaType">[]
+}): string {
+  const selected =
+    body.defaultMediaType ??
+    body.content.find((media) => media.mediaType === "application/json")?.mediaType ??
+    body.content[0]?.mediaType
+  if (!selected) throw new TypeError("Request body must declare a media type")
+  return selected
+}
+
+function resolveUrl(options: ClientOptions, path: string): URL {
+  const base = new URL(resolveBaseUrl(options))
   const existingQuery = base.search
   base.search = ""
   base.hash = ""
@@ -163,7 +158,7 @@ function resolveUrl(endpoint: EndpointDefinition, options: ClientOptions, path: 
 }
 
 async function parameterValue(
-  parameter: ParameterDescriptor,
+  parameter: ParameterBinding,
   input: RequestObject,
 ): Promise<ParameterValue | undefined> {
   const value = input[parameter.inputName ?? parameter.name]
@@ -186,7 +181,7 @@ async function execute<E extends EndpointDefinition>(
   // SAFETY: the TypeScript caller owns argument correctness; do not clone or re-parse the input.
   const input = (args[0] ?? {}) as RequestObject
   const requestOptions: RequestOptions = args[1] ?? {}
-  const plan = endpoint.plan
+  const plan = endpoint
   let path = plan.path
   const query: ReturnType<typeof serializeQueryParameter>[number][] = []
   const configuredHeaders = isHeaderResolver(options.headers)
@@ -194,22 +189,28 @@ async function execute<E extends EndpointDefinition>(
     : options.headers
   const headers = new Headers(configuredHeaders)
   const cookies: string[] = []
-  for (const parameter of plan.parameters) {
+  for (const parameter of plan.pathParams ?? []) {
     const value = await parameterValue(parameter, input)
-    if (value === undefined) continue
-    if (parameter.in === "path")
+    if (value !== undefined)
       path = path.split(`{${parameter.name}}`).join(serializePathParameter(parameter, value))
-    if (parameter.in === "query") query.push(...serializeQueryParameter(parameter, value))
-    if (parameter.in === "header")
-      headers.set(parameter.name, serializeHeaderParameter(parameter, value))
-    if (parameter.in === "cookie") {
+  }
+  for (const parameter of plan.queryParams ?? []) {
+    const value = await parameterValue(parameter, input)
+    if (value !== undefined) query.push(...serializeQueryParameter(parameter, value))
+  }
+  for (const parameter of plan.headerParams ?? []) {
+    const value = await parameterValue(parameter, input)
+    if (value !== undefined) headers.set(parameter.name, serializeHeaderParameter(parameter, value))
+  }
+  for (const parameter of plan.cookieParams ?? []) {
+    const value = await parameterValue(parameter, input)
+    if (value !== undefined)
       for (const [name, item] of serializeCookieParameter(parameter, value))
         cookies.push(`${encodeURIComponent(name)}=${encodeURIComponent(item)}`)
-    }
   }
   if (cookies.length)
     headers.set("cookie", [headers.get("cookie"), ...cookies].filter(Boolean).join("; "))
-  const url = resolveUrl(endpoint, options, path)
+  const url = resolveUrl(options, path)
   applyCredentials(endpoint, options, headers, url)
   for (const [name, value] of new Headers(requestOptions.headers)) headers.set(name, value)
   const queryString = renderQueryString(query)
@@ -224,7 +225,8 @@ async function execute<E extends EndpointDefinition>(
           'Select a request representation with the lowercase "content-type" header',
         )
     }
-    const contentType = requestOptions.headers?.["content-type"] ?? bodyPlan.defaultMediaType
+    const contentType =
+      requestOptions.headers?.["content-type"] ?? defaultRequestMediaType(bodyPlan)
     const selected = selectMedia(bodyPlan.content, contentType)
     if (!selected)
       throw new TypeError(`Unsupported request content-type ${contentType} for ${plan.operationId}`)
@@ -232,7 +234,7 @@ async function execute<E extends EndpointDefinition>(
     if (bodyPlan.mode === "separate") value = input["body"]
     else {
       const body: { [key: string]: RequestValue } = Object.create(null)
-      for (const field of bodyPlan.fields)
+      for (const field of bodyPlan.fields ?? [])
         if (Object.hasOwn(input, field) && input[field] !== undefined) body[field] = input[field]
       value = bodyPlan.required || Object.keys(body).length ? body : undefined
     }
@@ -316,12 +318,12 @@ function applyCredentials(
   url: URL,
 ): void {
   const credentials = options.credentials ?? {}
-  const requirement = endpoint.plan.security.find((entry) =>
+  const requirement = endpoint.security?.find((entry) =>
     Object.keys(entry).every((name) => credentials[name] !== undefined),
   )
   if (!requirement) return
   for (const name of Object.keys(requirement)) {
-    const scheme = endpoint.plan.securitySchemes[name]
+    const scheme = endpoint.securitySchemes?.[name]
     const credential = credentials[name]
     if (!scheme || credential === undefined) continue
     const value = credentialText(credential)

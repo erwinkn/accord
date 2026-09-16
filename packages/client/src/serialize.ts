@@ -1,7 +1,10 @@
 import type {
-  ParameterDescriptor,
+  CookieParameter,
+  HeaderParameter,
   ParameterObject,
   ParameterValue,
+  PathParameter,
+  QueryParameter,
   RequestObject,
   RequestValue,
 } from "./types.js"
@@ -87,10 +90,7 @@ function objectEntries(value: ParameterObject): readonly (readonly [string, Para
   return entries
 }
 
-export function serializePathParameter(
-  descriptor: ParameterDescriptor,
-  value: ParameterValue,
-): string {
+export function serializePathParameter(descriptor: PathParameter, value: ParameterValue): string {
   const name = encodeValue(descriptor.name)
   const encode = (item: ParameterValue) => encodeValue(item)
 
@@ -139,14 +139,16 @@ export function serializePathParameter(
 }
 
 export function serializeQueryParameter(
-  descriptor: ParameterDescriptor,
+  descriptor: QueryParameter,
   value: ParameterValue,
 ): readonly QueryPair[] {
+  const explode =
+    descriptor.explode ?? (descriptor.style === undefined || descriptor.style === "form")
   const inputName = descriptor.name
   const pair = (name: string, item: ParameterValue): QueryPair => [
     name,
     primitive(item),
-    descriptor.allowReserved,
+    descriptor.allowReserved ?? false,
   ]
 
   if (descriptor.style === "deepObject") {
@@ -175,14 +177,14 @@ export function serializeQueryParameter(
   }
 
   if (Array.isArray(value)) {
-    return descriptor.explode
+    return explode
       ? value.map((item) => pair(inputName, item))
       : [pair(inputName, value.map(primitive).join(","))]
   }
 
   if (isParameterObject(value)) {
     const entries = objectEntries(value)
-    return descriptor.explode
+    return explode
       ? entries.map(([key, item]) => pair(key, item))
       : [pair(inputName, entries.flatMap(([key, item]) => [key, primitive(item)]).join(","))]
   }
@@ -199,7 +201,7 @@ export function renderQueryString(pairs: readonly QueryPair[]): string {
 }
 
 export function serializeHeaderParameter(
-  descriptor: ParameterDescriptor,
+  descriptor: HeaderParameter,
   value: ParameterValue,
 ): string {
   if (Array.isArray(value)) return value.map(primitive).join(",")
@@ -213,18 +215,18 @@ export function serializeHeaderParameter(
 }
 
 export function serializeCookieParameter(
-  descriptor: ParameterDescriptor,
+  descriptor: CookieParameter,
   value: ParameterValue,
 ): readonly (readonly [string, string])[] {
   if (Array.isArray(value)) {
-    return descriptor.explode
+    return (descriptor.explode ?? true)
       ? value.map((item) => [descriptor.name, primitive(item)] as const)
       : [[descriptor.name, value.map(primitive).join(",")]]
   }
 
   if (isParameterObject(value)) {
     const entries = objectEntries(value)
-    return descriptor.explode
+    return (descriptor.explode ?? true)
       ? entries.map(([key, item]) => [key, primitive(item)] as const)
       : [[descriptor.name, entries.flatMap(([key, item]) => [key, primitive(item)]).join(",")]]
   }
@@ -234,12 +236,12 @@ export function serializeCookieParameter(
 
 export function interpolatePath(
   pathTemplate: string,
-  descriptors: readonly ParameterDescriptor[],
+  descriptors: readonly PathParameter[],
   input: RequestObject,
 ): string {
   let path = pathTemplate
 
-  for (const descriptor of descriptors.filter((parameter) => parameter.in === "path")) {
+  for (const descriptor of descriptors) {
     const inputName = descriptor.inputName ?? descriptor.name
     const value = input[inputName]
     if (value === undefined) {

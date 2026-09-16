@@ -142,167 +142,100 @@ export const ImportsReportDownloadResponseT200ApplicationOctetStreamSchema = sta
 export const api = {
     "imports": {
         "create": defineEndpoint<ImportsCreateContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "9d9164164cf9ef31",
-                "method": "POST",
-                "path": "/imports",
-                "operationId": "create",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "status",
-                "servers": [
+            "apiId": "cb61a7f76a3d0f0a",
+            "method": "POST",
+            "path": "/imports",
+            "operationId": "create",
+            "operationKind": "mutation",
+            "resultMode": "status",
+            "requestBody": {
+                "content": [
                     {
-                        "url": "https://imports.example.test/v2",
-                        "variables": {}
+                        "mediaType": "application/json"
+                    },
+                    {
+                        "mediaType": "text/csv"
                     }
                 ],
-                "security": [],
-                "securitySchemes": {},
-                "requestBody": {
-                    "required": true,
-                    "mode": "separate",
-                    "fields": [
-                        "rows"
-                    ],
+                "required": true,
+                "mode": "separate"
+            },
+            "responses": [
+                {
+                    "status": 200,
                     "content": [
                         {
-                            "mediaType": "application/json"
-                        },
-                        {
-                            "mediaType": "text/csv"
+                            "mediaType": "application/json",
+                            "schema": ImportsCreateResponseT200ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": ImportsCreateResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 202,
-                        "headers": [
-                            {
-                                "name": "Location",
-                                "inputName": "Location",
-                                "in": "header",
-                                "required": false,
-                                "style": "simple",
-                                "explode": false,
-                                "allowReserved": false
-                            }
-                        ],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": ImportsCreateResponseT202ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": ImportsCreateResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "get": defineEndpoint<ImportsGetContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "9d9164164cf9ef31",
-                "method": "GET",
-                "path": "/imports/{jobId}",
-                "operationId": "get",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "jobId",
-                        "inputName": "jobId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "https://imports.example.test/v2",
-                        "variables": {}
-                    }
-                ],
-                "security": [],
-                "securitySchemes": {},
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": ImportsGetResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "report": {
-            "download": defineEndpoint<ImportsReportDownloadContract, "query">({
-                kind: "endpoint",
-                plan: {
-                    "apiId": "9d9164164cf9ef31",
-                    "method": "GET",
-                    "path": "/imports/{jobId}/report",
-                    "operationId": "download",
-                    "operationKind": "query",
-                    "parameters": [
+                {
+                    "status": 202,
+                    "content": [
                         {
-                            "name": "jobId",
-                            "inputName": "jobId",
-                            "in": "path",
-                            "required": true,
-                            "style": "simple",
-                            "explode": false,
-                            "allowReserved": false
+                            "mediaType": "application/json",
+                            "schema": ImportsCreateResponseT202ApplicationJsonSchema
                         }
-                    ],
-                    "resultMode": "payload",
-                    "servers": [
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
                         {
-                            "url": "https://imports.example.test/v2",
-                            "variables": {}
-                        }
-                    ],
-                    "security": [],
-                    "securitySchemes": {},
-                    "responses": [
-                        {
-                            "status": 200,
-                            "headers": [],
-                            "content": [
-                                {
-                                    "mediaType": "application/octet-stream",
-                                    "schema": ImportsReportDownloadResponseT200ApplicationOctetStreamSchema
-                                }
-                            ]
+                            "mediaType": "application/json",
+                            "schema": ImportsCreateResponseT400ApplicationJsonSchema
                         }
                     ]
                 }
+            ]
+        }),
+        "get": defineEndpoint<ImportsGetContract, "query">({
+            "apiId": "cb61a7f76a3d0f0a",
+            "method": "GET",
+            "path": "/imports/{jobId}",
+            "operationId": "get",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "jobId"
+                }
+            ],
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": ImportsGetResponseT200ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "report": {
+            "download": defineEndpoint<ImportsReportDownloadContract, "query">({
+                "apiId": "cb61a7f76a3d0f0a",
+                "method": "GET",
+                "path": "/imports/{jobId}/report",
+                "operationId": "download",
+                "operationKind": "query",
+                "pathParams": [
+                    {
+                        "name": "jobId"
+                    }
+                ],
+                "responses": [
+                    {
+                        "status": 200,
+                        "content": [
+                            {
+                                "mediaType": "application/octet-stream",
+                                "schema": ImportsReportDownloadResponseT200ApplicationOctetStreamSchema
+                            }
+                        ]
+                    }
+                ]
             })
         }
     }

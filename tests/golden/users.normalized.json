@@ -5,20 +5,14 @@
       "listUsers"
     ],
     "plan": {
-      "apiId": "e99423110e5c1d1a",
+      "apiId": "ca315a231708d818",
       "method": "GET",
       "path": "/users",
       "operationId": "listUsers",
       "operationKind": "query",
-      "parameters": [
+      "queryParams": [
         {
-          "name": "limit",
-          "inputName": "limit",
-          "in": "query",
-          "required": false,
-          "style": "form",
-          "explode": true,
-          "allowReserved": false
+          "name": "limit"
         }
       ],
       "responses": [
@@ -28,14 +22,9 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
-      ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {}
+      ]
     }
   },
   {
@@ -44,12 +33,11 @@
       "createUser"
     ],
     "plan": {
-      "apiId": "e99423110e5c1d1a",
+      "apiId": "ca315a231708d818",
       "method": "POST",
       "path": "/users",
       "operationId": "createUser",
       "operationKind": "mutation",
-      "parameters": [],
       "responses": [
         {
           "status": 201,
@@ -57,8 +45,7 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         },
         {
           "status": 400,
@@ -66,27 +53,17 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
       ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {},
       "requestBody": {
-        "required": true,
-        "mode": "separate",
-        "fields": [
-          "email",
-          "name"
-        ],
         "content": [
           {
             "mediaType": "application/json"
           }
         ],
-        "defaultMediaType": "application/json"
+        "required": true,
+        "mode": "separate"
       }
     }
   },
@@ -96,20 +73,14 @@
       "getUser"
     ],
     "plan": {
-      "apiId": "e99423110e5c1d1a",
+      "apiId": "ca315a231708d818",
       "method": "GET",
       "path": "/users/{userId}",
       "operationId": "getUser",
       "operationKind": "query",
-      "parameters": [
+      "pathParams": [
         {
-          "name": "userId",
-          "inputName": "userId",
-          "in": "path",
-          "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
+          "name": "userId"
         }
       ],
       "responses": [
@@ -119,8 +90,7 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         },
         {
           "status": 404,
@@ -128,14 +98,9 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
-      ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {}
+      ]
     }
   }
 ]

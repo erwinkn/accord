@@ -20,74 +20,32 @@ type Contract<I> = {
   responses: { 200: User; 404: { message: string } }
   fullResponse: HttpResult<200, User>
 }
-const base = {
-  apiId: "unit",
-  servers: [],
-  security: [],
-  securitySchemes: {},
-  resultMode: "payload",
-} as const
-const json = {
-  mediaType: "application/json",
-} as const
 const getUser = defineEndpoint<Contract<GetInput>, "query">({
-  kind: "endpoint",
-  plan: {
-    ...base,
-    method: "GET",
-    path: "/users/{userId}",
-    operationId: "getUser",
-    operationKind: "query",
-    parameters: [
-      {
-        name: "userId",
-        in: "path",
-        required: true,
-        style: "simple",
-        explode: false,
-        allowReserved: false,
-      },
-      {
-        name: "includePosts",
-        in: "query",
-        required: false,
-        style: "form",
-        explode: true,
-        allowReserved: false,
-      },
-      {
-        name: "x-request-id",
-        in: "header",
-        required: false,
-        style: "simple",
-        explode: false,
-        allowReserved: false,
-      },
-    ],
-    responses: [
-      { status: 200, content: [json], headers: [] },
-      { status: 404, content: [json], headers: [] },
-    ],
-  },
+  apiId: "unit",
+  method: "GET",
+  path: "/users/{userId}",
+  operationId: "getUser",
+  operationKind: "query",
+  pathParams: [{ name: "userId" }],
+  queryParams: [{ name: "includePosts" }],
+  headerParams: [{ name: "x-request-id" }],
+  responses: [
+    { status: 200, content: [{ mediaType: "application/json" }] },
+    { status: 404, content: [{ mediaType: "application/json" }] },
+  ],
 })
 const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
-  kind: "endpoint",
-  plan: {
-    ...base,
-    method: "POST",
-    path: "/users",
-    operationId: "createUser",
-    operationKind: "mutation",
-    parameters: [],
-    requestBody: {
-      required: true,
-      defaultMediaType: "application/json",
-      content: [json],
-      mode: "merge",
-      fields: ["name", "email"],
-    },
-    responses: [{ status: 201, content: [json], headers: [] }],
+  apiId: "unit",
+  method: "POST",
+  path: "/users",
+  operationId: "createUser",
+  operationKind: "mutation",
+  requestBody: {
+    required: true,
+    content: [{ mediaType: "application/json" }],
+    fields: ["name", "email"],
   },
+  responses: [{ status: 201, content: [{ mediaType: "application/json" }] }],
 })
 const api = { users: { getUser, createUser } }
 

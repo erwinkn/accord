@@ -3,8 +3,10 @@ import type {
   CodecPlan,
   FormFieldPlan,
   ParameterValue,
+  QueryParameter,
   RequestObject,
   RequestValue,
+  StyleEncoding,
   XmlNode,
 } from "./types.js"
 
@@ -85,7 +87,7 @@ export async function encodeBody(
           pieces.push(
             renderQueryString(
               serializeQueryParameter(
-                { ...plan.codec.encoding, name: key, in: "query", required: false },
+                formParameter(key, plan.codec.encoding),
                 field as ParameterValue,
               ),
             ),
@@ -120,7 +122,7 @@ async function encodeMultipart(
     const entries =
       plan.codec.kind === "parameter"
         ? serializeQueryParameter(
-            { ...plan.codec.encoding, name: key, in: "query", required: false },
+            formParameter(key, plan.codec.encoding),
             field as ParameterValue,
           ).map(([name, value]) => [name, value] as const)
         : values.map((value) => [key, value] as const)
@@ -379,4 +381,9 @@ async function decodeXml(
       ? parsed[xmlName(root, "root")]
       : Object.entries(parsed).find(([name]) => !name.startsWith("?"))?.[1],
   )
+}
+
+function formParameter(name: string, encoding: StyleEncoding): QueryParameter {
+  // SAFETY: the compiler creates form field style encodings using query parameter rules.
+  return { name, ...encoding } as QueryParameter
 }

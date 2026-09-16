@@ -159,259 +159,161 @@ export const TasksCreateResponseT422ApplicationProblemJsonSchema = standardSchem
 export const TasksGetResponseT200ApplicationJsonSchema = standardSchema<Task>(accordValidators.check1, false);
 export const TasksGetResponseT404ApplicationProblemJsonSchema = standardSchema<Problem>(accordValidators.check2, false);
 export const TasksUpdateResponseT200ApplicationJsonSchema = standardSchema<Task>(accordValidators.check1, false);
+const accordSecuritySchemes0 = { "bearer": { "type": "http", "scheme": "bearer" } } as const;
 export const api = {
     "tasks": {
         "list": defineEndpoint<TasksListContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "8e3b20278e0ed937",
-                "method": "GET",
-                "path": "/tasks",
-                "operationId": "list",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "status",
-                        "inputName": "status",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "limit",
-                        "inputName": "limit",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "https://tasks.example.test/v1",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "4b68ad529ed16304",
+            "method": "GET",
+            "path": "/tasks",
+            "operationId": "list",
+            "operationKind": "query",
+            "queryParams": [
+                {
+                    "name": "status"
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": TasksListResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "name": "limit"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": TasksListResponseT200ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "create": defineEndpoint<TasksCreateContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "8e3b20278e0ed937",
-                "method": "POST",
-                "path": "/tasks",
-                "operationId": "create",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "payload",
-                "servers": [
+            "apiId": "4b68ad529ed16304",
+            "method": "POST",
+            "path": "/tasks",
+            "operationId": "create",
+            "operationKind": "mutation",
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "url": "https://tasks.example.test/v1",
-                        "variables": {}
+                        "mediaType": "application/json"
                     }
                 ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "labels",
-                        "status",
-                        "title"
-                    ],
+                "required": true,
+                "fields": [
+                    "labels",
+                    "status",
+                    "title"
+                ]
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": TasksCreateResponseT201ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": TasksCreateResponseT201ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 422,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/problem+json",
-                                "schema": TasksCreateResponseT422ApplicationProblemJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 422,
+                    "content": [
+                        {
+                            "mediaType": "application/problem+json",
+                            "schema": TasksCreateResponseT422ApplicationProblemJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "get": defineEndpoint<TasksGetContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "8e3b20278e0ed937",
-                "method": "GET",
-                "path": "/tasks/{id}",
-                "operationId": "get",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "inputName": "id",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "https://tasks.example.test/v1",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": TasksGetResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/problem+json",
-                                "schema": TasksGetResponseT404ApplicationProblemJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "update": defineEndpoint<TasksUpdateContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "8e3b20278e0ed937",
-                "method": "PATCH",
-                "path": "/tasks/{id}",
-                "operationId": "update",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "inputName": "id",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "https://tasks.example.test/v1",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": false,
-                    "mode": "separate",
-                    "fields": [
-                        "status",
-                        "title"
-                    ],
+            "apiId": "4b68ad529ed16304",
+            "method": "GET",
+            "path": "/tasks/{id}",
+            "operationId": "get",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "id"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": TasksGetResponseT200ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/problem+json",
+                            "schema": TasksGetResponseT404ApplicationProblemJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "update": defineEndpoint<TasksUpdateContract, "mutation">({
+            "apiId": "4b68ad529ed16304",
+            "method": "PATCH",
+            "path": "/tasks/{id}",
+            "operationId": "update",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "id"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": TasksUpdateResponseT200ApplicationJsonSchema
-                            }
-                        ]
+                        "mediaType": "application/json"
                     }
-                ]
-            }
+                ],
+                "mode": "separate"
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": TasksUpdateResponseT200ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         })
     }
 };

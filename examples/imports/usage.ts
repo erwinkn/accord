@@ -1,6 +1,6 @@
 import { createClient } from "@accord/client"
 import { api } from "./sdk.js"
-export const imports = createClient(api)
+export const imports = createClient(api, { baseUrl: "https://imports.example.test/v2" })
 export async function uploadCsv(csv: string) {
   const result = await imports.imports.create(
     { body: csv },

@@ -17,7 +17,7 @@ export class HttpError<TBody = unknown> extends Error {
   readonly body: TBody | undefined
   constructor(options: HttpErrorOptions<TBody>) {
     super(
-      `HTTP ${options.response.status} ${options.response.statusText || "Error"} for ${options.endpoint.plan.method} ${options.endpoint.plan.path}`,
+      `HTTP ${options.response.status} ${options.response.statusText || "Error"} for ${options.endpoint.method} ${options.endpoint.path}`,
       { cause: options.cause },
     )
     this.name = "HttpError"
@@ -36,7 +36,7 @@ export class DecodeError extends Error {
     readonly endpoint: EndpointDefinition,
     cause: unknown,
   ) {
-    super(`Could not decode response for ${endpoint.plan.operationId}`, { cause })
+    super(`Could not decode response for ${endpoint.operationId}`, { cause })
     this.name = "DecodeError"
   }
 }
@@ -48,7 +48,7 @@ export class ValidationError extends Error {
     readonly endpoint: EndpointDefinition,
   ) {
     super(
-      `Invalid response for ${endpoint.plan.operationId}: ${issues.map((issue) => issue.message).join("; ")}`,
+      `Invalid response for ${endpoint.operationId}: ${issues.map((issue) => issue.message).join("; ")}`,
     )
     this.name = "ValidationError"
   }
@@ -59,7 +59,7 @@ export class NetworkError extends Error {
     readonly endpoint: EndpointDefinition,
     cause: unknown,
   ) {
-    super(`Request failed for ${endpoint.plan.operationId}`, { cause })
+    super(`Request failed for ${endpoint.operationId}`, { cause })
     this.name = "NetworkError"
   }
 }

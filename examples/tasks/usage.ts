@@ -3,6 +3,7 @@ import { apiQuery } from "@accord/react-query"
 import { api, TasksGetResponseT200ApplicationJsonSchema } from "./sdk.js"
 
 export const tasks = createClient(api, {
+  baseUrl: "https://tasks.example.test/v1",
   credentials: { bearer: "replace-with-your-access-token" },
   cacheScope: "team-42",
 })

@@ -2,16 +2,14 @@ import { describe, expect, it } from "vitest"
 import {
   encodeValue,
   interpolatePath,
-  type ParameterDescriptor,
+  type QueryParameter,
   renderQueryString,
   serializePathParameter,
   serializeQueryParameter,
 } from "../src/index.js"
 
-const parameter = (overrides: Partial<ParameterDescriptor> = {}): ParameterDescriptor => ({
+const parameter = (overrides: Partial<QueryParameter> = {}): QueryParameter => ({
   name: "value",
-  in: "query",
-  required: false,
   style: "form",
   explode: true,
   allowReserved: false,
@@ -20,24 +18,17 @@ const parameter = (overrides: Partial<ParameterDescriptor> = {}): ParameterDescr
 
 describe("parameter serialization", () => {
   it("serializes simple, label, and matrix path parameters", () => {
-    expect(
-      serializePathParameter(parameter({ in: "path", style: "simple", explode: false }), [
-        "a",
-        "b",
-      ]),
-    ).toBe("a,b")
-    expect(
-      serializePathParameter(parameter({ in: "path", style: "label", explode: true }), {
-        role: "admin",
-        active: true,
-      }),
-    ).toBe(".role=admin.active=true")
+    expect(serializePathParameter({ name: "value" }, ["a", "b"])).toBe("a,b")
     expect(
       serializePathParameter(
-        parameter({ name: "id", in: "path", style: "matrix", explode: false }),
-        [3, 4],
+        { name: "value", style: "label", explode: true },
+        {
+          role: "admin",
+          active: true,
+        },
       ),
-    ).toBe(";id=3,4")
+    ).toBe(".role=admin.active=true")
+    expect(serializePathParameter({ name: "id", style: "matrix" }, [3, 4])).toBe(";id=3,4")
   })
 
   it("serializes form arrays and deep objects", () => {
@@ -63,13 +54,7 @@ describe("parameter serialization", () => {
   })
 
   it("interpolates every path placeholder and reports omissions", () => {
-    const descriptor = parameter({
-      name: "userId",
-      in: "path",
-      required: true,
-      style: "simple",
-      explode: false,
-    })
+    const descriptor = { name: "userId" }
     expect(interpolatePath("/users/{userId}", [descriptor], { userId: "a/b" })).toBe("/users/a%2Fb")
     expect(() => interpolatePath("/users/{userId}", [descriptor], {})).toThrow(
       "Missing required path parameter: userId",

@@ -839,336 +839,205 @@ export const SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema = 
 export const SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
+const accordSecuritySchemes0 = { "bearer": { "type": "http", "scheme": "bearer" } } as const;
 export const api = {
     "documents": {
         "getDocument": defineEndpoint<DocumentsGetDocumentContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/documents/{documentId}",
-                "operationId": "getDocument",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "documentId",
-                        "inputName": "documentId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsGetDocumentResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsGetDocumentResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsGetDocumentResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsGetDocumentResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "deleteDocument": defineEndpoint<DocumentsDeleteDocumentContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "DELETE",
-                "path": "/api/v1/documents/{documentId}",
-                "operationId": "deleteDocument",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "documentId",
-                        "inputName": "documentId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "responses": [
-                    {
-                        "status": 204,
-                        "headers": [],
-                        "content": []
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsDeleteDocumentResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsDeleteDocumentResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsDeleteDocumentResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "downloadDocument": defineEndpoint<DocumentsDownloadDocumentContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/documents/{documentId}/content",
-                "operationId": "downloadDocument",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "documentId",
-                        "inputName": "documentId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [
-                            {
-                                "name": "Content-Disposition",
-                                "inputName": "Content-Disposition",
-                                "in": "header",
-                                "required": false,
-                                "style": "simple",
-                                "explode": false,
-                                "allowReserved": false
-                            }
-                        ],
-                        "content": [
-                            {
-                                "mediaType": "application/octet-stream",
-                                "schema": DocumentsDownloadDocumentResponseT200ApplicationOctetStreamSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsDownloadDocumentResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsDownloadDocumentResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsDownloadDocumentResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "uploadDocument": defineEndpoint<DocumentsUploadDocumentContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "POST",
-                "path": "/api/v1/offerings/{offeringId}/documents",
-                "operationId": "uploadDocument",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "category",
-                        "file",
-                        "note"
-                    ],
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/documents/{documentId}",
+            "operationId": "getDocument",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "documentId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
                     "content": [
                         {
+                            "mediaType": "application/json",
+                            "schema": DocumentsGetDocumentResponseT200ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsGetDocumentResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsGetDocumentResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsGetDocumentResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "deleteDocument": defineEndpoint<DocumentsDeleteDocumentContract, "mutation">({
+            "apiId": "9867f9c20c327e9b",
+            "method": "DELETE",
+            "path": "/api/v1/documents/{documentId}",
+            "operationId": "deleteDocument",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "documentId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 204,
+                    "content": []
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsDeleteDocumentResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsDeleteDocumentResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsDeleteDocumentResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "downloadDocument": defineEndpoint<DocumentsDownloadDocumentContract, "query">({
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/documents/{documentId}/content",
+            "operationId": "downloadDocument",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "documentId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/octet-stream",
+                            "schema": DocumentsDownloadDocumentResponseT200ApplicationOctetStreamSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsDownloadDocumentResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsDownloadDocumentResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsDownloadDocumentResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "uploadDocument": defineEndpoint<DocumentsUploadDocumentContract, "mutation">({
+            "apiId": "9867f9c20c327e9b",
+            "method": "POST",
+            "path": "/api/v1/offerings/{offeringId}/documents",
+            "operationId": "uploadDocument",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
+                    {
+                        "mediaType": "multipart/form-data",
+                        "codec": {
+                            "kind": "form",
                             "mediaType": "multipart/form-data",
-                            "codec": {
-                                "kind": "form",
-                                "mediaType": "multipart/form-data",
-                                "fields": {
-                                    "category": {
-                                        "mediaType": "text/plain",
-                                        "codec": {
-                                            "kind": "text"
-                                        },
-                                        "multiple": false,
-                                        "headers": {}
+                            "fields": {
+                                "category": {
+                                    "mediaType": "text/plain",
+                                    "codec": {
+                                        "kind": "text"
                                     },
-                                    "file": {
-                                        "mediaType": "application/octet-stream",
-                                        "codec": {
-                                            "kind": "bytes",
-                                            "value": "upload"
-                                        },
-                                        "multiple": false,
-                                        "headers": {}
-                                    },
-                                    "note": {
-                                        "mediaType": "text/plain",
-                                        "codec": {
-                                            "kind": "text"
-                                        },
-                                        "multiple": false,
-                                        "headers": {}
-                                    }
+                                    "multiple": false,
+                                    "headers": {}
                                 },
-                                "patterns": {},
-                                "additional": {
+                                "file": {
                                     "mediaType": "application/octet-stream",
                                     "codec": {
                                         "kind": "bytes",
@@ -1176,1342 +1045,967 @@ export const api = {
                                     },
                                     "multiple": false,
                                     "headers": {}
+                                },
+                                "note": {
+                                    "mediaType": "text/plain",
+                                    "codec": {
+                                        "kind": "text"
+                                    },
+                                    "multiple": false,
+                                    "headers": {}
                                 }
+                            },
+                            "patterns": {},
+                            "additional": {
+                                "mediaType": "application/octet-stream",
+                                "codec": {
+                                    "kind": "bytes",
+                                    "value": "upload"
+                                },
+                                "multiple": false,
+                                "headers": {}
                             }
                         }
-                    ],
-                    "defaultMediaType": "multipart/form-data"
-                },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsUploadDocumentResponseT201ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsUploadDocumentResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsUploadDocumentResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsUploadDocumentResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 413,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": DocumentsUploadDocumentResponseT413ApplicationJsonSchema
-                            }
-                        ]
                     }
+                ],
+                "required": true,
+                "fields": [
+                    "category",
+                    "file",
+                    "note"
                 ]
-            }
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsUploadDocumentResponseT201ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsUploadDocumentResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsUploadDocumentResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsUploadDocumentResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 413,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": DocumentsUploadDocumentResponseT413ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         })
     },
     "investors": {
         "createCompanyInvestor": defineEndpoint<InvestorsCreateCompanyInvestorContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "POST",
-                "path": "/api/v1/investors/companies",
-                "operationId": "createCompanyInvestor",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "payload",
-                "servers": [
+            "apiId": "9867f9c20c327e9b",
+            "method": "POST",
+            "path": "/api/v1/investors/companies",
+            "operationId": "createCompanyInvestor",
+            "operationKind": "mutation",
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
+                        "mediaType": "application/json"
                     }
                 ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "country",
-                        "displayName",
-                        "email",
-                        "kind",
-                        "onboardingNote",
-                        "registrationNumber"
-                    ],
+                "required": true,
+                "fields": [
+                    "country",
+                    "displayName",
+                    "email",
+                    "kind",
+                    "onboardingNote",
+                    "registrationNumber"
+                ]
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateCompanyInvestorResponseT201ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateCompanyInvestorResponseT201ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateCompanyInvestorResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateCompanyInvestorResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateCompanyInvestorResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateCompanyInvestorResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateCompanyInvestorResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateCompanyInvestorResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "createIndividualInvestor": defineEndpoint<InvestorsCreateIndividualInvestorContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "POST",
-                "path": "/api/v1/investors/individuals",
-                "operationId": "createIndividualInvestor",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "payload",
-                "servers": [
+            "apiId": "9867f9c20c327e9b",
+            "method": "POST",
+            "path": "/api/v1/investors/individuals",
+            "operationId": "createIndividualInvestor",
+            "operationKind": "mutation",
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
+                        "mediaType": "application/json"
                     }
                 ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "country",
-                        "displayName",
-                        "email",
-                        "kind",
-                        "onboardingNote"
-                    ],
+                "required": true,
+                "fields": [
+                    "country",
+                    "displayName",
+                    "email",
+                    "kind",
+                    "onboardingNote"
+                ]
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateIndividualInvestorResponseT201ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateIndividualInvestorResponseT201ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateIndividualInvestorResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateIndividualInvestorResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsCreateIndividualInvestorResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateIndividualInvestorResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateIndividualInvestorResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsCreateIndividualInvestorResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "getInvestor": defineEndpoint<InvestorsGetInvestorContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/investors/{investorId}",
-                "operationId": "getInvestor",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "investorId",
-                        "inputName": "investorId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/investors/{investorId}",
+            "operationId": "getInvestor",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "investorId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsGetInvestorResponseT200ApplicationJsonSchema
+                        }
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsGetInvestorResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsGetInvestorResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsGetInvestorResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": InvestorsGetInvestorResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsGetInvestorResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsGetInvestorResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": InvestorsGetInvestorResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         })
     },
     "jobs": {
         "getSubmissionJob": defineEndpoint<JobsGetSubmissionJobContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/jobs/{jobId}",
-                "operationId": "getSubmissionJob",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "jobId",
-                        "inputName": "jobId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/jobs/{jobId}",
+            "operationId": "getSubmissionJob",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "jobId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": JobsGetSubmissionJobResponseT200ApplicationJsonSchema
+                        }
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": JobsGetSubmissionJobResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": JobsGetSubmissionJobResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": JobsGetSubmissionJobResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": JobsGetSubmissionJobResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": JobsGetSubmissionJobResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": JobsGetSubmissionJobResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": JobsGetSubmissionJobResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         })
     },
     "offerings": {
         "listOfferings": defineEndpoint<OfferingsListOfferingsContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/offerings",
-                "operationId": "listOfferings",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "inputName": "page",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "limit",
-                        "inputName": "limit",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "status",
-                        "inputName": "status",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/offerings",
+            "operationId": "listOfferings",
+            "operationKind": "query",
+            "queryParams": [
+                {
+                    "name": "page"
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsListOfferingsResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsListOfferingsResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsListOfferingsResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsListOfferingsResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "name": "limit"
+                },
+                {
+                    "name": "status"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsListOfferingsResponseT200ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsListOfferingsResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsListOfferingsResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsListOfferingsResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "createOffering": defineEndpoint<OfferingsCreateOfferingContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "POST",
-                "path": "/api/v1/offerings",
-                "operationId": "createOffering",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "payload",
-                "servers": [
+            "apiId": "9867f9c20c327e9b",
+            "method": "POST",
+            "path": "/api/v1/offerings",
+            "operationId": "createOffering",
+            "operationKind": "mutation",
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
+                        "mediaType": "application/json"
                     }
                 ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "description",
-                        "name",
-                        "tags",
-                        "terms"
-                    ],
+                "required": true,
+                "fields": [
+                    "description",
+                    "name",
+                    "tags",
+                    "terms"
+                ]
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": OfferingsCreateOfferingResponseT201ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsCreateOfferingResponseT201ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsCreateOfferingResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsCreateOfferingResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsCreateOfferingResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsCreateOfferingResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsCreateOfferingResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsCreateOfferingResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "getOffering": defineEndpoint<OfferingsGetOfferingContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/offerings/{offeringId}",
-                "operationId": "getOffering",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsGetOfferingResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsGetOfferingResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsGetOfferingResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsGetOfferingResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "updateOffering": defineEndpoint<OfferingsUpdateOfferingContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "PATCH",
-                "path": "/api/v1/offerings/{offeringId}",
-                "operationId": "updateOffering",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
-                },
-                "requestBody": {
-                    "required": false,
-                    "mode": "separate",
-                    "fields": [
-                        "description",
-                        "name",
-                        "tags",
-                        "terms"
-                    ],
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/offerings/{offeringId}",
+            "operationId": "getOffering",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": OfferingsGetOfferingResponseT200ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsGetOfferingResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsGetOfferingResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsGetOfferingResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "updateOffering": defineEndpoint<OfferingsUpdateOfferingContract, "mutation">({
+            "apiId": "9867f9c20c327e9b",
+            "method": "PATCH",
+            "path": "/api/v1/offerings/{offeringId}",
+            "operationId": "updateOffering",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsUpdateOfferingResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsUpdateOfferingResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsUpdateOfferingResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsUpdateOfferingResponseT404ApplicationJsonSchema
-                            }
-                        ]
+                        "mediaType": "application/json"
                     }
-                ]
-            }
+                ],
+                "mode": "separate"
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsUpdateOfferingResponseT200ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsUpdateOfferingResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsUpdateOfferingResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsUpdateOfferingResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "deleteOffering": defineEndpoint<OfferingsDeleteOfferingContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "DELETE",
-                "path": "/api/v1/offerings/{offeringId}",
-                "operationId": "deleteOffering",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "DELETE",
+            "path": "/api/v1/offerings/{offeringId}",
+            "operationId": "deleteOffering",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 204,
+                    "content": []
                 },
-                "responses": [
-                    {
-                        "status": 204,
-                        "headers": [],
-                        "content": []
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsDeleteOfferingResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsDeleteOfferingResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsDeleteOfferingResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 409,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsDeleteOfferingResponseT409ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsDeleteOfferingResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsDeleteOfferingResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsDeleteOfferingResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 409,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsDeleteOfferingResponseT409ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "exportOffering": defineEndpoint<OfferingsExportOfferingContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/offerings/{offeringId}/report",
-                "operationId": "exportOffering",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/offerings/{offeringId}/report",
+            "operationId": "exportOffering",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsExportOfferingResponseT200ApplicationJsonSchema
+                        },
+                        {
+                            "mediaType": "text/csv",
+                            "schema": OfferingsExportOfferingResponseT200TextCsvSchema
+                        }
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsExportOfferingResponseT200ApplicationJsonSchema
-                            },
-                            {
-                                "mediaType": "text/csv",
-                                "schema": OfferingsExportOfferingResponseT200TextCsvSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsExportOfferingResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsExportOfferingResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": OfferingsExportOfferingResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsExportOfferingResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsExportOfferingResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": OfferingsExportOfferingResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         })
     },
     "subscriptions": {
         "listSubscriptions": defineEndpoint<SubscriptionsListSubscriptionsContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/offerings/{offeringId}/subscriptions",
-                "operationId": "listSubscriptions",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "page",
-                        "inputName": "page",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "limit",
-                        "inputName": "limit",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "investorId",
-                        "inputName": "investorId",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/offerings/{offeringId}/subscriptions",
+            "operationId": "listSubscriptions",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "queryParams": [
+                {
+                    "name": "page"
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "createSubscription": defineEndpoint<SubscriptionsCreateSubscriptionContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "POST",
-                "path": "/api/v1/offerings/{offeringId}/subscriptions",
-                "operationId": "createSubscription",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "offeringId",
-                        "inputName": "offeringId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+                {
+                    "name": "limit"
                 },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "amount",
-                        "investorId",
-                        "metadata"
-                    ],
+                {
+                    "name": "investorId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
                     "content": [
                         {
-                            "mediaType": "application/json"
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema
                         }
-                    ],
-                    "defaultMediaType": "application/json"
+                    ]
                 },
-                "responses": [
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
+        }),
+        "createSubscription": defineEndpoint<SubscriptionsCreateSubscriptionContract, "mutation">({
+            "apiId": "9867f9c20c327e9b",
+            "method": "POST",
+            "path": "/api/v1/offerings/{offeringId}/subscriptions",
+            "operationId": "createSubscription",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "offeringId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsCreateSubscriptionResponseT201ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsCreateSubscriptionResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsCreateSubscriptionResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsCreateSubscriptionResponseT404ApplicationJsonSchema
-                            }
-                        ]
+                        "mediaType": "application/json"
                     }
+                ],
+                "required": true,
+                "fields": [
+                    "amount",
+                    "investorId",
+                    "metadata"
                 ]
-            }
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsCreateSubscriptionResponseT201ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsCreateSubscriptionResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsCreateSubscriptionResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsCreateSubscriptionResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "getSubscription": defineEndpoint<SubscriptionsGetSubscriptionContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "GET",
-                "path": "/api/v1/subscriptions/{subscriptionId}",
-                "operationId": "getSubscription",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "subscriptionId",
-                        "inputName": "subscriptionId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "GET",
+            "path": "/api/v1/subscriptions/{subscriptionId}",
+            "operationId": "getSubscription",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "subscriptionId"
+                }
+            ],
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsGetSubscriptionResponseT200ApplicationJsonSchema
+                        }
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsGetSubscriptionResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsGetSubscriptionResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsGetSubscriptionResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsGetSubscriptionResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsGetSubscriptionResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsGetSubscriptionResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsGetSubscriptionResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         }),
         "submitSubscription": defineEndpoint<SubscriptionsSubmitSubscriptionContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "5b76ccd055adf73a",
-                "method": "POST",
-                "path": "/api/v1/subscriptions/{subscriptionId}/submit",
-                "operationId": "submitSubscription",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "subscriptionId",
-                        "inputName": "subscriptionId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "background",
-                        "inputName": "background",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "status",
-                "servers": [
-                    {
-                        "url": "http://127.0.0.1:3100",
-                        "variables": {}
-                    }
-                ],
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ],
-                "securitySchemes": {
-                    "bearer": {
-                        "type": "http",
-                        "scheme": "bearer"
-                    }
+            "apiId": "9867f9c20c327e9b",
+            "method": "POST",
+            "path": "/api/v1/subscriptions/{subscriptionId}/submit",
+            "operationId": "submitSubscription",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "subscriptionId"
+                }
+            ],
+            "queryParams": [
+                {
+                    "name": "background"
+                }
+            ],
+            "resultMode": "status",
+            "security": [
+                {
+                    "bearer": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsSubmitSubscriptionResponseT200ApplicationJsonSchema
+                        }
+                    ]
                 },
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsSubmitSubscriptionResponseT200ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 202,
-                        "headers": [
-                            {
-                                "name": "Location",
-                                "inputName": "Location",
-                                "in": "header",
-                                "required": false,
-                                "style": "simple",
-                                "explode": false,
-                                "allowReserved": false
-                            }
-                        ],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 401,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "schema": SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema
-                            }
-                        ]
-                    }
-                ]
-            }
+                {
+                    "status": 202,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 401,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json",
+                            "schema": SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema
+                        }
+                    ]
+                }
+            ]
         })
     }
 };
@@ -2773,7 +2267,7 @@ function createAccordValidators(): {
     } as JsValue);
     // <stdin>
     var check0: JsValue = validate1;
-    var schema1: JsValue = { "additionalProperties": false, "properties": { "category": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema8" } as JsValue, "filename": { "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "note": { "type": "string" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "size": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["category", "id", "offeringId", "filename", "size"] as JsValue, "type": "object" } as JsValue;
+    var schema1: JsValue = { "additionalProperties": false, "properties": { "category": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema8" } as JsValue, "filename": { "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "note": { "type": "string" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "size": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["category", "id", "offeringId", "filename", "size"] as JsValue, "type": "object" } as JsValue;
     var func0: JsValue = Object.prototype.hasOwnProperty;
     var schema2: JsValue = { "enum": ["terms", "prospectus", "other"] as JsValue, "type": "string" } as JsValue;
     function validate2(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
@@ -3588,8 +3082,8 @@ function createAccordValidators(): {
     }
     (validate8 as JsValue).evaluated = { "dynamicProps": true, "dynamicItems": false } as JsValue;
     var check23: JsValue = validate11;
-    var schema8: JsValue = { "additionalProperties": false, "properties": { "id": { "format": "uuid", "type": "string" } as JsValue, "result": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema17" } as JsValue, "state": { "enum": ["completed"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["id", "state", "result"] as JsValue, "type": "object" } as JsValue;
-    var schema9: JsValue = { "additionalProperties": false, "properties": { "amount": { "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "investorId": { "format": "uuid", "type": "string" } as JsValue, "metadata": { "additionalProperties": { "type": "string" } as JsValue, "type": "object" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema18" } as JsValue, "submittedAt": { "format": "date-time", "readOnly": true, "type": ["string", "null"] as JsValue } as JsValue } as JsValue, "required": ["investorId", "amount", "id", "offeringId", "status", "submittedAt"] as JsValue, "type": "object" } as JsValue;
+    var schema8: JsValue = { "additionalProperties": false, "properties": { "id": { "format": "uuid", "type": "string" } as JsValue, "result": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema17" } as JsValue, "state": { "enum": ["completed"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["id", "state", "result"] as JsValue, "type": "object" } as JsValue;
+    var schema9: JsValue = { "additionalProperties": false, "properties": { "amount": { "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "investorId": { "format": "uuid", "type": "string" } as JsValue, "metadata": { "additionalProperties": { "type": "string" } as JsValue, "type": "object" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema18" } as JsValue, "submittedAt": { "format": "date-time", "readOnly": true, "type": ["string", "null"] as JsValue } as JsValue } as JsValue, "required": ["investorId", "amount", "id", "offeringId", "status", "submittedAt"] as JsValue, "type": "object" } as JsValue;
     var pattern0: JsValue = new RegExp("^[0-9]+\\.[0-9]{2}$", "u");
     var formats20: JsValue = require_formats().fullFormats["date-time"];
     var schema10: JsValue = { "enum": ["draft", "submitted"] as JsValue, "type": "string" } as JsValue;
@@ -3940,8 +3434,8 @@ function createAccordValidators(): {
     }
     (validate11 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check27: JsValue = validate16;
-    var schema11: JsValue = { "additionalProperties": false, "properties": { "items": { "items": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema11" } as JsValue, "type": "array" } as JsValue, "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total", "items"] as JsValue, "type": "object" } as JsValue;
-    var schema12: JsValue = { "additionalProperties": false, "properties": { "createdAt": { "format": "date-time", "readOnly": true, "type": "string" } as JsValue, "description": { "type": ["string", "null"] as JsValue } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "name": { "minLength": 3, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema12" } as JsValue, "tags": { "items": { "type": "string" } as JsValue, "type": "array" } as JsValue, "terms": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema5" } as JsValue } as JsValue, "required": ["name", "terms", "id", "status", "createdAt"] as JsValue, "type": "object" } as JsValue;
+    var schema11: JsValue = { "additionalProperties": false, "properties": { "items": { "items": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema11" } as JsValue, "type": "array" } as JsValue, "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total", "items"] as JsValue, "type": "object" } as JsValue;
+    var schema12: JsValue = { "additionalProperties": false, "properties": { "createdAt": { "format": "date-time", "readOnly": true, "type": "string" } as JsValue, "description": { "type": ["string", "null"] as JsValue } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "name": { "minLength": 3, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema12" } as JsValue, "tags": { "items": { "type": "string" } as JsValue, "type": "array" } as JsValue, "terms": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema5" } as JsValue } as JsValue, "required": ["name", "terms", "id", "status", "createdAt"] as JsValue, "type": "object" } as JsValue;
     var schema13: JsValue = { "enum": ["draft", "open", "closed"] as JsValue, "type": "string" } as JsValue;
     function validate18(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
@@ -3977,7 +3471,7 @@ function createAccordValidators(): {
         return errors === 0;
     }
     (validate18 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var schema14: JsValue = { "additionalProperties": false, "properties": { "closesAt": { "format": "date-time", "type": "string" } as JsValue, "currency": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema6" } as JsValue, "minimumInvestment": { "description": "Decimal string, avoiding floating-point currency rounding.", "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue } as JsValue, "required": ["minimumInvestment", "currency", "closesAt"] as JsValue, "type": "object" } as JsValue;
+    var schema14: JsValue = { "additionalProperties": false, "properties": { "closesAt": { "format": "date-time", "type": "string" } as JsValue, "currency": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema6" } as JsValue, "minimumInvestment": { "description": "Decimal string, avoiding floating-point currency rounding.", "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue } as JsValue, "required": ["minimumInvestment", "currency", "closesAt"] as JsValue, "type": "object" } as JsValue;
     var schema15: JsValue = { "enum": ["EUR", "USD"] as JsValue, "type": "string" } as JsValue;
     function validate21(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
@@ -4624,7 +4118,7 @@ function createAccordValidators(): {
     }
     (validate25 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check52: JsValue = validate28;
-    var schema17: JsValue = { "additionalProperties": false, "properties": { "currency": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema6" } as JsValue, "offeringId": { "format": "uuid", "type": "string" } as JsValue, "subscriptionCount": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["offeringId", "subscriptionCount", "currency"] as JsValue, "type": "object" } as JsValue;
+    var schema17: JsValue = { "additionalProperties": false, "properties": { "currency": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema6" } as JsValue, "offeringId": { "format": "uuid", "type": "string" } as JsValue, "subscriptionCount": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["offeringId", "subscriptionCount", "currency"] as JsValue, "type": "object" } as JsValue;
     function validate28(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
@@ -4757,7 +4251,7 @@ function createAccordValidators(): {
     }
     (validate30 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check57: JsValue = validate31;
-    var schema19: JsValue = { "additionalProperties": false, "properties": { "items": { "items": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema17" } as JsValue, "type": "array" } as JsValue, "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total", "items"] as JsValue, "type": "object" } as JsValue;
+    var schema19: JsValue = { "additionalProperties": false, "properties": { "items": { "items": { "$ref": "urn:accord:9867f9c20c327e9b:base:resource0#/$defs/schema17" } as JsValue, "type": "array" } as JsValue, "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total", "items"] as JsValue, "type": "object" } as JsValue;
     function validate31(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;

@@ -30,11 +30,32 @@ The type emitter reads the schema graph and representation decision directly int
 
 ## Generated endpoints
 
-The output combines ordinary exported TypeScript types with `defineEndpoint<Contract, "query" | "mutation">({ kind: "endpoint", plan })`. The contract has the argument tuple, input, successful result, error payload, per-status payloads, and full-response union. Its type-only marker disappears from JavaScript.
+The output combines ordinary exported TypeScript types with `defineEndpoint<Contract, "query" | "mutation">({ method, path, ... })`. The contract has the argument tuple, input, successful result, error payload, per-status payloads, and full-response union. It exists only in TypeScript: the object has no `contract`, `kind`, or `plan` field. `defineEndpoint` adds an internal symbol so the client can distinguish an endpoint from a namespace. Validation is separate and lives in the optional response `schema` entries.
 
 The plan describes how to bind inputs, serialize request representations, select status/media, decode responses, and choose payload versus status-envelope results. Status selectors stay compact (`200`, `2XX`, `default`); runtime and type generation share exact/range/default precedence.
 
 Each response media entry optionally references its Standard Schema directly: `{ mediaType: "application/json", schema: UserSchema }`. Status and media selection also select validation, with no parallel registry or ordinal keys. `codec` is omitted when the shared `defaultCodec(mediaType, direction)` determines JSON, ordinary text, or bytes. Schema-dependent cases such as numeric text, XML names and form field encodings retain an explicit codec. Inference uses the declared media type, including wildcard declarations, so it agrees with generated types.
+
+Request parameters are grouped into `pathParams`, `queryParams`, `headerParams`, and `cookieParams`, each with location-specific options. The usual entry is just `{ name: "id" }`; `inputName` is emitted only for a rename. Requiredness stays in the semantic model and public TypeScript input, not in the runtime binding. Defaults follow the [OpenAPI parameter rules](https://spec.openapis.org/oas/v3.1.1.html#parameter-object): simple path/header encoding, form query/cookie encoding, exploded form values, and reserved-character escaping. Only overrides are emitted. Empty parameter groups are omitted.
+
+Request bodies default to `mode: "merge"`, optional requiredness, and JSON when declared (otherwise the first declared media type). Payload-only results are the default. Explicit body mode, required bodies, alternate default media, and status-envelope results retain their flags. Response header declarations remain in the semantic model; the runtime exposes the actual Fetch `Headers` without carrying unused declarations.
+
+### Routing and credentials
+
+`createClient(api, { baseUrl })` controls routing. Generated endpoints do not contain OpenAPI `servers`, and there are no `server` or `serverVariables` client options. A regional or operation-specific origin belongs in a separate client or request middleware. Without `baseUrl`, the client uses the browser origin, or `http://localhost` outside a browser.
+
+Authentication currently means placing caller-provided credentials on a request:
+
+```ts
+const client = createClient(api, {
+  baseUrl: "https://api.example.com",
+  credentials: { bearer: accessToken },
+})
+```
+
+An endpoint's `security` lists alternatives: entries are OR, schemes within an entry are AND. `securitySchemes` tells the executor where to put each named credential (Bearer/Basic authorization, API-key header/query/cookie). Scheme dictionaries are shared constants in the generated module; the dictionary also identifies sensitive headers/query parameters for cache-key redaction, even on public operations. Public endpoints omit `security`; APIs without security schemes omit both fields. An explicit empty security alternative permits an anonymous call. The executor uses the first alternative whose credentials were supplied, and leaves authentication to caller headers/server policy if none match.
+
+There is no login, refresh, OAuth redirect, or scope enforcement. OAuth/OpenID entries accept an already-acquired bearer token; mutual TLS requires a configured Fetch transport. Callers can instead provide global headers, a header resolver for fresh tokens, or per-call headers. Per-call headers override automatically applied credentials. React Query excludes recognized credential values from keys and isolates client contexts.
 
 The runtime reconstructs flattened closed bodies using the model's fields and preserves nested bodies whole. It delegates serialization to shared codecs and does not reparse caller inputs. Generated validators execute only on responses. Full results and errors retain Fetch response metadata.
 

@@ -33,6 +33,8 @@ console.log(full.data, full.status, full.headers.get("x-request-id"))
 
 Endpoint and namespace names come from the spec. The example above uses the [Tasks API](examples/tasks/openapi.yaml).
 
+`baseUrl` controls routing; the SDK does not select from OpenAPI `servers`. Without it, requests use the browser origin (or `http://localhost` outside a browser). `credentials` maps security scheme names to tokens or Basic credentials and applies them to the declared header, query parameter, or cookie. Token acquisition and refresh belong to the application; a `headers` resolver can supply a fresh token for each request.
+
 ## Request and response conventions
 
 - Path, query, header and cookie inputs occupy the first object; request options (`headers`, `signal`) occupy the second.

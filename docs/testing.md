@@ -58,7 +58,7 @@ Generated snapshots and validator bundles are excluded from handwritten-code lin
 
 ## Precision and support boundaries
 
-This alpha targets ordinary outgoing HTTP SDKs using OpenAPI 3.0/3.1 and Fetch. It includes JSON, text, binary, URL forms, multipart, XML metadata, external references/resources, request/response read-write projections, status/media selection, optional body validation, servers/security configuration, and React Query integration. Executable fixtures establish the combinations actually tested; this is not certification of every possible OpenAPI or JSON Schema document.
+This alpha targets ordinary outgoing HTTP SDKs using OpenAPI 3.0/3.1 and Fetch. It includes JSON, text, binary, URL forms, multipart, XML metadata, external references/resources, request/response read-write projections, status/media selection, optional body validation, explicit client URLs and credential injection, and React Query integration. Executable fixtures establish the combinations actually tested; this is not certification of every possible OpenAPI or JSON Schema document.
 
 TypeScript types express structural contracts. Numeric bounds, general regular expressions, oneOf exclusivity, and general JSON Schema logical constraints still require response validators for enforcement. TypeScript cannot directly represent “every unknown key has this type except these heterogeneous named properties”; such index signatures include named property types. Omitted additionalProperties remains open. Caller-side runtime validation is intentionally absent.
 

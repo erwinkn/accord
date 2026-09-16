@@ -5,6 +5,66 @@ import type { Fixture } from "./model.js"
 const response = { "204": { description: "OK" } }
 export const generationCases: Fixture[] = [
   {
+    id: "generation.compact-endpoint-defaults",
+    title: "Flat location-specific bindings omit defaults without changing the HTTP request",
+    area: "generation",
+    reference: references.accord,
+    document: endpoint(
+      {
+        parameters: [
+          { name: "id", in: "path", required: true, schema: stringSchema },
+          { name: "tags", in: "query", schema: { type: "array", items: stringSchema } },
+          {
+            name: "x-meta",
+            in: "header",
+            schema: { type: "object", additionalProperties: stringSchema },
+          },
+          {
+            name: "prefs",
+            in: "cookie",
+            schema: { type: "object", additionalProperties: stringSchema },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["name"],
+                properties: { name: stringSchema },
+              },
+            },
+          },
+        },
+      },
+      "post",
+      "/probe/{id}",
+    ),
+    consumer: {
+      source: consumer(`export async function run() {
+        const endpoint = api.probe.call
+        for (const field of ["kind", "plan", "parameters", "servers", "resultMode", "security", "securitySchemes"])
+          assert.equal(Object.hasOwn(endpoint, field), false, field)
+        assert.deepEqual(endpoint.pathParams, [{ name: "id" }])
+        assert.deepEqual(endpoint.queryParams, [{ name: "tags" }])
+        assert.equal(endpoint.requestBody?.mode, undefined)
+        assert.equal(endpoint.requestBody?.defaultMediaType, undefined)
+        await withServer(async (baseUrl, requests) => {
+          await createClient(api, { baseUrl }).probe.call({
+            id: "a/b", tags: ["red", "blue"], xMeta: { role: "admin" }, prefs: { theme: "dark" }, name: "Ada",
+          })
+          assert.equal(requests[0]?.url, "/base/probe/a%2Fb?tags=red&tags=blue")
+          assert.equal(requests[0]?.headers["x-meta"], "role,admin")
+          assert.equal(requests[0]?.headers.cookie, "theme=dark")
+          assert.equal(requests[0]?.body.toString(), '{"name":"Ada"}')
+        })
+      }`),
+    },
+  },
+
+  {
     id: "generation.path-namespaces",
     title: "Only static path segments form namespaces; operation naming precedence is explicit",
     area: "generation",
@@ -24,8 +84,8 @@ export const generationCases: Fixture[] = [
     consumer: {
       source: consumer(`type Namespace = Expect<Equal<keyof typeof api.users, "posts">>
       export async function run() {
-        assert.equal(api.users.posts.listPosts.plan.path, "/api/v1/users/{userId}/posts")
-        assert.equal(api.users.posts.listPosts.plan.operationId, "ignored")
+        assert.equal(api.users.posts.listPosts.path, "/api/v1/users/{userId}/posts")
+        assert.equal(api.users.posts.listPosts.operationId, "ignored")
       }`),
     },
   },
@@ -38,7 +98,7 @@ export const generationCases: Fixture[] = [
     config: { namespace: "tag" },
     consumer: {
       source: consumer(
-        'export async function run() { assert.equal(api.usersApi.call.plan.path, "/probe") }',
+        'export async function run() { assert.equal(api.usersApi.call.path, "/probe") }',
       ),
     },
   },
@@ -57,7 +117,7 @@ export const generationCases: Fixture[] = [
     }),
     consumer: {
       source: consumer(
-        'export async function run() { assert.equal(api.users.posts.getByUserId.plan.path, "/users/{userId}/posts") }',
+        'export async function run() { assert.equal(api.users.posts.getByUserId.path, "/users/{userId}/posts") }',
       ),
     },
   },

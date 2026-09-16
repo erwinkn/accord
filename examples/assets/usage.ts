@@ -1,7 +1,7 @@
 import { createClient } from "@accord/client"
 import { api } from "./sdk.js"
 export const assets = createClient(api, {
-  serverVariables: { region: "us" },
+  baseUrl: "https://assets.example.test/us/v1",
   credentials: { apiKey: "replace-with-your-api-key" },
 })
 export async function upload(file: File) {

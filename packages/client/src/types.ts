@@ -72,14 +72,26 @@ export interface FormFieldPlan {
   readonly headers: Readonly<Record<string, string>>
 }
 
-/** The serializer consumes the same encoding record carried by the endpoint. */
-export interface ParameterDescriptor extends StyleEncoding {
+/** Shared input lookup and optional content encoding; requiredness belongs to the TS contract. */
+export interface ParameterBinding {
   readonly name: string
   readonly inputName?: string
-  readonly in: ParameterLocation
-  readonly required: boolean
   readonly codec?: CodecPlan
+  readonly explode?: boolean
 }
+export interface PathParameter extends ParameterBinding {
+  /** Default: simple. Explode defaults to false. */
+  readonly style?: "simple" | "label" | "matrix"
+}
+export interface QueryParameter extends ParameterBinding {
+  /** Default: form. Explode defaults to true for form, false otherwise. */
+  readonly style?: "form" | "spaceDelimited" | "pipeDelimited" | "deepObject"
+  readonly allowReserved?: boolean
+}
+/** Headers always use simple style; explode defaults to false. */
+export type HeaderParameter = ParameterBinding
+/** Cookies always use form style; explode defaults to true. */
+export type CookieParameter = ParameterBinding
 
 export interface MediaPlan {
   readonly mediaType: string
@@ -90,24 +102,18 @@ export interface MediaPlan {
 }
 
 export interface RequestBodyDescriptor {
-  readonly required: boolean
-  readonly mode: BodyMode
-  readonly fields: readonly string[]
+  readonly required?: boolean
+  /** Default: merge. */
+  readonly mode?: BodyMode
+  readonly fields?: readonly string[]
   readonly content: readonly MediaPlan[]
-  readonly defaultMediaType: string
+  /** Default: application/json when declared, otherwise the first content entry. */
+  readonly defaultMediaType?: string
 }
 
 export interface ResponseDescriptor {
   readonly status: StatusSelector
   readonly content: readonly MediaPlan[]
-  readonly headers: readonly ParameterDescriptor[]
-}
-
-export interface Server {
-  readonly url: string
-  readonly variables: Readonly<
-    Record<string, { readonly default: string; readonly enum?: readonly string[] }>
-  >
 }
 
 export type SecurityRequirement = Readonly<Record<string, readonly string[]>>
@@ -122,14 +128,17 @@ export interface EndpointPlan<K extends OperationKind = OperationKind> {
   readonly path: string
   readonly operationId: string
   readonly operationKind: K
-  readonly parameters: readonly ParameterDescriptor[]
+  readonly pathParams?: readonly PathParameter[]
+  readonly queryParams?: readonly QueryParameter[]
+  readonly headerParams?: readonly HeaderParameter[]
+  readonly cookieParams?: readonly CookieParameter[]
   readonly requestBody?: RequestBodyDescriptor
   /** Status groups are ordered exact, range, default. Match the status before matching media. */
   readonly responses: readonly ResponseDescriptor[]
-  readonly resultMode: "payload" | "status"
-  readonly servers: readonly Server[]
-  readonly security: readonly SecurityRequirement[]
-  readonly securitySchemes: Readonly<Record<string, SecurityScheme>>
+  /** Default: payload. */
+  readonly resultMode?: "payload" | "status"
+  readonly security?: readonly SecurityRequirement[]
+  readonly securitySchemes?: Readonly<Record<string, SecurityScheme>>
 }
 
 export interface EndpointContract {
@@ -141,13 +150,14 @@ export interface EndpointContract {
   readonly fullResponse: unknown
 }
 
+/** Internal factory brand; no string discriminator is needed in generated definitions. */
+export const endpointMarker: unique symbol = Symbol.for("@accord/client/endpoint")
 declare const endpointContract: unique symbol
 export interface EndpointDefinition<
   C extends EndpointContract = EndpointContract,
   K extends OperationKind = OperationKind,
-> {
-  readonly kind: "endpoint"
-  readonly plan: EndpointPlan<K>
+> extends EndpointPlan<K> {
+  readonly [endpointMarker]: true
   readonly [endpointContract]?: C
 }
 export type EndpointDescriptor<
@@ -276,9 +286,8 @@ export type ResponseMiddleware = (
 ) => MaybePromise<Response | void>
 export type Credential = string | { readonly username: string; readonly password: string }
 export interface ClientOptions {
+  /** Defaults to the browser origin, or http://localhost outside a browser. OpenAPI servers are not used. */
   readonly baseUrl?: string
-  readonly server?: number
-  readonly serverVariables?: Readonly<Record<string, string>>
   readonly fetch?: typeof globalThis.fetch
   readonly headers?: HeadersInit | HeaderResolver
   readonly credentials?: Readonly<Record<string, Credential>>

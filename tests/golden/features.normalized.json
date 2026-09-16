@@ -5,23 +5,17 @@
       "get"
     ],
     "plan": {
-      "apiId": "ebc51136307d5318",
+      "apiId": "cc751382879a44b9",
       "method": "GET",
       "path": "/api/v1/health",
       "operationId": "GET /api/v1/health",
       "operationKind": "query",
-      "parameters": [],
       "responses": [
         {
           "status": 204,
-          "content": [],
-          "headers": []
+          "content": []
         }
-      ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {}
+      ]
     }
   },
   {
@@ -30,12 +24,11 @@
       "createNode"
     ],
     "plan": {
-      "apiId": "ebc51136307d5318",
+      "apiId": "cc751382879a44b9",
       "method": "POST",
       "path": "/api/v1/nodes",
       "operationId": "createNode",
       "operationKind": "mutation",
-      "parameters": [],
       "responses": [
         {
           "status": 201,
@@ -43,27 +36,17 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
       ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {},
       "requestBody": {
-        "required": true,
-        "mode": "separate",
-        "fields": [
-          "children",
-          "name"
-        ],
         "content": [
           {
             "mediaType": "application/json"
           }
         ],
-        "defaultMediaType": "application/json"
+        "required": true,
+        "mode": "separate"
       }
     }
   },
@@ -74,56 +57,36 @@
       "searchUsers"
     ],
     "plan": {
-      "apiId": "ebc51136307d5318",
+      "apiId": "cc751382879a44b9",
       "method": "GET",
       "path": "/api/v1/organizations/{organization-id}/users",
       "operationId": "search-users",
       "operationKind": "query",
-      "parameters": [
+      "pathParams": [
         {
           "name": "organization-id",
-          "inputName": "organizationId",
-          "in": "path",
-          "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
-        },
+          "inputName": "organizationId"
+        }
+      ],
+      "queryParams": [
         {
-          "name": "roles",
-          "inputName": "roles",
-          "in": "query",
-          "required": false,
-          "style": "form",
-          "explode": true,
-          "allowReserved": false
+          "name": "roles"
         },
         {
           "name": "filter",
-          "inputName": "filter",
-          "in": "query",
-          "required": false,
-          "style": "deepObject",
           "explode": true,
-          "allowReserved": false
-        },
+          "style": "deepObject"
+        }
+      ],
+      "headerParams": [
         {
           "name": "X-Request-ID",
-          "inputName": "xRequestId",
-          "in": "header",
-          "required": false,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
-        },
+          "inputName": "xRequestId"
+        }
+      ],
+      "cookieParams": [
         {
-          "name": "session",
-          "inputName": "session",
-          "in": "cookie",
-          "required": true,
-          "style": "form",
-          "explode": true,
-          "allowReserved": false
+          "name": "session"
         }
       ],
       "responses": [
@@ -133,14 +96,9 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
-      ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {}
+      ]
     }
   },
   {
@@ -151,38 +109,23 @@
       "getPost"
     ],
     "plan": {
-      "apiId": "ebc51136307d5318",
+      "apiId": "cc751382879a44b9",
       "method": "GET",
       "path": "/api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}",
       "operationId": "get-post",
       "operationKind": "query",
-      "parameters": [
+      "pathParams": [
         {
           "name": "organization-id",
-          "inputName": "organizationId",
-          "in": "path",
-          "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
+          "inputName": "organizationId"
         },
         {
           "name": "user-id",
-          "inputName": "userId",
-          "in": "path",
-          "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
+          "inputName": "userId"
         },
         {
           "name": "post-id",
-          "inputName": "postId",
-          "in": "path",
-          "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
+          "inputName": "postId"
         }
       ],
       "responses": [
@@ -192,14 +135,9 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
-      ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {}
+      ]
     }
   },
   {
@@ -208,12 +146,11 @@
       "uploadFile"
     ],
     "plan": {
-      "apiId": "ebc51136307d5318",
+      "apiId": "cc751382879a44b9",
       "method": "POST",
       "path": "/api/v1/uploads",
       "operationId": "uploadFile",
       "operationKind": "mutation",
-      "parameters": [],
       "responses": [
         {
           "status": 201,
@@ -221,21 +158,10 @@
             {
               "mediaType": "application/json"
             }
-          ],
-          "headers": []
+          ]
         }
       ],
-      "resultMode": "payload",
-      "servers": [],
-      "security": [],
-      "securitySchemes": {},
       "requestBody": {
-        "required": true,
-        "mode": "separate",
-        "fields": [
-          "file",
-          "metadata"
-        ],
         "content": [
           {
             "mediaType": "multipart/form-data",
@@ -273,7 +199,8 @@
             }
           }
         ],
-        "defaultMediaType": "multipart/form-data"
+        "required": true,
+        "mode": "separate"
       }
     }
   }

@@ -1,6 +1,7 @@
 export {
   createClient,
   createEndpointClient,
+  defaultRequestMediaType,
   defineEndpoint,
   isEndpointDescriptor,
   resolveBaseUrl,

@@ -94,7 +94,7 @@ function unpack<T extends QueryTarget | MutationTarget>(
 }
 
 export function endpointIdentity(endpoint: EndpointDefinition): ApiEndpointKey {
-  const plan = endpoint.plan
+  const plan = endpoint
   return ["accord", plan.apiId, plan.method, plan.path, plan.operationId]
 }
 
@@ -108,7 +108,7 @@ function contextKey(bound: BoundEndpoint<EndpointDefinition>): CanonicalQueryVal
     context.responseMiddleware?.length
       ? identity(context)
       : null
-  return [resolveBaseUrl(bound.endpoint, context), context.cacheScope ?? null, credentialIdentity]
+  return [resolveBaseUrl(context), context.cacheScope ?? null, credentialIdentity]
 }
 
 function canonical<T>(value: T, ancestors = new Set<object>()): CanonicalQueryValue {
@@ -145,7 +145,7 @@ function argumentKey<E extends EndpointDefinition>(
 ): CanonicalQueryValue {
   const headers = new Headers(args[1]?.headers)
   const secretNames = new Set(["authorization", "proxy-authorization", "cookie", "set-cookie"])
-  for (const scheme of Object.values(endpoint.plan.securitySchemes))
+  for (const scheme of Object.values(endpoint.securitySchemes ?? {}))
     if (scheme.type === "apiKey" && scheme.in === "header")
       secretNames.add(scheme.name.toLowerCase())
   const publicHeaders: { [key: string]: string } = Object.create(null)
@@ -157,20 +157,27 @@ function argumentKey<E extends EndpointDefinition>(
   const secretIdentity = hasSecret && args[1]?.headers ? identity(args[1].headers) : null
   const input = args[0] ?? {}
   const secretInputs = new Set(
-    endpoint.plan.parameters
-      .filter(
-        (parameter) =>
-          parameter.in === "cookie" ||
-          (parameter.in === "header" && secretNames.has(parameter.name.toLowerCase())) ||
-          Object.values(endpoint.plan.securitySchemes).some(
-            (scheme) =>
-              scheme.type === "apiKey" &&
-              scheme.in === parameter.in &&
-              scheme.name === parameter.name,
-          ),
-      )
-      .map((parameter) => parameter.inputName ?? parameter.name),
+    (endpoint.cookieParams ?? []).map((parameter) => parameter.inputName ?? parameter.name),
   )
+  for (const parameter of endpoint.headerParams ?? [])
+    if (secretNames.has(parameter.name.toLowerCase()))
+      secretInputs.add(parameter.inputName ?? parameter.name)
+  for (const scheme of Object.values(endpoint.securitySchemes ?? {})) {
+    if (scheme.type !== "apiKey") continue
+    const parameters =
+      scheme.in === "query"
+        ? endpoint.queryParams
+        : scheme.in === "header"
+          ? endpoint.headerParams
+          : endpoint.cookieParams
+    for (const parameter of parameters ?? [])
+      if (
+        scheme.in === "header"
+          ? parameter.name.toLowerCase() === scheme.name.toLowerCase()
+          : parameter.name === scheme.name
+      )
+        secretInputs.add(parameter.inputName ?? parameter.name)
+  }
   // eslint-disable-next-line anti-slop/no-runtime-typeof -- Identify an input object solely to redact credential fields in cache keys.
   if (secretInputs.size && input !== null && typeof input === "object") {
     const publicInput = Object.fromEntries(

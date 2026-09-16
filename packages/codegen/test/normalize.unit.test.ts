@@ -83,19 +83,12 @@ describe("compile", () => {
       ["users", "createUser"],
       ["users", "getUser"],
     ])
-    expect(api.operations[0]?.plan.parameters[0]).toMatchObject({
-      name: "limit",
-      inputName: "limit",
-      in: "query",
-      required: false,
-      style: "form",
-      explode: true,
-    })
+    expect(api.operations[0]?.plan.queryParams?.[0]).toEqual({ name: "limit" })
     expect(api.operations[1]?.plan.requestBody).toMatchObject({
       required: true,
-      defaultMediaType: "application/json",
-      fields: ["name"],
+      mode: "separate",
     })
+    expect(api.operations[1]?.body?.fields).toEqual(["name"])
     expect(api.operations[2]?.plan.operationKind).toBe("query")
   })
 
@@ -129,7 +122,7 @@ describe("compile", () => {
       }),
     )
     expect(api.operations[0]?.parameters).toHaveLength(1)
-    expect(api.operations[0]?.plan.parameters[0]?.style).toBe("matrix")
+    expect(api.operations[0]?.plan.pathParams?.[0]?.style).toBe("matrix")
   })
 
   it("supports path and tag namespaces with base path stripping", () => {
@@ -296,7 +289,8 @@ describe("compile", () => {
     const operation = compile(input, { body: { mode: "separate" } }).operations[0]
     expect(operation?.body?.mode).toBe("separate")
     expect(operation?.parameters[0]?.name).toBe("id")
-    expect(operation?.plan.requestBody?.fields).toEqual(["id", "name"])
+    expect(operation?.body?.fields).toEqual(["id", "name"])
+    expect(operation?.plan.requestBody?.fields).toBeUndefined()
     expect(operation?.plan.responses[0]?.content.map((media) => media.mediaType)).toEqual([
       "application/json",
     ])

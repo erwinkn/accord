@@ -124,87 +124,29 @@ export type AssetsRemoveContract = {
     readonly "responses": AssetsRemoveResponses;
     readonly "fullResponse": AssetsRemoveFullResponse;
 };
+const accordSecuritySchemes0 = { "apiKey": { "type": "apiKey", "name": "X-API-Key", "in": "header" } } as const;
 export const api = {
     "assets": {
         "upload": defineEndpoint<AssetsUploadContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "87f2f074fd3a6e3e",
-                "method": "POST",
-                "path": "/assets",
-                "operationId": "upload",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "payload",
-                "servers": [
+            "apiId": "df335817bc82c2f0",
+            "method": "POST",
+            "path": "/assets",
+            "operationId": "upload",
+            "operationKind": "mutation",
+            "security": [
+                {
+                    "apiKey": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "url": "https://assets.example.test/{region}/v1",
-                        "variables": {
-                            "region": {
-                                "default": "eu",
-                                "enum": [
-                                    "eu",
-                                    "us"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "apiKey": []
-                    }
-                ],
-                "securitySchemes": {
-                    "apiKey": {
-                        "type": "apiKey",
-                        "name": "X-API-Key",
-                        "in": "header"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "merge",
-                    "fields": [
-                        "file",
-                        "metadata",
-                        "tags"
-                    ],
-                    "content": [
-                        {
+                        "mediaType": "multipart/form-data",
+                        "codec": {
+                            "kind": "form",
                             "mediaType": "multipart/form-data",
-                            "codec": {
-                                "kind": "form",
-                                "mediaType": "multipart/form-data",
-                                "fields": {
-                                    "file": {
-                                        "mediaType": "application/octet-stream",
-                                        "codec": {
-                                            "kind": "bytes",
-                                            "value": "upload"
-                                        },
-                                        "multiple": false,
-                                        "headers": {}
-                                    },
-                                    "metadata": {
-                                        "mediaType": "application/json",
-                                        "codec": {
-                                            "kind": "json"
-                                        },
-                                        "multiple": false,
-                                        "headers": {}
-                                    },
-                                    "tags": {
-                                        "mediaType": "text/plain",
-                                        "codec": {
-                                            "kind": "text"
-                                        },
-                                        "multiple": true,
-                                        "headers": {}
-                                    }
-                                },
-                                "patterns": {},
-                                "additional": {
+                            "fields": {
+                                "file": {
                                     "mediaType": "application/octet-stream",
                                     "codec": {
                                         "kind": "bytes",
@@ -212,152 +154,116 @@ export const api = {
                                     },
                                     "multiple": false,
                                     "headers": {}
+                                },
+                                "metadata": {
+                                    "mediaType": "application/json",
+                                    "codec": {
+                                        "kind": "json"
+                                    },
+                                    "multiple": false,
+                                    "headers": {}
+                                },
+                                "tags": {
+                                    "mediaType": "text/plain",
+                                    "codec": {
+                                        "kind": "text"
+                                    },
+                                    "multiple": true,
+                                    "headers": {}
                                 }
+                            },
+                            "patterns": {},
+                            "additional": {
+                                "mediaType": "application/octet-stream",
+                                "codec": {
+                                    "kind": "bytes",
+                                    "value": "upload"
+                                },
+                                "multiple": false,
+                                "headers": {}
                             }
                         }
-                    ],
-                    "defaultMediaType": "multipart/form-data"
-                },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
                     }
+                ],
+                "required": true,
+                "fields": [
+                    "file",
+                    "metadata",
+                    "tags"
                 ]
-            }
-        }),
-        "rename": defineEndpoint<AssetsRenameContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "87f2f074fd3a6e3e",
-                "method": "PATCH",
-                "path": "/assets/{id}",
-                "operationId": "rename",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "inputName": "id",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "https://assets.example.test/{region}/v1",
-                        "variables": {
-                            "region": {
-                                "default": "eu",
-                                "enum": [
-                                    "eu",
-                                    "us"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "apiKey": []
-                    }
-                ],
-                "securitySchemes": {
-                    "apiKey": {
-                        "type": "apiKey",
-                        "name": "X-API-Key",
-                        "in": "header"
-                    }
-                },
-                "requestBody": {
-                    "required": true,
-                    "mode": "separate",
-                    "fields": [
-                        "id",
-                        "name"
-                    ],
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 201,
                     "content": [
                         {
                             "mediaType": "application/json"
                         }
-                    ],
-                    "defaultMediaType": "application/json"
-                },
-                "responses": [
+                    ]
+                }
+            ]
+        }),
+        "rename": defineEndpoint<AssetsRenameContract, "mutation">({
+            "apiId": "df335817bc82c2f0",
+            "method": "PATCH",
+            "path": "/assets/{id}",
+            "operationId": "rename",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "id"
+                }
+            ],
+            "security": [
+                {
+                    "apiKey": []
+                }
+            ],
+            "requestBody": {
+                "content": [
                     {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
+                        "mediaType": "application/json"
                     }
-                ]
-            }
+                ],
+                "required": true,
+                "mode": "separate"
+            },
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json"
+                        }
+                    ]
+                }
+            ]
         }),
         "remove": defineEndpoint<AssetsRemoveContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "87f2f074fd3a6e3e",
-                "method": "DELETE",
-                "path": "/assets/{id}",
-                "operationId": "remove",
-                "operationKind": "mutation",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "inputName": "id",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [
-                    {
-                        "url": "https://assets.example.test/{region}/v1",
-                        "variables": {
-                            "region": {
-                                "default": "eu",
-                                "enum": [
-                                    "eu",
-                                    "us"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "apiKey": []
-                    }
-                ],
-                "securitySchemes": {
-                    "apiKey": {
-                        "type": "apiKey",
-                        "name": "X-API-Key",
-                        "in": "header"
-                    }
-                },
-                "responses": [
-                    {
-                        "status": 204,
-                        "headers": [],
-                        "content": []
-                    }
-                ]
-            }
+            "apiId": "df335817bc82c2f0",
+            "method": "DELETE",
+            "path": "/assets/{id}",
+            "operationId": "remove",
+            "operationKind": "mutation",
+            "pathParams": [
+                {
+                    "name": "id"
+                }
+            ],
+            "security": [
+                {
+                    "apiKey": []
+                }
+            ],
+            "securitySchemes": accordSecuritySchemes0,
+            "responses": [
+                {
+                    "status": 204,
+                    "content": []
+                }
+            ]
         })
     }
 };

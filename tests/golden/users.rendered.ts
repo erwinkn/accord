@@ -115,134 +115,90 @@ export type UsersGetUserContract = {
 export const api = {
     "users": {
         "listUsers": defineEndpoint<UsersListUsersContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "e99423110e5c1d1a",
-                "method": "GET",
-                "path": "/users",
-                "operationId": "listUsers",
-                "operationKind": "query",
-                "parameters": [
-                    {
-                        "name": "limit",
-                        "inputName": "limit",
-                        "in": "query",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    }
-                ],
-                "resultMode": "payload",
-                "servers": [],
-                "security": [],
-                "securitySchemes": {},
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
-                    }
-                ]
-            }
-        }),
-        "createUser": defineEndpoint<UsersCreateUserContract, "mutation">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "e99423110e5c1d1a",
-                "method": "POST",
-                "path": "/users",
-                "operationId": "createUser",
-                "operationKind": "mutation",
-                "parameters": [],
-                "resultMode": "payload",
-                "servers": [],
-                "security": [],
-                "securitySchemes": {},
-                "requestBody": {
-                    "required": true,
-                    "mode": "separate",
-                    "fields": [
-                        "email",
-                        "name"
-                    ],
+            "apiId": "ca315a231708d818",
+            "method": "GET",
+            "path": "/users",
+            "operationId": "listUsers",
+            "operationKind": "query",
+            "queryParams": [
+                {
+                    "name": "limit"
+                }
+            ],
+            "responses": [
+                {
+                    "status": 200,
                     "content": [
                         {
                             "mediaType": "application/json"
                         }
-                    ],
-                    "defaultMediaType": "application/json"
-                },
-                "responses": [
-                    {
-                        "status": 201,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
-                    }
-                ]
-            }
+                    ]
+                }
+            ]
         }),
-        "getUser": defineEndpoint<UsersGetUserContract, "query">({
-            kind: "endpoint",
-            plan: {
-                "apiId": "e99423110e5c1d1a",
-                "method": "GET",
-                "path": "/users/{userId}",
-                "operationId": "getUser",
-                "operationKind": "query",
-                "parameters": [
+        "createUser": defineEndpoint<UsersCreateUserContract, "mutation">({
+            "apiId": "ca315a231708d818",
+            "method": "POST",
+            "path": "/users",
+            "operationId": "createUser",
+            "operationKind": "mutation",
+            "requestBody": {
+                "content": [
                     {
-                        "name": "userId",
-                        "inputName": "userId",
-                        "in": "path",
-                        "required": true,
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
+                        "mediaType": "application/json"
                     }
                 ],
-                "resultMode": "payload",
-                "servers": [],
-                "security": [],
-                "securitySchemes": {},
-                "responses": [
-                    {
-                        "status": 200,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
-                    },
-                    {
-                        "status": 404,
-                        "headers": [],
-                        "content": [
-                            {
-                                "mediaType": "application/json"
-                            }
-                        ]
-                    }
-                ]
-            }
+                "required": true,
+                "mode": "separate"
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "content": [
+                        {
+                            "mediaType": "application/json"
+                        }
+                    ]
+                },
+                {
+                    "status": 400,
+                    "content": [
+                        {
+                            "mediaType": "application/json"
+                        }
+                    ]
+                }
+            ]
+        }),
+        "getUser": defineEndpoint<UsersGetUserContract, "query">({
+            "apiId": "ca315a231708d818",
+            "method": "GET",
+            "path": "/users/{userId}",
+            "operationId": "getUser",
+            "operationKind": "query",
+            "pathParams": [
+                {
+                    "name": "userId"
+                }
+            ],
+            "responses": [
+                {
+                    "status": 200,
+                    "content": [
+                        {
+                            "mediaType": "application/json"
+                        }
+                    ]
+                },
+                {
+                    "status": 404,
+                    "content": [
+                        {
+                            "mediaType": "application/json"
+                        }
+                    ]
+                }
+            ]
         })
     }
 };

@@ -100,7 +100,7 @@ describe("committed example SDKs", () => {
   it("encodes multipart bytes, repeated fields, JSON parts and security headers", async () => {
     const client = createClient(assetApi, {
       credentials: { apiKey: "secret" },
-      serverVariables: { region: "us" },
+      baseUrl: "https://assets.example.test/us/v1",
       fetch: async (url, init) => {
         expect(String(url)).toBe("https://assets.example.test/us/v1/assets")
         expect(new Headers(init?.headers).get("x-api-key")).toBe("secret")

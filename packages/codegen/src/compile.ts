@@ -1,14 +1,17 @@
 import { createHash } from "node:crypto"
 import {
   defaultCodec,
+  defaultRequestMediaType,
   type EndpointPlan,
   type HttpMethod,
   type MediaPlan,
-  type ParameterDescriptor,
+  type ParameterBinding,
+  type PathParameter,
+  type QueryParameter,
+  type RequestBodyDescriptor,
   type ResponseDescriptor,
   type SecurityRequirement,
   type SecurityScheme,
-  type Server,
   selectResponse,
 } from "@accord/client"
 import { type DocumentStore, fail, list, object, string } from "./loader.js"
@@ -152,7 +155,6 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
       const responsePlans: ResponseDescriptor[] = responses.map((response) => ({
         status: statusSelector(response.status, at),
         content: response.media.map((media) => mediaPlan(media, "response")),
-        headers: response.headers.map(parameterPlan),
       }))
       responsePlans.sort((left, right) => statusOrder(left.status) - statusOrder(right.status))
       const successful = Array.from({ length: 100 }, (_, index) => index + 200).filter((status) =>
@@ -168,6 +170,7 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
         fail("INVALID_EXTENSION", "Invalid operation kind", at.source)
       const operationKind =
         override ?? (method === "get" || method === "head" ? "query" : "mutation")
+      const security = securityRequirements(value["security"] ?? root["security"])
       let plan: EndpointPlan = {
         apiId,
         // SAFETY: method comes from the exhaustive HTTP method list.
@@ -175,13 +178,18 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
         path,
         operationId: id,
         operationKind,
-        parameters: params.map(parameterPlan),
+        ...parameterGroups(params),
         responses: responsePlans,
-        resultMode: successful.length > 1 ? "status" : "payload",
-        servers: servers(value["servers"] ?? pathItem["servers"] ?? root["servers"]),
-        security: securityRequirements(value["security"] ?? root["security"]),
-        securitySchemes,
       }
+      if (successful.length > 1) plan = { ...plan, resultMode: "status" }
+      if (security.length) {
+        for (const name of new Set(security.flatMap((entry) => Object.keys(entry))))
+          if (!securitySchemes[name])
+            fail("INVALID_DOCUMENT", `Unknown security scheme ${name}`, at.source)
+        plan = { ...plan, security }
+      }
+      // Keep API-wide schemes for cache-key redaction even on anonymous operations.
+      if (Object.keys(securitySchemes).length) plan = { ...plan, securitySchemes }
       if (body) {
         const preferred =
           config.defaultMediaTypes?.[id] ??
@@ -192,16 +200,17 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
           body.media[0]!.mediaType
         if (!body.media.some((media) => media.mediaType === defaultMediaType))
           fail("INVALID_EXTENSION", `Unknown default media type ${defaultMediaType}`, at.source)
-        plan = {
-          ...plan,
-          requestBody: {
-            required: body.required,
-            mode: body.mode,
-            fields: body.fields,
-            content: body.media.map((media) => mediaPlan(media, "request")),
-            defaultMediaType,
-          },
+        let requestBodyPlan: RequestBodyDescriptor = {
+          content: body.media.map((media) => mediaPlan(media, "request")),
         }
+        if (body.required) requestBodyPlan = { ...requestBodyPlan, required: true }
+        requestBodyPlan =
+          body.mode === "separate"
+            ? { ...requestBodyPlan, mode: "separate" }
+            : { ...requestBodyPlan, fields: body.fields }
+        if (defaultMediaType !== defaultRequestMediaType(requestBodyPlan))
+          requestBodyPlan = { ...requestBodyPlan, defaultMediaType }
+        plan = { ...plan, requestBody: requestBodyPlan }
       }
       let operation: OperationModel = {
         key: id,
@@ -336,22 +345,60 @@ function parameters(at: LocatedValue, keyword: string, graph: SchemaGraph): Para
   return result
 }
 
-function parameterPlan(parameter: ParameterModel): ParameterDescriptor {
+function parameterBinding(parameter: ParameterModel): ParameterBinding {
   const codec = parameter.codec
-  const base = {
-    name: parameter.name,
-    inputName: parameter.inputName,
-    in: parameter.location,
-    required: parameter.required,
-  }
-  if (codec.kind === "parameter") return { ...base, ...codec.encoding }
-  return {
-    ...base,
-    codec,
-    style: parameter.location === "path" || parameter.location === "header" ? "simple" : "form",
-    explode: false,
-    allowReserved: false,
-  }
+  const encoding = codec.kind === "parameter" ? codec.encoding : undefined
+  const defaultExplode = encoding
+    ? encoding.style === "form"
+    : parameter.location === "query" || parameter.location === "cookie"
+  const explode = encoding?.explode ?? false
+  let binding: ParameterBinding = { name: parameter.name }
+  if (parameter.inputName !== parameter.name)
+    binding = { ...binding, inputName: parameter.inputName }
+  if (codec.kind !== "parameter") binding = { ...binding, codec }
+  if (explode !== defaultExplode) binding = { ...binding, explode }
+  return binding
+}
+
+function pathParameter(parameter: ParameterModel): PathParameter {
+  const style = parameter.codec.kind === "parameter" ? parameter.codec.encoding.style : "simple"
+  if (style !== "simple" && style !== "label" && style !== "matrix")
+    fail("INVALID_PARAMETER", `Invalid path style ${style}`, parameter.source)
+  return style === "simple"
+    ? parameterBinding(parameter)
+    : { ...parameterBinding(parameter), style }
+}
+
+function queryParameter(parameter: ParameterModel): QueryParameter {
+  const encoding = parameter.codec.kind === "parameter" ? parameter.codec.encoding : undefined
+  const style = encoding?.style ?? "form"
+  if (
+    style !== "form" &&
+    style !== "spaceDelimited" &&
+    style !== "pipeDelimited" &&
+    style !== "deepObject"
+  )
+    fail("INVALID_PARAMETER", `Invalid query style ${style}`, parameter.source)
+  let binding: QueryParameter = parameterBinding(parameter)
+  if (style !== "form") binding = { ...binding, style }
+  if (encoding?.allowReserved) binding = { ...binding, allowReserved: true }
+  return binding
+}
+
+function parameterGroups(
+  parameters: readonly ParameterModel[],
+): Pick<EndpointPlan, "pathParams" | "queryParams" | "headerParams" | "cookieParams"> {
+  const pathParams = parameters.filter((item) => item.location === "path").map(pathParameter)
+  const queryParams = parameters.filter((item) => item.location === "query").map(queryParameter)
+  const headerParams = parameters.filter((item) => item.location === "header").map(parameterBinding)
+  const cookieParams = parameters.filter((item) => item.location === "cookie").map(parameterBinding)
+  let groups: Pick<EndpointPlan, "pathParams" | "queryParams" | "headerParams" | "cookieParams"> =
+    {}
+  if (pathParams.length) groups = { ...groups, pathParams }
+  if (queryParams.length) groups = { ...groups, queryParams }
+  if (headerParams.length) groups = { ...groups, headerParams }
+  if (cookieParams.length) groups = { ...groups, cookieParams }
+  return groups
 }
 
 function mediaModels(
@@ -483,24 +530,6 @@ function statusSelector(status: string, at: LocatedValue): ResponseDescriptor["s
 }
 function statusOrder(status: ResponseDescriptor["status"]): number {
   return status === "default" ? 1000 : isString(status) ? 700 + Number(status[0]) : status
-}
-function servers(value: JsonValue | undefined): Server[] {
-  return list(value).map((item) => {
-    const server = object(item)
-    const variables = Object.fromEntries(
-      Object.entries(object(server["variables"])).map(([name, raw]) => {
-        const variable = object(raw)
-        const choices = list(variable["enum"]).filter(isString)
-        return [
-          name,
-          choices.length
-            ? { default: string(variable["default"]), enum: choices }
-            : { default: string(variable["default"]) },
-        ]
-      }),
-    )
-    return { url: string(server["url"], "/"), variables }
-  })
 }
 function securityRequirements(value: JsonValue | undefined): SecurityRequirement[] {
   return list(value).map((entry) =>

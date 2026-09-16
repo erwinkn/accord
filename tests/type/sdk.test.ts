@@ -59,7 +59,7 @@ apiMutation(api.users.getUser)
 mutationResult.mutate({ email: "missing-name@example.test" })
 
 featureApi.organizations.users.searchUsers satisfies {
-  readonly plan: { readonly parameters: readonly unknown[] }
+  readonly queryParams?: readonly unknown[]
 }
 const featureHttp = createClient(featureApi, { baseUrl: "https://example.test" })
 featureHttp.organizations.users.searchUsers({

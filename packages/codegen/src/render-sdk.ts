@@ -1,4 +1,4 @@
-import { selectResponse } from "@accord/client"
+import { defaultRequestMediaType, selectResponse } from "@accord/client"
 import ts from "typescript"
 import type { Compilation } from "./compile.js"
 import type { MediaModel, OperationModel, ResponseModel } from "./model.js"
@@ -93,7 +93,8 @@ function renderOperation(operation: OperationModel, emitter: TypeEmitter): Rende
   const inputs = variants.map((media) => inputType(operation, emitter, media))
   declaration.push(printNode(alias(`${name}Input`, union(inputs))))
   const args = variants.map((media, index) => {
-    const isDefault = !media || media.mediaType === operation.plan.requestBody?.defaultMediaType
+    const isDefault =
+      !media || media.mediaType === defaultRequestMediaType(operation.plan.requestBody!)
     const inputOptional =
       !operation.parameters.some((parameter) => parameter.required) && !operation.body?.required
     const options = media ? optionsType(media, isDefault) : typeReference("RequestOptions")
@@ -258,6 +259,15 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     }
     at.operation = operation
   }
+  // Intern security scheme dictionaries so common auth configuration appears only once.
+  const securityDefinitions = new Map<string, string>()
+  for (const operation of compilation.model.operations) {
+    if (!operation.plan.securitySchemes || !Object.keys(operation.plan.securitySchemes).length)
+      continue
+    const json = JSON.stringify(operation.plan.securitySchemes)
+    if (!securityDefinitions.has(json))
+      securityDefinitions.set(json, `accordSecuritySchemes${securityDefinitions.size}`)
+  }
   const renderTree = (node: TreeNode, depth: number): string => {
     if (node.operation) {
       const operation = node.operation
@@ -273,8 +283,14 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
         const json = JSON.stringify({ ...response, content: undefined }, null, 2)
         return `${json.slice(0, -1)}, "content": [\n${content.join(",\n")}\n] }`
       })
-      const plan = JSON.stringify({ ...operation.plan, responses: undefined }, null, 2)
-      const definition = `{\nkind: "endpoint",\nplan: ${plan.slice(0, -1)}, "responses": [\n${responses.join(",\n")}\n] }\n}`
+      const plan = JSON.stringify(
+        { ...operation.plan, responses: undefined, securitySchemes: undefined },
+        null,
+        2,
+      )
+      const security = securityDefinitions.get(JSON.stringify(operation.plan.securitySchemes))
+      const securityEntry = security ? `,\n"securitySchemes": ${security}` : ""
+      const definition = `${plan.slice(0, -1)}${securityEntry},\n"responses": [\n${responses.join(",\n")}\n] }`
       return `defineEndpoint<${operations.get(operation.key)!.contract}, ${JSON.stringify(operation.plan.operationKind)}>(${definition})`
     }
     return `{\n${[...node.children].map(([key, child]) => `${"  ".repeat(depth + 1)}${JSON.stringify(key)}: ${renderTree(child, depth + 1)}`).join(",\n")}\n${"  ".repeat(depth)}}`
@@ -294,6 +310,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     ...[...operations.values()].map((operation) => operation.declaration),
     ...(validators ? ["const accordValidators = createAccordValidators()"] : []),
     ...validatorDeclarations,
+    ...[...securityDefinitions].map(([json, name]) => `const ${name} = ${json} as const`),
     `export const api = ${renderTree(root, 0)}`,
     ...(validators ? [validators.source] : []),
     "",
