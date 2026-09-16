@@ -346,6 +346,17 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     }
   }
 
+  emitter.retainUsedDeclarations(
+    ts.createSourceFile(
+      "contracts.ts",
+      [
+        ...[...operations.values()].map((operation) => operation.declaration),
+        ...(validationSource?.declarations ?? []),
+      ].join("\n"),
+      ts.ScriptTarget.Latest,
+      true,
+    ),
+  )
   const root: TreeNode = { children: new Map() }
   for (const operation of compilation.model.operations) {
     let at = root

@@ -9,23 +9,11 @@ export type AcceptedSubmissionDto = {
     readonly "jobId": string;
     readonly "state": "accepted" & string;
 };
-export type AcceptedSubmissionDtoRequest = {
-    readonly "jobId": string;
-    readonly "state": "accepted" & string;
-};
 export type CompanyInvestorDto = {
     readonly "country": string;
     readonly "displayName": string;
     readonly "email": string;
     readonly "id": string;
-    readonly "kind": "company" & string;
-    readonly "registrationNumber": string;
-};
-export type CompanyInvestorDtoRequest = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "id"?: never;
     readonly "kind": "company" & string;
     readonly "registrationNumber": string;
 };
@@ -71,18 +59,6 @@ export type CreateOfferingDto = {
     readonly "tags"?: ReadonlyArray<string>;
     readonly "terms": TermsDto;
 };
-export type CurrencyRequest = ("EUR" | "USD") & string;
-export type TermsDtoRequest = {
-    readonly "closesAt": string;
-    readonly "currency": CurrencyRequest;
-    readonly "minimumInvestment": string;
-};
-export type CreateOfferingDtoRequest = {
-    readonly "description"?: string | null;
-    readonly "name": string;
-    readonly "tags"?: ReadonlyArray<string>;
-    readonly "terms": TermsDtoRequest;
-};
 export type CreateSubscriptionDto = {
     readonly "amount": string;
     readonly "investorId": string;
@@ -90,15 +66,7 @@ export type CreateSubscriptionDto = {
         readonly [key: string]: string;
     };
 };
-export type CreateSubscriptionDtoRequest = {
-    readonly "amount": string;
-    readonly "investorId": string;
-    readonly "metadata"?: {
-        readonly [key: string]: string;
-    };
-};
 export type DocumentCategory = ("terms" | "prospectus" | "other") & string;
-export type DocumentCategoryRequest = ("terms" | "prospectus" | "other") & string;
 export type DocumentDto = {
     readonly "category": DocumentCategory;
     readonly "filename": string;
@@ -107,26 +75,11 @@ export type DocumentDto = {
     readonly "offeringId": string;
     readonly "size": number;
 };
-export type DocumentDtoRequest = {
-    readonly "category": DocumentCategoryRequest;
-    readonly "filename": string;
-    readonly "id"?: never;
-    readonly "note"?: string;
-    readonly "offeringId"?: never;
-    readonly "size": number;
-};
 export type IndividualInvestorDto = {
     readonly "country": string;
     readonly "displayName": string;
     readonly "email": string;
     readonly "id": string;
-    readonly "kind": "individual" & string;
-};
-export type IndividualInvestorDtoRequest = {
-    readonly "country": string;
-    readonly "displayName": string;
-    readonly "email": string;
-    readonly "id"?: never;
     readonly "kind": "individual" & string;
 };
 export type OfferingStatus = ("draft" | "open" | "closed") & string;
@@ -139,24 +92,8 @@ export type OfferingDto = {
     readonly "tags"?: ReadonlyArray<string>;
     readonly "terms": TermsDto;
 };
-export type OfferingStatusRequest = ("draft" | "open" | "closed") & string;
-export type OfferingDtoRequest = {
-    readonly "createdAt"?: never;
-    readonly "description"?: string | null;
-    readonly "id"?: never;
-    readonly "name": string;
-    readonly "status": OfferingStatusRequest;
-    readonly "tags"?: ReadonlyArray<string>;
-    readonly "terms": TermsDtoRequest;
-};
 export type OfferingDtoPage = {
     readonly "items": ReadonlyArray<OfferingDto>;
-    readonly "limit": number;
-    readonly "page": number;
-    readonly "total": number;
-};
-export type OfferingDtoPageRequest = {
-    readonly "items": ReadonlyArray<OfferingDtoRequest>;
     readonly "limit": number;
     readonly "page": number;
     readonly "total": number;
@@ -166,18 +103,7 @@ export type OfferingReportDto = {
     readonly "offeringId": string;
     readonly "subscriptionCount": number;
 };
-export type OfferingReportDtoRequest = {
-    readonly "currency": CurrencyRequest;
-    readonly "offeringId": string;
-    readonly "subscriptionCount": number;
-};
 export type ProblemDto = {
-    readonly "code": string;
-    readonly "details"?: ReadonlyArray<string>;
-    readonly "message": string;
-    readonly "statusCode": number;
-};
-export type ProblemDtoRequest = {
     readonly "code": string;
     readonly "details"?: ReadonlyArray<string>;
     readonly "message": string;
@@ -200,31 +126,8 @@ export type SubmissionJobDto = {
     readonly "result": SubscriptionDto;
     readonly "state": "completed" & string;
 };
-export type SubscriptionStatusRequest = ("draft" | "submitted") & string;
-export type SubscriptionDtoRequest = {
-    readonly "amount": string;
-    readonly "id"?: never;
-    readonly "investorId": string;
-    readonly "metadata"?: {
-        readonly [key: string]: string;
-    };
-    readonly "offeringId"?: never;
-    readonly "status": SubscriptionStatusRequest;
-    readonly "submittedAt"?: never;
-};
-export type SubmissionJobDtoRequest = {
-    readonly "id": string;
-    readonly "result": SubscriptionDtoRequest;
-    readonly "state": "completed" & string;
-};
 export type SubscriptionDtoPage = {
     readonly "items": ReadonlyArray<SubscriptionDto>;
-    readonly "limit": number;
-    readonly "page": number;
-    readonly "total": number;
-};
-export type SubscriptionDtoPageRequest = {
-    readonly "items": ReadonlyArray<SubscriptionDtoRequest>;
     readonly "limit": number;
     readonly "page": number;
     readonly "total": number;
@@ -235,24 +138,13 @@ export type UpdateOfferingDto = {
     readonly "tags"?: ReadonlyArray<string>;
     readonly "terms"?: TermsDto;
 };
-export type UpdateOfferingDtoRequest = {
-    readonly "description"?: string | null;
-    readonly "name"?: string;
-    readonly "tags"?: ReadonlyArray<string>;
-    readonly "terms"?: TermsDtoRequest;
-};
 export type UploadDocumentDto = {
     readonly "category": DocumentCategory;
     readonly "file": string;
     readonly "note"?: string;
 };
-export type UploadDocumentDtoRequest = {
-    readonly "category": DocumentCategoryRequest;
-    readonly "file": string;
-    readonly "note"?: string;
-};
-export type UploadDocumentDtoRequestForm = {
-    readonly "category": DocumentCategoryRequest;
+export type UploadDocumentDtoForm = {
+    readonly "category": DocumentCategory;
     readonly "file": BinaryUpload;
     readonly "note"?: string;
 };

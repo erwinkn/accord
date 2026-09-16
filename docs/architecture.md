@@ -26,7 +26,7 @@ flowchart TD
 
 `OperationModel` ties parameters, request/response schemas, codec decisions, public names, and the runtime plan together. Schema uses carry a codec directly: JSON, text, bytes, a form, or XML. There is no separate representation wrapper or synthetic representation ID. Parameter and form styles live in those transport decisions. The client never ships the source graph.
 
-The type emitter reads the schema graph and representation decision directly into TypeScript's AST. There is no separate general-purpose type-expression graph and no openapi-typescript dependency. Named references are handled by an identity/name registry, including recursive types and separate request/response aliases.
+The type emitter reads the schema graph and representation decision directly into TypeScript's AST. There is no separate general-purpose type-expression graph and no openapi-typescript dependency. Named references are handled by an identity/name registry. Request and response projections of the same schema share a type when their emitted structures agree, including through recursive references. Differences propagate through containing types; distinct source models retain their own identities. Public component types stay exported, while alternate request and transport projections are retained only when referenced by generated contracts or schemas.
 
 ## Generated endpoints
 

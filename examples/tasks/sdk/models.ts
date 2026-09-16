@@ -8,10 +8,6 @@ export type Problem = {
     readonly "code": string;
     readonly "message": string;
 };
-export type ProblemRequest = {
-    readonly "code": string;
-    readonly "message": string;
-};
 export type Task = {
     readonly "createdAt": string;
     readonly "id": string;

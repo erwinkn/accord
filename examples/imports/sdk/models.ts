@@ -8,15 +8,7 @@ export type ImportJob = {
     readonly "jobId": string;
     readonly "state": "queued";
 };
-export type ImportJobRequest = {
-    readonly "jobId": string;
-    readonly "state": "queued";
-};
 export type ImportResult = {
-    readonly "imported": number;
-    readonly "state": "completed";
-};
-export type ImportResultRequest = {
     readonly "imported": number;
     readonly "state": "completed";
 };

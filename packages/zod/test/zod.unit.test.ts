@@ -42,6 +42,28 @@ describe("native Zod adapter", () => {
     expect(validator.safeParse({ id: "1" }).success).toBe(false)
     expect(validator.safeParse({}).success).toBe(false)
   })
+  it.each([true, false])(
+    "rejects forbidden optional properties with additionalProperties=%s",
+    (additionalProperties) => {
+      const { validator } = compile({
+        type: "object",
+        additionalProperties,
+        properties: { id: { type: "string" }, password: false },
+        required: ["id"],
+      })
+      expect(validator.safeParse({ id: "1" }).success).toBe(true)
+      expect(validator.safeParse({ id: "1", password: "secret" }).success).toBe(false)
+      expect(validator.safeParse({ id: "1", password: undefined }).success).toBe(false)
+      const impossible = compile({
+        type: "object",
+        additionalProperties: false,
+        properties: { password: false },
+        required: ["password"],
+      }).validator
+      expect(impossible.safeParse({}).success).toBe(false)
+      expect(impossible.safeParse({ password: undefined }).success).toBe(false)
+    },
+  )
   it("enforces JSON Schema constraints on the appropriate instance types", () => {
     const { validator } = compile({
       allOf: [

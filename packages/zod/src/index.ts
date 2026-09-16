@@ -312,12 +312,19 @@ function generateZod(context: ValidationContext) {
         const required = list(definition["required"]).filter(string)
         const patterns = Object.entries(record(definition["patternProperties"]))
         const additional = definition["additionalProperties"]
-        const fields = [...new Set([...Object.keys(properties), ...required])].map((key) => {
-          const present = Object.hasOwn(properties, key)
-          const field = present ? child(properties[key]!) : "z.unknown()"
-          return `${key === "__proto__" ? `[${quote(key)}]` : quote(key)}: ${field}${required.includes(key) ? "" : ".optional()"}`
-        })
-        let expression = `z.${additional === false && !patterns.length ? "strictObject" : "looseObject"}({\n${fields.join(",\n")}\n})`
+        const closed = additional === false && !patterns.length
+        const forbidden = Object.keys(properties).filter(
+          (key) => properties[key] === false && !required.includes(key),
+        )
+        const fields = [...new Set([...Object.keys(properties), ...required])]
+          // Forbidden properties must be absent, rather than `field?: undefined`.
+          .filter((key) => !forbidden.includes(key))
+          .map((key) => {
+            const present = Object.hasOwn(properties, key)
+            const field = present ? child(properties[key]!) : "z.unknown()"
+            return `${key === "__proto__" ? `[${quote(key)}]` : quote(key)}: ${field}${required.includes(key) ? "" : ".optional()"}`
+          })
+        let expression = `z.${closed ? "strictObject" : "looseObject"}({\n${fields.join(",\n")}\n})`
         // Required names absent from properties are still additional properties under JSON Schema.
         if (
           required.some((key) => !Object.hasOwn(properties, key)) ||
@@ -341,6 +348,11 @@ function generateZod(context: ValidationContext) {
           expression += `.superRefine(${helper("objectKeys")}(${quote(Object.keys(properties))}, [${patternsSource}], ${additional === undefined ? "undefined" : child(additional)}))`
         } else if (additional !== undefined && additional !== true && additional !== false)
           expression += `.catchall(${child(additional)})`
+        // Closed objects reject these keys through strictObject; open objects retain
+        // unknown keys, so check their presence explicitly without stripping values.
+        if (!closed)
+          for (const key of forbidden)
+            expression += `.refine(value => !Object.hasOwn(value, ${quote(key)}), { message: "Property is forbidden", path: [${quote(key)}] })`
         for (const [key, operator] of [
           ["minProperties", ">="],
           ["maxProperties", "<="],

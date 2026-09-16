@@ -25,7 +25,7 @@ Nest controllers + DTO decorators
    real Nest server
 ```
 
-For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [call types](sdk/types/offerings.ts). The [model types](sdk/models.ts) and [Zod schemas](sdk/schemas.ts) hold the definitions reused across groups. The entry re-exports public types and schemas, so callers can keep one import source.
+For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [call types](sdk/types/offerings.ts). The [model types](sdk/models.ts) and [Zod schemas](sdk/schemas.ts) hold the definitions reused across groups. The entry re-exports public types and schemas, so callers can keep one import source. `SubscriptionDto` and `SubscriptionDtoPage` are response models: no unused request variants are emitted. Models with identical request/response shapes share one type; a distinct request type is generated only when an endpoint needs it.
 
 ## Run it
 

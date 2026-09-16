@@ -10,28 +10,12 @@ export type ApiError = {
     readonly "message": string;
     readonly [key: string]: unknown;
 };
-export type ApiErrorRequest = {
-    readonly "code": string;
-    readonly "message": string;
-    readonly [key: string]: unknown;
-};
 export type CreateUser = {
     readonly "email"?: string;
     readonly "name": string;
     readonly [key: string]: unknown;
 };
-export type CreateUserRequest = {
-    readonly "email"?: string;
-    readonly "name": string;
-    readonly [key: string]: unknown;
-};
 export type User = {
-    readonly "email"?: string | null;
-    readonly "id": string;
-    readonly "name": string;
-    readonly [key: string]: unknown;
-};
-export type UserRequest = {
     readonly "email"?: string | null;
     readonly "id": string;
     readonly "name": string;
@@ -61,11 +45,11 @@ export type ListUsersContract = {
     readonly "fullResponse": ListUsersFullResponse;
 };
 export type CreateUserInput = {
-    readonly "body": CreateUserRequest;
+    readonly "body": CreateUser;
 };
 export type CreateUserArguments = [
     input: {
-        readonly "body": CreateUserRequest;
+        readonly "body": CreateUser;
     },
     options?: Omit<RequestOptions, "headers"> & {
         readonly "headers"?: Readonly<Record<string, string>> & {

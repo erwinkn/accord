@@ -5,6 +5,7 @@ import type { Direction, SchemaId } from "./model.js"
 import { sanitizeTypeIdentifier } from "./naming.js"
 import { isJsonArray, isObject, isString } from "./object.js"
 import type { SchemaGraph } from "./schema.js"
+import { renameTypeReferences, typeReferences } from "./type-projections.js"
 import type { JsonValue } from "./types.js"
 
 const f = ts.factory
@@ -147,6 +148,57 @@ export class TypeEmitter {
       this.emit(id, "response")
       this.emit(id, "request")
     }
+    this.shareIdenticalProjections()
+  }
+
+  private shareIdenticalProjections(): void {
+    const shared = new Map<string, string>()
+    for (const [key, request] of this.names) {
+      if (!key.startsWith("request:")) continue
+      const response = this.names.get(`response:${key.slice("request:".length)}`)
+      if (
+        response &&
+        response !== request &&
+        this.declarations.has(request) &&
+        this.declarations.has(response)
+      )
+        shared.set(request, response)
+    }
+    // Initially assume paired projections agree. A field difference invalidates its
+    // pair and then every containing pair. Identical recursive cycles stay shared.
+    let changed = true
+    while (changed) {
+      changed = false
+      for (const [request, response] of shared) {
+        const input = this.declarations.get(request)!.type
+        const output = this.declarations.get(response)!.type
+        if (printNode(renameTypeReferences(input, shared)) !== printNode(output)) {
+          shared.delete(request)
+          changed = true
+        }
+      }
+    }
+    if (!shared.size) return
+    for (const [key, name] of this.names) this.names.set(key, shared.get(name) ?? name)
+    for (const [name, declaration] of this.declarations) {
+      if (shared.has(name)) this.declarations.delete(name)
+      else this.declarations.set(name, alias(name, renameTypeReferences(declaration.type, shared)))
+    }
+    for (const [key, type] of this.cache) this.cache.set(key, renameTypeReferences(type, shared))
+  }
+
+  /** Preserve public component types; keep alternate projections only when referenced. */
+  retainUsedDeclarations(consumer: ts.Node): void {
+    const used = new Set(typeReferences(consumer))
+    for (const id of this.graph.named.values()) {
+      const name = this.names.get(`response:${id}`)
+      if (name) used.add(name)
+    }
+    for (const name of used) {
+      const declaration = this.declarations.get(name)
+      if (declaration) for (const reference of typeReferences(declaration.type)) used.add(reference)
+    }
+    for (const name of this.declarations.keys()) if (!used.has(name)) this.declarations.delete(name)
   }
 
   private constant(value: JsonValue): ts.TypeNode {

@@ -3,7 +3,7 @@ import type { HttpResult, RequestOptions } from "@accord/client";
 import type {
     AcceptedSubmissionDto,
     AccordSimplify,
-    CreateSubscriptionDtoRequest,
+    CreateSubscriptionDto,
     ProblemDto,
     SubscriptionDto,
     SubscriptionDtoPage
@@ -42,11 +42,11 @@ export type ListSubscriptionsContract = {
 };
 export type CreateSubscriptionInput = AccordSimplify<{
     readonly "offeringId": string;
-} & CreateSubscriptionDtoRequest>;
+} & CreateSubscriptionDto>;
 export type CreateSubscriptionArguments = [
     input: AccordSimplify<{
         readonly "offeringId": string;
-    } & CreateSubscriptionDtoRequest>,
+    } & CreateSubscriptionDto>,
     options?: Omit<RequestOptions, "headers"> & {
         readonly "headers"?: Readonly<Record<string, string>> & {
             readonly "content-type"?: "application/json" | `application/json;${string}`;
