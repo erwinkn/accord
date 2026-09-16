@@ -140,6 +140,7 @@
           }
         },
         "additional": {
+          "type": "text",
           "mediaType": "application/octet-stream"
         },
         "required": true,

@@ -120,11 +120,8 @@ export type RequestFormEncoding = (
   /** Default: binary passthrough for undeclared fields. Caller input is never validated here. */
   readonly additional?: RequestField
 }
-/** An empty field definition means text/plain; only encoding overrides are emitted. */
-export type RequestField = (
-  | Exclude<RequestEncoding, { type: "text" }>
-  | { readonly type?: "text" }
-) & {
+/** Every field names its encoding explicitly; further options override that encoding's defaults. */
+export type RequestField = RequestEncoding & {
   readonly mediaType?: string
   readonly multiple?: boolean
   readonly headers?: Readonly<Record<string, string>>

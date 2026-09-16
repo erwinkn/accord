@@ -56,14 +56,14 @@ requestBody: {
   type: "multipart",
   required: true,
   fields: {
-    category: {},
+    category: { type: "text" },
     file: { type: "binary" },
-    note: {},
+    note: { type: "text" },
   },
 }
 ```
 
-The field map both extracts the body from flat caller inputs and describes how to encode each part. There is no repeated list of field names, `content` array, or `codec` wrapper. An empty field definition means text/plain. JSON parts use `{ type: "json" }`; repeated parts add `multiple: true`. Non-default part media types, headers and style/explode/allowReserved options remain explicit. Dynamic field encodings live in `additional` and `patterns`; empty maps and default binary passthrough are omitted.
+The field map both extracts the body from flat caller inputs and describes how to encode each part. There is no repeated list of field names, `content` array, or `codec` wrapper. Every field names its encoding explicitly; `{ type: "text" }` means text/plain. JSON parts use `{ type: "json" }`; repeated parts add `multiple: true`. Non-default part media types, headers and style/explode/allowReserved options remain explicit. Dynamic field encodings live in `additional` and `patterns`; empty maps and default binary passthrough are omitted.
 
 JSON uses `requestBody: { type: "json", required: true, fields: ["title", "status"] }`. The media type follows `type` by default; a custom media type such as `text/csv` or `application/merge-patch+json` is retained as `mediaType`. XML retains its root and node metadata. `mode: "separate"` uses the caller's `body` value directly; otherwise fields come from the flat first argument. Requiredness controls whether an empty flattened body is sent, without validating caller input.
 

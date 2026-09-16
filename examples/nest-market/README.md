@@ -88,7 +88,7 @@ else console.log(report.data.subscriptionCount)
 
 Creates and uploads use **flat inputs**, including nested terms, metadata dictionaries, and files. Nest Swagger 7 leaves DTOs open to arbitrary properties by default. The [document factory](src/app.ts) explicitly sets `additionalProperties: false` on this example's fixed request and response DTOs. Concrete page DTOs include both pagination fields and items, so closure applies to the whole record. Nested dictionaries such as subscription metadata retain their arbitrary string keys. Both Swagger UI and Accord use this same exported contract; the SDK needs no body-mode overrides.
 
-Generated body metadata also stays flat. Uploads use `requestBody: { type: "multipart", required: true, fields: { category: {}, file: { type: "binary" }, note: {} } }`. Empty field definitions mean text/plain; only overrides are emitted. JSON bodies use `type: "json"` and a field-name list. The same metadata selects payload fields and drives serialization.
+Generated body metadata also stays flat. Uploads use `requestBody: { type: "multipart", required: true, fields: { category: { type: "text" }, file: { type: "binary" }, note: { type: "text" } } }`. Text fields explicitly use `{ type: "text" }`; further options are emitted only when they override defaults. JSON bodies use `type: "json"` and a field-name list. The same metadata selects payload fields and drives serialization.
 
 The one explicit `body` example is the optional PATCH payload: `client.offerings.updateOffering({ offeringId, body: { description: null } })`. Its whole body can be omitted, so Accord preserves the distinction between no payload and `body: {}`. Both are no-ops on this server; supplied fields update the offering.
 

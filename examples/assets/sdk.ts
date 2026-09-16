@@ -124,7 +124,7 @@ export type RemoveContract = {
     readonly "responses": RemoveResponses;
     readonly "fullResponse": RemoveFullResponse;
 };
-const defineEndpoint = createEndpointFactory("b7234d86fa45ef9a");
+const defineEndpoint = createEndpointFactory("f8d72c46252ec3f3");
 export const api = {
     "assets": {
         "upload": defineEndpoint<UploadContract, "mutation">({
@@ -142,6 +142,7 @@ export const api = {
                         "type": "json"
                     },
                     "tags": {
+                        "type": "text",
                         "multiple": true
                     }
                 },

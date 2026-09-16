@@ -16,7 +16,7 @@ export function requestBodyVariants(body: RequestBodyDescriptor): readonly Reque
 
 /** Media selection and emission use the same defaults, including nested form parts. */
 export function requestMediaType(encoding: {
-  readonly type?: RequestEncoding["type"]
+  readonly type: RequestEncoding["type"]
   readonly mediaType?: string
 }): string {
   if (encoding.mediaType !== undefined) return encoding.mediaType
@@ -47,7 +47,7 @@ export function requestBodyFields(body: RequestBodyVariant): readonly string[] {
 }
 
 /** Expand only transport defaults; source schemas and request values are never interpreted here. */
-export function requestCodec(encoding: RequestEncoding | RequestField): CodecPlan {
+export function requestCodec(encoding: RequestEncoding): CodecPlan {
   switch (encoding.type) {
     case "json":
       return { kind: "json" }

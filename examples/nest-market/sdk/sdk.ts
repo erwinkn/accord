@@ -911,7 +911,7 @@ export const SubmitSubscription202Schema = z.strictObject({
 export const SubmitSubscription400Schema = ProblemDtoSchema;
 export const SubmitSubscription401Schema = ProblemDtoSchema;
 export const SubmitSubscription404Schema = ProblemDtoSchema;
-const defineEndpoint = createEndpointFactory("bf460e1062765136");
+const defineEndpoint = createEndpointFactory("e93a4e55a06c37be");
 export const api = {
     "documents": {
         "getDocument": defineEndpoint<GetDocumentContract, "query">({
@@ -1011,11 +1011,15 @@ export const api = {
             "requestBody": {
                 "type": "multipart",
                 "fields": {
-                    "category": {},
+                    "category": {
+                        "type": "text"
+                    },
                     "file": {
                         "type": "binary"
                     },
-                    "note": {}
+                    "note": {
+                        "type": "text"
+                    }
                 },
                 "required": true
             },

@@ -89,8 +89,7 @@ function requestEncoding(codec: CodecPlan): RequestEncoding {
   }
 }
 function requestField(field: FormFieldPlan): RequestField {
-  const encoding = requestEncoding(field.codec)
-  let result: RequestField = encoding.type === "text" ? {} : encoding
+  let result: RequestField = requestEncoding(field.codec)
   if (field.mediaType !== requestMediaType(result))
     result = { ...result, mediaType: field.mediaType }
   if (field.multiple) result = { ...result, multiple: true }

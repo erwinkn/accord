@@ -34,7 +34,7 @@ export const requestBodyCases: Fixture[] = [
       source: consumer(`export async function run() {
       assert.deepEqual(api.probe.call.requestBody, {
         type: "multipart", required: true,
-        fields: { category: {}, file: { type: "binary" }, note: {} },
+        fields: { category: { type: "text" }, file: { type: "binary" }, note: { type: "text" } },
       })
       await withServer(async (baseUrl, requests) => {
         await createClient(api, { baseUrl }).probe.call({ audit: true, category: "report", file: new File(["PDF bytes"], "report.pdf", { type: "application/pdf" }) })
@@ -88,9 +88,9 @@ export const requestBodyCases: Fixture[] = [
       source: consumer(`export async function run() {
       assert.deepEqual(api.probe.call.requestBody, {
         type: "multipart", required: true, fields: {
-          attachments: { type: "binary", multiple: true }, labels: { multiple: true },
+          attachments: { type: "binary", multiple: true }, labels: { type: "text", multiple: true },
           metadata: { type: "json" }, ids: { type: "parameter", style: "pipeDelimited" },
-          table: { mediaType: "text/csv", headers: { "x-part": "trace" } },
+          table: { type: "text", mediaType: "text/csv", headers: { "x-part": "trace" } },
         },
       })
       await withServer(async (baseUrl, requests) => {
@@ -132,7 +132,7 @@ export const requestBodyCases: Fixture[] = [
       source: consumer(`export async function run() {
       assert.deepEqual(api.probe.call.requestBody, {
         type: "multipart", mode: "separate", required: true,
-        patterns: { "^meta_": { type: "json" } }, additional: {},
+        patterns: { "^meta_": { type: "json" } }, additional: { type: "text" },
       })
       const body = { label: "kept", constructor: "own", ["__proto__"]: "also own", meta_flags: { state: "active" } }
       await withServer(async (baseUrl, requests) => {
