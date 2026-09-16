@@ -70,6 +70,9 @@ jobs:
       - name: Integration tests
         run: pnpm test:integration
 
+      - name: NestJS OpenAPI generation and live SDK tests
+        run: pnpm test:nest
+
       - name: Bounded fuzz smoke test
         env:
           ACCORD_FUZZ_RUNS: 20

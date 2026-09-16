@@ -24,7 +24,7 @@
     "test:property": "vitest run --config vitest.property.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:fuzz": "tsx tests/conformance/fuzz.ts",
-    "check": "pnpm quality && pnpm typecheck && pnpm generate:examples && pnpm typecheck:examples && pnpm typecheck:tests && pnpm test && pnpm test:harness && pnpm test:conformance:strict && ACCORD_FUZZ_RUNS=20 pnpm test:fuzz && pnpm test:scale && pnpm test:distribution",
+    "check": "pnpm quality && pnpm typecheck && pnpm generate:examples && pnpm typecheck:examples && pnpm typecheck:tests && pnpm test && pnpm test:nest && pnpm test:harness && pnpm test:conformance:strict && ACCORD_FUZZ_RUNS=20 pnpm test:fuzz && pnpm test:scale && pnpm test:distribution",
     "test:types": "pnpm typecheck",
     "lint:anti-slop": "oxlint",
     "test:conformance": "tsx tests/conformance/runner.ts",
@@ -33,11 +33,15 @@
     "test:harness": "vitest run --config vitest.conformance.config.ts",
     "test:distribution": "tsx tests/conformance/distribution.ts",
     "typecheck:tests": "tsc -p tests/conformance/tsconfig.json --noEmit",
-    "generate:examples": "tsx scripts/generate-examples.ts",
+    "generate:examples": "tsx scripts/generate-examples.ts && pnpm example:nest:generate",
     "update:goldens": "tsx scripts/update-goldens.ts",
-    "typecheck:examples": "tsc -p examples/tsconfig.json --noEmit",
+    "typecheck:examples": "tsc -p examples/tsconfig.json --noEmit && pnpm --filter @accord/example-nest-market typecheck",
     "test:scale": "tsx scripts/measure-scale.ts",
-    "pack:alpha": "pnpm build && tsx scripts/pack-alpha.ts"
+    "pack:alpha": "pnpm build && tsx scripts/pack-alpha.ts",
+    "example:nest:generate": "pnpm --filter @accord/example-nest-market generate",
+    "example:nest:start": "pnpm --filter @accord/example-nest-market start",
+    "example:nest:demo": "pnpm --filter @accord/example-nest-market demo",
+    "test:nest": "pnpm --filter @accord/example-nest-market test"
   },
   "devDependencies": {
     "@accord/client": "workspace:*",

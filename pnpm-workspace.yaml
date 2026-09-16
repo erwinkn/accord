@@ -1,9 +1,11 @@
 packages:
   - "packages/*"
+  - "examples/nest-market"
 
 engineStrict: true
 strictPeerDependencies: true
 autoInstallPeers: false
 
 allowBuilds:
+  '@nestjs/core': false
   esbuild: true

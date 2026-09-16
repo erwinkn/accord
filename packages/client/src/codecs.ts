@@ -119,7 +119,7 @@ async function encodeMultipart(
     for (const [name, value] of entries) {
       const safeName = name.replace(/[\r\n]/g, "").replace(/"/g, "%22")
       let disposition = `Content-Disposition: form-data; name="${safeName}"`
-      if (value instanceof Blob) {
+      if (value instanceof Blob || value instanceof ArrayBuffer || ArrayBuffer.isView(value)) {
         const filename = value instanceof File ? value.name : "blob"
         disposition += `; filename="${filename.replace(/[\r\n]/g, "").replace(/"/g, "%22")}"`
       }

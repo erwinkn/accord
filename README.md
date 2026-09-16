@@ -4,6 +4,8 @@ Accord generates a typed TypeScript SDK from OpenAPI 3.0 or 3.1. One semantic mo
 
 This is the `0.1.0-alpha.0` rewrite. Start with the [alpha review and verification results](docs/alpha-review.md) or [example APIs and generated SDKs](examples/README.md), then see [architecture](docs/architecture.md) and [verification](docs/testing.md).
 
+For a complete backend-to-SDK workflow, try the [NestJS investment-platform example](examples/nest-market/README.md): a real backend generates OpenAPI, Accord generates its SDK, and the demo calls the running API.
+
 ## Generate and use an SDK
 
 ```sh
