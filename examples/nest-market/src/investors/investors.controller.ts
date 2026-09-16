@@ -9,7 +9,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from "@nestjs/swagger"
-import { ApiProblems } from "../common.js"
+import { ApiErrors } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import {
   CompanyInvestorDto,
@@ -21,7 +21,7 @@ import {
 
 @ApiTags("investors")
 @ApiBearerAuth("bearer")
-@ApiProblems()
+@ApiErrors()
 @Controller("investors")
 export class InvestorsController {
   constructor(private readonly store: MarketStore) {}

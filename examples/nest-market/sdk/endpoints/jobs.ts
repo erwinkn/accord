@@ -7,7 +7,7 @@ import {
     GetSubmissionJob401Schema,
     GetSubmissionJob404Schema
 } from "../schemas.js";
-const defineEndpoint = createEndpointFactory("e93a4e55a06c37be");
+const defineEndpoint = createEndpointFactory("dc085c6fffabdb3b");
 export const endpoints = {
     "getSubmissionJob": defineEndpoint<GetSubmissionJobContract, "query">({
         "method": "GET",

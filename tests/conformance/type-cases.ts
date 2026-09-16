@@ -198,6 +198,67 @@ type InputContract = Expect<Equal<Pick<InputOf<typeof api.probe.call>["body"], "
     },
   },
   {
+    id: "types.merged-union-with-path",
+    title: "A plain intersection preserves path arguments and discriminated body branches",
+    area: "types",
+    reference: references.accord,
+    document: endpoint(
+      {
+        parameters: [{ name: "id", in: "path", required: true, schema: stringSchema }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                oneOf: [
+                  {
+                    type: "object",
+                    additionalProperties: false,
+                    required: ["kind", "text"],
+                    properties: { kind: { const: "text" }, text: stringSchema },
+                  },
+                  {
+                    type: "object",
+                    additionalProperties: false,
+                    required: ["kind", "count"],
+                    properties: { kind: { const: "count" }, count: { type: "integer" } },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+      "post",
+      "/probe/{id}",
+    ),
+    consumer: {
+      source: consumer(`function examples(input: InputOf<typeof api.probe.call>) {
+        const client = createClient(api)
+        client.probe.call({ id: "1", kind: "text", text: "hello" })
+        client.probe.call({ id: "1", kind: "count", count: 2 })
+        const id: string = input.id
+        if (input.kind === "text") { const text: string = input.text }
+        else { const count: number = input.count }
+        // @negative MISSING_PATH
+        client.probe.call({ kind: "text", text: "hello" })
+        // @negative WRONG_BRANCH
+        client.probe.call({ id: "1", kind: "count", text: "wrong" })
+      }
+      export async function run() {
+        await withServer(async (baseUrl, requests) => {
+          await createClient(api, { baseUrl }).probe.call({ id: "a/b", kind: "text", text: "kept" })
+          assert.equal(requests[0]!.url, "/base/probe/a%2Fb")
+          assert.deepEqual(JSON.parse(requests[0]!.body.toString()), { kind: "text", text: "kept" })
+        })
+      }`),
+      diagnostics: [
+        { marker: "MISSING_PATH", codes: [2345] },
+        { marker: "WRONG_BRANCH", codes: [2345] },
+      ],
+    },
+  },
+  {
     id: "types.recursive-response",
     title: "Recursive schema references preserve nested response types",
     area: "types",

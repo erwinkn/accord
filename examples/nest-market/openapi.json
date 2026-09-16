@@ -55,7 +55,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -65,7 +65,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -75,7 +75,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -120,7 +120,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -130,7 +130,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -140,7 +140,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -186,7 +186,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -196,7 +196,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -206,7 +206,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -261,7 +261,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -271,7 +271,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -281,7 +281,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -318,7 +318,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -328,7 +328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -338,7 +338,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -348,7 +348,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -400,7 +400,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -410,7 +410,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -420,7 +420,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -466,7 +466,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -476,7 +476,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -486,7 +486,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -532,7 +532,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -542,7 +542,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -552,7 +552,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -613,7 +613,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -623,7 +623,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -633,7 +633,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -689,7 +689,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -699,7 +699,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -709,7 +709,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -783,7 +783,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -793,7 +793,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -803,7 +803,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -849,7 +849,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -859,7 +859,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -869,7 +869,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -942,7 +942,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -952,7 +952,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -962,7 +962,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1008,7 +1008,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1018,7 +1018,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1028,7 +1028,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1085,7 +1085,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1095,7 +1095,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1105,7 +1105,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1115,7 +1115,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1161,7 +1161,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1171,7 +1171,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1181,7 +1181,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1218,7 +1218,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1228,7 +1228,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1238,7 +1238,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1293,7 +1293,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1303,7 +1303,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1313,7 +1313,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDto"
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -1352,7 +1352,7 @@
       }
     },
     "schemas": {
-      "ProblemDto": {
+      "ErrorDto": {
         "type": "object",
         "properties": {
           "statusCode": {

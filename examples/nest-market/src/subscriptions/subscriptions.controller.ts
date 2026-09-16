@@ -22,7 +22,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger"
 import type { Response } from "express"
-import { ApiPage, ApiProblems, type Page, paginate } from "../common.js"
+import { ApiErrors, ApiPage, type Page, paginate } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import {
   AcceptedSubmissionDto,
@@ -34,7 +34,7 @@ import {
 
 @ApiTags("subscriptions")
 @ApiBearerAuth("bearer")
-@ApiProblems()
+@ApiErrors()
 @Controller()
 export class SubscriptionsController {
   constructor(private readonly store: MarketStore) {}
@@ -91,7 +91,7 @@ export class SubscriptionsController {
 
 @ApiTags("jobs")
 @ApiBearerAuth("bearer")
-@ApiProblems()
+@ApiErrors()
 @Controller("jobs")
 export class JobsController {
   constructor(private readonly store: MarketStore) {}

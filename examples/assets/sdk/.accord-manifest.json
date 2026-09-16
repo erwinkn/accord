@@ -1,8 +1,8 @@
 {
   "version": 1,
   "files": {
-    "models.ts": "6065ecef61fd12a74a69d8f2ca9ca620ea4c2d417d232f1ded9da1a52c7c0e85",
-    "types/assets.ts": "28b1b7e9d583ca7c6019169f590dadf5392fcb383f48c2153e7fae4f2393a7a4",
+    "models.ts": "a7b2c116cbf1f64d879efff3a7ec474bc14c54c9b79aecef94dbca2b7750cc4e",
+    "types/assets.ts": "6c5531568e303e2d92f49bb71173bc078316715ed63801fe8bec47a75c435b56",
     "endpoints/assets.ts": "44b2d56fa33d8273836388a62f9fb294619917812a11c3812cf5ae53fc183b10"
   }
 }

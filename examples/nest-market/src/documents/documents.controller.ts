@@ -26,13 +26,13 @@ import {
   ApiPayloadTooLargeResponse,
   ApiTags,
 } from "@nestjs/swagger"
-import { ApiProblems, ProblemDto } from "../common.js"
+import { ApiErrors, ErrorDto } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import { DocumentDto, DocumentFieldsDto, UploadDocumentDto } from "./document.dto.js"
 
 @ApiTags("documents")
 @ApiBearerAuth("bearer")
-@ApiProblems()
+@ApiErrors()
 @Controller()
 export class DocumentsController {
   constructor(private readonly store: MarketStore) {}
@@ -42,7 +42,7 @@ export class DocumentsController {
   @ApiBody({ type: UploadDocumentDto })
   @ApiOperation({ summary: "Upload an offering document with its category and note" })
   @ApiCreatedResponse({ type: DocumentDto })
-  @ApiPayloadTooLargeResponse({ type: ProblemDto })
+  @ApiPayloadTooLargeResponse({ type: ErrorDto })
   @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 1024 * 1024 } }))
   uploadDocument(
     @Param("offeringId", ParseUUIDPipe) offeringId: string,

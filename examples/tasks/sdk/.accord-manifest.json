@@ -1,9 +1,9 @@
 {
   "version": 1,
   "files": {
-    "models.ts": "5760e4e1ad402ad96e083462790934c714296c6b2ce18ba27b934fbe115bd798",
+    "models.ts": "ceaf43e7b0a486d0976a4440c8575e57b8ed1d42f9bf3e8823530ae2389cab91",
     "schemas.ts": "9ef532bc08f5ced80cfe6fee8ae2b7955c3b6d1ab5772f935f3ff07215f6d7be",
-    "types/tasks.ts": "cd380d5332b1b26171138c1701166d00664d2f275fa96004e899a647a18080ef",
+    "types/tasks.ts": "e6f8383c8726ea253b188bfc5254eeaea4d69cdc3e9870311c60c2934a2a41bc",
     "endpoints/tasks.ts": "a329e6634d38bc72e6bf5609d11aba9a683b6e07d329db0a623269968614ec56"
   }
 }

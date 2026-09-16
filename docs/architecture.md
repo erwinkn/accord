@@ -78,7 +78,7 @@ requestBody: [
 ]
 ```
 
-The generator puts JSON first when declared, or honors `defaultMediaTypes`. The call's second-argument `headers["content-type"]` selects another format and remains correlated with its input type. Shared media defaults and a small transport-default expansion feed the existing codecs; request schemas and caller values are never reinterpreted by that expansion.
+The generator puts JSON first when declared, or honors `defaultMediaTypes`. The call's second-argument `headers["content-type"]` selects another format and remains correlated with its input type. Generated types use `RequestOptionsFor<MediaType>` from `@accord/client`; the second generic argument is `true` when the content-type selector is required. Merged path/body inputs use plain intersections, preserving the body's union branches without a generated `Simplify` wrapper. Shared media defaults and a small transport-default expansion feed the existing codecs; request schemas and caller values are never reinterpreted by that expansion.
 
 Payload-only results are the default; status-envelope results retain their flag. Response header declarations remain in the semantic model; the runtime exposes the actual Fetch `Headers` without carrying unused declarations.
 

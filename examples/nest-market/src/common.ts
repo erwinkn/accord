@@ -36,7 +36,7 @@ export class DemoAuthGuard implements CanActivate {
   }
 }
 
-export class ProblemDto {
+export class ErrorDto {
   @ApiProperty({ type: "integer", example: 400 })
   statusCode!: number
 
@@ -51,7 +51,7 @@ export class ProblemDto {
 }
 
 @Catch(HttpException)
-export class ProblemFilter implements ExceptionFilter<HttpException> {
+export class HttpErrorFilter implements ExceptionFilter<HttpException> {
   catch(exception: HttpException, host: ArgumentsHost): void {
     const response = host.switchToHttp().getResponse<Response>()
     const statusCode = exception.getStatus()
@@ -63,25 +63,25 @@ export class ProblemFilter implements ExceptionFilter<HttpException> {
       [409, "CONFLICT"],
       [413, "PAYLOAD_TOO_LARGE"],
     ])
-    const problem: ProblemDto = {
+    const errorPayload: ErrorDto = {
       statusCode,
       code: codes.get(statusCode) ?? "HTTP_ERROR",
       message: exception.message,
     }
     // eslint-disable-next-line anti-slop/no-runtime-typeof -- Nest exceptions expose either a string or a structured payload at this HTTP boundary.
     if (typeof payload === "object" && "message" in payload && Array.isArray(payload.message))
-      problem.details = payload.message.filter(
+      errorPayload.details = payload.message.filter(
         (message): message is string => typeof message === "string",
       )
-    response.status(statusCode).json(problem)
+    response.status(statusCode).json(errorPayload)
   }
 }
 
-export function ApiProblems() {
+export function ApiErrors() {
   return applyDecorators(
-    ApiBadRequestResponse({ type: ProblemDto }),
-    ApiUnauthorizedResponse({ type: ProblemDto }),
-    ApiNotFoundResponse({ type: ProblemDto }),
+    ApiBadRequestResponse({ type: ErrorDto }),
+    ApiUnauthorizedResponse({ type: ErrorDto }),
+    ApiNotFoundResponse({ type: ErrorDto }),
   )
 }
 

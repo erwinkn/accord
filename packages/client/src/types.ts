@@ -252,6 +252,26 @@ export interface RequestOptions {
   readonly signal?: AbortSignal
   readonly headers?: Readonly<Record<string, string>>
 }
+/**
+ * Request options for one body media type, including parameters such as charset.
+ * Set RequireContentType to true when selecting a non-default body representation.
+ */
+export type RequestOptionsFor<
+  ContentType extends string,
+  RequireContentType extends boolean = false,
+> = Omit<RequestOptions, "headers"> &
+  (RequireContentType extends true
+    ? {
+        readonly headers: NonNullable<RequestOptions["headers"]> & {
+          readonly "content-type": ContentType | `${ContentType};${string}`
+        }
+      }
+    : {
+        readonly headers?: NonNullable<RequestOptions["headers"]> & {
+          readonly "content-type"?: ContentType | `${ContentType};${string}`
+        }
+      })
+
 export interface HttpResult<Status extends number = number, Data = unknown> {
   readonly status: Status
   readonly data: Data

@@ -28,7 +28,7 @@ import {
   getSchemaPath,
 } from "@nestjs/swagger"
 import type { Response } from "express"
-import { ApiPage, ApiProblems, type Page, ProblemDto, paginate } from "../common.js"
+import { ApiErrors, ApiPage, ErrorDto, type Page, paginate } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import {
   CreateOfferingDto,
@@ -40,7 +40,7 @@ import {
 
 @ApiTags("offerings")
 @ApiBearerAuth("bearer")
-@ApiProblems()
+@ApiErrors()
 @Controller("offerings")
 export class OfferingsController {
   constructor(private readonly store: MarketStore) {}
@@ -81,7 +81,7 @@ export class OfferingsController {
   @HttpCode(204)
   @ApiParam({ name: "offeringId", format: "uuid" })
   @ApiNoContentResponse()
-  @ApiConflictResponse({ type: ProblemDto })
+  @ApiConflictResponse({ type: ErrorDto })
   deleteOffering(@Param("offeringId", ParseUUIDPipe) offeringId: string): void {
     this.store.deleteOffering(offeringId)
   }

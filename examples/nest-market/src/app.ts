@@ -4,7 +4,7 @@ import { type INestApplication, Module, ValidationPipe } from "@nestjs/common"
 import { APP_GUARD, NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import type { NextFunction, Request, Response } from "express"
-import { DemoAuthGuard, ProblemFilter } from "./common.js"
+import { DemoAuthGuard, HttpErrorFilter } from "./common.js"
 import { DocumentsModule } from "./documents/documents.controller.js"
 import { InvestorsModule } from "./investors/investors.controller.js"
 import { OfferingsModule } from "./offerings/offerings.controller.js"
@@ -22,7 +22,7 @@ export async function createApplication(): Promise<INestApplication> {
   app.useGlobalPipes(
     new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }),
   )
-  app.useGlobalFilters(new ProblemFilter())
+  app.useGlobalFilters(new HttpErrorFilter())
   app.use((request: Request, response: Response, next: NextFunction) => {
     response.setHeader("x-request-id", request.get("x-request-id") ?? randomUUID())
     next()

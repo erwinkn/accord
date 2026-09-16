@@ -47,20 +47,10 @@ function statusType(codes: readonly number[]): ts.TypeNode {
 }
 
 function optionsType(media: MediaModel, isDefault: boolean): ts.TypeNode {
-  const content = union([
-    literal(media.mediaType),
-    f.createTemplateLiteralType(f.createTemplateHead(`${media.mediaType};`), [
-      f.createTemplateLiteralTypeSpan(stringType(), f.createTemplateTail("")),
-    ]),
-  ])
-  const headers = intersection([
-    typeReference("Readonly", [typeReference("Record", [stringType(), stringType()])]),
-    typeLiteral([property("content-type", content, isDefault)]),
-  ])
-  return intersection([
-    typeReference("Omit", [typeReference("RequestOptions"), literal("headers")]),
-    typeLiteral([property("headers", headers, isDefault)]),
-  ])
+  return typeReference(
+    "RequestOptionsFor",
+    isDefault ? [literal(media.mediaType)] : [literal(media.mediaType), literal(true)],
+  )
 }
 
 function inputType(
@@ -79,9 +69,7 @@ function inputType(
   const bodyType = emitter.emit(media.schema, "request", media.codec)
   if (operation.body.mode === "separate")
     return typeLiteral([...params, property("body", bodyType, !operation.body.required)])
-  return params.length
-    ? typeReference("AccordSimplify", [intersection([typeLiteral(params), bodyType])])
-    : bodyType
+  return params.length ? intersection([typeLiteral(params), bodyType]) : bodyType
 }
 
 interface RenderOperation {
@@ -230,8 +218,8 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     "BinaryUpload",
     "HttpResult",
     "RequestOptions",
+    "RequestOptionsFor",
     "StatusRange",
-    "AccordSimplify",
     "AccordObjectConstraints",
     "AccordArrayConstraints",
     "ArrayBuffer",
@@ -392,7 +380,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
   }
   const source = [
     generatedHeader,
-    'import { createEndpointFactory, type BinaryUpload, type HttpResult, type RequestOptions, type StatusRange } from "@accord/client"',
+    'import { createEndpointFactory, type BinaryUpload, type HttpResult, type RequestOptions, type RequestOptionsFor, type StatusRange } from "@accord/client"',
     ...(validationSource?.imports ?? []),
     ...typeHelpers,
     ...[...emitter.declarations.values()].map(printNode),

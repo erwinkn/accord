@@ -1,18 +1,18 @@
 {
   "version": 1,
   "files": {
-    "models.ts": "b8936efacfba96b705dd77c990d7f8fede9b3d3601041e706555fdb1408db405",
-    "schemas.ts": "06ace189c75faca1c0e14e2c03f08fb664b4634dbf989ebb8045e59e6129e6d2",
-    "types/documents.ts": "5fbdcf0056727c4fe76a7dad668a7773b0758171a081910b08d9fc735e7fb33a",
-    "endpoints/documents.ts": "31f30248b1aed7033bcb8fa46c2e1a5e6e49285b3522289cefe7362cccb05f9f",
-    "types/investors.ts": "b38a18c09dcd2850834e2ab19ab4805b3d0fbef932fdc52b27bf415c3a50d204",
-    "endpoints/investors.ts": "c9e8a0360454e22dbc3bfc0eb18aafae3aa27c8ee87b978a7c306193d66f2dc9",
-    "types/jobs.ts": "3730494883f7f7274e30830d98f2530e104f6525b4498f591d02a765758c17fa",
-    "endpoints/jobs.ts": "73ba3fd523348ce4dfa02103721755452fe6738bb6ca917360d5efa5255e043f",
-    "types/offerings.ts": "70521592930e9956dc18d3b022124742d4e9e0427eadd254bf99e6f34eb4da93",
-    "endpoints/offerings.ts": "5a89c6ff91c0f9b30499dfdc7828608f22907b996a82719d3a522c07fceb1a94",
-    "types/subscriptions.ts": "341cd3f73e8e4e8cc04c6ab510c6dba25d46093e661dff69ec9f2113e53f7c7f",
-    "endpoints/subscriptions.ts": "068de2fb903d10f26a8a0931a1dcdeb1a0623e6092e1ab7d6b6ae45a3b9d78ec",
-    "index.ts": "f0c3eae7ec020827ec000a6512f39c6891f3fae230abcb896f2f863512c98217"
+    "models.ts": "0d4a26f458f8880234a6a304903b513178a9d327dc4bf25adf95d076c7c0803a",
+    "schemas.ts": "eac5ef5b1960d24175ee214cff1c3a28faa0e2eba289386eeb11af4af388d43e",
+    "types/documents.ts": "a4ad56e5e708c80271e6db522e610beff8f80e61afc694f310cf8107f0683af4",
+    "endpoints/documents.ts": "b4d156d14e3071fce3f7cf6a1b491e2aae38253b72518f61c066231daed176ab",
+    "types/investors.ts": "c097d50a264c080c12a0b4337be92d68f31f25048ee956fb648e9d33522953e8",
+    "endpoints/investors.ts": "1680a11b77de9d439bbc65b425df5efb0dc1a527c89d6b40239c2ee7cf252d87",
+    "types/jobs.ts": "8d32d4fe21b13c7a44ecc5189576a65bff2daa5af395ebe03ab1a76b1b5eacf4",
+    "endpoints/jobs.ts": "3e320dd3c429f8b9fd4f26f6aa4f76682ac22844a0ec41cbaaa17546224b5586",
+    "types/offerings.ts": "efd194b1cc98023de2b582f1cb1f2d65840aec9b9d942f800484e79ece2179a5",
+    "endpoints/offerings.ts": "9c77a1b0433c8ad3fa9e728dafd8c24b55d32ee4f0734af47d1ac616be329cb7",
+    "types/subscriptions.ts": "df6c0ed8f6a0edbcf91023c4da0be853de6a4590e61f204dde7506eea9f3fb93",
+    "endpoints/subscriptions.ts": "c761485d8e3de055e9a543d9cd8df59c846ee1cbc5337ca0280601e4f5e6501a",
+    "index.ts": "79405ca7bed663708e7732579b0afaa5eb9f501481a324eada0c5296fb9503a6"
   }
 }

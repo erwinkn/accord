@@ -9,22 +9,22 @@ const DocumentDtoSchema = z.strictObject({
     "size": z.number().refine(Number.isInteger, "Expected integer").gte(0)
 });
 export const GetDocument200Schema = DocumentDtoSchema;
-const ProblemDtoSchema = z.strictObject({
+const ErrorDtoSchema = z.strictObject({
     "code": z.string(),
     "details": z.array(z.string()).optional(),
     "message": z.string(),
     "statusCode": z.number().refine(Number.isInteger, "Expected integer")
 });
-export const GetDocument400Schema = ProblemDtoSchema;
-export const GetDocument401Schema = ProblemDtoSchema;
-export const GetDocument404Schema = ProblemDtoSchema;
-export const DeleteDocument400Schema = ProblemDtoSchema;
-export const DeleteDocument401Schema = ProblemDtoSchema;
-export const DeleteDocument404Schema = ProblemDtoSchema;
+export const GetDocument400Schema = ErrorDtoSchema;
+export const GetDocument401Schema = ErrorDtoSchema;
+export const GetDocument404Schema = ErrorDtoSchema;
+export const DeleteDocument400Schema = ErrorDtoSchema;
+export const DeleteDocument401Schema = ErrorDtoSchema;
+export const DeleteDocument404Schema = ErrorDtoSchema;
 export const DownloadDocument200Schema = z.instanceof(ArrayBuffer);
-export const DownloadDocument400Schema = ProblemDtoSchema;
-export const DownloadDocument401Schema = ProblemDtoSchema;
-export const DownloadDocument404Schema = ProblemDtoSchema;
+export const DownloadDocument400Schema = ErrorDtoSchema;
+export const DownloadDocument401Schema = ErrorDtoSchema;
+export const DownloadDocument404Schema = ErrorDtoSchema;
 const CompanyInvestorDtoSchema = z.strictObject({
     "country": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2").refine(value => [...value].length <= 2, "Must satisfy maxLength: 2"),
     "displayName": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2"),
@@ -34,9 +34,9 @@ const CompanyInvestorDtoSchema = z.strictObject({
     "registrationNumber": z.string().refine(value => [...value].length >= 3, "Must satisfy minLength: 3")
 });
 export const CreateCompanyInvestor201Schema = CompanyInvestorDtoSchema;
-export const CreateCompanyInvestor400Schema = ProblemDtoSchema;
-export const CreateCompanyInvestor401Schema = ProblemDtoSchema;
-export const CreateCompanyInvestor404Schema = ProblemDtoSchema;
+export const CreateCompanyInvestor400Schema = ErrorDtoSchema;
+export const CreateCompanyInvestor401Schema = ErrorDtoSchema;
+export const CreateCompanyInvestor404Schema = ErrorDtoSchema;
 const IndividualInvestorDtoSchema = z.strictObject({
     "country": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2").refine(value => [...value].length <= 2, "Must satisfy maxLength: 2"),
     "displayName": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2"),
@@ -45,13 +45,13 @@ const IndividualInvestorDtoSchema = z.strictObject({
     "kind": z.intersection(z.string(), z.literal("individual"))
 });
 export const CreateIndividualInvestor201Schema = IndividualInvestorDtoSchema;
-export const CreateIndividualInvestor400Schema = ProblemDtoSchema;
-export const CreateIndividualInvestor401Schema = ProblemDtoSchema;
-export const CreateIndividualInvestor404Schema = ProblemDtoSchema;
+export const CreateIndividualInvestor400Schema = ErrorDtoSchema;
+export const CreateIndividualInvestor401Schema = ErrorDtoSchema;
+export const CreateIndividualInvestor404Schema = ErrorDtoSchema;
 export const GetInvestor200Schema = z.xor([IndividualInvestorDtoSchema, CompanyInvestorDtoSchema]);
-export const GetInvestor400Schema = ProblemDtoSchema;
-export const GetInvestor401Schema = ProblemDtoSchema;
-export const GetInvestor404Schema = ProblemDtoSchema;
+export const GetInvestor400Schema = ErrorDtoSchema;
+export const GetInvestor401Schema = ErrorDtoSchema;
+export const GetInvestor404Schema = ErrorDtoSchema;
 const SubscriptionDtoSchema = z.strictObject({
     "amount": z.string().regex(new RegExp("^[0-9]+\\.[0-9]{2}$", "u")),
     "id": z.uuid(),
@@ -66,9 +66,9 @@ export const GetSubmissionJob200Schema = z.strictObject({
     "result": SubscriptionDtoSchema,
     "state": z.intersection(z.string(), z.literal("completed"))
 });
-export const GetSubmissionJob400Schema = ProblemDtoSchema;
-export const GetSubmissionJob401Schema = ProblemDtoSchema;
-export const GetSubmissionJob404Schema = ProblemDtoSchema;
+export const GetSubmissionJob400Schema = ErrorDtoSchema;
+export const GetSubmissionJob401Schema = ErrorDtoSchema;
+export const GetSubmissionJob404Schema = ErrorDtoSchema;
 const CurrencySchema = z.intersection(z.string(), z.union([z.literal("EUR"), z.literal("USD")]));
 const OfferingDtoSchema = z.strictObject({
     "createdAt": z.iso.datetime({ offset: true }),
@@ -89,61 +89,61 @@ export const ListOfferings200Schema = z.strictObject({
     "page": z.number().refine(Number.isInteger, "Expected integer").gte(1),
     "total": z.number().refine(Number.isInteger, "Expected integer").gte(0)
 });
-export const ListOfferings400Schema = ProblemDtoSchema;
-export const ListOfferings401Schema = ProblemDtoSchema;
-export const ListOfferings404Schema = ProblemDtoSchema;
+export const ListOfferings400Schema = ErrorDtoSchema;
+export const ListOfferings401Schema = ErrorDtoSchema;
+export const ListOfferings404Schema = ErrorDtoSchema;
 export const CreateOffering201Schema = OfferingDtoSchema;
-export const CreateOffering400Schema = ProblemDtoSchema;
-export const CreateOffering401Schema = ProblemDtoSchema;
-export const CreateOffering404Schema = ProblemDtoSchema;
+export const CreateOffering400Schema = ErrorDtoSchema;
+export const CreateOffering401Schema = ErrorDtoSchema;
+export const CreateOffering404Schema = ErrorDtoSchema;
 export const GetOffering200Schema = OfferingDtoSchema;
-export const GetOffering400Schema = ProblemDtoSchema;
-export const GetOffering401Schema = ProblemDtoSchema;
-export const GetOffering404Schema = ProblemDtoSchema;
+export const GetOffering400Schema = ErrorDtoSchema;
+export const GetOffering401Schema = ErrorDtoSchema;
+export const GetOffering404Schema = ErrorDtoSchema;
 export const UpdateOffering200Schema = OfferingDtoSchema;
-export const UpdateOffering400Schema = ProblemDtoSchema;
-export const UpdateOffering401Schema = ProblemDtoSchema;
-export const UpdateOffering404Schema = ProblemDtoSchema;
-export const DeleteOffering400Schema = ProblemDtoSchema;
-export const DeleteOffering401Schema = ProblemDtoSchema;
-export const DeleteOffering404Schema = ProblemDtoSchema;
-export const DeleteOffering409Schema = ProblemDtoSchema;
+export const UpdateOffering400Schema = ErrorDtoSchema;
+export const UpdateOffering401Schema = ErrorDtoSchema;
+export const UpdateOffering404Schema = ErrorDtoSchema;
+export const DeleteOffering400Schema = ErrorDtoSchema;
+export const DeleteOffering401Schema = ErrorDtoSchema;
+export const DeleteOffering404Schema = ErrorDtoSchema;
+export const DeleteOffering409Schema = ErrorDtoSchema;
 export const UploadDocument201Schema = DocumentDtoSchema;
-export const UploadDocument400Schema = ProblemDtoSchema;
-export const UploadDocument401Schema = ProblemDtoSchema;
-export const UploadDocument404Schema = ProblemDtoSchema;
-export const UploadDocument413Schema = ProblemDtoSchema;
+export const UploadDocument400Schema = ErrorDtoSchema;
+export const UploadDocument401Schema = ErrorDtoSchema;
+export const UploadDocument404Schema = ErrorDtoSchema;
+export const UploadDocument413Schema = ErrorDtoSchema;
 export const ExportOffering200JsonSchema = z.strictObject({
     "currency": CurrencySchema,
     "offeringId": z.uuid(),
     "subscriptionCount": z.number().refine(Number.isInteger, "Expected integer").gte(0)
 });
 export const ExportOffering200CsvSchema = z.string();
-export const ExportOffering400Schema = ProblemDtoSchema;
-export const ExportOffering401Schema = ProblemDtoSchema;
-export const ExportOffering404Schema = ProblemDtoSchema;
+export const ExportOffering400Schema = ErrorDtoSchema;
+export const ExportOffering401Schema = ErrorDtoSchema;
+export const ExportOffering404Schema = ErrorDtoSchema;
 export const ListSubscriptions200Schema = z.strictObject({
     "items": z.array(SubscriptionDtoSchema),
     "limit": z.number().refine(Number.isInteger, "Expected integer").gte(1),
     "page": z.number().refine(Number.isInteger, "Expected integer").gte(1),
     "total": z.number().refine(Number.isInteger, "Expected integer").gte(0)
 });
-export const ListSubscriptions400Schema = ProblemDtoSchema;
-export const ListSubscriptions401Schema = ProblemDtoSchema;
-export const ListSubscriptions404Schema = ProblemDtoSchema;
+export const ListSubscriptions400Schema = ErrorDtoSchema;
+export const ListSubscriptions401Schema = ErrorDtoSchema;
+export const ListSubscriptions404Schema = ErrorDtoSchema;
 export const CreateSubscription201Schema = SubscriptionDtoSchema;
-export const CreateSubscription400Schema = ProblemDtoSchema;
-export const CreateSubscription401Schema = ProblemDtoSchema;
-export const CreateSubscription404Schema = ProblemDtoSchema;
+export const CreateSubscription400Schema = ErrorDtoSchema;
+export const CreateSubscription401Schema = ErrorDtoSchema;
+export const CreateSubscription404Schema = ErrorDtoSchema;
 export const GetSubscription200Schema = SubscriptionDtoSchema;
-export const GetSubscription400Schema = ProblemDtoSchema;
-export const GetSubscription401Schema = ProblemDtoSchema;
-export const GetSubscription404Schema = ProblemDtoSchema;
+export const GetSubscription400Schema = ErrorDtoSchema;
+export const GetSubscription401Schema = ErrorDtoSchema;
+export const GetSubscription404Schema = ErrorDtoSchema;
 export const SubmitSubscription200Schema = SubscriptionDtoSchema;
 export const SubmitSubscription202Schema = z.strictObject({
     "jobId": z.uuid(),
     "state": z.intersection(z.string(), z.literal("accepted"))
 });
-export const SubmitSubscription400Schema = ProblemDtoSchema;
-export const SubmitSubscription401Schema = ProblemDtoSchema;
-export const SubmitSubscription404Schema = ProblemDtoSchema;
+export const SubmitSubscription400Schema = ErrorDtoSchema;
+export const SubmitSubscription401Schema = ErrorDtoSchema;
+export const SubmitSubscription404Schema = ErrorDtoSchema;
