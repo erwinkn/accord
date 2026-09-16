@@ -9,6 +9,7 @@ try {
   // Use the same documented contract as Swagger UI, including strict request DTOs.
   await writeFile("openapi.json", `${JSON.stringify(document, null, 2)}\n`)
   const generated = await generateFromFile("openapi.json", {
+    prefix: "market",
     namespace: "tag",
     validators: zodAdapter(),
   })

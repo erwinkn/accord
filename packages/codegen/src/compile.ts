@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto"
 import {
   defaultCodec,
   type EndpointPlan,
@@ -189,50 +188,6 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
     }
   }
   graph.assertProductiveReferences()
-  const indices = new Map([...graph.nodes.keys()].map((id, index) => [id, index]))
-  const signatures = [...graph.nodes.values()].map((node) => {
-    const children = new Set([...node.edges.keys()].map((key) => key.split("/")[0]))
-    const rules =
-      node.rules === true || node.rules === false
-        ? node.rules
-        : Object.fromEntries(
-            Object.entries(node.rules).filter(
-              ([key]) =>
-                !children.has(key) &&
-                ![
-                  "description",
-                  "summary",
-                  "title",
-                  "example",
-                  "examples",
-                  "externalDocs",
-                  "$id",
-                  "$ref",
-                  "$dynamicRef",
-                  "$anchor",
-                ].includes(key),
-            ),
-          )
-    return {
-      rules,
-      edges: [...node.edges].map(([key, id]) => [key, indices.get(id)]),
-      reference: node.reference ? indices.get(node.reference) : null,
-      dynamicAnchor: node.dynamicAnchor ?? null,
-    }
-  })
-  const identity =
-    config.apiId ??
-    createHash("sha256")
-      .update(
-        JSON.stringify({
-          title: object(root["info"])["title"],
-          version: object(root["info"])["version"],
-          operations: operations.map((operation) => operation.plan),
-          schemas: signatures,
-        }),
-      )
-      .digest("hex")
-      .slice(0, 16)
   const resolved = operations.map((operation) => ({
     ...operation,
     plan: operation.plan,
@@ -240,7 +195,7 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
   return {
     graph,
     model: {
-      id: identity,
+      prefix: config.prefix ?? (string(object(root["info"])["title"]).trim() || "api"),
       version: store.version,
       schemas: graph.nodes,
       resources: store.resources,

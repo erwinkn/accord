@@ -57,7 +57,7 @@ interface EndpointGroup {
 }
 
 interface ModuleInput {
-  readonly apiId: string
+  readonly prefix: string
   readonly models: ReadonlyMap<string, string>
   readonly modelFamilies: readonly (readonly string[])[]
   readonly groups: readonly EndpointGroup[]
@@ -155,7 +155,7 @@ export function renderModules(input: ModuleInput) {
     ...imports,
     ...[...typeFiles.keys()].map((file) => `export type * from "./types/${file}.js"`),
     input.validation ? 'export * from "./schemas.js"' : "",
-    `export const api = defineApi(${JSON.stringify(input.apiId)}, {\n${namespaces.join(",\n")}\n})`,
+    `export const api = defineApi(${JSON.stringify(input.prefix)}, {\n${namespaces.join(",\n")}\n})`,
   ])
   return files
 }

@@ -80,7 +80,7 @@ export interface OperationModel {
 }
 
 export interface ApiModel {
-  readonly id: string
+  readonly prefix: string
   readonly version: "3.0" | "3.1"
   readonly schemas: ReadonlyMap<SchemaId, SchemaNode>
   readonly resources: ReadonlyMap<string, SchemaResource>

@@ -66,10 +66,10 @@ export function defineEndpoint<C extends EndpointContract, K extends OperationKi
   return { ...definition, [endpointMarker]: true }
 }
 
-/** Bind the assembled API to one cache identity without changing the supplied endpoint tree. */
-export function defineApi<const TApi extends object>(scope: string, api: TApi): TApi {
+/** Set the SDK query/mutation key prefix without changing the supplied endpoint tree. */
+export function defineApi<const TApi extends object>(prefix: string, api: TApi): TApi {
   const bind = <T>(value: T): T => {
-    if (isEndpointDescriptor(value)) return { ...value, [endpointScope]: scope }
+    if (isEndpointDescriptor(value)) return { ...value, [endpointScope]: prefix }
     if (!isRecord(value)) throw new TypeError("Accord namespaces must contain endpoint definitions")
     // SAFETY: copy the same namespace keys and preserve each endpoint's contract; only add its scope symbol.
     return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, bind(child)])) as T
@@ -77,7 +77,7 @@ export function defineApi<const TApi extends object>(scope: string, api: TApi): 
   return bind(api)
 }
 
-/** @deprecated Use defineApi(scope, endpoints) around the assembled API. */
+/** @deprecated Use defineApi(prefix, endpoints) around the assembled API. */
 export function createEndpointFactory(scope: string) {
   return function scopedEndpoint<
     C extends EndpointContract,

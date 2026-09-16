@@ -3,6 +3,6 @@ import { defineApi } from "@accord/client";
 import { endpoints as tasksEndpoints } from "./sdk/endpoints/tasks.js";
 export type * from "./sdk/types/tasks.js";
 export * from "./sdk/schemas.js";
-export const api = defineApi("a0e40c2397785a61", {
+export const api = defineApi("Team Tasks", {
     "tasks": tasksEndpoints
 });

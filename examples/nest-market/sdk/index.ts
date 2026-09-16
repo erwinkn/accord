@@ -12,7 +12,7 @@ export type * from "./types/offerings.js";
 export type * from "./types/subscriptions.js";
 export type * from "./types/shared.js";
 export * from "./schemas.js";
-export const api = defineApi("dc085c6fffabdb3b", {
+export const api = defineApi("market", {
     "documents": documentsEndpoints,
     "investors": investorsEndpoints,
     "jobs": jobsEndpoints,

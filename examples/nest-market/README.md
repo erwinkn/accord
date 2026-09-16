@@ -16,7 +16,7 @@ Nest controllers + DTO decorators
        ↓ SwaggerModule.createDocument + DTO closure
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
-   sdk/index.ts                    ← defineApi(identity, slices) and public exports
+   sdk/index.ts                    ← defineApi("market", slices) and public exports
    sdk/schemas.ts                  ← native Zod schemas
    sdk/types/<group>.ts            ← each domain's DTOs and call types
    sdk/types/shared.ts             ← ErrorDto, used across domains
@@ -28,6 +28,8 @@ Nest controllers + DTO decorators
 For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [DTOs and call types](sdk/types/offerings.ts). Each domain’s DTOs live in its type slice: jobs imports `SubscriptionDto` from [subscriptions](sdk/types/subscriptions.ts). The common `ErrorDto` lives in [shared types](sdk/types/shared.ts); [Zod schemas](sdk/schemas.ts) stay together for reuse and recursion. The entry re-exports public types and schemas, so callers can keep one import source. `SubscriptionDto` and `SubscriptionDtoPage` are response models: no unused request variants are emitted. Models with identical request/response shapes share one type; a distinct request type is generated only when an endpoint needs it.
 
 DTOs and response data are mutable: you can annotate a draft as `CreateOfferingDto`, append to its `tags`, change nested `terms`, and edit returned arrays directly. Calls also accept deeply readonly inputs, including `as const` arrays. OpenAPI read/write field projections still apply.
+
+The generator sets `prefix: "market"`, so React Query keys start with `["market", "api", "v1", "offerings", …]` for the offering list. Change it in [the generation script](scripts/generate.ts) to use your SDK's name. `queryClient.invalidateQueries({ queryKey: ["market"] })` invalidates the whole SDK; use `["market", "api", "v1", "offerings"]` to target the offerings group, including nested routes. Input values, server, authentication context and result mode remain separate parts of the full key.
 
 ## Run it
 

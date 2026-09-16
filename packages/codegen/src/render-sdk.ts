@@ -386,7 +386,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     ...[...emitter.declarations.values()].map(printNode),
     ...[...operations.values()].map((operation) => operation.declaration),
     ...(validationSource?.declarations ?? []),
-    `export const api = defineApi(${JSON.stringify(compilation.model.id)}, ${renderTree(root, 0)})`,
+    `export const api = defineApi(${JSON.stringify(compilation.model.prefix)}, ${renderTree(root, 0)})`,
     "",
   ].join("\n\n")
   const groups = [...root.children].map(([name, node]) => {
@@ -415,7 +415,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
   return {
     source: formatSource(source),
     files: renderModules({
-      apiId: compilation.model.id,
+      prefix: compilation.model.prefix,
       models: new Map(
         [...emitter.declarations].map(([name, declaration]) => [name, printNode(declaration)]),
       ),

@@ -74,7 +74,20 @@ const query = useQuery({
 
 Use `apiQueryResponse` for full HTTP results. Ordinary mutations accept the default-media input; `apiMutationCall` uses the generated argument tuple as mutation variables. `AccordProvider` supplies client options to `useApiQuery` / `useApiMutation` when using unbound endpoint definitions.
 
-Keys include API identity, server, account scope, inputs, headers, and result mode. Credentials use opaque identities rather than their values. Reuse the client/options object, and update `cacheScope` when a dynamic credential resolver switches accounts. Never place secrets in `cacheScope`.
+Set `prefix: "harbor"` in the generator config (or pass CLI `--prefix harbor`) to make query and mutation keys start with `["harbor", "endpoint", "path", …]`. Each path segment is a separate element. For `/users/{userId}/documents`, the key starts with `["harbor", "users", "{userId}", "documents"]`; actual parameter values appear in a final request-details object. Without `prefix`, Accord uses the OpenAPI title, or `"api"` if no title is available. No generated API hash or operation ID is included in the key.
+
+```ts
+// All requests from this SDK:
+await queryClient.invalidateQueries({ queryKey: ["harbor"] })
+// The entire users group, including lists and nested routes:
+await queryClient.invalidateQueries({ queryKey: ["harbor", "users"] })
+// User documents, across all userId values:
+await queryClient.invalidateQueries({
+  queryKey: ["harbor", "users", "{userId}", "documents"],
+})
+```
+
+The final object includes HTTP method, server, account scope, inputs, headers, and result mode. Credentials use opaque identities rather than their values. Reuse the client/options object, and update `cacheScope` when a dynamic credential resolver switches accounts. Never place secrets in `cacheScope`. Use different prefixes for independent APIs that share the same title. Prefix matching uses whole segments, so `"users"` does not match `"users-search"`. Interior and trailing empty path segments are preserved. Unwrapped handwritten endpoints use `"api"` as their prefix.
 
 ## Generation options
 
@@ -83,6 +96,7 @@ Keys include API identity, server, account scope, inputs, headers, and result mo
 import { zodAdapter } from "@accord/zod"
 
 export default {
+  prefix: "harbor", // query/mutation key prefix
   namespace: "path", // or "tag"
   basePath: "/v1",   // affects naming, not the HTTP path
   validators: zodAdapter(), // omit for no validation
@@ -115,16 +129,16 @@ sdk/
 
 Groups follow the configured path or tag namespaces. Each type slice includes its DTOs and their request/response variants. Direct endpoint uses determine a model’s slice; nested models follow their parent unless they have their own slice. Cross-slice references use type-only imports. Models directly used by multiple slices, and public components with no endpoint owner, go in `types/shared.ts`. Validators stay together in `schemas.ts` to support recursive schemas without runtime import cycles. Import from the entry as before: `import { api, type User } from "./sdk/index.js"`.
 
-The entry assigns the SDK's cache identity once:
+The entry assigns the SDK's prefix once:
 
 ```ts
-export const api = defineApi("<generated contract fingerprint>", {
+export const api = defineApi("harbor", {
   users: usersEndpoints,
   documents: documentsEndpoints,
 })
 ```
 
-This identity separates APIs in React Query cache keys. Set `apiId` in the generator config to override the default fingerprint. Endpoint modules only call `defineEndpoint`; take runtime endpoints from the exported `api` so they carry the SDK identity, including when destructured or passed individually to React Query.
+This prefix comes from `prefix` in the generator config; otherwise Accord uses the OpenAPI title. You can also wrap an existing API with `defineApi("harbor", importedApi)` to set its prefix without regenerating. Endpoint modules only call `defineEndpoint`; take runtime endpoints from the exported `api` so they carry the SDK identity, including when destructured or passed individually to React Query.
 
 Public DTOs, input aliases, and response data use mutable properties, arrays, tuples, and dictionaries, so callers can build requests incrementally and edit local results. Request calls also accept readonly values, including nested `as const` arrays; the client only reads caller input. Endpoint metadata stays readonly. OpenAPI `readOnly`/`writeOnly` still controls which fields belong in requests and responses; it does not make returned objects immutable.
 

@@ -2,6 +2,6 @@
 import { defineApi } from "@accord/client";
 import { endpoints as assetsEndpoints } from "./sdk/endpoints/assets.js";
 export type * from "./sdk/types/assets.js";
-export const api = defineApi("f8d72c46252ec3f3", {
+export const api = defineApi("Asset Library", {
     "assets": assetsEndpoints
 });

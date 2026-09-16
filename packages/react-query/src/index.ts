@@ -48,13 +48,7 @@ export type QueryTarget = QueryEndpoint | BoundEndpoint<QueryEndpoint>
 export type MutationTarget = MutationEndpoint | BoundEndpoint<MutationEndpoint>
 export type EndpointOf<T> =
   T extends BoundEndpoint<infer E> ? E : T extends EndpointDefinition ? T : never
-export type ApiEndpointKey = readonly [
-  "accord",
-  scope: string,
-  method: string,
-  path: string,
-  id: string,
-]
+export type ApiEndpointKey = readonly [prefix: string, ...path: string[]]
 export type CanonicalQueryValue =
   | string
   | number
@@ -67,11 +61,20 @@ export interface CanonicalQueryObject {
 }
 export type ApiQueryKey = readonly [
   ...ApiEndpointKey,
-  context: CanonicalQueryValue,
-  mode: "payload" | "response",
-  arguments: CanonicalQueryValue,
+  request: {
+    readonly method: EndpointDefinition["method"]
+    readonly context: CanonicalQueryValue
+    readonly mode: "payload" | "response"
+    readonly arguments: CanonicalQueryValue
+  },
 ]
-export type ApiMutationKey = readonly [...ApiEndpointKey, context: CanonicalQueryValue]
+export type ApiMutationKey = readonly [
+  ...ApiEndpointKey,
+  request: {
+    readonly method: EndpointDefinition["method"]
+    readonly context: CanonicalQueryValue
+  },
+]
 
 const EMPTY_OPTIONS: ClientOptions = Object.freeze({})
 const Context = createContext<ClientOptions>(EMPTY_OPTIONS)
@@ -101,15 +104,9 @@ function unpack<T extends QueryTarget | MutationTarget>(
   return resolved as BoundEndpoint<EndpointOf<T>>
 }
 
-export function endpointIdentity(endpoint: EndpointDefinition): ApiEndpointKey {
-  const plan = endpoint
-  return [
-    "accord",
-    getEndpointScope(endpoint) ?? identity(endpoint),
-    plan.method,
-    plan.path,
-    plan.id,
-  ]
+export function endpointKeyPrefix(endpoint: EndpointDefinition): ApiEndpointKey {
+  // Remove only the leading slash: interior/trailing empty segments distinguish real routes.
+  return [getEndpointScope(endpoint) ?? "api", ...endpoint.path.replace(/^\//, "").split("/")]
 }
 
 function contextKey(bound: BoundEndpoint<EndpointDefinition>): CanonicalQueryValue {
@@ -217,15 +214,21 @@ export function apiQueryKey<T extends QueryTarget>(
 ): ApiQueryKey {
   const bound = unpack(target)
   return [
-    ...endpointIdentity(bound.endpoint),
-    contextKey(bound),
-    "payload",
-    argumentKey(bound, args),
+    ...endpointKeyPrefix(bound.endpoint),
+    {
+      method: bound.endpoint.method,
+      context: contextKey(bound),
+      mode: "payload",
+      arguments: argumentKey(bound, args),
+    },
   ]
 }
 export function apiMutationKey<T extends MutationTarget>(target: T): ApiMutationKey {
   const bound = unpack(target)
-  return [...endpointIdentity(bound.endpoint), contextKey(bound)]
+  return [
+    ...endpointKeyPrefix(bound.endpoint),
+    { method: bound.endpoint.method, context: contextKey(bound) },
+  ]
 }
 
 function requestWithSignal<E extends EndpointDefinition>(
@@ -289,10 +292,13 @@ function queryResponseImplementation<T extends QueryTarget>(
   const bound = unpack(target)
   const request = createEndpointClient(bound.endpoint, bound.context)
   const key: ApiQueryKey = [
-    ...endpointIdentity(bound.endpoint),
-    contextKey(bound),
-    "response",
-    argumentKey(bound, args),
+    ...endpointKeyPrefix(bound.endpoint),
+    {
+      method: bound.endpoint.method,
+      context: contextKey(bound),
+      mode: "response",
+      arguments: argumentKey(bound, args),
+    },
   ]
   // SAFETY: this cache mode always executes withResponse and therefore has the full-result data tag.
   const queryKey = key as DataTag<

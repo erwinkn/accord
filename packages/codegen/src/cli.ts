@@ -10,6 +10,7 @@ interface CliArguments {
   input: string
   output?: string
   configPath?: string
+  prefix?: string
   namespace?: NamespaceStrategy
   bodyMode?: BodyMode
   basePath?: string
@@ -22,6 +23,7 @@ interface ConfigModule {
 }
 
 interface MutableCodegenConfig {
+  prefix?: string
   namespace?: NamespaceStrategy
   basePath?: string
   body?: NonNullable<AccordCodegenConfig["body"]>
@@ -33,6 +35,7 @@ async function main(): Promise<void> {
   const args = parseArguments(process.argv.slice(2))
   const fileConfig = args.configPath ? await importConfig(args.configPath) : {}
   const config: MutableCodegenConfig = { ...fileConfig }
+  if (args.prefix !== undefined) config.prefix = args.prefix
   if (args.validators) {
     const module: ValidationAdapterModule = await import(
       resolveModule(args.validators, pathToFileURL(resolve("package.json")).href)
@@ -61,6 +64,7 @@ function parseArguments(values: readonly string[]): CliArguments {
   let input: string | undefined
   let output: string | undefined
   let configPath: string | undefined
+  let prefix: string | undefined
   let namespace: NamespaceStrategy | undefined
   let bodyMode: BodyMode | undefined
   let basePath: string | undefined
@@ -90,6 +94,9 @@ function parseArguments(values: readonly string[]): CliArguments {
     } else if (value === "--config" || value === "-c") {
       configPath = requireValue(value, next)
       index += 1
+    } else if (value === "--prefix") {
+      prefix = requireValue(value, next)
+      index += 1
     } else if (value === "--namespace") {
       const candidate = requireValue(value, next)
       if (candidate !== "path" && candidate !== "tag") {
@@ -118,6 +125,7 @@ function parseArguments(values: readonly string[]): CliArguments {
   if (adapterIndex >= 0) parsed.validators = requireValue("--validators", values[adapterIndex + 1])
   if (output !== undefined) parsed.output = output
   if (configPath !== undefined) parsed.configPath = configPath
+  if (prefix !== undefined) parsed.prefix = prefix
   if (namespace !== undefined) parsed.namespace = namespace
   if (bodyMode !== undefined) parsed.bodyMode = bodyMode
   if (basePath !== undefined) parsed.basePath = basePath
@@ -140,7 +148,7 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 
 function printUsage(): void {
   process.stdout.write(
-    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --prefix <prefix>     SDK query/mutation key prefix (OpenAPI title by default)\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
   )
 }
 

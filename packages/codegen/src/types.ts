@@ -19,8 +19,8 @@ export interface BodyCodegenConfig {
 }
 
 export interface AccordCodegenConfig {
-  /** API cache identity, emitted once in defineApi. Defaults to a fingerprint of the API contract. */
-  readonly apiId?: string
+  /** Readable SDK query/mutation key prefix, emitted once in defineApi. Defaults to the OpenAPI title (or "api" if absent). */
+  readonly prefix?: string
   /** Opt in to response schema generation with a library-specific adapter. */
   readonly validators?: ValidationAdapter
   readonly defaultMediaTypes?: Readonly<Record<string, string>>

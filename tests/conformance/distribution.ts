@@ -143,6 +143,7 @@ async function main(): Promise<void> {
     )
     const help = await command(installed, "pnpm", ["exec", "accord", "--help"])
     assert.match(help, /Usage: accord/)
+    assert.match(help, /--prefix/)
     await command(installed, "pnpm", [
       "exec",
       "accord",
@@ -150,6 +151,8 @@ async function main(): Promise<void> {
       "openapi.json",
       "--output",
       "generated.ts",
+      "--prefix",
+      "harbor",
       "--validators",
       "@accord/zod",
     ])
@@ -180,7 +183,10 @@ async function main(): Promise<void> {
     for (const file of ["schemas.ts", "types/probe.ts", "endpoints/probe.ts"])
       assert((await readFile(join(installed, "generated", file), "utf8")).length > 0)
     assert(!(await readdir(installed)).some((name) => name.includes(".validators.")))
-    await writeFile(join(installed, "config.mjs"), 'export default { namespace: "tag" }\n')
+    await writeFile(
+      join(installed, "config.mjs"),
+      'export default { namespace: "tag", prefix: "configured-market" }\n',
+    )
     await command(installed, "pnpm", [
       "exec",
       "accord",
@@ -191,6 +197,19 @@ async function main(): Promise<void> {
       "--output",
       "configured.ts",
     ])
+    const configuredSource = await readFile(join(installed, "configured.ts"), "utf8")
+    assert.match(configuredSource, /defineApi\("configured-market",/)
+    const overriddenSource = await command(installed, "pnpm", [
+      "exec",
+      "accord",
+      "generate",
+      "openapi.json",
+      "--config",
+      "config.mjs",
+      "--prefix",
+      "override-market",
+    ])
+    assert.match(overriddenSource, /defineApi\("override-market",/)
     await writeFile(
       join(installed, "consumer.ts"),
       `import assert from "node:assert/strict"
@@ -203,7 +222,7 @@ const client = createClient(api, { baseUrl: "https://example.test/api", fetch: a
 } })
 assert.deepEqual(await client.probe.call(), { message: "ok" })
 await assert.rejects(createClient(api, {fetch:async () => Response.json({message:42})}).probe.call(), ValidationError)
-assert.equal(apiQuery(api.probe.call, {}).queryKey[0], "accord")
+assert.deepEqual(apiQuery(api.probe.call, {}).queryKey.slice(0, 2), ["harbor", "probe"])
 for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", "@accord/zod"]) {
   assert(!import.meta.resolve(name).includes("/packages/"), "Must load tarballs, not workspace sources")
 }

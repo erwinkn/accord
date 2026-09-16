@@ -89,7 +89,7 @@ export type GetUserContract = {
     "responses": GetUserResponses;
     "fullResponse": GetUserFullResponse;
 };
-export const api = defineApi("ff1dd6251c42ed1a", {
+export const api = defineApi("Accord users fixture", {
     "users": {
         "listUsers": defineEndpoint<ListUsersContract, "query">({
             "method": "GET",

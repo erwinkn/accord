@@ -3,6 +3,6 @@ import { defineApi } from "@accord/client";
 import { endpoints as importsEndpoints } from "./sdk/endpoints/imports.js";
 export type * from "./sdk/types/imports.js";
 export * from "./sdk/schemas.js";
-export const api = defineApi("0f2f07b43a1ba796", {
+export const api = defineApi("Data Imports", {
     "imports": importsEndpoints
 });

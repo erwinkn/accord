@@ -27,6 +27,8 @@ describe("owned generation goldens", () => {
   it("matches real generated types and metadata without a mocked type producer", async () => {
     const result = await generateFromFile(fixture("users.openapi.yaml"))
     expect(result.source).toBe(await readFile(golden("users.rendered.ts"), "utf8"))
+    expect(result.model.prefix).toBe("Accord users fixture")
+    expect(result.files["index.ts"]).toContain('defineApi("Accord users fixture", {')
   })
   it("is deterministic across complete generation runs", async () => {
     const first = await generateFromFile(fixture("users.openapi.yaml"), {
@@ -42,6 +44,7 @@ describe("owned generation goldens", () => {
     const directory = await mkdtemp(join(tmpdir(), "accord-modules-"))
     try {
       const result = await generateFromFile(fixture("users.openapi.yaml"), {
+        prefix: "harbor",
         validators: zodAdapter(),
       })
       await writeGeneratedSdk(join(directory, "sdk.ts"), result)
@@ -56,8 +59,10 @@ describe("owned generation goldens", () => {
       expect(result.files["endpoints/users.ts"]).not.toContain("export type")
       expect(result.files["endpoints/users.ts"]).toContain("import { defineEndpoint }")
       expect(result.files["endpoints/users.ts"]).not.toContain("createEndpointFactory")
-      expect(result.files["endpoints/users.ts"]).not.toContain(result.model.id)
-      expect(result.files["index.ts"]).toContain(`defineApi("${result.model.id}", {`)
+      expect(result.files["endpoints/users.ts"]).not.toContain(result.model.prefix)
+      expect(result.files["index.ts"]).toContain(`defineApi("${result.model.prefix}", {`)
+      expect(result.model.prefix).toBe("harbor")
+      expect(result.source).toContain('defineApi("harbor", {')
       expect(result.files["endpoints/users.ts"]).toContain("import {\n    ListUsers200Schema,")
       expect(result.files["schemas.ts"]).toContain("export const GetUser200Schema = UserSchema")
       expect(result.source).not.toMatch(/@ts-(?:ignore|nocheck)|\.validators\.js/)
