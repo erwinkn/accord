@@ -1,7 +1,7 @@
 import type { StandardSchemaV1 } from "@accord/client/validation"
 import { type } from "arktype"
-import { z } from "zod"
-import { TasksGetResponseT200ApplicationJsonSchema } from "../tasks/sdk.js"
+import type { z } from "zod"
+import { Get200Schema } from "../tasks/sdk.js"
 
 const ark = type.scope({}, { clone: false }).type
 
@@ -13,20 +13,6 @@ function isPathSegment(
 
 function issuePath(issue: StandardSchemaV1.Issue): PropertyKey[] {
   return (issue.path ?? []).map((segment) => (isPathSegment(segment) ? segment.key : segment))
-}
-
-/** Use parseAsync/safeParseAsync: Standard Schema permits asynchronous validation. */
-export function asZod<Input, Output>(schema: StandardSchemaV1<Input, Output>) {
-  return z.unknown().transform(async (value, context) => {
-    const result = await schema["~standard"].validate(value)
-    if (result.issues) {
-      for (const issue of result.issues) {
-        context.addIssue({ code: "custom", message: issue.message, path: issuePath(issue) })
-      }
-      return z.NEVER
-    }
-    return result.value
-  })
 }
 
 /** Accord's generated checks are synchronous. Async schemas need an async consumer. */
@@ -45,8 +31,8 @@ export function asArkType<Input, Output>(schema: StandardSchemaV1<Input, Output>
   })
 }
 
-export const zodTask = asZod(TasksGetResponseT200ApplicationJsonSchema)
-export const arkTask = asArkType(TasksGetResponseT200ApplicationJsonSchema)
+export const zodTask = Get200Schema
+export const arkTask = asArkType(Get200Schema)
 
 export type ZodTask = z.output<typeof zodTask>
 export type ArkTask = typeof arkTask.infer

@@ -10,7 +10,7 @@ flowchart TD
   D --> E[TypeScript AST and printer]
   D --> F[Endpoint plan]
   C --> G[Response schema projection]
-  G --> H[Ajv standalone checks and Standard Schema facade]
+  G --> H[Optional adapter: native Zod schemas]
   E --> I[Generated SDK]
   F --> I
   H --> I
@@ -30,7 +30,7 @@ The type emitter reads the schema graph and representation decision directly int
 
 ## Generated endpoints
 
-The output combines ordinary exported TypeScript types with `defineEndpoint<Contract, "query" | "mutation">({ method, path, ... })`. The contract has the argument tuple, input, successful result, error payload, per-status payloads, and full-response union. It exists only in TypeScript: the object has no `contract`, `kind`, or `plan` field. `defineEndpoint` adds an internal symbol so the client can distinguish an endpoint from a namespace. Validation is separate and lives in the optional response `schema` entries.
+The output combines ordinary exported TypeScript types with `defineEndpoint<Contract, "query" | "mutation">({ method, path, ... })`. The contract has the argument tuple, input, successful result, error payload, per-status payloads, and full-response union. It exists only in TypeScript: the object has no `contract` or `plan` wrapper; `kind` is `query` or `mutation`, and `id` is the operation ID. `defineEndpoint` adds an internal symbol so the client can distinguish an endpoint from a namespace. Validation lives in optional response `schema` entries. `createEndpointFactory(scope)` attaches one stable SDK identity through a symbol without repeating a public `apiId` field. A batch allocator gives schemas short names, qualifying every participant in a conflict.
 
 The plan describes how to bind inputs, serialize request representations, select status/media, decode responses, and choose payload versus status-envelope results. Status selectors stay compact (`200`, `2XX`, `default`); runtime and type generation share exact/range/default precedence.
 
@@ -44,33 +44,25 @@ Request bodies default to `mode: "merge"`, optional requiredness, and JSON when 
 
 `createClient(api, { baseUrl })` controls routing. Generated endpoints do not contain OpenAPI `servers`, and there are no `server` or `serverVariables` client options. A regional or operation-specific origin belongs in a separate client or request middleware. Without `baseUrl`, the client uses the browser origin, or `http://localhost` outside a browser.
 
-Authentication currently means placing caller-provided credentials on a request:
+Authentication is a runtime extension point. `token` accepts a static string or callback; `auth` accepts an `AuthProvider` or a map keyed by security scheme name. Providers receive mutable headers/URL and selected scheme/scopes. Generated `security` alternatives retain OR/AND semantics; public/anonymous operations do not acquire tokens. Per-call headers override provider headers. Shared scheme metadata controls API-key placement and cache-key redaction.
 
-```ts
-const client = createClient(api, {
-  baseUrl: "https://api.example.com",
-  credentials: { bearer: accessToken },
-})
-```
-
-An endpoint's `security` lists alternatives: entries are OR, schemes within an entry are AND. `securitySchemes` tells the executor where to put each named credential (Bearer/Basic authorization, API-key header/query/cookie). Scheme dictionaries are shared constants in the generated module; the dictionary also identifies sensitive headers/query parameters for cache-key redaction, even on public operations. Public endpoints omit `security`; APIs without security schemes omit both fields. An explicit empty security alternative permits an anonymous call. The executor uses the first alternative whose credentials were supplied, and leaves authentication to caller headers/server policy if none match.
-
-There is no login, refresh, OAuth redirect, or scope enforcement. OAuth/OpenID entries accept an already-acquired bearer token; mutual TLS requires a configured Fetch transport. Callers can instead provide global headers, a header resolver for fresh tokens, or per-call headers. Per-call headers override automatically applied credentials. React Query excludes recognized credential values from keys and isolates client contexts.
+Built-ins cover Bearer, Basic, API keys, custom callbacks, and OAuth client credentials. The client-credentials provider can use declared token URL/scopes, caches by token URL and scope set, and shares in-flight acquisitions. Authorization-code/PKCE/device flows remain application concerns behind callbacks. React Query uses opaque auth context identity and a public `cacheScope`. See [authentication](authentication.md) for the complete contract.
 
 The runtime reconstructs flattened closed bodies using the model's fields and preserves nested bodies whole. It delegates serialization to shared codecs and does not reparse caller inputs. Generated validators execute only on responses. Full results and errors retain Fetch response metadata.
 
 ## Validation and library interoperability
 
-The optional validator backend projects response read/write rules and references into real JSON Schema trees and compiles them with Ajv at generation time. Referenced models share checks. Bundled JavaScript checks and helpers are embedded in a private factory at the end of the generated TypeScript file. A mechanical AST pass annotates their dynamic JavaScript internals; a `ValidationFunction` boundary keeps that implementation separate from the public types without disabling TypeScript checking. Schema files are not interpreted at runtime, and there is no `eval` or runtime compilation. The generated facade implements [Standard Schema](https://standardschema.dev/), so compatible consumers can accept it directly.
+Validation is disabled by default. Core projects decoded response schemas from the same semantic graph used for types and metadata, then delegates to an explicit `ValidationAdapter`. Its stable interface receives normalized JSON Schema documents, export names/types, reference types, and a batch name allocator; it returns TypeScript imports and declarations.
 
-`createAccordValidators()` runs once during SDK module initialization and returns the private compiled check functions. Names such as `check0` have no API meaning. Exported `standardSchema<T>(check)` facades add the inferred type and translate validation errors to Standard Schema issues. Endpoints reference those exported schemas directly; consumers can also import them to validate data outside HTTP. There is no additional `responseSchemas` object.
+`@accord/zod` generates native Zod schemas. Simple objects expose `.shape` directly; arrays, unions, references and constraints become ordinary constructors or refinements. Shared models have named definitions and recursion uses `z.lazy`. The schemas already implement Standard Schema v1, so the client needs no library-specific validation integration. There are no numbered checks, registry factories, or validator sidecar files.
 
-Standard Schema is a validation interface, not a portable description from which a native Zod/ArkType object tree can be reconstructed. A downstream wrapper delegates validation; it does not gain the target library's object-shape introspection. Native library-specific emitters remain a later backend option.
+The adapter fails generation on features it cannot represent faithfully, including dynamic references and branch-dependent unevaluated properties. See [its exact support boundary](../packages/zod/README.md). A small optional refinement module supports complex constraints without interpreting schema documents. The client preserves the original decoded value after validation; consumers calling native `.parse()` get normal Zod semantics, including copying.
 
 ## Package boundaries
 
-- `@accord/codegen`: document loading, semantic compilation, TypeScript AST emission, optional validator compilation, CLI and atomic output writes.
-- `@accord/client`: endpoint contract types, shared Fetch execution, serialization/decoding, errors, optional Standard Schema facade.
+- `@accord/codegen`: document loading, semantic compilation, TypeScript AST emission, adapter-driven schema emission, CLI and atomic output writes.
+- `@accord/client`: endpoint contract types, shared Fetch execution, serialization/decoding, errors, pluggable auth, and library-independent Standard Schema consumption.
+- `@accord/zod`: optional native Zod emitter and shared refinement helpers.
 - `@accord/react-query`: option factories/hooks and cache identity. It consumes endpoints rather than reinterpreting OpenAPI.
 
 The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,type-emitter,render-sdk,validators}.ts`, `packages/client/src/{types,client,codecs}.ts`, and `packages/react-query/src/index.ts`.

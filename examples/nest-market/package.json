@@ -32,6 +32,8 @@
     "@types/node": "26.5.1",
     "@types/react": "^19.3.0",
     "tsx": "4.23.13",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "@accord/zod": "workspace:*",
+    "zod": "4.4.3"
   }
 }

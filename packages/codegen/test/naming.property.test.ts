@@ -1,6 +1,6 @@
 import fc from "fast-check"
 import { describe, expect, it } from "vitest"
-import { pathNamespace, sanitizeIdentifier } from "../src/naming.js"
+import { allocateIdentifiers, pathNamespace, sanitizeIdentifier } from "../src/naming.js"
 import { canonicalize } from "../src/object.js"
 
 describe("naming properties", () => {
@@ -13,6 +13,23 @@ describe("naming properties", () => {
         expect(first).toMatch(/^[A-Za-z_$][A-Za-z0-9_$]*$/)
       }),
       { numRuns: 1_000 },
+    )
+  })
+
+  it("allocates distinct identifiers independently of request order", () => {
+    fc.assert(
+      fc.property(fc.array(fc.string(), { maxLength: 40 }), (values) => {
+        const requests = values.map((value, index) => ({
+          key: String(index),
+          core: sanitizeIdentifier(value),
+          qualifiers: [{ prefix: "Qualified" }],
+        }))
+        const names = allocateIdentifiers(requests, ["Qualified_", "_"])
+        expect(new Set(names.values()).size).toBe(requests.length)
+        expect(names).toEqual(allocateIdentifiers([...requests].reverse(), ["Qualified_", "_"]))
+        for (const name of names.values()) expect(name).toMatch(/^[A-Za-z_$][A-Za-z0-9_$]*$/)
+      }),
+      { numRuns: 500 },
     )
   })
 

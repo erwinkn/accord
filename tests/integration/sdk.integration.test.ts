@@ -87,7 +87,7 @@ describe("OpenAPI -> generated API -> client -> HTTP server", () => {
     expect(error).toMatchObject({
       status: 404,
       body: { code: "not_found", message: "User missing was not found" },
-      endpoint: { operationId: "getUser" },
+      endpoint: { id: "getUser" },
     })
   })
 })

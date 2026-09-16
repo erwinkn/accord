@@ -89,7 +89,7 @@ describe("compile", () => {
       mode: "separate",
     })
     expect(api.operations[1]?.body?.fields).toEqual(["name"])
-    expect(api.operations[2]?.plan.operationKind).toBe("query")
+    expect(api.operations[2]?.plan.kind).toBe("query")
   })
 
   it("lets operation parameters override path-item parameters", () => {

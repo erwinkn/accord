@@ -24,7 +24,7 @@ pnpm test:scale
 | `pnpm test:harness` | Diagnostic matching, isolation, registry integrity, source-format equivalence, input immutability |
 | `pnpm test:conformance:strict` | Every registered type/wire/response/cache invariant must pass |
 | `pnpm test:fuzz` | Seeded generation, semantic compilation, and real loopback HTTP exchanges, with shrinking |
-| `pnpm test:distribution` | Pack all three packages, install outside the workspace, generate validators, compile and execute a consumer, bundle for browsers |
+| `pnpm test:distribution` | Pack all four packages, install outside the workspace, generate validators, compile and execute a consumer, bundle for browsers |
 | `pnpm test:scale` | Generate and strictly compile a 300-operation SDK and calls to every operation |
 
 Use `ACCORD_CONFORMANCE_CASE=representation.xml-roundtrip pnpm test:conformance` for one case. Increase fuzzing with `ACCORD_FUZZ_RUNS=100 pnpm test:fuzz`. Failures print the seed and `ACCORD_FUZZ_PATH` needed to replay the minimized case.
@@ -54,7 +54,7 @@ Most conformance cases skip rechecking dependency declarations to isolate type/w
 
 Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, Unicode/reserved characters, numeric/boolean values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Object-key reordering must preserve generated source and semantic metadata. Failures retain a minimized executable reproduction.
 
-Generated snapshots and validator bundles are excluded from handwritten-code lint rules; they are compiled, executed, and compared against regeneration. Narrow inline lint exceptions explain genuine runtime dispatch and external validation boundaries. Request inputs are not reparsed to satisfy a lint rule.
+Generated snapshots and schemas are excluded from handwritten-code lint rules; they are compiled, executed, and compared against regeneration. Narrow inline lint exceptions explain genuine runtime dispatch and external validation boundaries. Request inputs are not reparsed to satisfy a lint rule.
 
 ## Precision and support boundaries
 
@@ -62,11 +62,11 @@ This alpha targets ordinary outgoing HTTP SDKs using OpenAPI 3.0/3.1 and Fetch. 
 
 TypeScript types express structural contracts. Numeric bounds, general regular expressions, oneOf exclusivity, and general JSON Schema logical constraints still require response validators for enforcement. TypeScript cannot directly represent “every unknown key has this type except these heterogeneous named properties”; such index signatures include named property types. Omitted additionalProperties remains open. Caller-side runtime validation is intentionally absent.
 
-Advanced `$dynamicRef` specialization, arbitrary conditional/negation type precision, overlapping pattern constraints, and unusual XML/form encoding combinations need broader compatibility work. Preserve valid source constraints in the semantic model and validator backend; do not infer complete support from a successful type snapshot. Custom JSON Schema dialects, OpenAPI 3.2, callback/webhook server generation, native Zod/ArkType emitters, and automatic login/retry/pagination/streaming policies are outside this alpha.
+Advanced `$dynamicRef` specialization, arbitrary conditional/negation type precision, overlapping pattern constraints, and unusual XML/form encoding combinations need broader compatibility work. Preserve valid source constraints in the semantic model and validator backend; do not infer complete support from a successful type snapshot. Custom JSON Schema dialects, OpenAPI 3.2, callback/webhook server generation, native adapters beyond Zod, and automatic interactive login/retry/pagination/streaming policies are outside this alpha.
 
 XML decoding uses declared names/prefixes and rejects document type/entity declarations. Browser bundling is verified; a browser/CORS/credential interoperability matrix is separate work. Fetch controls redirects and transport restrictions. Full response wrappers expose the original `Response`, whose body may have been consumed by decoding.
 
-Response validators check decoded bodies. They preserve values rather than transforming/coercing them. They cannot validate an undeclared success status/media pairing, which instead raises a decode error. HTTP error status/headers survive malformed error bodies. Validators are embedded in the single generated SDK file and compile under the same strict settings as its public types.
+Response validators check decoded bodies. They preserve values rather than transforming/coercing them. They cannot validate an undeclared success status/media pairing, which instead raises a decode error. HTTP error status/headers survive malformed error bodies. Native Zod schemas are emitted in the single generated SDK file and compile under the same strict settings as its public types.
 
 ## Reports
 
@@ -77,3 +77,5 @@ Response validators check decoded bodies. They preserve values rather than trans
 - `artifacts/scale/report.json`: generated size, generation time and TypeScript diagnostics.
 
 Primary references: [OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html), [OpenAPI 3.0.3](https://spec.openapis.org/oas/v3.0.3.html), [Standard Schema](https://standardschema.dev/), [TypeScript compiler API](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API), [fast-check replay](https://fast-check.dev/docs/core-blocks/runners/).
+
+The optional Zod adapter has an explicit [support boundary](../packages/zod/README.md#explicit-limits). Dynamic-reference and conditional unevaluated-keyword support in the semantic model does not imply that every validation adapter implements those features. Adapter tests cover rejection instead of silent weakening.

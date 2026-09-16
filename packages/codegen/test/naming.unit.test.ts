@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  allocateIdentifiers,
   fallbackOperationName,
   operationName,
   pathNamespace,
@@ -49,5 +50,66 @@ describe("identifier generation", () => {
     expect(fallbackOperationName("GET", "/users/{user-id}/posts/{postId}")).toBe(
       "getByUserIdAndPostId",
     )
+  })
+})
+
+describe("batch identifier allocation", () => {
+  it("keeps unique names short and qualifies every conflicting name", () => {
+    const requests = [
+      {
+        key: "documents",
+        core: "Get404",
+        suffix: "Schema",
+        qualifiers: [{ suffix: "Json" }, { prefix: "Documents" }],
+      },
+      {
+        key: "files",
+        core: "Get404",
+        suffix: "Schema",
+        qualifiers: [{ suffix: "Json" }, { prefix: "Files" }],
+      },
+      { key: "unique", core: "Create", suffix: "Input" },
+    ]
+    expect(Object.fromEntries(allocateIdentifiers(requests))).toEqual({
+      documents: "DocumentsGet404Schema",
+      files: "FilesGet404Schema",
+      unique: "CreateInput",
+    })
+    expect(allocateIdentifiers(requests)).toEqual(allocateIdentifiers([...requests].reverse()))
+  })
+  it("uses media suffixes when they suffice, without adding namespace prefixes", () => {
+    expect(
+      Object.fromEntries(
+        allocateIdentifiers([
+          {
+            key: "json",
+            core: "Get200",
+            suffix: "Schema",
+            qualifiers: [{ suffix: "Json" }, { prefix: "Documents" }],
+          },
+          {
+            key: "text",
+            core: "Get200",
+            suffix: "Schema",
+            qualifiers: [{ suffix: "Plain" }, { prefix: "Documents" }],
+          },
+        ]),
+      ),
+    ).toEqual({ json: "Get200JsonSchema", text: "Get200PlainSchema" })
+  })
+  it("handles reserved identifiers, cascading collisions, and exhausted qualifiers", () => {
+    const requests = [
+      { key: "a", core: "Get", qualifiers: [{ prefix: "Documents" }] },
+      { key: "b", core: "Get", qualifiers: [{ prefix: "Files" }] },
+      { key: "c", core: "DocumentsGet", qualifiers: [{ prefix: "Other" }] },
+      { key: "d", core: "Reserved" },
+      { key: "e", core: "Reserved" },
+    ]
+    const names = allocateIdentifiers(requests, ["Reserved"])
+    expect(new Set(names.values()).size).toBe(requests.length)
+    expect(names.get("a")).not.toBe("DocumentsGet")
+    expect(names.get("c")).not.toBe("DocumentsGet")
+    expect([...names.values()]).not.toContain("Reserved")
+    expect(names).toEqual(allocateIdentifiers([...requests].reverse(), ["Reserved"]))
   })
 })

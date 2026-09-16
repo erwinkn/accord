@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import { resolve } from "node:path"
 import { pathToFileURL } from "node:url"
+import { resolve as resolveModule } from "import-meta-resolve"
 import { generateFromFile, writeGeneratedSdk } from "./generate.js"
 import type { AccordCodegenConfig, BodyMode, NamespaceStrategy } from "./types.js"
+import type { ValidationAdapterModule } from "./validation-adapter.js"
 
 interface CliArguments {
   input: string
@@ -11,7 +13,7 @@ interface CliArguments {
   namespace?: NamespaceStrategy
   bodyMode?: BodyMode
   basePath?: string
-  validators?: boolean
+  validators?: string
 }
 
 interface ConfigModule {
@@ -22,7 +24,7 @@ interface MutableCodegenConfig {
   namespace?: NamespaceStrategy
   basePath?: string
   body?: NonNullable<AccordCodegenConfig["body"]>
-  validators?: boolean
+  validators?: NonNullable<AccordCodegenConfig["validators"]>
   operationKinds?: NonNullable<AccordCodegenConfig["operationKinds"]>
 }
 
@@ -30,7 +32,12 @@ async function main(): Promise<void> {
   const args = parseArguments(process.argv.slice(2))
   const fileConfig = args.configPath ? await importConfig(args.configPath) : {}
   const config: MutableCodegenConfig = { ...fileConfig }
-  if (args.validators) config.validators = true
+  if (args.validators) {
+    const module: ValidationAdapterModule = await import(
+      resolveModule(args.validators, pathToFileURL(resolve("package.json")).href)
+    )
+    config.validators = module.default()
+  }
   if (args.namespace !== undefined) config.namespace = args.namespace
   if (args.basePath !== undefined) config.basePath = args.basePath
   if (args.bodyMode !== undefined) config.body = { ...fileConfig.body, mode: args.bodyMode }
@@ -64,7 +71,10 @@ function parseArguments(values: readonly string[]): CliArguments {
       continue
     }
 
-    if (value === "--validators") continue
+    if (value === "--validators") {
+      index += 1
+      continue
+    }
     const next = args[index + 1]
     if (value === "--output" || value === "-o") {
       output = requireValue(value, next)
@@ -96,7 +106,8 @@ function parseArguments(values: readonly string[]): CliArguments {
 
   if (!input) throw new TypeError("An OpenAPI input file is required")
   const parsed: CliArguments = { input }
-  if (values.includes("--validators")) parsed.validators = true
+  const adapterIndex = values.indexOf("--validators")
+  if (adapterIndex >= 0) parsed.validators = requireValue("--validators", values[adapterIndex + 1])
   if (output !== undefined) parsed.output = output
   if (configPath !== undefined) parsed.configPath = configPath
   if (namespace !== undefined) parsed.namespace = namespace
@@ -121,7 +132,7 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 
 function printUsage(): void {
   process.stdout.write(
-    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators              Generate Standard Schema response validators\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
   )
 }
 

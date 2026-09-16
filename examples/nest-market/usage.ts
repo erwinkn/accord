@@ -3,7 +3,7 @@ import { apiQuery } from "@accord/react-query"
 import { api } from "./sdk/sdk.js"
 
 export function createMarketClient(baseUrl: string, token: string) {
-  return createClient(api, { baseUrl, credentials: { bearer: token }, cacheScope: "demo-account" })
+  return createClient(api, { baseUrl, token, cacheScope: "demo-account" })
 }
 export type MarketClient = ReturnType<typeof createMarketClient>
 

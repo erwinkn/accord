@@ -45,7 +45,7 @@ export const generationCases: Fixture[] = [
     consumer: {
       source: consumer(`export async function run() {
         const endpoint = api.probe.call
-        for (const field of ["kind", "plan", "parameters", "servers", "resultMode", "security", "securitySchemes"])
+        for (const field of ["apiId", "plan", "parameters", "servers", "resultMode", "security", "securitySchemes"])
           assert.equal(Object.hasOwn(endpoint, field), false, field)
         assert.deepEqual(endpoint.pathParams, [{ name: "id" }])
         assert.deepEqual(endpoint.queryParams, [{ name: "tags" }])
@@ -85,7 +85,7 @@ export const generationCases: Fixture[] = [
       source: consumer(`type Namespace = Expect<Equal<keyof typeof api.users, "posts">>
       export async function run() {
         assert.equal(api.users.posts.listPosts.path, "/api/v1/users/{userId}/posts")
-        assert.equal(api.users.posts.listPosts.operationId, "ignored")
+        assert.equal(api.users.posts.listPosts.id, "ignored")
       }`),
     },
   },

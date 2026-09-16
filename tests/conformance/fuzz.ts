@@ -3,6 +3,7 @@ import { cp, mkdir, rm, stat, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import type { JsonObject, JsonValue } from "@accord/codegen"
 import { generate } from "@accord/codegen"
+import { zodAdapter } from "@accord/zod"
 import fc from "fast-check"
 import { consumer, document, integerSchema, references, stringSchema } from "./fixture.js"
 import { root, verifyFixture } from "./harness.js"
@@ -117,10 +118,10 @@ async function main(): Promise<void> {
         ),
         openapi: sample.version,
       }
-      const config = {
+      const baseConfig = {
         body: { mode: sample.mode === "merge" ? "merge" : "separate" },
-        validators: sample.validators,
       } as const
+      const config = sample.validators ? { ...baseConfig, validators: zodAdapter() } : baseConfig
       const [first, second] = await Promise.all([
         generate(inputDocument, config),
         generate(reordered(inputDocument), config),

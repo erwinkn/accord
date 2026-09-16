@@ -21,11 +21,10 @@ type Contract<I> = {
   fullResponse: HttpResult<200, User>
 }
 const getUser = defineEndpoint<Contract<GetInput>, "query">({
-  apiId: "unit",
   method: "GET",
   path: "/users/{userId}",
-  operationId: "getUser",
-  operationKind: "query",
+  id: "getUser",
+  kind: "query",
   pathParams: [{ name: "userId" }],
   queryParams: [{ name: "includePosts" }],
   headerParams: [{ name: "x-request-id" }],
@@ -35,11 +34,10 @@ const getUser = defineEndpoint<Contract<GetInput>, "query">({
   ],
 })
 const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
-  apiId: "unit",
   method: "POST",
   path: "/users",
-  operationId: "createUser",
-  operationKind: "mutation",
+  id: "createUser",
+  kind: "mutation",
   requestBody: {
     required: true,
     content: [{ mediaType: "application/json" }],

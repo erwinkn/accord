@@ -1,31 +1,38 @@
-import { createRequire } from "node:module"
-import { dirname } from "node:path"
-import { _, Ajv2020 } from "ajv/dist/2020.js"
-import { build } from "esbuild"
 import type { Compilation } from "./compile.js"
 import type { DocumentStore } from "./loader.js"
 import { object, pointerSegment } from "./loader.js"
 import type { MediaModel, SchemaId } from "./model.js"
+import { allocateIdentifiers, sanitizeTypeIdentifier } from "./naming.js"
 import { isObject, isString } from "./object.js"
 import type { JsonObject, JsonValue } from "./types.js"
-import { validatorSource } from "./validator-source.js"
+import type { ValidationAdapter } from "./validation-adapter.js"
 
-// Ajv's CJS plugin exports do not expose a callable default under NodeNext's interop types.
-const require = createRequire(import.meta.url)
-const addFormats: typeof import("ajv-formats").default = require("ajv-formats")
-const standalone: typeof import("ajv/dist/standalone/index.js").default = require("ajv/dist/standalone/index.js")
-
-export interface ValidatorBinding {
-  readonly exportName: string
-  readonly binary: boolean
-  readonly schema: SchemaId
-}
 export interface ValidatorOutput {
-  readonly source: string
-  readonly bindings: ReadonlyMap<MediaModel, ValidatorBinding>
+  readonly adapter: ValidationAdapter
+  readonly referenceSchemas: ReadonlyMap<string, SchemaId>
+  readonly documents: readonly JsonObject[]
+  readonly bindings: ReadonlyMap<MediaModel, boolean | JsonObject>
 }
 
-/** Place source schema trees under real JSON Schema keywords before handing them to Ajv.
+function validationTarget(compilation: Compilation, initial: SchemaId): SchemaId {
+  let schema = initial
+  const visited = new Set<SchemaId>()
+  while (!visited.has(schema)) {
+    visited.add(schema)
+    const node = compilation.graph.get(schema)
+    if (
+      !node.reference ||
+      !isObject(node.rules) ||
+      Object.keys(node.rules).length !== 1 ||
+      !isString(node.rules["$ref"])
+    )
+      return schema
+    schema = node.reference
+  }
+  return schema
+}
+
+/** Place source schema trees under real JSON Schema keywords before handing them to a validation adapter.
  * OpenAPI paths/media names are not schema keywords; passing the whole API to a schema
  * walker can misinterpret instance data and fails to escape pointers under unknown keys.
  */
@@ -36,12 +43,13 @@ interface ValidatorDocuments {
 function validationDocuments(
   compilation: Compilation,
   store: DocumentStore,
+  selectedSchemas: readonly SchemaId[],
   binarySchemas: ReadonlySet<SchemaId> = new Set(),
   context = "base",
 ): ValidatorDocuments {
   const graph = compilation.graph
   const nodes = [...graph.nodes.values()].filter((node) => node.id !== graph.any)
-  const roots = nodes.filter(
+  const allRoots = nodes.filter(
     (node) =>
       !nodes.some(
         (parent) =>
@@ -50,18 +58,68 @@ function validationDocuments(
           node.source.pointer.startsWith(`${parent.source.pointer}/`),
       ),
   )
+  // Keep whole lexical roots (including dynamic anchors), but only roots reachable from responses.
+  const included = new Set<SchemaId>()
+  const include = (id: SchemaId): void => {
+    if (id === graph.any) return
+    const node = graph.get(id)
+    const root = allRoots.find(
+      (root) =>
+        root.source.document === node.source.document &&
+        (root === node || node.source.pointer.startsWith(`${root.source.pointer}/`)),
+    )!
+    if (included.has(root.id)) return
+    included.add(root.id)
+    for (const child of nodes)
+      if (
+        child.source.document === root.source.document &&
+        (child === root || child.source.pointer.startsWith(`${root.source.pointer}/`)) &&
+        child.reference
+      )
+        include(child.reference)
+  }
+  for (const id of selectedSchemas) include(id)
+  const roots = allRoots.filter((root) => included.has(root.id))
+  const named = new Map([...graph.named].map(([name, id]) => [id, name]))
+  const rootNames = allocateIdentifiers(
+    roots.map((root) => {
+      const operation = compilation.model.operations.find((operation) =>
+        operation.responses.some((response) =>
+          response.media.some((media) => media.schema === root.id),
+        ),
+      )
+      const response = operation?.responses.find((response) =>
+        response.media.some((media) => media.schema === root.id),
+      )
+      const file =
+        new URL(root.source.document).pathname
+          .split("/")
+          .at(-1)
+          ?.replace(/\.[^.]+$/, "") ?? "External"
+      const core =
+        named.get(root.id) ??
+        (operation ? `${operation.exportPath.at(-1)}${response!.status}` : file)
+      return {
+        key: root.id,
+        core: sanitizeTypeIdentifier(core),
+        qualifiers: [
+          { prefix: sanitizeTypeIdentifier(operation?.exportPath.slice(0, -1).join(" ") ?? file) },
+        ],
+      }
+    }),
+  )
   const references = new Map<SchemaId, string>()
   const containers = new Map<string, { uri: string; definitions: { [key: string]: JsonValue } }>()
   for (const root of roots) {
     let container = containers.get(root.source.document)
     if (!container) {
       container = {
-        uri: `urn:accord:${compilation.model.id}:${context}:resource${containers.size}`,
+        uri: `urn:accord:${context}:schemas${containers.size || ""}`,
         definitions: Object.create(null),
       }
       containers.set(root.source.document, container)
     }
-    const key = `schema${Object.keys(container.definitions).length}`
+    const key = rootNames.get(root.id)!
     container.definitions[key] = true
     for (const node of nodes) {
       if (
@@ -70,7 +128,7 @@ function validationDocuments(
       ) {
         references.set(
           node.id,
-          `${container.uri}#/$defs/${key}${node.source.pointer.slice(root.source.pointer.length)}`,
+          `${container.uri}#/$defs/${key}${node.source.pointer.slice(root.source.pointer.length).split("/").map(encodeURIComponent).join("/")}`,
         )
       }
     }
@@ -81,8 +139,8 @@ function validationDocuments(
     if (node && binarySchemas.has(node.id))
       return {
         accordBinary: {
-          minimum: graph.annotation(node.id, "minLength") ?? 0,
-          maximum: graph.annotation(node.id, "maxLength") ?? Number.MAX_SAFE_INTEGER,
+          minByteLength: graph.annotation(node.id, "minLength") ?? 0,
+          maxByteLength: graph.annotation(node.id, "maxLength") ?? Number.MAX_SAFE_INTEGER,
         },
       }
     if (Array.isArray(value))
@@ -154,48 +212,23 @@ function validationDocuments(
 export async function generateValidators(
   compilation: Compilation,
   store: DocumentStore,
+  adapter: ValidationAdapter,
 ): Promise<ValidatorOutput> {
-  const ajv = new Ajv2020({
-    strict: false,
-    validateSchema: false,
-    allErrors: true,
-    ownProperties: true,
-    code: { source: true, esm: true },
-    removeAdditional: false,
-    useDefaults: false,
-    coerceTypes: false,
-    // Shared components should have one implementation, including common error responses.
-    inlineRefs: false,
-    loopRequired: 3,
-    loopEnum: 5,
-  })
-  ajv.addKeyword({
-    keyword: "accordBinary",
-    schemaType: "object",
-    code(context) {
-      const { data, schemaCode } = context
-      context.fail(
-        _`!(${data} instanceof ArrayBuffer) || ${data}.byteLength < ${schemaCode}.minimum || ${data}.byteLength > ${schemaCode}.maximum`,
-      )
-    },
-  })
-  addFormats(ajv)
-  // Formats describing transport representations do not imply string transformations.
-  for (const format of ["binary", "byte", "int32", "int64", "float", "double", "password"])
-    ajv.addFormat(format, true)
-  const { documents, references } = validationDocuments(compilation, store)
-  for (const [uri, document] of documents) ajv.addSchema(document, uri)
-  const exports: { [key: string]: string } = Object.create(null)
-  const shared = new Map<string, string>()
-  const bindings = new Map<MediaModel, ValidatorBinding>()
-  let count = 0
+  const selectedSchemas = compilation.model.operations.flatMap((operation) =>
+    operation.responses.flatMap((response) =>
+      response.media
+        .filter((media) => media.codec.kind !== "bytes")
+        .map((media) => validationTarget(compilation, media.schema)),
+    ),
+  )
+  const { documents, references } = validationDocuments(compilation, store, selectedSchemas)
+  const allDocuments = new Map(documents)
+  const referenceSchemas = new Map([...references].map(([id, ref]) => [ref, id]))
+  const bindings = new Map<MediaModel, boolean | JsonObject>()
   for (const operation of compilation.model.operations) {
     for (const response of operation.responses) {
       for (const media of response.media) {
-        const exportName = `check${count++}`
-        const key = `urn:accord:${compilation.model.id}:${exportName}`
         const codec = media.codec
-        const binary = codec.kind === "bytes"
         let selectedReferences = references
         if (codec.kind === "form") {
           const binaries = new Set<SchemaId>()
@@ -207,68 +240,36 @@ export async function generateValidators(
                 binaries.add(field.multiple ? compilation.graph.edge(schema, "items") : schema)
           }
           if (binaries.size) {
-            const projected = validationDocuments(compilation, store, binaries, exportName)
-            for (const [uri, document] of projected.documents) ajv.addSchema(document, uri)
+            const context = encodeURIComponent(
+              `${operation.key}:${response.status}:${media.mediaType}`,
+            )
+            const projected = validationDocuments(
+              compilation,
+              store,
+              [validationTarget(compilation, media.schema)],
+              binaries,
+              context,
+            )
+            for (const [uri, document] of projected.documents) allDocuments.set(uri, document)
             selectedReferences = projected.references
+            for (const [id, ref] of projected.references) referenceSchemas.set(ref, id)
           }
         }
-        let schema = media.schema
-        // A bare static reference has no sibling constraints or dynamic scope of its own.
-        // Compile its target directly so every use of a component shares one check.
-        while (true) {
-          const node = compilation.graph.get(schema)
-          if (
-            !node.reference ||
-            !isObject(node.rules) ||
-            Object.keys(node.rules).length !== 1 ||
-            !isString(node.rules["$ref"])
-          )
-            break
-          schema = node.reference
-        }
-        let validator: JsonObject | undefined
-        if (compilation.graph.impossible(schema)) validator = { not: {} }
-        else if (binary) {
-          const rules = {
-            minLength: compilation.graph.annotation(media.schema, "minLength"),
-            maxLength: compilation.graph.annotation(media.schema, "maxLength"),
-          }
-          validator = { type: "integer", minimum: rules["minLength"] ?? 0 }
-          if (rules["maxLength"] !== undefined)
-            validator = { ...validator, maximum: rules["maxLength"] }
-        } else if (schema === compilation.graph.any) validator = {}
-        const identity = validator ? JSON.stringify(validator) : selectedReferences.get(schema)!
-        let sharedName = shared.get(identity)
-        if (!sharedName) {
-          sharedName = exportName
-          shared.set(identity, sharedName)
-          if (validator) ajv.addSchema(validator, key)
-          exports[sharedName] = validator ? key : identity
-        }
-        bindings.set(media, {
-          exportName: sharedName,
-          binary,
-          schema: media.schema,
-        })
+        const schema = validationTarget(compilation, media.schema)
+        let definition: boolean | JsonObject
+        if (compilation.graph.impossible(schema)) definition = false
+        else if (codec.kind === "bytes") {
+          const minimum = compilation.graph.annotation(media.schema, "minLength")
+          const maximum = compilation.graph.annotation(media.schema, "maxLength")
+          let limits: JsonObject = {}
+          if (minimum !== undefined) limits = { ...limits, minByteLength: minimum }
+          if (maximum !== undefined) limits = { ...limits, maxByteLength: maximum }
+          definition = { accordBinary: limits }
+        } else if (schema === compilation.graph.any) definition = true
+        else definition = { $ref: selectedReferences.get(schema)! }
+        bindings.set(media, definition)
       }
     }
   }
-  const javascript = standalone(ajv, exports)
-  const bundled = await build({
-    stdin: {
-      contents: javascript,
-      resolveDir: dirname(require.resolve("ajv/package.json")),
-      loader: "js",
-    },
-    bundle: true,
-    write: false,
-    format: "esm",
-    platform: "neutral",
-    target: "es2022",
-    logLevel: "silent",
-  })
-  return {
-    bindings,
-    source: validatorSource(bundled.outputFiles[0]!.text),
-  }
+  return { adapter, documents: [...allDocuments.values()], bindings, referenceSchemas }
 }

@@ -1,3 +1,4 @@
+import { zodAdapter } from "@accord/zod"
 import {
   bodyDocument,
   consumer,
@@ -42,7 +43,7 @@ export const representationCases: Fixture[] = [
         },
       },
     }),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`import { ValidationError } from "@accord/client"
       export async function run() {
@@ -123,7 +124,7 @@ export const representationCases: Fixture[] = [
       },
       "application/xml",
     ),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`export async function run() { await withServer(async baseUrl => {
       const result = await createClient(api, { baseUrl }).probe.call()
@@ -179,7 +180,7 @@ export const representationCases: Fixture[] = [
       },
       "head",
     ),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`type Empty = Expect<Equal<ResponseOf<typeof api.probe.call>, undefined>>
       export async function run() { await withServer(async baseUrl => {
@@ -204,7 +205,7 @@ export const representationCases: Fixture[] = [
         },
       },
     }),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source:
         consumer(`type Empty = Expect<Equal<Extract<ResponseOf<typeof api.probe.call>, {status: 204 | 205}>["data"], undefined>>
@@ -222,7 +223,7 @@ export const representationCases: Fixture[] = [
       ...responseDocument({ type: "string", nullable: true, enum: ["one", "two"] }),
       openapi: "3.0.3",
     },
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(
         'type Exact = Expect<Equal<ResponseOf<typeof api.probe.call>, "one" | "two">>',
@@ -242,7 +243,7 @@ export const representationCases: Fixture[] = [
       ],
       unevaluatedProperties: false,
     }),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`export async function run() { await withServer(async baseUrl => {
       assert.deepEqual(await createClient(api, { baseUrl }).probe.call(), { a: "ok", b: 2 }, "ACCORD_UNEVALUATED")
@@ -333,7 +334,7 @@ representationCases.push(
       },
       "application/x-www-form-urlencoded",
     ),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`export async function run() { await withServer(async baseUrl => {
       const result = await createClient(api, { baseUrl }).probe.call()
@@ -358,7 +359,7 @@ representationCases.push(
       },
       "multipart/form-data",
     ),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source:
         consumer(`type FileValue = Expect<Equal<ResponseOf<typeof api.probe.call>["file"], ArrayBuffer>>
@@ -378,7 +379,7 @@ representationCases.push(
     area: "types",
     reference: references.schema,
     document: responseDocument(false, "application/octet-stream"),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`import { ValidationError } from "@accord/client"
       type Impossible = Expect<Equal<ResponseOf<typeof api.probe.call>, never>>
@@ -404,7 +405,7 @@ representationCases.push(
     area: "responses",
     reference: references.response,
     document: responseDocument({ type: "boolean" }, "text/plain"),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`import { DecodeError } from "@accord/client"
       type BooleanResponse = Expect<Equal<ResponseOf<typeof api.probe.call>, boolean>>
@@ -419,7 +420,7 @@ representationCases.push(
     area: "responses",
     reference: references.schema,
     document: responseDocument({ type: "object", xml: { name: "person" } }, "application/xml"),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`import { DecodeError } from "@accord/client"
       export async function run() { await withServer(async baseUrl => {
@@ -428,3 +429,36 @@ representationCases.push(
     },
   },
 )
+
+representationCases.push({
+  id: "representation.unsupported-validator-semantics",
+  title: "Zod generation rejects branch-dependent unevaluated properties explicitly",
+  area: "generation",
+  reference: references.schema,
+  document: responseDocument({
+    type: "object",
+    anyOf: [{ properties: { a: stringSchema } }, { properties: { b: stringSchema } }],
+    unevaluatedProperties: false,
+  }),
+  config: { validators: zodAdapter() },
+  rejection: "VALIDATION_ADAPTER_ERROR",
+})
+
+representationCases.push({
+  id: "representation.zod-format-compilation",
+  title: "Native format expressions compile and validate through the public SDK",
+  area: "responses",
+  reference: references.schema,
+  document: responseDocument({
+    type: "object",
+    properties: { time: { type: "string", format: "time" }, integer: { type: "integer" } },
+    required: ["time", "integer"],
+    additionalProperties: false,
+  }),
+  config: { validators: zodAdapter() },
+  consumer: {
+    source: consumer(`export async function run() { await withServer(async baseUrl => {
+    assert.deepEqual(await createClient(api,{baseUrl}).probe.call(), {time:"12:30:00+02:00",integer:1e20})
+  }, {status:200, headers:{"content-type":"application/json"}, body:JSON.stringify({time:"12:30:00+02:00",integer:1e20})}) }`),
+  },
+})

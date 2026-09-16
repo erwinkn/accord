@@ -45,7 +45,6 @@ const METHODS = ["get", "post", "put", "patch", "delete", "head", "options", "tr
 export function compileApi(store: DocumentStore, config: AccordCodegenConfig): Compilation {
   const graph = new SchemaGraph(store)
   const root = object(store.root.value)
-  const apiId = config.apiId ?? ""
   const components = object(root["components"])
   for (const name of Object.keys(object(components["schemas"])).sort())
     graph.named.set(name, graph.add(store.child(store.root, "components", "schemas", name)))
@@ -60,13 +59,22 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
         fail("INVALID_DOCUMENT", `Invalid security location for ${name}`, at.source)
       securitySchemes[name] = { type, name: string(scheme["name"]), in: location }
     } else if (type === "http") securitySchemes[name] = { type, scheme: string(scheme["scheme"]) }
-    else if (type === "oauth2" || type === "openIdConnect" || type === "mutualTLS")
-      securitySchemes[name] = { type }
+    else if (type === "oauth2") {
+      const flow = object(object(scheme["flows"])["clientCredentials"])
+      securitySchemes[name] = flow["tokenUrl"]
+        ? {
+            type,
+            clientCredentials: {
+              tokenUrl: string(flow["tokenUrl"]),
+              scopes: Object.keys(object(flow["scopes"])),
+            },
+          }
+        : { type }
+    } else if (type === "openIdConnect" || type === "mutualTLS") securitySchemes[name] = { type }
     else fail("INVALID_DOCUMENT", `Invalid security scheme ${name}`, at.source)
   }
   const operations: OperationModel[] = []
   const operationIds = new Set<string>()
-  const typeNames = new Set<string>()
   const exportPaths: string[][] = []
   if (!isObject(root["paths"]))
     fail("INVALID_DOCUMENT", "Expected a paths object", store.root.source)
@@ -145,9 +153,6 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
       }
       exportPaths.push(exportPath)
       const typeName = sanitizeTypeIdentifier(exportPath.join(" "))
-      if (typeNames.has(typeName))
-        fail("TYPE_NAME_COLLISION", `Duplicate generated type ${typeName}`, at.source)
-      typeNames.add(typeName)
       const body = requestBody(at, params, graph, config, id, method, path)
       const responses = responseModels(at, graph).map((response) =>
         method === "head" ? { ...response, media: [] } : response,
@@ -172,12 +177,11 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
         override ?? (method === "get" || method === "head" ? "query" : "mutation")
       const security = securityRequirements(value["security"] ?? root["security"])
       let plan: EndpointPlan = {
-        apiId,
         // SAFETY: method comes from the exhaustive HTTP method list.
         method: method.toUpperCase() as HttpMethod,
         path,
-        operationId: id,
-        operationKind,
+        id,
+        kind: operationKind,
         ...parameterGroups(params),
         responses: responsePlans,
       }
@@ -275,7 +279,7 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
       .slice(0, 16)
   const resolved = operations.map((operation) => ({
     ...operation,
-    plan: { ...operation.plan, apiId: identity },
+    plan: operation.plan,
   }))
   return {
     graph,

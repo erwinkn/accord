@@ -6,7 +6,7 @@ import { promisify } from "node:util"
 
 const destination = resolve("artifacts/alpha")
 await mkdir(destination, { recursive: true })
-for (const name of ["client", "codegen", "react-query"]) {
+for (const name of ["client", "codegen", "react-query", "zod"]) {
   const result = await promisify(execFile)("pnpm", ["pack", "--pack-destination", destination], {
     cwd: resolve("packages", name),
   })

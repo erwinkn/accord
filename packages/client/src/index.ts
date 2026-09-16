@@ -1,8 +1,24 @@
+export type {
+  AuthProvider,
+  AuthRequest,
+  OAuthClientCredentialsOptions,
+  TokenSource,
+} from "./auth.js"
+export {
+  ApiKeyAuth,
+  BasicAuth,
+  BearerAuth,
+  CustomAuth,
+  OAuthClientCredentialsAuth,
+  StaticBearerAuth,
+} from "./auth.js"
 export {
   createClient,
   createEndpointClient,
+  createEndpointFactory,
   defaultRequestMediaType,
   defineEndpoint,
+  getEndpointScope,
   isEndpointDescriptor,
   resolveBaseUrl,
   selectResponse,

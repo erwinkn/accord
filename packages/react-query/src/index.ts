@@ -9,6 +9,7 @@ import {
   type EndpointFunction,
   type ErrorOf,
   type FullResponseOf,
+  getEndpointScope,
   type HttpError,
   type MutationEndpoint,
   type QueryEndpoint,
@@ -42,10 +43,10 @@ export type EndpointOf<T> =
   T extends BoundEndpoint<infer E> ? E : T extends EndpointDefinition ? T : never
 export type ApiEndpointKey = readonly [
   "accord",
-  apiId: string,
+  scope: string,
   method: string,
   path: string,
-  operationId: string,
+  id: string,
 ]
 export type CanonicalQueryValue =
   | string
@@ -95,13 +96,21 @@ function unpack<T extends QueryTarget | MutationTarget>(
 
 export function endpointIdentity(endpoint: EndpointDefinition): ApiEndpointKey {
   const plan = endpoint
-  return ["accord", plan.apiId, plan.method, plan.path, plan.operationId]
+  return [
+    "accord",
+    getEndpointScope(endpoint) ?? identity(endpoint),
+    plan.method,
+    plan.path,
+    plan.id,
+  ]
 }
 
 function contextKey(bound: BoundEndpoint<EndpointDefinition>): CanonicalQueryValue {
   const context = bound.context
   const credentialIdentity =
     context.credentials ||
+    context.auth ||
+    context.token ||
     context.headers ||
     context.fetch ||
     context.requestMiddleware?.length ||

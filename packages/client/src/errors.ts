@@ -36,7 +36,7 @@ export class DecodeError extends Error {
     readonly endpoint: EndpointDefinition,
     cause: unknown,
   ) {
-    super(`Could not decode response for ${endpoint.operationId}`, { cause })
+    super(`Could not decode response for ${endpoint.id}`, { cause })
     this.name = "DecodeError"
   }
 }
@@ -47,9 +47,7 @@ export class ValidationError extends Error {
     readonly response: Response,
     readonly endpoint: EndpointDefinition,
   ) {
-    super(
-      `Invalid response for ${endpoint.operationId}: ${issues.map((issue) => issue.message).join("; ")}`,
-    )
+    super(`Invalid response for ${endpoint.id}: ${issues.map((issue) => issue.message).join("; ")}`)
     this.name = "ValidationError"
   }
 }
@@ -59,7 +57,7 @@ export class NetworkError extends Error {
     readonly endpoint: EndpointDefinition,
     cause: unknown,
   ) {
-    super(`Request failed for ${endpoint.operationId}`, { cause })
+    super(`Request failed for ${endpoint.id}`, { cause })
     this.name = "NetworkError"
   }
 }

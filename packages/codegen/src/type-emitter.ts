@@ -80,8 +80,13 @@ export class TypeEmitter {
   constructor(
     readonly graph: SchemaGraph,
     reserved: readonly string[] = [],
+    allocated: ReadonlyMap<string, string> = new Map(),
   ) {
     for (const name of reserved) this.used.add(name)
+    for (const [key, name] of allocated) {
+      this.names.set(key, name)
+      this.used.add(name)
+    }
     for (const [name, id] of graph.named) {
       this.name(id, "response", sanitizeTypeIdentifier(name))
       this.name(id, "request", `${sanitizeTypeIdentifier(name)}Request`)

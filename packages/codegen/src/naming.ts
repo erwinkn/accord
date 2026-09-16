@@ -90,3 +90,58 @@ export function operationName(operation: JsonObject, method: string, path = ""):
   if (isNonEmptyString(operationId)) return sanitizeIdentifier(operationId)
   return fallbackOperationName(method, path)
 }
+
+/** A stable identity, a short name, and progressively stronger optional qualifiers. */
+export interface IdentifierRequest {
+  readonly key: string
+  readonly core: string
+  readonly suffix?: string
+  readonly qualifiers?: readonly { readonly prefix?: string; readonly suffix?: string }[]
+}
+
+/** Resolve names as a batch: every member of a collision is qualified, independent of order. */
+export function allocateIdentifiers(
+  requests: readonly IdentifierRequest[],
+  reserved: readonly string[] = [],
+): ReadonlyMap<string, string> {
+  const ordered = [...requests].sort((left, right) => left.key.localeCompare(right.key))
+  if (new Set(ordered.map((request) => request.key)).size !== ordered.length)
+    throw new TypeError("Identifier requests must have distinct keys")
+  const fixed = new Set(reserved)
+  const levels = new Map(ordered.map((request) => [request.key, 0]))
+  const ranks = new Map(ordered.map((request, index) => [request.key, index + 1]))
+  const candidate = (request: IdentifierRequest, level: number): string => {
+    const qualifiers = request.qualifiers ?? []
+    if (level === 0) return `${request.core}${request.suffix ?? ""}`
+    const qualifier = qualifiers[level - 1]
+    if (qualifier)
+      return `${qualifier.prefix ?? ""}${request.core}${qualifier.suffix ?? ""}${request.suffix ?? ""}`
+    // The stable rank resolves identical sanitized names; the round handles reserved/cascading collisions.
+    return `${request.core}_${ranks.get(request.key)}_${level - qualifiers.length}${request.suffix ?? ""}`
+  }
+  while (true) {
+    const groups = new Map<string, IdentifierRequest[]>()
+    for (const request of ordered) {
+      const name = candidate(request, levels.get(request.key)!)
+      const group = groups.get(name) ?? []
+      group.push(request)
+      groups.set(name, group)
+    }
+    let changed = false
+    for (const [name, group] of groups) {
+      if (group.length === 1 && !fixed.has(name)) continue
+      changed = true
+      let level = Math.max(...group.map((request) => levels.get(request.key)!)) + 1
+      while (true) {
+        const names = group.map((request) => candidate(request, level))
+        if (new Set(names).size === names.length && names.every((name) => !fixed.has(name))) break
+        level++
+      }
+      for (const request of group) levels.set(request.key, level)
+    }
+    if (!changed)
+      return new Map(
+        ordered.map((request) => [request.key, candidate(request, levels.get(request.key)!)]),
+      )
+  }
+}

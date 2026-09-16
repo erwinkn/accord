@@ -1,4 +1,12 @@
 import {
+  ApiKeyAuth,
+  type AuthProvider,
+  BasicAuth,
+  BearerAuth,
+  CustomAuth,
+  isAuthProvider,
+} from "./auth.js"
+import {
   decodeBody,
   defaultCodec,
   encodeBody,
@@ -39,7 +47,7 @@ import type {
   StatusSelector,
 } from "./types.js"
 
-import { endpointMarker } from "./types.js"
+import { endpointMarker, endpointScope } from "./types.js"
 
 function isRecord<T>(value: T): value is T & object {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -57,6 +65,20 @@ export function defineEndpoint<C extends EndpointContract, K extends OperationKi
   definition: EndpointPlan<K>,
 ): EndpointDefinition<C, K> {
   return { ...definition, [endpointMarker]: true }
+}
+
+/** Bind one stable SDK identity without repeating it in every endpoint's metadata. */
+export function createEndpointFactory(scope: string) {
+  return function scopedEndpoint<
+    C extends EndpointContract,
+    K extends OperationKind = OperationKind,
+  >(definition: EndpointPlan<K>): EndpointDefinition<C, K> {
+    return { ...defineEndpoint<C, K>(definition), [endpointScope]: scope }
+  }
+}
+
+export function getEndpointScope(endpoint: EndpointDefinition): string | undefined {
+  return endpoint[endpointScope]
 }
 
 export function createClient<const TApi extends object>(
@@ -211,7 +233,6 @@ async function execute<E extends EndpointDefinition>(
   if (cookies.length)
     headers.set("cookie", [headers.get("cookie"), ...cookies].filter(Boolean).join("; "))
   const url = resolveUrl(options, path)
-  applyCredentials(endpoint, options, headers, url)
   for (const [name, value] of new Headers(requestOptions.headers)) headers.set(name, value)
   const queryString = renderQueryString(query)
   if (queryString) url.search = [url.search.slice(1), queryString].filter(Boolean).join("&")
@@ -229,7 +250,7 @@ async function execute<E extends EndpointDefinition>(
       requestOptions.headers?.["content-type"] ?? defaultRequestMediaType(bodyPlan)
     const selected = selectMedia(bodyPlan.content, contentType)
     if (!selected)
-      throw new TypeError(`Unsupported request content-type ${contentType} for ${plan.operationId}`)
+      throw new TypeError(`Unsupported request content-type ${contentType} for ${plan.id}`)
     let value: RequestValue
     if (bodyPlan.mode === "separate") value = input["body"]
     else {
@@ -248,6 +269,10 @@ async function execute<E extends EndpointDefinition>(
       if (body !== undefined) init.body = body
     }
   }
+  await applyAuthentication(endpoint, options, headers, url, init)
+  // Explicit per-call headers have the final say, including Authorization.
+  for (const [name, value] of new Headers(requestOptions.headers))
+    if (name !== "content-type") headers.set(name, value)
   let context: RequestMiddlewareContext = { endpoint, input, url, init }
   for (const middleware of options.requestMiddleware ?? [])
     context = (await middleware(context)) ?? context
@@ -277,7 +302,7 @@ async function execute<E extends EndpointDefinition>(
       (!selectedResponse || (!noBody && selectedResponse.content.length > 0 && !selectedMedia))
     ) {
       throw new TypeError(
-        `Undeclared response ${response.status} ${actualMedia ?? "(missing content-type)"} for ${plan.operationId}`,
+        `Undeclared response ${response.status} ${actualMedia ?? "(missing content-type)"} for ${plan.id}`,
       )
     }
     data = await decodeBody(codec, response, plan.method)
@@ -307,44 +332,69 @@ async function execute<E extends EndpointDefinition>(
   }
 }
 
-function credentialText(value: Credential): string {
-  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
-  return typeof value === "string" ? value : `${value.username}:${value.password}`
+function legacyProvider(
+  credential: Credential,
+  scheme: NonNullable<EndpointDefinition["securitySchemes"]>[string],
+): AuthProvider {
+  if (scheme.type === "mutualTLS") return CustomAuth(() => {})
+  if (scheme.type === "apiKey") return ApiKeyAuth(String(credential))
+  if (scheme.type === "http" && scheme.scheme.toLowerCase() === "basic") {
+    // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch the existing typed credential union.
+    if (typeof credential !== "string") return BasicAuth(credential.username, credential.password)
+    const colon = credential.indexOf(":")
+    return BasicAuth(
+      colon < 0 ? credential : credential.slice(0, colon),
+      colon < 0 ? "" : credential.slice(colon + 1),
+    )
+  }
+  if (scheme.type === "http" && scheme.scheme.toLowerCase() !== "bearer")
+    return CustomAuth(({ headers }) => {
+      headers.set("authorization", `${scheme.scheme} ${String(credential)}`)
+    })
+  return BearerAuth(String(credential))
 }
-function applyCredentials(
+async function applyAuthentication(
   endpoint: EndpointDefinition,
   options: ClientOptions,
   headers: Headers,
   url: URL,
-): void {
-  const credentials = options.credentials ?? {}
+  init: RequestInit,
+): Promise<void> {
+  const providers = new Map<string, AuthProvider>()
+  for (const [name, scheme] of Object.entries(endpoint.securitySchemes ?? {})) {
+    const auth = options.auth
+    const configured = auth
+      ? isAuthProvider(auth)
+        ? auth
+        : Object.hasOwn(auth, name)
+          ? auth[name]
+          : undefined
+      : undefined
+    const credential =
+      options.credentials && Object.hasOwn(options.credentials, name)
+        ? options.credentials[name]
+        : undefined
+    const bearer =
+      scheme.type === "oauth2" ||
+      scheme.type === "openIdConnect" ||
+      (scheme.type === "http" && scheme.scheme.toLowerCase() === "bearer")
+    const provider =
+      configured ??
+      (credential !== undefined
+        ? legacyProvider(credential, scheme)
+        : bearer && options.token !== undefined
+          ? BearerAuth(options.token)
+          : undefined)
+    if (provider) providers.set(name, provider)
+  }
   const requirement = endpoint.security?.find((entry) =>
-    Object.keys(entry).every((name) => credentials[name] !== undefined),
+    Object.keys(entry).every((name) => providers.has(name)),
   )
   if (!requirement) return
-  for (const name of Object.keys(requirement)) {
-    const scheme = endpoint.securitySchemes?.[name]
-    const credential = credentials[name]
-    if (!scheme || credential === undefined) continue
-    const value = credentialText(credential)
-    if (scheme.type === "apiKey") {
-      if (scheme.in === "header") headers.set(scheme.name, value)
-      else if (scheme.in === "query") url.searchParams.append(scheme.name, value)
-      else
-        headers.set(
-          "cookie",
-          [headers.get("cookie"), `${encodeURIComponent(scheme.name)}=${encodeURIComponent(value)}`]
-            .filter(Boolean)
-            .join("; "),
-        )
-    } else if (scheme.type === "http") {
-      if (scheme.scheme.toLowerCase() === "basic")
-        headers.set("authorization", `Basic ${btoa(value)}`)
-      else
-        headers.set(
-          "authorization",
-          `${scheme.scheme.toLowerCase() === "bearer" ? "Bearer" : scheme.scheme} ${value}`,
-        )
-    } else if (scheme.type !== "mutualTLS") headers.set("authorization", `Bearer ${value}`)
+  for (const [name, scopes] of Object.entries(requirement)) {
+    const scheme = endpoint.securitySchemes![name]!
+    await providers
+      .get(name)!
+      .apply({ endpoint, url, headers, init, scopes, scheme, baseUrl: resolveBaseUrl(options) })
   }
 }

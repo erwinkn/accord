@@ -5,11 +5,10 @@
       "listUsers"
     ],
     "plan": {
-      "apiId": "ca315a231708d818",
       "method": "GET",
       "path": "/users",
-      "operationId": "listUsers",
-      "operationKind": "query",
+      "id": "listUsers",
+      "kind": "query",
       "queryParams": [
         {
           "name": "limit"
@@ -33,11 +32,10 @@
       "createUser"
     ],
     "plan": {
-      "apiId": "ca315a231708d818",
       "method": "POST",
       "path": "/users",
-      "operationId": "createUser",
-      "operationKind": "mutation",
+      "id": "createUser",
+      "kind": "mutation",
       "responses": [
         {
           "status": 201,
@@ -73,11 +71,10 @@
       "getUser"
     ],
     "plan": {
-      "apiId": "ca315a231708d818",
       "method": "GET",
       "path": "/users/{userId}",
-      "operationId": "getUser",
-      "operationKind": "query",
+      "id": "getUser",
+      "kind": "query",
       "pathParams": [
         {
           "name": "userId"

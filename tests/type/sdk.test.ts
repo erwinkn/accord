@@ -4,9 +4,9 @@ import { api as featureApi } from "../generated/features.js"
 import {
   type ApiError,
   api,
+  type GetUserError,
+  type GetUserInput,
   type User,
-  type UsersGetUserError,
-  type UsersGetUserInput,
 } from "../generated/users.js"
 
 type Equal<TLeft, TRight> =
@@ -22,8 +22,8 @@ const createPromise = http.users.createUser({ body: { name: "Alice" } })
 type _ListResponse = Expect<Equal<Awaited<typeof listPromise>, readonly User[]>>
 type _GetResponse = Expect<Equal<Awaited<typeof getPromise>, User>>
 type _CreateResponse = Expect<Equal<Awaited<typeof createPromise>, User>>
-type _GeneratedInput = Expect<Equal<UsersGetUserInput, { readonly userId: string }>>
-type _TypedError = Expect<Equal<UsersGetUserError, ApiError>>
+type _GeneratedInput = Expect<Equal<GetUserInput, { readonly userId: string }>>
+type _TypedError = Expect<Equal<GetUserError, ApiError>>
 
 // @ts-expect-error userId is required
 http.users.getUser({})

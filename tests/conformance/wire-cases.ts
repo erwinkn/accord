@@ -538,7 +538,7 @@ type ResponseContract = Expect<Equal<ResponseOf<typeof api.probe.call>, ArrayBuf
       await assert.rejects(createClient(api, { baseUrl }).probe.call(), error => {
         assert(error instanceof HttpError, "ACCORD_HTTP_ERROR")
         assert.equal(error.status, 404)
-        assert.equal(error.endpoint.operationId, "call")
+        assert.equal(error.endpoint.id, "call")
         assert.deepEqual(JSON.parse(JSON.stringify(error.body)), { message: "missing" })
         return true
       })

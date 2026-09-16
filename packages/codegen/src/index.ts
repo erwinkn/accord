@@ -15,7 +15,9 @@ export {
 } from "./generate.js"
 export type { ApiModel, OperationModel, SchemaNode, SchemaResource } from "./model.js"
 export {
+  allocateIdentifiers,
   fallbackOperationName,
+  type IdentifierRequest,
   isDangerousInputName,
   operationName,
   operationNamespace,
@@ -37,3 +39,5 @@ export type {
   ParameterLocation,
   ParameterStyle,
 } from "./types.js"
+
+export type * from "./validation-adapter.js"

@@ -92,7 +92,7 @@ The one explicit `body` example is the optional PATCH payload: `client.offerings
 
 The backend's `ValidationPipe` validates DTO fields and rejects unknown properties. Accord performs no request schema validation; generated TypeScript checks callers, and generated Standard Schema checks decoded responses. Money remains a decimal string end to end.
 
-Response media entries reference their generated Standard Schema directly. There is no `responseSchemas` registry or separate validator-key map. JSON, ordinary text and binary codecs are inferred from the declared media type and direction; multipart retains its field encoding metadata. The private `createAccordValidators()` factory initializes shared precompiled checks once when the SDK module loads. Numbered checks are internal implementation names, while exported schemas provide typed validation for HTTP calls or other consumers.
+Response media entries reference their generated Standard Schema directly. There is no `responseSchemas` registry or separate validator-key map. JSON, ordinary text and binary codecs are inferred from the declared media type and direction; multipart retains its field encoding metadata. The optional `zodAdapter()` emits native Zod definitions, shared by response schemas such as `GetDocument404Schema`. These expose `.parse()`, `.safeParse()` and native shape inspection. The client consumes them through Standard Schema. The usage example supplies a client-level bearer token; [auth providers](../../docs/authentication.md) also support callbacks and client credentials.
 
 ## Adapting to a real backend
 

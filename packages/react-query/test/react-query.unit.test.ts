@@ -96,3 +96,18 @@ describe("React Query integration", () => {
     expect(await mutation.execute({ body: { name: "Alice" } })).toEqual({ id: "7", name: "Alice" })
   })
 })
+
+it("isolates token/provider contexts without exposing secrets and keeps SDK scope stable", () => {
+  const first = createClient(api, { token: "first-secret" })
+  const second = createClient(api, { token: "second-secret" })
+  const firstKey = apiQueryKey(first.users.getUser, { userId: "7" })
+  const secondKey = apiQueryKey(second.users.getUser, { userId: "7" })
+  expect(firstKey).not.toEqual(secondKey)
+  expect(JSON.stringify([firstKey, secondKey])).not.toMatch(/first-secret|second-secret/)
+  const provider = { apply: async () => {} }
+  const third = createClient(api, { auth: provider })
+  const fourth = createClient(api, { auth: provider, cacheScope: "other-account" })
+  expect(apiQueryKey(third.users.getUser, { userId: "7" })).not.toEqual(
+    apiQueryKey(fourth.users.getUser, { userId: "7" }),
+  )
+})

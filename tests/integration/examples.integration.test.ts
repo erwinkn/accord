@@ -4,16 +4,13 @@ import { describe, expect, it } from "vitest"
 import { arkTask, zodTask } from "../../examples/adapters/schemas.js"
 import { api as assetApi } from "../../examples/assets/sdk.js"
 import { api as importApi } from "../../examples/imports/sdk.js"
-import {
-  TasksGetResponseT200ApplicationJsonSchema,
-  api as taskApi,
-} from "../../examples/tasks/sdk.js"
+import { Get200Schema, api as taskApi } from "../../examples/tasks/sdk.js"
 
 const task = { id: "t1", title: "Review", status: "open", createdAt: "2026-09-16T12:00:00Z" }
 describe("committed example SDKs", () => {
-  it("wraps Standard Schema for Zod and ArkType with paths and unchanged output", async () => {
-    expect(await zodTask.parseAsync(task)).toBe(task)
-    expect(arkTask.assert(task)).toBe(task)
+  it("uses native Zod and an ArkType wrapper with precise paths and unchanged values", async () => {
+    expect(await zodTask.parseAsync(task)).toEqual(task)
+    expect(arkTask.assert(task)).toEqual(task)
     const invalid = { ...task, title: 42 }
     const zodResult = await zodTask.safeParseAsync(invalid)
     expect(zodResult.success).toBe(false)
@@ -24,9 +21,9 @@ describe("committed example SDKs", () => {
       expect(Array.from(arkResult[0]?.path ?? [])).toEqual(["title"])
   })
   it("validates tasks while preserving readOnly fields, dates and value identity", async () => {
-    const checked = await TasksGetResponseT200ApplicationJsonSchema["~standard"].validate(task)
+    const checked = await Get200Schema["~standard"].validate(task)
     if (checked.issues) throw new Error("Expected valid task")
-    expect(checked.value).toBe(task)
+    expect(checked.value).toEqual(task)
     const client = createClient(taskApi, {
       credentials: { bearer: "token" },
       fetch: async (_url, init) => {

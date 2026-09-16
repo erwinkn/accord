@@ -2,6 +2,7 @@ import { mkdtemp, readdir, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { zodAdapter } from "@accord/zod"
 import { describe, expect, it } from "vitest"
 import { generate, generateFromFile, writeGeneratedSdk } from "../src/generate.js"
 import type { JsonObject } from "../src/types.js"
@@ -28,14 +29,20 @@ describe("owned generation goldens", () => {
     expect(result.source).toBe(await readFile(golden("users.rendered.ts"), "utf8"))
   })
   it("is deterministic across complete generation runs", async () => {
-    const first = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
-    const second = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
+    const first = await generateFromFile(fixture("users.openapi.yaml"), {
+      validators: zodAdapter(),
+    })
+    const second = await generateFromFile(fixture("users.openapi.yaml"), {
+      validators: zodAdapter(),
+    })
     expect(first.source).toBe(second.source)
   })
   it("writes a complete single-file SDK, including optional validators", async () => {
     const directory = await mkdtemp(join(tmpdir(), "accord-single-file-"))
     try {
-      const result = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
+      const result = await generateFromFile(fixture("users.openapi.yaml"), {
+        validators: zodAdapter(),
+      })
       await writeGeneratedSdk(join(directory, "sdk.ts"), result)
       expect(await readdir(directory)).toEqual(["sdk.ts"])
       expect(await readFile(join(directory, "sdk.ts"), "utf8")).toBe(result.source)
@@ -80,11 +87,42 @@ describe("owned generation goldens", () => {
     })
     const extraBytes = async (count: number) => {
       const input = document(count)
-      const withChecks = await generate(input, { validators: true })
+      const withChecks = await generate(input, { validators: zodAdapter() })
       const withoutChecks = await generate(input)
       return withChecks.source.length - withoutChecks.source.length
     }
     // Extra endpoint bindings are small; the complex schema check must not grow 20-fold.
-    expect(await extraBytes(20)).toBeLessThan((await extraBytes(1)) * 3)
+    expect(await extraBytes(20)).toBeLessThan((await extraBytes(1)) + 20 * 180)
+    const shared = await generate(document(20), { validators: zodAdapter() })
+    expect(shared.source.match(/z\.email\(\)/g)).toHaveLength(1)
   })
+})
+
+it("disambiguates all conflicting schema names and retains short unambiguous names", async () => {
+  const get = (id: string, name: string) => ({
+    operationId: id,
+    "x-sdk-name": name,
+    responses: {
+      200: { description: "ok", content: { "application/json": { schema: { type: "string" } } } },
+    },
+  })
+  const { source } = await generate(
+    {
+      openapi: "3.1.0",
+      info: { title: "Names", version: "1" },
+      paths: {
+        "/documents": { get: get("documentsGet", "get") },
+        "/files": { get: get("filesGet", "get") },
+        "/users": { get: get("getUser", "getUser") },
+      },
+    },
+    { validators: zodAdapter() },
+  )
+  expect(source).toContain("DocumentsGet200Schema")
+  expect(source).toContain("FilesGet200Schema")
+  expect(source).toContain("GetUser200Schema")
+  expect(source).not.toContain('"apiId"')
+  expect(source).not.toContain('"operationId"')
+  expect(source).toContain('"id": "getUser"')
+  expect(source).toContain('"kind": "query"')
 })

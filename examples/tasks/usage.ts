@@ -1,10 +1,10 @@
 import { createClient } from "@accord/client"
 import { apiQuery } from "@accord/react-query"
-import { api, TasksGetResponseT200ApplicationJsonSchema } from "./sdk.js"
+import { api, Get200Schema } from "./sdk.js"
 
 export const tasks = createClient(api, {
   baseUrl: "https://tasks.example.test/v1",
-  credentials: { bearer: "replace-with-your-access-token" },
+  token: "replace-with-your-access-token",
   cacheScope: "team-42",
 })
 export async function workflow() {
@@ -19,4 +19,4 @@ export const openTasks = {
   staleTime: 30_000,
 }
 // A generated Standard Schema can also validate data outside the HTTP client.
-export const taskSchema = TasksGetResponseT200ApplicationJsonSchema
+export const taskSchema = Get200Schema

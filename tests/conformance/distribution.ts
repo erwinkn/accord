@@ -41,7 +41,7 @@ async function main(): Promise<void> {
     const installed = join(temporary, "consumer")
     await mkdir(tarballs)
     await mkdir(installed)
-    for (const name of ["client", "codegen", "react-query"]) {
+    for (const name of ["client", "codegen", "react-query", "zod"]) {
       await command(join(root, "packages", name), "pnpm", ["pack", "--pack-destination", tarballs])
     }
     const files = await readdir(tarballs)
@@ -54,6 +54,8 @@ async function main(): Promise<void> {
       "@accord/client": packageTarball("client"),
       "@accord/codegen": packageTarball("codegen"),
       "@accord/react-query": packageTarball("react-query"),
+      "@accord/zod": packageTarball("zod"),
+      zod: "4.4.3",
       "@tanstack/react-query": "5.101.4",
       react: "19.2.8",
       typescript: "5.9.3",
@@ -63,7 +65,13 @@ async function main(): Promise<void> {
     }
     await writeFile(
       join(installed, "package.json"),
-      JSON.stringify({ name: "accord-install-smoke", private: true, type: "module", dependencies }),
+      JSON.stringify({
+        name: "accord-install-smoke",
+        private: true,
+        type: "module",
+        packageManager: "pnpm@11.22.0",
+        dependencies,
+      }),
     )
     const clientManifest: PackedManifest = JSON.parse(
       await command(installed, "tar", [
@@ -80,6 +88,21 @@ async function main(): Promise<void> {
       ]),
     )
     assert.equal(clientManifest.name, "@accord/client")
+    for (const name of ["client", "codegen"]) {
+      const manifest: PackedManifest = JSON.parse(
+        await command(installed, "tar", [
+          "-xOf",
+          packageTarball(name).slice(5),
+          "package/package.json",
+        ]),
+      )
+      for (const dependency of ["ajv", "ajv-formats", "zod", "@accord/zod"])
+        assert.equal(
+          manifest.dependencies?.[dependency],
+          undefined,
+          `Core ${name} must not depend on ${dependency}`,
+        )
+    }
     assert.equal(
       queryManifest.dependencies?.["@accord/client"],
       clientManifest.version,
@@ -90,11 +113,22 @@ async function main(): Promise<void> {
     await writeFile(
       join(installed, "pnpm-workspace.yaml"),
       JSON.stringify({
-        overrides: { [`@accord/client@${clientManifest.version}`]: dependencies["@accord/client"] },
+        overrides: {
+          [`@accord/client@${clientManifest.version}`]: dependencies["@accord/client"],
+          [`@accord/codegen@${clientManifest.version}`]: dependencies["@accord/codegen"],
+        },
       }),
     )
     // Outside the repository: workspace links, root imports, and source aliases cannot rescue broken packages.
-    await command(installed, "pnpm", ["install", "--ignore-scripts", "--no-frozen-lockfile"])
+    await command(installed, "pnpm", [
+      "install",
+      "--ignore-scripts",
+      "--no-frozen-lockfile",
+      "--store-dir",
+      join(root, "node_modules/.cache/distribution-store"),
+      "--cache-dir",
+      join(root, "node_modules/.cache/distribution-cache"),
+    ])
     await writeFile(
       join(installed, "openapi.json"),
       JSON.stringify(
@@ -103,6 +137,7 @@ async function main(): Promise<void> {
           required: ["message"],
           additionalProperties: false,
           properties: { message: { type: "string" } },
+          patternProperties: { "^x-": { type: "string" } },
         }),
       ),
     )
@@ -116,6 +151,7 @@ async function main(): Promise<void> {
       "--output",
       "generated.ts",
       "--validators",
+      "@accord/zod",
     ])
     const stdoutSdk = await command(installed, "pnpm", [
       "exec",
@@ -123,6 +159,7 @@ async function main(): Promise<void> {
       "generate",
       "openapi.json",
       "--validators",
+      "@accord/zod",
     ])
     assert.equal(stdoutSdk, await readFile(join(installed, "generated.ts"), "utf8"))
     assert(!(await readdir(installed)).some((name) => name.includes(".validators.")))
@@ -140,7 +177,7 @@ async function main(): Promise<void> {
     await writeFile(
       join(installed, "consumer.ts"),
       `import assert from "node:assert/strict"
-import { createClient } from "@accord/client"
+import { createClient, ValidationError } from "@accord/client"
 import { apiQuery } from "@accord/react-query"
 import { api } from "./generated.js"
 const client = createClient(api, { baseUrl: "https://example.test/api", fetch: async input => {
@@ -148,8 +185,9 @@ const client = createClient(api, { baseUrl: "https://example.test/api", fetch: a
   return Response.json({ message: "ok" })
 } })
 assert.deepEqual(await client.probe.call(), { message: "ok" })
+await assert.rejects(createClient(api, {fetch:async () => Response.json({message:42})}).probe.call(), ValidationError)
 assert.equal(apiQuery(api.probe.call, {}).queryKey[0], "accord")
-for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"]) {
+for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", "@accord/zod"]) {
   assert(!import.meta.resolve(name).includes("/packages/"), "Must load tarballs, not workspace sources")
 }
 `,
@@ -200,7 +238,7 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"])
             "single-file-validators-and-stdout",
             "config-import",
             "semantic-consumer-compile-with-declaration-checking",
-            "standalone-validator-generation-and-execution",
+            "native-zod-generation-and-execution",
             "browser-bundle",
             "runtime-imports-and-request",
           ],
@@ -210,7 +248,7 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"])
       ),
     )
     console.log(
-      "Distribution passed: all three packed packages installed outside the workspace and used by a compiled consumer",
+      "Distribution passed: all four packed packages installed outside the workspace and used by a compiled consumer",
     )
   } catch (error) {
     const message = error instanceof Error ? (error.stack ?? error.message) : String(error)

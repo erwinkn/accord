@@ -5,11 +5,10 @@
       "get"
     ],
     "plan": {
-      "apiId": "cc751382879a44b9",
       "method": "GET",
       "path": "/api/v1/health",
-      "operationId": "GET /api/v1/health",
-      "operationKind": "query",
+      "id": "GET /api/v1/health",
+      "kind": "query",
       "responses": [
         {
           "status": 204,
@@ -24,11 +23,10 @@
       "createNode"
     ],
     "plan": {
-      "apiId": "cc751382879a44b9",
       "method": "POST",
       "path": "/api/v1/nodes",
-      "operationId": "createNode",
-      "operationKind": "mutation",
+      "id": "createNode",
+      "kind": "mutation",
       "responses": [
         {
           "status": 201,
@@ -57,11 +55,10 @@
       "searchUsers"
     ],
     "plan": {
-      "apiId": "cc751382879a44b9",
       "method": "GET",
       "path": "/api/v1/organizations/{organization-id}/users",
-      "operationId": "search-users",
-      "operationKind": "query",
+      "id": "search-users",
+      "kind": "query",
       "pathParams": [
         {
           "name": "organization-id",
@@ -109,11 +106,10 @@
       "getPost"
     ],
     "plan": {
-      "apiId": "cc751382879a44b9",
       "method": "GET",
       "path": "/api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}",
-      "operationId": "get-post",
-      "operationKind": "query",
+      "id": "get-post",
+      "kind": "query",
       "pathParams": [
         {
           "name": "organization-id",
@@ -146,11 +142,10 @@
       "uploadFile"
     ],
     "plan": {
-      "apiId": "cc751382879a44b9",
       "method": "POST",
       "path": "/api/v1/uploads",
-      "operationId": "uploadFile",
-      "operationKind": "mutation",
+      "id": "uploadFile",
+      "kind": "mutation",
       "responses": [
         {
           "status": 201,

@@ -3,6 +3,7 @@ import { readdir, readFile } from "node:fs/promises"
 import { after, before, test } from "node:test"
 import { createClient, HttpError, ValidationError } from "@accord/client"
 import { generateFromFile } from "@accord/codegen"
+import { zodAdapter } from "@accord/zod"
 import { QueryClient } from "@tanstack/react-query"
 import { createApplication, createOpenApiDocument } from "../dist/src/app.js"
 import { DEMO_TOKEN } from "../dist/src/common.js"
@@ -38,7 +39,10 @@ function httpError(status: number, code: string) {
 test("Nest's exported document and Accord output match the committed artifacts", async () => {
   const document = createOpenApiDocument(app)
   assert.equal(`${JSON.stringify(document, null, 2)}\n`, await readFile("openapi.json", "utf8"))
-  const generated = await generateFromFile("openapi.json", { namespace: "tag", validators: true })
+  const generated = await generateFromFile("openapi.json", {
+    namespace: "tag",
+    validators: zodAdapter(),
+  })
   assert.equal(generated.model.operations.length, 18)
   assert.equal(Object.keys(document.components?.schemas ?? {}).length, 22)
   assert.deepEqual(

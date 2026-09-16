@@ -1,4 +1,5 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec"
+import type { AuthProvider, TokenSource } from "./auth.js"
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS" | "TRACE"
 export type BodyMode = "merge" | "separate"
@@ -120,14 +121,17 @@ export type SecurityRequirement = Readonly<Record<string, readonly string[]>>
 export type SecurityScheme =
   | { readonly type: "apiKey"; readonly name: string; readonly in: "header" | "query" | "cookie" }
   | { readonly type: "http"; readonly scheme: string }
-  | { readonly type: "oauth2" | "openIdConnect" | "mutualTLS" }
+  | {
+      readonly type: "oauth2"
+      readonly clientCredentials?: { readonly tokenUrl: string; readonly scopes: readonly string[] }
+    }
+  | { readonly type: "openIdConnect" | "mutualTLS" }
 
 export interface EndpointPlan<K extends OperationKind = OperationKind> {
-  readonly apiId: string
   readonly method: HttpMethod
   readonly path: string
-  readonly operationId: string
-  readonly operationKind: K
+  readonly id: string
+  readonly kind: K
   readonly pathParams?: readonly PathParameter[]
   readonly queryParams?: readonly QueryParameter[]
   readonly headerParams?: readonly HeaderParameter[]
@@ -152,12 +156,14 @@ export interface EndpointContract {
 
 /** Internal factory brand; no string discriminator is needed in generated definitions. */
 export const endpointMarker: unique symbol = Symbol.for("@accord/client/endpoint")
+export const endpointScope: unique symbol = Symbol.for("@accord/client/scope")
 declare const endpointContract: unique symbol
 export interface EndpointDefinition<
   C extends EndpointContract = EndpointContract,
   K extends OperationKind = OperationKind,
 > extends EndpointPlan<K> {
   readonly [endpointMarker]: true
+  readonly [endpointScope]?: string
   readonly [endpointContract]?: C
 }
 export type EndpointDescriptor<
@@ -291,6 +297,10 @@ export interface ClientOptions {
   readonly fetch?: typeof globalThis.fetch
   readonly headers?: HeadersInit | HeaderResolver
   readonly credentials?: Readonly<Record<string, Credential>>
+  /** Bearer shortcut for secured endpoints; callbacks run for each request. */
+  readonly token?: TokenSource
+  /** One provider, or providers keyed by OpenAPI security scheme name. */
+  readonly auth?: AuthProvider | Readonly<Record<string, AuthProvider>>
   /** Public account/tenant identity for cache isolation. Never put credentials here. */
   readonly cacheScope?: string
   readonly requestMiddleware?: readonly RequestMiddleware[]

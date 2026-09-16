@@ -1,8 +1,9 @@
 import { defaultRequestMediaType, selectResponse } from "@accord/client"
 import ts from "typescript"
 import type { Compilation } from "./compile.js"
+import { AccordCodegenError } from "./diagnostics.js"
 import type { MediaModel, OperationModel, ResponseModel } from "./model.js"
-import { sanitizeTypeIdentifier } from "./naming.js"
+import { allocateIdentifiers, type IdentifierRequest, sanitizeTypeIdentifier } from "./naming.js"
 import {
   alias,
   intersection,
@@ -15,6 +16,7 @@ import {
   undefinedType,
   union,
 } from "./type-emitter.js"
+import type { ValidationSchemaExport, ValidationSource } from "./validation-adapter.js"
 import type { ValidatorOutput } from "./validators.js"
 
 const f = ts.factory
@@ -86,12 +88,29 @@ interface RenderOperation {
   readonly declaration: string
 }
 
-function renderOperation(operation: OperationModel, emitter: TypeEmitter): RenderOperation {
-  const name = operation.typeName
+const OPERATION_TYPES = [
+  "Input",
+  "Arguments",
+  "Response",
+  "Error",
+  "Responses",
+  "FullResponse",
+  "Contract",
+] as const
+function symbolKey(...parts: readonly string[]): string {
+  return JSON.stringify(parts)
+}
+
+function renderOperation(
+  operation: OperationModel,
+  emitter: TypeEmitter,
+  names: ReadonlyMap<string, string>,
+): RenderOperation {
+  const name = (suffix: string) => names.get(symbolKey("operation", operation.key, suffix))!
   const declaration: string[] = []
   const variants = operation.body?.media ?? [undefined]
   const inputs = variants.map((media) => inputType(operation, emitter, media))
-  declaration.push(printNode(alias(`${name}Input`, union(inputs))))
+  declaration.push(printNode(alias(name("Input"), union(inputs))))
   const args = variants.map((media, index) => {
     const isDefault =
       !media || media.mediaType === defaultRequestMediaType(operation.plan.requestBody!)
@@ -113,7 +132,7 @@ function renderOperation(operation: OperationModel, emitter: TypeEmitter): Rende
       ),
     ])
   })
-  declaration.push(printNode(alias(`${name}Arguments`, union(args))))
+  declaration.push(printNode(alias(name("Arguments"), union(args))))
   const success: ts.TypeNode[] = []
   const errors: ts.TypeNode[] = []
   const full: ts.TypeNode[] = []
@@ -173,22 +192,22 @@ function renderOperation(operation: OperationModel, emitter: TypeEmitter): Rende
     if (codes.some((code) => code < 200 || code >= 300)) errors.push(payload)
     if (codes.includes(304)) errors.push(undefinedType())
   }
-  declaration.push(printNode(alias(`${name}Response`, union(success))))
-  declaration.push(printNode(alias(`${name}Error`, union(errors))))
-  declaration.push(printNode(alias(`${name}Responses`, typeLiteral(responseProperties))))
-  declaration.push(printNode(alias(`${name}FullResponse`, union(full))))
-  const contract = `${name}Contract`
+  declaration.push(printNode(alias(name("Response"), union(success))))
+  declaration.push(printNode(alias(name("Error"), union(errors))))
+  declaration.push(printNode(alias(name("Responses"), typeLiteral(responseProperties))))
+  declaration.push(printNode(alias(name("FullResponse"), union(full))))
+  const contract = name("Contract")
   declaration.push(
     printNode(
       alias(
         contract,
         typeLiteral([
-          property("args", typeReference(`${name}Arguments`)),
-          property("input", typeReference(`${name}Input`)),
-          property("response", typeReference(`${name}Response`)),
-          property("error", typeReference(`${name}Error`)),
-          property("responses", typeReference(`${name}Responses`)),
-          property("fullResponse", typeReference(`${name}FullResponse`)),
+          property("args", typeReference(name("Arguments"))),
+          property("input", typeReference(name("Input"))),
+          property("response", typeReference(name("Response"))),
+          property("error", typeReference(name("Error"))),
+          property("responses", typeReference(name("Responses"))),
+          property("fullResponse", typeReference(name("FullResponse"))),
         ]),
       ),
     ),
@@ -202,12 +221,11 @@ interface TreeNode {
 }
 
 export function renderSdk(compilation: Compilation, validators?: ValidatorOutput): string {
-  const emitter = new TypeEmitter(compilation.graph, [
+  const reserved = [
     "api",
-    "accordValidators",
-    "createAccordValidators",
-    "AccordValidationFunction",
-    "standardSchema",
+    "createEndpointFactory",
+    "defineEndpoint",
+    ...(validators?.adapter.reservedNames ?? []),
     "BinaryUpload",
     "HttpResult",
     "RequestOptions",
@@ -215,37 +233,118 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     "AccordSimplify",
     "AccordObjectConstraints",
     "AccordArrayConstraints",
-    ...compilation.model.operations.flatMap((operation) =>
-      ["Input", "Arguments", "Response", "Error", "Responses", "FullResponse", "Contract"].map(
-        (suffix) => `${operation.typeName}${suffix}`,
-      ),
-    ),
-  ])
+    "ArrayBuffer",
+    "Response",
+    "Record",
+    "Readonly",
+    "Omit",
+    "Exclude",
+    "Promise",
+    "Uint8Array",
+  ]
+  const requests: IdentifierRequest[] = []
+  for (const [name, id] of compilation.graph.named) {
+    const core = sanitizeTypeIdentifier(name)
+    requests.push({
+      key: `response:${id}`,
+      core,
+      qualifiers: [{ prefix: "Response" }, { prefix: "ModelResponse" }],
+    })
+    requests.push({
+      key: `request:${id}`,
+      core,
+      suffix: "Request",
+      qualifiers: [{ prefix: "Request" }, { prefix: "ModelRequest" }],
+    })
+  }
+  for (const operation of compilation.model.operations) {
+    const core = sanitizeTypeIdentifier(operation.exportPath.at(-1)!)
+    const prefix = sanitizeTypeIdentifier(operation.exportPath.slice(0, -1).join(" "))
+    for (const suffix of OPERATION_TYPES)
+      requests.push({
+        key: symbolKey("operation", operation.key, suffix),
+        core,
+        suffix,
+        qualifiers: [{ prefix }, { prefix: `${prefix}Operation` }],
+      })
+    if (validators)
+      for (const response of operation.responses)
+        for (const media of response.media) {
+          const shortMedia = sanitizeTypeIdentifier(media.mediaType.split("/").at(-1)!)
+          const fullMedia = sanitizeTypeIdentifier(media.mediaType)
+          requests.push({
+            key: symbolKey("validator", operation.key, response.status, media.mediaType),
+            core: `${core}${response.status === "default" ? "Default" : response.status}`,
+            suffix: "Schema",
+            qualifiers: [
+              { suffix: shortMedia },
+              { prefix },
+              { suffix: fullMedia },
+              { prefix, suffix: shortMedia },
+              { prefix, suffix: fullMedia },
+            ],
+          })
+        }
+  }
+  const names = allocateIdentifiers(requests, reserved)
+  const typeNames = new Map(
+    [...names].filter(([key]) => key.startsWith("request:") || key.startsWith("response:")),
+  )
+  const emitter = new TypeEmitter(compilation.graph, [...reserved, ...names.values()], typeNames)
   emitter.emitNamed()
   const operations = new Map(
     compilation.model.operations.map((operation) => [
       operation.key,
-      renderOperation(operation, emitter),
+      renderOperation(operation, emitter, names),
     ]),
   )
-  const validatorDeclarations: string[] = []
+  const schemaExports: ValidationSchemaExport[] = []
   const validatorBindings = new Map<MediaModel, string>()
   if (validators) {
     for (const operation of compilation.model.operations) {
       for (const response of operation.responses) {
         for (const media of response.media) {
           const binding = validators.bindings.get(media)
-          if (!binding) continue
-          const name = `${operation.typeName}Response${sanitizeTypeIdentifier(`${response.status} ${media.mediaType}`)}Schema`
+          if (binding === undefined) continue
+          const name = names.get(
+            symbolKey("validator", operation.key, response.status, media.mediaType),
+          )!
           const type = printNode(emitter.emit(media.schema, "response", media.codec))
-          validatorDeclarations.push(
-            `export const ${name} = standardSchema<${type}>(accordValidators.${binding.exportName}, ${binding.binary})`,
-          )
+          schemaExports.push({ name, type, schema: binding })
           validatorBindings.set(media, name)
         }
       }
     }
   }
+  let validationSource: ValidationSource | undefined
+  if (validators) {
+    try {
+      validationSource = validators.adapter.generate({
+        documents: validators.documents,
+        schemas: schemaExports,
+        referenceTypes: new Map(
+          [...validators.referenceSchemas].map(([ref, id]) => [
+            ref,
+            printNode(emitter.emit(id, "response")),
+          ]),
+        ),
+        allocateIdentifiers: (requests) =>
+          allocateIdentifiers(requests, [
+            ...reserved,
+            ...names.values(),
+            ...emitter.declarations.keys(),
+          ]),
+      })
+    } catch (cause) {
+      throw new AccordCodegenError([
+        {
+          code: "VALIDATION_ADAPTER_ERROR",
+          message: `${validators.adapter.name}: ${cause instanceof Error ? cause.message : String(cause)}`,
+        },
+      ])
+    }
+  }
+
   const root: TreeNode = { children: new Map() }
   for (const operation of compilation.model.operations) {
     let at = root
@@ -291,28 +390,23 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
       const security = securityDefinitions.get(JSON.stringify(operation.plan.securitySchemes))
       const securityEntry = security ? `,\n"securitySchemes": ${security}` : ""
       const definition = `${plan.slice(0, -1)}${securityEntry},\n"responses": [\n${responses.join(",\n")}\n] }`
-      return `defineEndpoint<${operations.get(operation.key)!.contract}, ${JSON.stringify(operation.plan.operationKind)}>(${definition})`
+      return `defineEndpoint<${operations.get(operation.key)!.contract}, ${JSON.stringify(operation.plan.kind)}>(${definition})`
     }
     return `{\n${[...node.children].map(([key, child]) => `${"  ".repeat(depth + 1)}${JSON.stringify(key)}: ${renderTree(child, depth + 1)}`).join(",\n")}\n${"  ".repeat(depth)}}`
   }
   const source = [
     "/* Generated by @accord/codegen. Regenerate from the OpenAPI source. */",
-    'import { defineEndpoint, type BinaryUpload, type HttpResult, type RequestOptions, type StatusRange } from "@accord/client"',
-    ...(validators
-      ? [
-          'import { standardSchema, type ValidationFunction as AccordValidationFunction } from "@accord/client/validation"',
-        ]
-      : []),
+    'import { createEndpointFactory, type BinaryUpload, type HttpResult, type RequestOptions, type StatusRange } from "@accord/client"',
+    ...(validationSource?.imports ?? []),
     "type AccordSimplify<T> = T extends unknown ? { [K in keyof T]: T[K] } : never",
     "type AccordObjectConstraints<T, R> = T extends readonly unknown[] ? T : T extends object ? T & R : T",
     "type AccordArrayConstraints<T, R> = T extends readonly unknown[] ? T & R : T",
     ...[...emitter.declarations.values()].map(printNode),
     ...[...operations.values()].map((operation) => operation.declaration),
-    ...(validators ? ["const accordValidators = createAccordValidators()"] : []),
-    ...validatorDeclarations,
+    ...(validationSource?.declarations ?? []),
     ...[...securityDefinitions].map(([json, name]) => `const ${name} = ${json} as const`),
+    `const defineEndpoint = createEndpointFactory(${JSON.stringify(compilation.model.id)})`,
     `export const api = ${renderTree(root, 0)}`,
-    ...(validators ? [validators.source] : []),
     "",
   ].join("\n\n")
   return ts

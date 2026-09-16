@@ -1,3 +1,4 @@
+import type { ValidationAdapter } from "./validation-adapter.js"
 export type BodyMode = "merge" | "separate"
 export type NamespaceStrategy = "path" | "tag"
 export type OperationKind = "query" | "mutation"
@@ -19,7 +20,8 @@ export interface BodyCodegenConfig {
 
 export interface AccordCodegenConfig {
   readonly apiId?: string
-  readonly validators?: boolean
+  /** Opt in to response schema generation with a library-specific adapter. */
+  readonly validators?: ValidationAdapter
   readonly defaultMediaTypes?: Readonly<Record<string, string>>
   readonly sourceUrl?: string
   readonly namespace?: NamespaceStrategy

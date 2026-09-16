@@ -1,3 +1,4 @@
+import { zodAdapter } from "@accord/zod"
 import {
   bodyDocument,
   consumer,
@@ -169,7 +170,7 @@ export const rewriteCases: Fixture[] = [
         },
       },
     }),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`export async function run() {
       await withServer(async baseUrl => {
@@ -264,7 +265,7 @@ export const rewriteCases: Fixture[] = [
       required: ["id", "name"],
       additionalProperties: false,
     }),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`import { ValidationError } from "@accord/client"
       export async function run() { await withServer(async baseUrl => {
@@ -332,7 +333,7 @@ export const rewriteCases: Fixture[] = [
         },
       },
     ),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(`function examples() {
       const call = createClient(api).probe.call
@@ -363,7 +364,7 @@ export const rewriteCases: Fixture[] = [
       }),
       "value.json": JSON.stringify({ type: "string", enum: ["ok"] }),
     },
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(
         'type Contract = Expect<Equal<ResponseOf<typeof api.probe.call>, { readonly value: "ok" }>>',
@@ -383,7 +384,7 @@ export const rewriteCases: Fixture[] = [
       required: ["name"],
       additionalProperties: false,
     }),
-    config: { validators: true },
+    config: { validators: zodAdapter() },
     consumer: {
       source: consumer(
         'type Contract = Expect<Equal<ResponseOf<typeof api.probe.call>, { readonly name: "Ada" }>>',

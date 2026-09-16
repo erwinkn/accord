@@ -23,7 +23,9 @@ export async function generate(
   )
   await store.preload()
   const compilation = compileApi(store, config)
-  const validators = config.validators ? await generateValidators(compilation, store) : undefined
+  const validators = config.validators
+    ? await generateValidators(compilation, store, config.validators)
+    : undefined
   return {
     source: renderSdk(compilation, validators),
     model: compilation.model,
