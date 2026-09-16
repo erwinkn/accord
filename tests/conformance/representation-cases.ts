@@ -11,6 +11,68 @@ import type { Fixture } from "./model.js"
 
 export const representationCases: Fixture[] = [
   {
+    id: "representation.direct-schema-selection",
+    title:
+      "Direct schema references follow status precedence and media type, including text numbers",
+    area: "responses",
+    reference: references.response,
+    document: endpoint({
+      responses: {
+        200: {
+          description: "Ready",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["ready"],
+                additionalProperties: false,
+                properties: { ready: { const: true } },
+              },
+            },
+            "text/plain": { schema: { type: "integer", minimum: 5 } },
+          },
+        },
+        "2XX": {
+          description: "Queued",
+          content: { "application/json": { schema: { const: "queued" } } },
+        },
+        default: {
+          description: "Error",
+          content: { "application/json": { schema: { const: "denied" } } },
+        },
+      },
+    }),
+    config: { validators: true },
+    consumer: {
+      source: consumer(`import { ValidationError } from "@accord/client"
+      export async function run() {
+        for (const [status, mediaType, body, expected] of [
+          [200, "application/json", '{"ready":true}', { ready: true }],
+          [200, "text/plain", "7", 7],
+          [201, "application/json", '"queued"', "queued"],
+        ] as const) await withServer(async baseUrl => {
+          assert.deepEqual(await createClient(api, { baseUrl }).probe.call(), { status, data: expected })
+        }, { status, headers: { "content-type": mediaType }, body })
+        for (const [status, mediaType, body] of [
+          [200, "application/json", '"queued"'],
+          [200, "text/plain", "3"],
+          [201, "application/json", '{"ready":true}'],
+        ] as const) await withServer(async baseUrl => {
+          await assert.rejects(createClient(api, { baseUrl }).probe.call(), ValidationError)
+        }, { status, headers: { "content-type": mediaType }, body })
+        await withServer(async baseUrl => {
+          try { await createClient(api, { baseUrl }).probe.call(); assert.fail("Expected an HTTP error") }
+          catch (error) {
+            assert(error instanceof HttpError)
+            assert.equal(error.status, 403)
+            assert.equal(error.body, "denied")
+            assert.equal(error.cause, undefined)
+          }
+        }, { status: 403, headers: { "content-type": "application/json" }, body: '"denied"' })
+      }`),
+    },
+  },
+  {
     id: "representation.multipart-style",
     title: "Explicit multipart field style chooses its delimiter and ignores contentType",
     area: "wire",

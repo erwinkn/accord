@@ -91,6 +91,8 @@ pnpm exec accord generate openapi.yaml -c accord.config.mjs -o src/api.ts
 
 Generation produces one TypeScript file, including when `--validators` is enabled. Types are exported directly by name; no namespace or duplicate type aliases are needed. Optional response checks are compiled at generation time, share referenced models, and live in a private section at the end of the file. The consuming app does not compile schemas or depend on Ajv. File and HTTP references resolve relative to their source document, including embedded `$id` resources and anchors.
 
+Response media entries reference their generated schemas directly, so the selected status and content type also select validation. Ordinary JSON, text and binary formats need no explicit codec metadata. Schema-dependent encodings such as XML, multipart and numeric text retain their codec details.
+
 The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, model }`. Use `writeGeneratedSdk` to write the file, or consume `source` directly. The CLI can also print the complete SDK to stdout, with or without validators.
 
 ## Develop

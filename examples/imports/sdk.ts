@@ -139,75 +139,17 @@ export const ImportsCreateResponseT400ApplicationJsonSchema = standardSchema<{
 }>(accordValidators.check2, false);
 export const ImportsGetResponseT200ApplicationJsonSchema = standardSchema<ImportJob | ImportResult>(accordValidators.check3, false);
 export const ImportsReportDownloadResponseT200ApplicationOctetStreamSchema = standardSchema<ArrayBuffer>(accordValidators.check4, true);
-export const responseSchemas = { "ImportsCreateResponseT200ApplicationJsonSchema": ImportsCreateResponseT200ApplicationJsonSchema, "ImportsCreateResponseT202ApplicationJsonSchema": ImportsCreateResponseT202ApplicationJsonSchema, "ImportsCreateResponseT400ApplicationJsonSchema": ImportsCreateResponseT400ApplicationJsonSchema, "ImportsGetResponseT200ApplicationJsonSchema": ImportsGetResponseT200ApplicationJsonSchema, "ImportsReportDownloadResponseT200ApplicationOctetStreamSchema": ImportsReportDownloadResponseT200ApplicationOctetStreamSchema };
 export const api = {
     "imports": {
         "create": defineEndpoint<ImportsCreateContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "84c05d9e50d2c6fb",
+            kind: "endpoint",
+            plan: {
+                "apiId": "9d9164164cf9ef31",
                 "method": "POST",
                 "path": "/imports",
                 "operationId": "create",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 202,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-202-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": [
-                            {
-                                "name": "Location",
-                                "inputName": "Location",
-                                "in": "header",
-                                "required": false,
-                                "style": "simple",
-                                "explode": false,
-                                "allowReserved": false
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "status",
                 "servers": [
                     {
@@ -225,33 +167,62 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         },
                         {
-                            "mediaType": "text/csv",
-                            "representation": {
-                                "key": "request-1",
-                                "codec": {
-                                    "kind": "text"
-                                }
-                            }
+                            "mediaType": "text/csv"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-200-0": ImportsCreateResponseT200ApplicationJsonSchema, "response-202-0": ImportsCreateResponseT202ApplicationJsonSchema, "response-400-0": ImportsCreateResponseT400ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": ImportsCreateResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 202,
+                        "headers": [
+                            {
+                                "name": "Location",
+                                "inputName": "Location",
+                                "in": "header",
+                                "required": false,
+                                "style": "simple",
+                                "explode": false,
+                                "allowReserved": false
+                            }
+                        ],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": ImportsCreateResponseT202ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": ImportsCreateResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "get": defineEndpoint<ImportsGetContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "84c05d9e50d2c6fb",
+            kind: "endpoint",
+            plan: {
+                "apiId": "9d9164164cf9ef31",
                 "method": "GET",
                 "path": "/imports/{jobId}",
                 "operationId": "get",
@@ -267,23 +238,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -292,15 +246,26 @@ export const api = {
                     }
                 ],
                 "security": [],
-                "securitySchemes": {}
-            },
-            "validators": { "response-200-0": ImportsGetResponseT200ApplicationJsonSchema }
+                "securitySchemes": {},
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": ImportsGetResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "report": {
             "download": defineEndpoint<ImportsReportDownloadContract, "query">({
-                "kind": "endpoint",
-                "plan": {
-                    "apiId": "84c05d9e50d2c6fb",
+                kind: "endpoint",
+                plan: {
+                    "apiId": "9d9164164cf9ef31",
                     "method": "GET",
                     "path": "/imports/{jobId}/report",
                     "operationId": "download",
@@ -316,24 +281,6 @@ export const api = {
                             "allowReserved": false
                         }
                     ],
-                    "responses": [
-                        {
-                            "status": 200,
-                            "content": [
-                                {
-                                    "mediaType": "application/octet-stream",
-                                    "representation": {
-                                        "key": "response-200-0",
-                                        "codec": {
-                                            "kind": "bytes",
-                                            "value": "ArrayBuffer"
-                                        }
-                                    }
-                                }
-                            ],
-                            "headers": []
-                        }
-                    ],
                     "resultMode": "payload",
                     "servers": [
                         {
@@ -342,9 +289,20 @@ export const api = {
                         }
                     ],
                     "security": [],
-                    "securitySchemes": {}
-                },
-                "validators": { "response-200-0": ImportsReportDownloadResponseT200ApplicationOctetStreamSchema }
+                    "securitySchemes": {},
+                    "responses": [
+                        {
+                            "status": 200,
+                            "headers": [],
+                            "content": [
+                                {
+                                    "mediaType": "application/octet-stream",
+                                    "schema": ImportsReportDownloadResponseT200ApplicationOctetStreamSchema
+                                }
+                            ]
+                        }
+                    ]
+                }
             })
         }
     }

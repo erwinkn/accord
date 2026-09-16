@@ -1,4 +1,11 @@
-import { decodeBody, encodeBody, fallbackCodec, mediaMatches, mediaType } from "./codecs.js"
+import {
+  decodeBody,
+  defaultCodec,
+  encodeBody,
+  fallbackCodec,
+  mediaMatches,
+  mediaType,
+} from "./codecs.js"
 import { DecodeError, HttpError, NetworkError, ValidationError } from "./errors.js"
 import {
   renderQueryString,
@@ -161,8 +168,8 @@ async function parameterValue(
 ): Promise<ParameterValue | undefined> {
   const value = input[parameter.inputName ?? parameter.name]
   if (value === undefined) return undefined
-  if (parameter.representation && parameter.representation.codec.kind !== "parameter") {
-    const encoded = await encodeBody(parameter.representation.codec, value, new Headers())
+  if (parameter.codec && parameter.codec.kind !== "parameter") {
+    const encoded = await encodeBody(parameter.codec, value, new Headers())
     if (encoded instanceof Blob) return encoded.text()
     if (encoded instanceof ArrayBuffer) return new TextDecoder().decode(encoded)
     return String(encoded ?? "")
@@ -231,7 +238,11 @@ async function execute<E extends EndpointDefinition>(
     }
     if (value !== undefined) {
       headers.set("content-type", contentType)
-      const body = await encodeBody(selected.representation.codec, value, headers)
+      const body = await encodeBody(
+        selected.codec ?? defaultCodec(selected.mediaType, "request"),
+        value,
+        headers,
+      )
       if (body !== undefined) init.body = body
     }
   }
@@ -252,9 +263,11 @@ async function execute<E extends EndpointDefinition>(
     ? selectMedia(selectedResponse.content, actualMedia)
     : undefined
   const noBody = plan.method === "HEAD" || [204, 205, 304].includes(response.status)
-  const codec =
-    selectedMedia?.representation.codec ??
-    (selectedResponse?.content.length === 0 ? { kind: "empty" } : fallbackCodec(actualMedia))
+  const codec = selectedMedia
+    ? (selectedMedia.codec ?? defaultCodec(selectedMedia.mediaType, "response"))
+    : selectedResponse?.content.length === 0
+      ? { kind: "empty" as const }
+      : fallbackCodec(actualMedia)
   let data: RequestValue | Response
   try {
     if (
@@ -271,8 +284,7 @@ async function execute<E extends EndpointDefinition>(
     if (!response.ok) throw new HttpError({ response, endpoint, body: undefined, cause: error })
     throw error
   }
-  const validator =
-    !noBody && selectedMedia && endpoint.validators?.[selectedMedia.representation.key]
+  const validator = !noBody && selectedMedia?.schema
   if (validator) {
     try {
       const validation = await validator["~standard"].validate(data)

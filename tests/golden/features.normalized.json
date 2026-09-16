@@ -5,7 +5,7 @@
       "get"
     ],
     "plan": {
-      "apiId": "33d21648e074e9fc",
+      "apiId": "ebc51136307d5318",
       "method": "GET",
       "path": "/api/v1/health",
       "operationId": "GET /api/v1/health",
@@ -30,7 +30,7 @@
       "createNode"
     ],
     "plan": {
-      "apiId": "33d21648e074e9fc",
+      "apiId": "ebc51136307d5318",
       "method": "POST",
       "path": "/api/v1/nodes",
       "operationId": "createNode",
@@ -41,13 +41,7 @@
           "status": 201,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-201-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -66,13 +60,7 @@
         ],
         "content": [
           {
-            "mediaType": "application/json",
-            "representation": {
-              "key": "request-0",
-              "codec": {
-                "kind": "json"
-              }
-            }
+            "mediaType": "application/json"
           }
         ],
         "defaultMediaType": "application/json"
@@ -86,7 +74,7 @@
       "searchUsers"
     ],
     "plan": {
-      "apiId": "33d21648e074e9fc",
+      "apiId": "ebc51136307d5318",
       "method": "GET",
       "path": "/api/v1/organizations/{organization-id}/users",
       "operationId": "search-users",
@@ -143,13 +131,7 @@
           "status": 200,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-200-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -169,7 +151,7 @@
       "getPost"
     ],
     "plan": {
-      "apiId": "33d21648e074e9fc",
+      "apiId": "ebc51136307d5318",
       "method": "GET",
       "path": "/api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}",
       "operationId": "get-post",
@@ -208,13 +190,7 @@
           "status": 200,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-200-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -232,7 +208,7 @@
       "uploadFile"
     ],
     "plan": {
-      "apiId": "33d21648e074e9fc",
+      "apiId": "ebc51136307d5318",
       "method": "POST",
       "path": "/api/v1/uploads",
       "operationId": "uploadFile",
@@ -243,13 +219,7 @@
           "status": 201,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-201-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -269,39 +239,36 @@
         "content": [
           {
             "mediaType": "multipart/form-data",
-            "representation": {
-              "key": "request-0",
-              "codec": {
-                "kind": "form",
-                "mediaType": "multipart/form-data",
-                "fields": {
-                  "file": {
-                    "mediaType": "application/octet-stream",
-                    "codec": {
-                      "kind": "bytes",
-                      "value": "upload"
-                    },
-                    "multiple": false,
-                    "headers": {}
-                  },
-                  "metadata": {
-                    "mediaType": "application/json",
-                    "codec": {
-                      "kind": "json"
-                    },
-                    "multiple": false,
-                    "headers": {}
-                  }
-                },
-                "patterns": {},
-                "additional": {
+            "codec": {
+              "kind": "form",
+              "mediaType": "multipart/form-data",
+              "fields": {
+                "file": {
                   "mediaType": "application/octet-stream",
                   "codec": {
-                    "kind": "text"
+                    "kind": "bytes",
+                    "value": "upload"
+                  },
+                  "multiple": false,
+                  "headers": {}
+                },
+                "metadata": {
+                  "mediaType": "application/json",
+                  "codec": {
+                    "kind": "json"
                   },
                   "multiple": false,
                   "headers": {}
                 }
+              },
+              "patterns": {},
+              "additional": {
+                "mediaType": "application/octet-stream",
+                "codec": {
+                  "kind": "text"
+                },
+                "multiple": false,
+                "headers": {}
               }
             }
           }

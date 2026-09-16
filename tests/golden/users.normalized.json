@@ -5,7 +5,7 @@
       "listUsers"
     ],
     "plan": {
-      "apiId": "8f355a546a72debe",
+      "apiId": "e99423110e5c1d1a",
       "method": "GET",
       "path": "/users",
       "operationId": "listUsers",
@@ -26,13 +26,7 @@
           "status": 200,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-200-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -50,7 +44,7 @@
       "createUser"
     ],
     "plan": {
-      "apiId": "8f355a546a72debe",
+      "apiId": "e99423110e5c1d1a",
       "method": "POST",
       "path": "/users",
       "operationId": "createUser",
@@ -61,13 +55,7 @@
           "status": 201,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-201-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -76,13 +64,7 @@
           "status": 400,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-400-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -101,13 +83,7 @@
         ],
         "content": [
           {
-            "mediaType": "application/json",
-            "representation": {
-              "key": "request-0",
-              "codec": {
-                "kind": "json"
-              }
-            }
+            "mediaType": "application/json"
           }
         ],
         "defaultMediaType": "application/json"
@@ -120,7 +96,7 @@
       "getUser"
     ],
     "plan": {
-      "apiId": "8f355a546a72debe",
+      "apiId": "e99423110e5c1d1a",
       "method": "GET",
       "path": "/users/{userId}",
       "operationId": "getUser",
@@ -141,13 +117,7 @@
           "status": 200,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-200-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []
@@ -156,13 +126,7 @@
           "status": 404,
           "content": [
             {
-              "mediaType": "application/json",
-              "representation": {
-                "key": "response-404-0",
-                "codec": {
-                  "kind": "json"
-                }
-              }
+              "mediaType": "application/json"
             }
           ],
           "headers": []

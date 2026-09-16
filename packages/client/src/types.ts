@@ -72,23 +72,21 @@ export interface FormFieldPlan {
   readonly headers: Readonly<Record<string, string>>
 }
 
-export interface Representation {
-  readonly key: string
-  readonly codec: CodecPlan
-}
-
 /** The serializer consumes the same encoding record carried by the endpoint. */
 export interface ParameterDescriptor extends StyleEncoding {
   readonly name: string
   readonly inputName?: string
   readonly in: ParameterLocation
   readonly required: boolean
-  readonly representation?: Representation
+  readonly codec?: CodecPlan
 }
 
 export interface MediaPlan {
   readonly mediaType: string
-  readonly representation: Representation
+  /** Omitted when the media type and request/response direction determine the codec. */
+  readonly codec?: CodecPlan
+  /** Optional response validation, after decoding this media variant. */
+  readonly schema?: StandardSchemaV1
 }
 
 export interface RequestBodyDescriptor {
@@ -150,7 +148,6 @@ export interface EndpointDefinition<
 > {
   readonly kind: "endpoint"
   readonly plan: EndpointPlan<K>
-  readonly validators?: Readonly<Record<string, StandardSchemaV1>>
   readonly [endpointContract]?: C
 }
 export type EndpointDescriptor<

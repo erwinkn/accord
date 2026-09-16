@@ -2,7 +2,6 @@ import type {
   CodecPlan,
   FormFieldPlan,
   FormStyleValue,
-  Representation,
   StyleEncoding,
   XmlNode,
 } from "@accord/client"
@@ -288,13 +287,7 @@ export class SchemaGraph {
     return "unknown"
   }
 
-  representation(
-    id: SchemaId,
-    direction: Direction,
-    media: string,
-    key: string,
-    encoding: JsonObject = {},
-  ): Representation {
+  codec(id: SchemaId, direction: Direction, media: string, encoding: JsonObject = {}): CodecPlan {
     const actual = media.toLowerCase().split(";", 1)[0]!
     let codec: CodecPlan
     if (actual === "application/json" || actual.endsWith("+json")) codec = { kind: "json" }
@@ -324,7 +317,7 @@ export class SchemaGraph {
             ? { kind: "text", value: "boolean" }
             : { kind: "text" }
     } else codec = { kind: "bytes", value: direction === "request" ? "upload" : "ArrayBuffer" }
-    return { key, codec }
+    return codec
   }
 
   formField(
@@ -345,7 +338,7 @@ export class SchemaGraph {
           ? "application/json"
           : "text/plain"
     const contentType = string(encoding["contentType"], defaultType).split(",")[0]!.trim()
-    let fieldCodec = this.representation(item, direction, contentType, "field").codec
+    let fieldCodec = this.codec(item, direction, contentType)
     if (contentEncoding !== undefined || (itemKind === "unknown" && item === this.any))
       fieldCodec = { kind: "text" }
     const headers: { [key: string]: string } = Object.create(null)
@@ -389,10 +382,10 @@ export class SchemaGraph {
           properties: Object.fromEntries(
             [...view.fields].map(([name, ids]) => [
               name,
-              this.representation(ids[0]!, direction, "text/plain", "field").codec,
+              this.codec(ids[0]!, direction, "text/plain"),
             ]),
           ),
-          additional: this.representation(view.additional, direction, "text/plain", "field").codec,
+          additional: this.codec(view.additional, direction, "text/plain"),
         }
       } else styleValue = { kind: "primitive", codec: fieldCodec }
       return { ...styled, styleValue }

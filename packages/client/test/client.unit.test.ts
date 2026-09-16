@@ -29,7 +29,6 @@ const base = {
 } as const
 const json = {
   mediaType: "application/json",
-  representation: { key: "json", codec: { kind: "json" } },
 } as const
 const getUser = defineEndpoint<Contract<GetInput>, "query">({
   kind: "endpoint",

@@ -5,13 +5,9 @@ import { APP_GUARD, NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import type { NextFunction, Request, Response } from "express"
 import { DemoAuthGuard, ProblemFilter } from "./common.js"
-import { UploadDocumentDto } from "./documents/document.dto.js"
 import { DocumentsModule } from "./documents/documents.controller.js"
-import { CreateCompanyInvestorDto, CreateIndividualInvestorDto } from "./investors/investor.dto.js"
 import { InvestorsModule } from "./investors/investors.controller.js"
-import { CreateOfferingDto, TermsDto, UpdateOfferingDto } from "./offerings/offering.dto.js"
 import { OfferingsModule } from "./offerings/offerings.controller.js"
-import { CreateSubscriptionDto } from "./subscriptions/subscription.dto.js"
 import { SubscriptionsModule } from "./subscriptions/subscriptions.controller.js"
 
 @Module({
@@ -46,28 +42,13 @@ export function createOpenApiDocument(app: INestApplication) {
     // Method names are descriptive and globally unique; Accord checks collisions.
     operationIdFactory: (_controller, method) => method,
   })
-  // Swagger 7 omits additionalProperties for DTO classes. Match the server's strict
-  // request DTOs explicitly; don't close response composition or nested dictionaries.
-  for (const dto of [
-    CreateOfferingDto,
-    UpdateOfferingDto,
-    TermsDto,
-    CreateIndividualInvestorDto,
-    CreateCompanyInvestorDto,
-    CreateSubscriptionDto,
-    UploadDocumentDto,
-  ]) {
-    const schema = document.components?.schemas?.[dto.name]
-    if (
-      !schema ||
-      "$ref" in schema ||
-      schema.type !== "object" ||
-      !schema.properties ||
-      schema.allOf ||
-      schema.anyOf ||
-      schema.oneOf
-    )
-      throw new Error(`Expected a concrete object schema for request DTO ${dto.name}`)
+  // This example's DTO classes describe fixed records. Swagger 7 leaves them open,
+  // so make their contract explicit. Nested dictionaries keep their own key rules.
+  for (const [name, schema] of Object.entries(document.components?.schemas ?? {})) {
+    if ("$ref" in schema || schema.type !== "object" || schema.additionalProperties !== undefined)
+      continue
+    if (!schema.properties || schema.allOf || schema.anyOf || schema.oneOf)
+      throw new Error(`Expected a concrete object schema for DTO ${name}`)
     schema.additionalProperties = false
   }
   return document

@@ -115,9 +115,9 @@ export type UsersGetUserContract = {
 export const api = {
     "users": {
         "listUsers": defineEndpoint<UsersListUsersContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8f355a546a72debe",
+            kind: "endpoint",
+            plan: {
+                "apiId": "e99423110e5c1d1a",
                 "method": "GET",
                 "path": "/users",
                 "operationId": "listUsers",
@@ -133,70 +133,32 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [],
                 "security": [],
-                "securitySchemes": {}
+                "securitySchemes": {},
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    }
+                ]
             }
         }),
         "createUser": defineEndpoint<UsersCreateUserContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8f355a546a72debe",
+            kind: "endpoint",
+            plan: {
+                "apiId": "e99423110e5c1d1a",
                 "method": "POST",
                 "path": "/users",
                 "operationId": "createUser",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [],
                 "security": [],
@@ -210,23 +172,37 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    }
+                ]
             }
         }),
         "getUser": defineEndpoint<UsersGetUserContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8f355a546a72debe",
+            kind: "endpoint",
+            plan: {
+                "apiId": "e99423110e5c1d1a",
                 "method": "GET",
                 "path": "/users/{userId}",
                 "operationId": "getUser",
@@ -242,42 +218,30 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [],
                 "security": [],
-                "securitySchemes": {}
+                "securitySchemes": {},
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    }
+                ]
             }
         })
     }

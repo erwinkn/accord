@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto"
 import {
+  defaultCodec,
   type EndpointPlan,
   type HttpMethod,
+  type MediaPlan,
   type ParameterDescriptor,
   type ResponseDescriptor,
   type SecurityRequirement,
@@ -12,6 +14,7 @@ import {
 import { type DocumentStore, fail, list, object, string } from "./loader.js"
 import type {
   ApiModel,
+  Direction,
   LocatedValue,
   MediaModel,
   OperationModel,
@@ -148,10 +151,7 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
       )
       const responsePlans: ResponseDescriptor[] = responses.map((response) => ({
         status: statusSelector(response.status, at),
-        content: response.media.map(({ mediaType, representation }) => ({
-          mediaType,
-          representation,
-        })),
+        content: response.media.map((media) => mediaPlan(media, "response")),
         headers: response.headers.map(parameterPlan),
       }))
       responsePlans.sort((left, right) => statusOrder(left.status) - statusOrder(right.status))
@@ -198,10 +198,7 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
             required: body.required,
             mode: body.mode,
             fields: body.fields,
-            content: body.media.map(({ mediaType, representation }) => ({
-              mediaType,
-              representation,
-            })),
+            content: body.media.map((media) => mediaPlan(media, "request")),
             defaultMediaType,
           },
         }
@@ -319,23 +316,20 @@ function parameters(at: LocatedValue, keyword: string, graph: SchemaGraph): Para
     if (content.length > 1)
       fail("INVALID_PARAMETER", "Parameter content must have one media type", parameter.source)
     const schema = content.length
-      ? mediaModels(parameter, graph, "request", `param-${location}-${name}`)[0]!.schema
+      ? mediaModels(parameter, graph, "request")[0]!.schema
       : value["schema"] !== undefined
         ? graph.add(graph.store.child(parameter, "schema"))
         : graph.any
-    const representation = content.length
-      ? graph.representation(schema, "request", content[0]!, `param-${location}-${name}`)
-      : {
-          key: `param-${location}-${name}`,
-          codec: { kind: "parameter", encoding: styleEncoding(value, location) } as const,
-        }
+    const codec = content.length
+      ? graph.codec(schema, "request", content[0]!)
+      : { kind: "parameter" as const, encoding: styleEncoding(value, location) }
     result.push({
       name,
       inputName: sanitizeIdentifier(name),
       location,
       required: value["required"] === true,
       schema,
-      representation,
+      codec,
       source: parameter.source,
     })
   }
@@ -343,7 +337,7 @@ function parameters(at: LocatedValue, keyword: string, graph: SchemaGraph): Para
 }
 
 function parameterPlan(parameter: ParameterModel): ParameterDescriptor {
-  const codec = parameter.representation.codec
+  const codec = parameter.codec
   const base = {
     name: parameter.name,
     inputName: parameter.inputName,
@@ -353,7 +347,7 @@ function parameterPlan(parameter: ParameterModel): ParameterDescriptor {
   if (codec.kind === "parameter") return { ...base, ...codec.encoding }
   return {
     ...base,
-    representation: parameter.representation,
+    codec,
     style: parameter.location === "path" || parameter.location === "header" ? "simple" : "form",
     explode: false,
     allowReserved: false,
@@ -364,25 +358,25 @@ function mediaModels(
   at: LocatedValue,
   graph: SchemaGraph,
   direction: "request" | "response",
-  prefix: string,
 ): MediaModel[] {
   const content = object(object(at.value)["content"])
   return Object.keys(content)
     .sort()
-    .map((mediaType, index) => {
+    .map((mediaType) => {
       const mediaAt = graph.store.child(at, "content", mediaType)
       const media = object(mediaAt.value)
       const schema =
         media["schema"] === undefined ? graph.any : graph.add(graph.store.child(mediaAt, "schema"))
-      const representation = graph.representation(
-        schema,
-        direction,
-        mediaType,
-        `${prefix}-${index}`,
-        object(media["encoding"]),
-      )
-      return { mediaType, schema, representation }
+      const codec = graph.codec(schema, direction, mediaType, object(media["encoding"]))
+      return { mediaType, schema, codec }
     })
+}
+
+function mediaPlan(media: MediaModel, direction: Direction): MediaPlan {
+  const { mediaType, codec } = media
+  return JSON.stringify(codec) === JSON.stringify(defaultCodec(mediaType, direction))
+    ? { mediaType }
+    : { mediaType, codec }
 }
 
 function requestBody(
@@ -397,7 +391,7 @@ function requestBody(
   if (object(at.value)["requestBody"] === undefined) return undefined
   const bodyAt = graph.store.dereference(graph.store.child(at, "requestBody"))
   const body = object(bodyAt.value)
-  const media = mediaModels(bodyAt, graph, "request", "request")
+  const media = mediaModels(bodyAt, graph, "request")
   if (!media.length)
     fail("INVALID_REQUEST_BODY", "Request body needs at least one media type", bodyAt.source)
   const views = media.map((item) => graph.objectView(item.schema, "request"))
@@ -465,18 +459,13 @@ function responseModels(at: LocatedValue, graph: SchemaGraph): ResponseModel[] {
         location: "header",
         required: value["required"] === true,
         schema,
-        representation: {
-          key: `header-${status}-${name}`,
-          codec: { kind: "parameter", encoding: styleEncoding(value, "header") },
-        },
+        codec: { kind: "parameter", encoding: styleEncoding(value, "header") },
         source: header.source,
       })
     }
     responses.push({
       status,
-      media: ["204", "205", "304"].includes(status)
-        ? []
-        : mediaModels(response, graph, "response", `response-${status}`),
+      media: ["204", "205", "304"].includes(status) ? [] : mediaModels(response, graph, "response"),
       headers,
     })
   }

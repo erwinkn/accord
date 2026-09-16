@@ -45,25 +45,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/PageInfoDto"
-                    },
-                    {
-                      "type": "object",
-                      "required": [
-                        "items"
-                      ],
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/OfferingDto"
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/OfferingDtoPage"
                 }
               }
             }
@@ -791,25 +773,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/PageInfoDto"
-                    },
-                    {
-                      "type": "object",
-                      "required": [
-                        "items"
-                      ],
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/SubscriptionDto"
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/SubscriptionDtoPage"
                 }
               }
             }
@@ -1414,29 +1378,8 @@
           "statusCode",
           "code",
           "message"
-        ]
-      },
-      "PageInfoDto": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "limit": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "total": {
-            "type": "integer",
-            "minimum": 0
-          }
-        },
-        "required": [
-          "page",
-          "limit",
-          "total"
-        ]
+        ],
+        "additionalProperties": false
       },
       "Currency": {
         "type": "string",
@@ -1525,7 +1468,38 @@
           "id",
           "status",
           "createdAt"
-        ]
+        ],
+        "additionalProperties": false
+      },
+      "OfferingDtoPage": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferingDto"
+            }
+          }
+        },
+        "required": [
+          "page",
+          "limit",
+          "total",
+          "items"
+        ],
+        "additionalProperties": false
       },
       "CreateOfferingDto": {
         "type": "object",
@@ -1608,7 +1582,8 @@
           "offeringId",
           "subscriptionCount",
           "currency"
-        ]
+        ],
+        "additionalProperties": false
       },
       "CreateIndividualInvestorDto": {
         "type": "object",
@@ -1686,7 +1661,8 @@
           "country",
           "kind",
           "id"
-        ]
+        ],
+        "additionalProperties": false
       },
       "CreateCompanyInvestorDto": {
         "type": "object",
@@ -1776,7 +1752,8 @@
           "kind",
           "registrationNumber",
           "id"
-        ]
+        ],
+        "additionalProperties": false
       },
       "CreateSubscriptionDto": {
         "type": "object",
@@ -1864,7 +1841,38 @@
           "offeringId",
           "status",
           "submittedAt"
-        ]
+        ],
+        "additionalProperties": false
+      },
+      "SubscriptionDtoPage": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionDto"
+            }
+          }
+        },
+        "required": [
+          "page",
+          "limit",
+          "total",
+          "items"
+        ],
+        "additionalProperties": false
       },
       "AcceptedSubmissionDto": {
         "type": "object",
@@ -1883,7 +1891,8 @@
         "required": [
           "state",
           "jobId"
-        ]
+        ],
+        "additionalProperties": false
       },
       "SubmissionJobDto": {
         "type": "object",
@@ -1906,7 +1915,8 @@
           "id",
           "state",
           "result"
-        ]
+        ],
+        "additionalProperties": false
       },
       "DocumentCategory": {
         "type": "string",
@@ -1969,7 +1979,8 @@
           "offeringId",
           "filename",
           "size"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   }

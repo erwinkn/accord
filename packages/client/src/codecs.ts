@@ -12,6 +12,14 @@ export function mediaType(value: string | null): string {
   return (value ?? "").split(";", 1)[0]!.trim().toLowerCase()
 }
 
+/** Shared by codegen and runtime: only schema-dependent decoding needs an explicit override. */
+export function defaultCodec(type: string, direction: "request" | "response"): CodecPlan {
+  const actual = mediaType(type)
+  if (actual === "application/json" || actual.endsWith("+json")) return { kind: "json" }
+  if (actual.startsWith("text/")) return { kind: "text" }
+  return { kind: "bytes", value: direction === "request" ? "upload" : "ArrayBuffer" }
+}
+
 export function mediaMatches(pattern: string, actual: string): boolean {
   const expected = mediaType(pattern)
   const received = mediaType(actual)
@@ -262,9 +270,8 @@ async function decodeForm(
 
 export function fallbackCodec(type: string | null): CodecPlan {
   const actual = mediaType(type)
-  if (actual === "application/json" || actual.endsWith("+json")) return { kind: "json" }
-  if (!actual || actual.startsWith("text/") || actual.endsWith("xml")) return { kind: "text" }
-  return { kind: "bytes", value: "ArrayBuffer" }
+  if (!actual || actual.endsWith("xml")) return { kind: "text" }
+  return defaultCodec(actual, "response")
 }
 
 function escapeXml(value: RequestValue): string {

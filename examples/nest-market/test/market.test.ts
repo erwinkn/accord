@@ -40,7 +40,7 @@ test("Nest's exported document and Accord output match the committed artifacts",
   assert.equal(`${JSON.stringify(document, null, 2)}\n`, await readFile("openapi.json", "utf8"))
   const generated = await generateFromFile("openapi.json", { namespace: "tag", validators: true })
   assert.equal(generated.model.operations.length, 18)
-  assert.equal(Object.keys(document.components?.schemas ?? {}).length, 21)
+  assert.equal(Object.keys(document.components?.schemas ?? {}).length, 22)
   assert.deepEqual(
     Object.fromEntries(
       generated.model.operations
@@ -266,6 +266,25 @@ test("generated response validators reject a corrupted response after a real HTT
     client.offerings.getOffering({ offeringId: SAMPLE_OFFERING_ID }),
     ValidationError,
   )
+})
+
+test("closed response DTOs reject undeclared server fields", async () => {
+  const client = createClient(api, {
+    baseUrl,
+    credentials: { bearer: DEMO_TOKEN },
+    fetch: async (url, init) => {
+      const response = await fetch(url, init)
+      return Response.json(
+        { ...(await response.json()), unexpected: "not in the contract" },
+        { status: response.status, headers: response.headers },
+      )
+    },
+  })
+  await assert.rejects(
+    client.offerings.getOffering({ offeringId: SAMPLE_OFFERING_ID }),
+    ValidationError,
+  )
+  await assert.rejects(client.offerings.listOfferings(), ValidationError)
 })
 
 test("React Query options execute the generated endpoint against the live app", async () => {

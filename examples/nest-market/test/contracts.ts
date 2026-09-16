@@ -11,6 +11,12 @@ export async function callerContract(client: MarketClient) {
   const page = await client.offerings.listOfferings({ status: ["open", "draft"], limit: 5 })
   const offering: OfferingDto | undefined = page.items[0]
   void offering
+  // @ts-expect-error page DTOs describe fixed records, not arbitrary dictionaries
+  page.unlistedField
+  if (offering) {
+    // @ts-expect-error response DTOs reject misspelled or undeclared properties
+    offering.unlistedField
+  }
   // @ts-expect-error nested terms are required
   client.offerings.createOffering({ name: "Incomplete" })
   // @ts-expect-error money is a decimal string

@@ -68,12 +68,12 @@ function inputType(
   const params = operation.parameters.map((parameter) =>
     property(
       parameter.inputName,
-      emitter.emit(parameter.schema, "request", parameter.representation.codec),
+      emitter.emit(parameter.schema, "request", parameter.codec),
       !parameter.required,
     ),
   )
   if (!media || !operation.body) return typeLiteral(params)
-  const bodyType = emitter.emit(media.schema, "request", media.representation.codec)
+  const bodyType = emitter.emit(media.schema, "request", media.codec)
   if (operation.body.mode === "separate")
     return typeLiteral([...params, property("body", bodyType, !operation.body.required)])
   return params.length
@@ -135,9 +135,7 @@ function renderOperation(operation: OperationModel, emitter: TypeEmitter): Rende
       full.push(typeReference("HttpResult", [statusType(emptyCodes), undefinedType()]))
     }
     const payloads = response.media.length
-      ? response.media.map((media) =>
-          emitter.emit(media.schema, "response", media.representation.codec),
-        )
+      ? response.media.map((media) => emitter.emit(media.schema, "response", media.codec))
       : [undefinedType()]
     const payload = union(payloads)
     responseProperties.push(
@@ -205,7 +203,6 @@ interface TreeNode {
 export function renderSdk(compilation: Compilation, validators?: ValidatorOutput): string {
   const emitter = new TypeEmitter(compilation.graph, [
     "api",
-    "responseSchemas",
     "accordValidators",
     "createAccordValidators",
     "AccordValidationFunction",
@@ -231,25 +228,21 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     ]),
   )
   const validatorDeclarations: string[] = []
-  const validatorBindings = new Map<string, string>()
-  const publicSchemas: string[] = []
+  const validatorBindings = new Map<MediaModel, string>()
   if (validators) {
     for (const operation of compilation.model.operations) {
-      const entries: string[] = []
       for (const response of operation.responses) {
         for (const media of response.media) {
-          const binding = validators.bindings.get(operation.key)?.get(media.representation.key)
+          const binding = validators.bindings.get(media)
           if (!binding) continue
           const name = `${operation.typeName}Response${sanitizeTypeIdentifier(`${response.status} ${media.mediaType}`)}Schema`
-          const type = printNode(emitter.emit(media.schema, "response", media.representation.codec))
+          const type = printNode(emitter.emit(media.schema, "response", media.codec))
           validatorDeclarations.push(
             `export const ${name} = standardSchema<${type}>(accordValidators.${binding.exportName}, ${binding.binary})`,
           )
-          entries.push(`${JSON.stringify(media.representation.key)}: ${name}`)
-          publicSchemas.push(`${JSON.stringify(name)}: ${name}`)
+          validatorBindings.set(media, name)
         }
       }
-      validatorBindings.set(operation.key, `{ ${entries.join(", ")} }`)
     }
   }
   const root: TreeNode = { children: new Map() }
@@ -268,9 +261,20 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
   const renderTree = (node: TreeNode, depth: number): string => {
     if (node.operation) {
       const operation = node.operation
-      let definition = JSON.stringify({ kind: "endpoint", plan: operation.plan }, null, 2)
-      if (validators)
-        definition = `${definition.slice(0, -1)}, "validators": ${validatorBindings.get(operation.key)} }`
+      const responses = operation.plan.responses.map((response) => {
+        const model = operation.responses.find((item) => item.status === String(response.status))!
+        const content = response.content.map((media) => {
+          const source = model.media.find((item) => item.mediaType === media.mediaType)!
+          const schema = validatorBindings.get(source)
+          const json = JSON.stringify(media, null, 2)
+          return schema ? `${json.slice(0, -1)}, "schema": ${schema} }` : json
+        })
+        // Only generated identifiers are injected; all spec-owned text remains JSON escaped.
+        const json = JSON.stringify({ ...response, content: undefined }, null, 2)
+        return `${json.slice(0, -1)}, "content": [\n${content.join(",\n")}\n] }`
+      })
+      const plan = JSON.stringify({ ...operation.plan, responses: undefined }, null, 2)
+      const definition = `{\nkind: "endpoint",\nplan: ${plan.slice(0, -1)}, "responses": [\n${responses.join(",\n")}\n] }\n}`
       return `defineEndpoint<${operations.get(operation.key)!.contract}, ${JSON.stringify(operation.plan.operationKind)}>(${definition})`
     }
     return `{\n${[...node.children].map(([key, child]) => `${"  ".repeat(depth + 1)}${JSON.stringify(key)}: ${renderTree(child, depth + 1)}`).join(",\n")}\n${"  ".repeat(depth)}}`
@@ -290,7 +294,6 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     ...[...operations.values()].map((operation) => operation.declaration),
     ...(validators ? ["const accordValidators = createAccordValidators()"] : []),
     ...validatorDeclarations,
-    ...(validators ? [`export const responseSchemas = { ${publicSchemas.join(", ")} }`] : []),
     `export const api = ${renderTree(root, 0)}`,
     ...(validators ? [validators.source] : []),
     "",

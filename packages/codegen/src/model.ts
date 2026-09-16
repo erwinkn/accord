@@ -1,4 +1,4 @@
-import type { EndpointPlan, Representation } from "@accord/client"
+import type { CodecPlan, EndpointPlan } from "@accord/client"
 import type { JsonObject, JsonValue } from "./types.js"
 
 /** Identity is a canonical source URI, including its JSON pointer. */
@@ -45,14 +45,14 @@ export interface ParameterModel {
   readonly location: "path" | "query" | "header" | "cookie"
   readonly required: boolean
   readonly schema: SchemaId
-  readonly representation: Representation
+  readonly codec: CodecPlan
   readonly source: SourceLocation
 }
 
 export interface MediaModel {
   readonly mediaType: string
   readonly schema: SchemaId
-  readonly representation: Representation
+  readonly codec: CodecPlan
 }
 
 export interface ResponseModel {

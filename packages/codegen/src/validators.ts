@@ -5,7 +5,7 @@ import { build } from "esbuild"
 import type { Compilation } from "./compile.js"
 import type { DocumentStore } from "./loader.js"
 import { object, pointerSegment } from "./loader.js"
-import type { SchemaId } from "./model.js"
+import type { MediaModel, SchemaId } from "./model.js"
 import { isObject, isString } from "./object.js"
 import type { JsonObject, JsonValue } from "./types.js"
 import { validatorSource } from "./validator-source.js"
@@ -22,7 +22,7 @@ export interface ValidatorBinding {
 }
 export interface ValidatorOutput {
   readonly source: string
-  readonly bindings: ReadonlyMap<string, ReadonlyMap<string, ValidatorBinding>>
+  readonly bindings: ReadonlyMap<MediaModel, ValidatorBinding>
 }
 
 /** Place source schema trees under real JSON Schema keywords before handing them to Ajv.
@@ -187,15 +187,14 @@ export async function generateValidators(
   for (const [uri, document] of documents) ajv.addSchema(document, uri)
   const exports: { [key: string]: string } = Object.create(null)
   const shared = new Map<string, string>()
-  const bindings = new Map<string, ReadonlyMap<string, ValidatorBinding>>()
+  const bindings = new Map<MediaModel, ValidatorBinding>()
   let count = 0
   for (const operation of compilation.model.operations) {
-    const operationBindings = new Map<string, ValidatorBinding>()
     for (const response of operation.responses) {
       for (const media of response.media) {
         const exportName = `check${count++}`
         const key = `urn:accord:${compilation.model.id}:${exportName}`
-        const codec = media.representation.codec
+        const codec = media.codec
         const binary = codec.kind === "bytes"
         let selectedReferences = references
         if (codec.kind === "form") {
@@ -246,14 +245,13 @@ export async function generateValidators(
           if (validator) ajv.addSchema(validator, key)
           exports[sharedName] = validator ? key : identity
         }
-        operationBindings.set(media.representation.key, {
+        bindings.set(media, {
           exportName: sharedName,
           binary,
           schema: media.schema,
         })
       }
     }
-    bindings.set(operation.key, operationBindings)
   }
   const javascript = standalone(ajv, exports)
   const bundled = await build({

@@ -159,13 +159,12 @@ export const TasksCreateResponseT422ApplicationProblemJsonSchema = standardSchem
 export const TasksGetResponseT200ApplicationJsonSchema = standardSchema<Task>(accordValidators.check1, false);
 export const TasksGetResponseT404ApplicationProblemJsonSchema = standardSchema<Problem>(accordValidators.check2, false);
 export const TasksUpdateResponseT200ApplicationJsonSchema = standardSchema<Task>(accordValidators.check1, false);
-export const responseSchemas = { "TasksListResponseT200ApplicationJsonSchema": TasksListResponseT200ApplicationJsonSchema, "TasksCreateResponseT201ApplicationJsonSchema": TasksCreateResponseT201ApplicationJsonSchema, "TasksCreateResponseT422ApplicationProblemJsonSchema": TasksCreateResponseT422ApplicationProblemJsonSchema, "TasksGetResponseT200ApplicationJsonSchema": TasksGetResponseT200ApplicationJsonSchema, "TasksGetResponseT404ApplicationProblemJsonSchema": TasksGetResponseT404ApplicationProblemJsonSchema, "TasksUpdateResponseT200ApplicationJsonSchema": TasksUpdateResponseT200ApplicationJsonSchema };
 export const api = {
     "tasks": {
         "list": defineEndpoint<TasksListContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "43627e3dc115fb62",
+            kind: "endpoint",
+            plan: {
+                "apiId": "8e3b20278e0ed937",
                 "method": "GET",
                 "path": "/tasks",
                 "operationId": "list",
@@ -190,23 +189,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -224,51 +206,30 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": TasksListResponseT200ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": TasksListResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "create": defineEndpoint<TasksCreateContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "43627e3dc115fb62",
+            kind: "endpoint",
+            plan: {
+                "apiId": "8e3b20278e0ed937",
                 "method": "POST",
                 "path": "/tasks",
                 "operationId": "create",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 422,
-                        "content": [
-                            {
-                                "mediaType": "application/problem+json",
-                                "representation": {
-                                    "key": "response-422-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -297,24 +258,39 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-201-0": TasksCreateResponseT201ApplicationJsonSchema, "response-422-0": TasksCreateResponseT422ApplicationProblemJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": TasksCreateResponseT201ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 422,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/problem+json",
+                                "schema": TasksCreateResponseT422ApplicationProblemJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "get": defineEndpoint<TasksGetContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "43627e3dc115fb62",
+            kind: "endpoint",
+            plan: {
+                "apiId": "8e3b20278e0ed937",
                 "method": "GET",
                 "path": "/tasks/{id}",
                 "operationId": "get",
@@ -328,38 +304,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/problem+json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -379,14 +323,35 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": TasksGetResponseT200ApplicationJsonSchema, "response-404-0": TasksGetResponseT404ApplicationProblemJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": TasksGetResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/problem+json",
+                                "schema": TasksGetResponseT404ApplicationProblemJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "update": defineEndpoint<TasksUpdateContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "43627e3dc115fb62",
+            kind: "endpoint",
+            plan: {
+                "apiId": "8e3b20278e0ed937",
                 "method": "PATCH",
                 "path": "/tasks/{id}",
                 "operationId": "update",
@@ -400,23 +365,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -446,19 +394,24 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-200-0": TasksUpdateResponseT200ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": TasksUpdateResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         })
     }
 };

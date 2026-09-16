@@ -18,7 +18,6 @@ import {
   ApiProperty,
   ApiPropertyOptional,
   ApiUnauthorizedResponse,
-  getSchemaPath,
 } from "@nestjs/swagger"
 import { Type as TransformType } from "class-transformer"
 import { IsInt, IsOptional, Max, Min } from "class-validator"
@@ -118,23 +117,14 @@ export interface Page<T> extends PageInfoDto {
   items: T[]
 }
 
-/** The usual Nest Swagger pagination pattern: generic TS types need explicit item metadata. */
+/** Concrete page DTOs preserve generic item metadata and can describe a closed object. */
 export function ApiPage<T>(model: Type<T>) {
-  return applyDecorators(
-    ApiExtraModels(PageInfoDto, model),
-    ApiOkResponse({
-      schema: {
-        allOf: [
-          { $ref: getSchemaPath(PageInfoDto) },
-          {
-            type: "object",
-            required: ["items"],
-            properties: { items: { type: "array", items: { $ref: getSchemaPath(model) } } },
-          },
-        ],
-      },
-    }),
-  )
+  class PageDto extends PageInfoDto {
+    @ApiProperty({ type: [model] })
+    items!: T[]
+  }
+  Object.defineProperty(PageDto, "name", { value: `${model.name}Page` })
+  return applyDecorators(ApiExtraModels(PageDto), ApiOkResponse({ type: PageDto }))
 }
 
 export function paginate<T>(items: T[], query: PageQueryDto): Page<T> {

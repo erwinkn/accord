@@ -127,31 +127,14 @@ export type AssetsRemoveContract = {
 export const api = {
     "assets": {
         "upload": defineEndpoint<AssetsUploadContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "c51c0cec0551be53",
+            kind: "endpoint",
+            plan: {
+                "apiId": "87f2f074fd3a6e3e",
                 "method": "POST",
                 "path": "/assets",
                 "operationId": "upload",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -190,40 +173,11 @@ export const api = {
                     "content": [
                         {
                             "mediaType": "multipart/form-data",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "form",
-                                    "mediaType": "multipart/form-data",
-                                    "fields": {
-                                        "file": {
-                                            "mediaType": "application/octet-stream",
-                                            "codec": {
-                                                "kind": "bytes",
-                                                "value": "upload"
-                                            },
-                                            "multiple": false,
-                                            "headers": {}
-                                        },
-                                        "metadata": {
-                                            "mediaType": "application/json",
-                                            "codec": {
-                                                "kind": "json"
-                                            },
-                                            "multiple": false,
-                                            "headers": {}
-                                        },
-                                        "tags": {
-                                            "mediaType": "text/plain",
-                                            "codec": {
-                                                "kind": "text"
-                                            },
-                                            "multiple": true,
-                                            "headers": {}
-                                        }
-                                    },
-                                    "patterns": {},
-                                    "additional": {
+                            "codec": {
+                                "kind": "form",
+                                "mediaType": "multipart/form-data",
+                                "fields": {
+                                    "file": {
                                         "mediaType": "application/octet-stream",
                                         "codec": {
                                             "kind": "bytes",
@@ -231,19 +185,56 @@ export const api = {
                                         },
                                         "multiple": false,
                                         "headers": {}
+                                    },
+                                    "metadata": {
+                                        "mediaType": "application/json",
+                                        "codec": {
+                                            "kind": "json"
+                                        },
+                                        "multiple": false,
+                                        "headers": {}
+                                    },
+                                    "tags": {
+                                        "mediaType": "text/plain",
+                                        "codec": {
+                                            "kind": "text"
+                                        },
+                                        "multiple": true,
+                                        "headers": {}
                                     }
+                                },
+                                "patterns": {},
+                                "additional": {
+                                    "mediaType": "application/octet-stream",
+                                    "codec": {
+                                        "kind": "bytes",
+                                        "value": "upload"
+                                    },
+                                    "multiple": false,
+                                    "headers": {}
                                 }
                             }
                         }
                     ],
                     "defaultMediaType": "multipart/form-data"
-                }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    }
+                ]
             }
         }),
         "rename": defineEndpoint<AssetsRenameContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "c51c0cec0551be53",
+            kind: "endpoint",
+            plan: {
+                "apiId": "87f2f074fd3a6e3e",
                 "method": "PATCH",
                 "path": "/assets/{id}",
                 "operationId": "rename",
@@ -257,23 +248,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -312,23 +286,28 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json"
+                            }
+                        ]
+                    }
+                ]
             }
         }),
         "remove": defineEndpoint<AssetsRemoveContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "c51c0cec0551be53",
+            kind: "endpoint",
+            plan: {
+                "apiId": "87f2f074fd3a6e3e",
                 "method": "DELETE",
                 "path": "/assets/{id}",
                 "operationId": "remove",
@@ -342,13 +321,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 204,
-                        "content": [],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -377,7 +349,14 @@ export const api = {
                         "name": "X-API-Key",
                         "in": "header"
                     }
-                }
+                },
+                "responses": [
+                    {
+                        "status": 204,
+                        "headers": [],
+                        "content": []
+                    }
+                ]
             }
         })
     }

@@ -9,12 +9,10 @@ type AccordArrayConstraints<T, R> = T extends readonly unknown[] ? T & R : T;
 export type AcceptedSubmissionDto = {
     readonly "jobId": string;
     readonly "state": "accepted" & string;
-    readonly [key: string]: unknown;
 };
 export type AcceptedSubmissionDtoRequest = {
     readonly "jobId": string;
     readonly "state": "accepted" & string;
-    readonly [key: string]: unknown;
 };
 export type CompanyInvestorDto = {
     readonly "country": string;
@@ -23,7 +21,6 @@ export type CompanyInvestorDto = {
     readonly "id": string;
     readonly "kind": "company" & string;
     readonly "registrationNumber": string;
-    readonly [key: string]: unknown;
 };
 export type CompanyInvestorDtoRequest = {
     readonly "country": string;
@@ -32,7 +29,6 @@ export type CompanyInvestorDtoRequest = {
     readonly "id"?: never;
     readonly "kind": "company" & string;
     readonly "registrationNumber": string;
-    readonly [key: string]: unknown;
 };
 export type CreateCompanyInvestorDto = {
     readonly "country": string;
@@ -111,7 +107,6 @@ export type DocumentDto = {
     readonly "note"?: string;
     readonly "offeringId": string;
     readonly "size": number;
-    readonly [key: string]: unknown;
 };
 export type DocumentDtoRequest = {
     readonly "category": DocumentCategoryRequest;
@@ -120,7 +115,6 @@ export type DocumentDtoRequest = {
     readonly "note"?: string;
     readonly "offeringId"?: never;
     readonly "size": number;
-    readonly [key: string]: unknown;
 };
 export type IndividualInvestorDto = {
     readonly "country": string;
@@ -128,7 +122,6 @@ export type IndividualInvestorDto = {
     readonly "email": string;
     readonly "id": string;
     readonly "kind": "individual" & string;
-    readonly [key: string]: unknown;
 };
 export type IndividualInvestorDtoRequest = {
     readonly "country": string;
@@ -136,7 +129,6 @@ export type IndividualInvestorDtoRequest = {
     readonly "email": string;
     readonly "id"?: never;
     readonly "kind": "individual" & string;
-    readonly [key: string]: unknown;
 };
 export type OfferingStatus = ("draft" | "open" | "closed") & string;
 export type OfferingDto = {
@@ -147,7 +139,6 @@ export type OfferingDto = {
     readonly "status": OfferingStatus;
     readonly "tags"?: ReadonlyArray<string>;
     readonly "terms": TermsDto;
-    readonly [key: string]: unknown;
 };
 export type OfferingStatusRequest = ("draft" | "open" | "closed") & string;
 export type OfferingDtoRequest = {
@@ -158,45 +149,40 @@ export type OfferingDtoRequest = {
     readonly "status": OfferingStatusRequest;
     readonly "tags"?: ReadonlyArray<string>;
     readonly "terms": TermsDtoRequest;
-    readonly [key: string]: unknown;
+};
+export type OfferingDtoPage = {
+    readonly "items": ReadonlyArray<OfferingDto>;
+    readonly "limit": number;
+    readonly "page": number;
+    readonly "total": number;
+};
+export type OfferingDtoPageRequest = {
+    readonly "items": ReadonlyArray<OfferingDtoRequest>;
+    readonly "limit": number;
+    readonly "page": number;
+    readonly "total": number;
 };
 export type OfferingReportDto = {
     readonly "currency": Currency;
     readonly "offeringId": string;
     readonly "subscriptionCount": number;
-    readonly [key: string]: unknown;
 };
 export type OfferingReportDtoRequest = {
     readonly "currency": CurrencyRequest;
     readonly "offeringId": string;
     readonly "subscriptionCount": number;
-    readonly [key: string]: unknown;
-};
-export type PageInfoDto = {
-    readonly "limit": number;
-    readonly "page": number;
-    readonly "total": number;
-    readonly [key: string]: unknown;
-};
-export type PageInfoDtoRequest = {
-    readonly "limit": number;
-    readonly "page": number;
-    readonly "total": number;
-    readonly [key: string]: unknown;
 };
 export type ProblemDto = {
     readonly "code": string;
     readonly "details"?: ReadonlyArray<string>;
     readonly "message": string;
     readonly "statusCode": number;
-    readonly [key: string]: unknown;
 };
 export type ProblemDtoRequest = {
     readonly "code": string;
     readonly "details"?: ReadonlyArray<string>;
     readonly "message": string;
     readonly "statusCode": number;
-    readonly [key: string]: unknown;
 };
 export type SubscriptionStatus = ("draft" | "submitted") & string;
 export type SubscriptionDto = {
@@ -209,13 +195,11 @@ export type SubscriptionDto = {
     readonly "offeringId": string;
     readonly "status": SubscriptionStatus;
     readonly "submittedAt": string | null;
-    readonly [key: string]: unknown;
 };
 export type SubmissionJobDto = {
     readonly "id": string;
     readonly "result": SubscriptionDto;
     readonly "state": "completed" & string;
-    readonly [key: string]: unknown;
 };
 export type SubscriptionStatusRequest = ("draft" | "submitted") & string;
 export type SubscriptionDtoRequest = {
@@ -228,13 +212,23 @@ export type SubscriptionDtoRequest = {
     readonly "offeringId"?: never;
     readonly "status": SubscriptionStatusRequest;
     readonly "submittedAt"?: never;
-    readonly [key: string]: unknown;
 };
 export type SubmissionJobDtoRequest = {
     readonly "id": string;
     readonly "result": SubscriptionDtoRequest;
     readonly "state": "completed" & string;
-    readonly [key: string]: unknown;
+};
+export type SubscriptionDtoPage = {
+    readonly "items": ReadonlyArray<SubscriptionDto>;
+    readonly "limit": number;
+    readonly "page": number;
+    readonly "total": number;
+};
+export type SubscriptionDtoPageRequest = {
+    readonly "items": ReadonlyArray<SubscriptionDtoRequest>;
+    readonly "limit": number;
+    readonly "page": number;
+    readonly "total": number;
 };
 export type UpdateOfferingDto = {
     readonly "description"?: string | null;
@@ -458,24 +452,15 @@ export type OfferingsListOfferingsArguments = [
     },
     options?: RequestOptions
 ];
-export type OfferingsListOfferingsResponse = PageInfoDto & {
-    readonly "items": ReadonlyArray<OfferingDto>;
-    readonly [key: string]: unknown;
-};
+export type OfferingsListOfferingsResponse = OfferingDtoPage;
 export type OfferingsListOfferingsError = ProblemDto;
 export type OfferingsListOfferingsResponses = {
-    readonly "200": PageInfoDto & {
-        readonly "items": ReadonlyArray<OfferingDto>;
-        readonly [key: string]: unknown;
-    };
+    readonly "200": OfferingDtoPage;
     readonly "400": ProblemDto;
     readonly "401": ProblemDto;
     readonly "404": ProblemDto;
 };
-export type OfferingsListOfferingsFullResponse = HttpResult<200, PageInfoDto & {
-    readonly "items": ReadonlyArray<OfferingDto>;
-    readonly [key: string]: unknown;
-}>;
+export type OfferingsListOfferingsFullResponse = HttpResult<200, OfferingDtoPage>;
 export type OfferingsListOfferingsContract = {
     readonly "args": OfferingsListOfferingsArguments;
     readonly "input": OfferingsListOfferingsInput;
@@ -671,24 +656,15 @@ export type SubscriptionsListSubscriptionsArguments = [
     },
     options?: RequestOptions
 ];
-export type SubscriptionsListSubscriptionsResponse = PageInfoDto & {
-    readonly "items": ReadonlyArray<SubscriptionDto>;
-    readonly [key: string]: unknown;
-};
+export type SubscriptionsListSubscriptionsResponse = SubscriptionDtoPage;
 export type SubscriptionsListSubscriptionsError = ProblemDto;
 export type SubscriptionsListSubscriptionsResponses = {
-    readonly "200": PageInfoDto & {
-        readonly "items": ReadonlyArray<SubscriptionDto>;
-        readonly [key: string]: unknown;
-    };
+    readonly "200": SubscriptionDtoPage;
     readonly "400": ProblemDto;
     readonly "401": ProblemDto;
     readonly "404": ProblemDto;
 };
-export type SubscriptionsListSubscriptionsFullResponse = HttpResult<200, PageInfoDto & {
-    readonly "items": ReadonlyArray<SubscriptionDto>;
-    readonly [key: string]: unknown;
-}>;
+export type SubscriptionsListSubscriptionsFullResponse = HttpResult<200, SubscriptionDtoPage>;
 export type SubscriptionsListSubscriptionsContract = {
     readonly "args": SubscriptionsListSubscriptionsArguments;
     readonly "input": SubscriptionsListSubscriptionsInput;
@@ -816,10 +792,7 @@ export const JobsGetSubmissionJobResponseT200ApplicationJsonSchema = standardSch
 export const JobsGetSubmissionJobResponseT400ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const JobsGetSubmissionJobResponseT401ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const JobsGetSubmissionJobResponseT404ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
-export const OfferingsListOfferingsResponseT200ApplicationJsonSchema = standardSchema<PageInfoDto & {
-    readonly "items": ReadonlyArray<OfferingDto>;
-    readonly [key: string]: unknown;
-}>(accordValidators.check27, false);
+export const OfferingsListOfferingsResponseT200ApplicationJsonSchema = standardSchema<OfferingDtoPage>(accordValidators.check27, false);
 export const OfferingsListOfferingsResponseT400ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const OfferingsListOfferingsResponseT401ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const OfferingsListOfferingsResponseT404ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
@@ -849,10 +822,7 @@ export const OfferingsExportOfferingResponseT200TextCsvSchema = standardSchema<s
 export const OfferingsExportOfferingResponseT400ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const OfferingsExportOfferingResponseT401ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const OfferingsExportOfferingResponseT404ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
-export const SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema = standardSchema<PageInfoDto & {
-    readonly "items": ReadonlyArray<SubscriptionDto>;
-    readonly [key: string]: unknown;
-}>(accordValidators.check57, false);
+export const SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema = standardSchema<SubscriptionDtoPage>(accordValidators.check57, false);
 export const SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
@@ -869,13 +839,12 @@ export const SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema = 
 export const SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
 export const SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema = standardSchema<ProblemDto>(accordValidators.check1, false);
-export const responseSchemas = { "DocumentsGetDocumentResponseT200ApplicationJsonSchema": DocumentsGetDocumentResponseT200ApplicationJsonSchema, "DocumentsGetDocumentResponseT400ApplicationJsonSchema": DocumentsGetDocumentResponseT400ApplicationJsonSchema, "DocumentsGetDocumentResponseT401ApplicationJsonSchema": DocumentsGetDocumentResponseT401ApplicationJsonSchema, "DocumentsGetDocumentResponseT404ApplicationJsonSchema": DocumentsGetDocumentResponseT404ApplicationJsonSchema, "DocumentsDeleteDocumentResponseT400ApplicationJsonSchema": DocumentsDeleteDocumentResponseT400ApplicationJsonSchema, "DocumentsDeleteDocumentResponseT401ApplicationJsonSchema": DocumentsDeleteDocumentResponseT401ApplicationJsonSchema, "DocumentsDeleteDocumentResponseT404ApplicationJsonSchema": DocumentsDeleteDocumentResponseT404ApplicationJsonSchema, "DocumentsDownloadDocumentResponseT200ApplicationOctetStreamSchema": DocumentsDownloadDocumentResponseT200ApplicationOctetStreamSchema, "DocumentsDownloadDocumentResponseT400ApplicationJsonSchema": DocumentsDownloadDocumentResponseT400ApplicationJsonSchema, "DocumentsDownloadDocumentResponseT401ApplicationJsonSchema": DocumentsDownloadDocumentResponseT401ApplicationJsonSchema, "DocumentsDownloadDocumentResponseT404ApplicationJsonSchema": DocumentsDownloadDocumentResponseT404ApplicationJsonSchema, "InvestorsCreateCompanyInvestorResponseT201ApplicationJsonSchema": InvestorsCreateCompanyInvestorResponseT201ApplicationJsonSchema, "InvestorsCreateCompanyInvestorResponseT400ApplicationJsonSchema": InvestorsCreateCompanyInvestorResponseT400ApplicationJsonSchema, "InvestorsCreateCompanyInvestorResponseT401ApplicationJsonSchema": InvestorsCreateCompanyInvestorResponseT401ApplicationJsonSchema, "InvestorsCreateCompanyInvestorResponseT404ApplicationJsonSchema": InvestorsCreateCompanyInvestorResponseT404ApplicationJsonSchema, "InvestorsCreateIndividualInvestorResponseT201ApplicationJsonSchema": InvestorsCreateIndividualInvestorResponseT201ApplicationJsonSchema, "InvestorsCreateIndividualInvestorResponseT400ApplicationJsonSchema": InvestorsCreateIndividualInvestorResponseT400ApplicationJsonSchema, "InvestorsCreateIndividualInvestorResponseT401ApplicationJsonSchema": InvestorsCreateIndividualInvestorResponseT401ApplicationJsonSchema, "InvestorsCreateIndividualInvestorResponseT404ApplicationJsonSchema": InvestorsCreateIndividualInvestorResponseT404ApplicationJsonSchema, "InvestorsGetInvestorResponseT200ApplicationJsonSchema": InvestorsGetInvestorResponseT200ApplicationJsonSchema, "InvestorsGetInvestorResponseT400ApplicationJsonSchema": InvestorsGetInvestorResponseT400ApplicationJsonSchema, "InvestorsGetInvestorResponseT401ApplicationJsonSchema": InvestorsGetInvestorResponseT401ApplicationJsonSchema, "InvestorsGetInvestorResponseT404ApplicationJsonSchema": InvestorsGetInvestorResponseT404ApplicationJsonSchema, "JobsGetSubmissionJobResponseT200ApplicationJsonSchema": JobsGetSubmissionJobResponseT200ApplicationJsonSchema, "JobsGetSubmissionJobResponseT400ApplicationJsonSchema": JobsGetSubmissionJobResponseT400ApplicationJsonSchema, "JobsGetSubmissionJobResponseT401ApplicationJsonSchema": JobsGetSubmissionJobResponseT401ApplicationJsonSchema, "JobsGetSubmissionJobResponseT404ApplicationJsonSchema": JobsGetSubmissionJobResponseT404ApplicationJsonSchema, "OfferingsListOfferingsResponseT200ApplicationJsonSchema": OfferingsListOfferingsResponseT200ApplicationJsonSchema, "OfferingsListOfferingsResponseT400ApplicationJsonSchema": OfferingsListOfferingsResponseT400ApplicationJsonSchema, "OfferingsListOfferingsResponseT401ApplicationJsonSchema": OfferingsListOfferingsResponseT401ApplicationJsonSchema, "OfferingsListOfferingsResponseT404ApplicationJsonSchema": OfferingsListOfferingsResponseT404ApplicationJsonSchema, "OfferingsCreateOfferingResponseT201ApplicationJsonSchema": OfferingsCreateOfferingResponseT201ApplicationJsonSchema, "OfferingsCreateOfferingResponseT400ApplicationJsonSchema": OfferingsCreateOfferingResponseT400ApplicationJsonSchema, "OfferingsCreateOfferingResponseT401ApplicationJsonSchema": OfferingsCreateOfferingResponseT401ApplicationJsonSchema, "OfferingsCreateOfferingResponseT404ApplicationJsonSchema": OfferingsCreateOfferingResponseT404ApplicationJsonSchema, "OfferingsGetOfferingResponseT200ApplicationJsonSchema": OfferingsGetOfferingResponseT200ApplicationJsonSchema, "OfferingsGetOfferingResponseT400ApplicationJsonSchema": OfferingsGetOfferingResponseT400ApplicationJsonSchema, "OfferingsGetOfferingResponseT401ApplicationJsonSchema": OfferingsGetOfferingResponseT401ApplicationJsonSchema, "OfferingsGetOfferingResponseT404ApplicationJsonSchema": OfferingsGetOfferingResponseT404ApplicationJsonSchema, "OfferingsUpdateOfferingResponseT200ApplicationJsonSchema": OfferingsUpdateOfferingResponseT200ApplicationJsonSchema, "OfferingsUpdateOfferingResponseT400ApplicationJsonSchema": OfferingsUpdateOfferingResponseT400ApplicationJsonSchema, "OfferingsUpdateOfferingResponseT401ApplicationJsonSchema": OfferingsUpdateOfferingResponseT401ApplicationJsonSchema, "OfferingsUpdateOfferingResponseT404ApplicationJsonSchema": OfferingsUpdateOfferingResponseT404ApplicationJsonSchema, "OfferingsDeleteOfferingResponseT400ApplicationJsonSchema": OfferingsDeleteOfferingResponseT400ApplicationJsonSchema, "OfferingsDeleteOfferingResponseT401ApplicationJsonSchema": OfferingsDeleteOfferingResponseT401ApplicationJsonSchema, "OfferingsDeleteOfferingResponseT404ApplicationJsonSchema": OfferingsDeleteOfferingResponseT404ApplicationJsonSchema, "OfferingsDeleteOfferingResponseT409ApplicationJsonSchema": OfferingsDeleteOfferingResponseT409ApplicationJsonSchema, "DocumentsUploadDocumentResponseT201ApplicationJsonSchema": DocumentsUploadDocumentResponseT201ApplicationJsonSchema, "DocumentsUploadDocumentResponseT400ApplicationJsonSchema": DocumentsUploadDocumentResponseT400ApplicationJsonSchema, "DocumentsUploadDocumentResponseT401ApplicationJsonSchema": DocumentsUploadDocumentResponseT401ApplicationJsonSchema, "DocumentsUploadDocumentResponseT404ApplicationJsonSchema": DocumentsUploadDocumentResponseT404ApplicationJsonSchema, "DocumentsUploadDocumentResponseT413ApplicationJsonSchema": DocumentsUploadDocumentResponseT413ApplicationJsonSchema, "OfferingsExportOfferingResponseT200ApplicationJsonSchema": OfferingsExportOfferingResponseT200ApplicationJsonSchema, "OfferingsExportOfferingResponseT200TextCsvSchema": OfferingsExportOfferingResponseT200TextCsvSchema, "OfferingsExportOfferingResponseT400ApplicationJsonSchema": OfferingsExportOfferingResponseT400ApplicationJsonSchema, "OfferingsExportOfferingResponseT401ApplicationJsonSchema": OfferingsExportOfferingResponseT401ApplicationJsonSchema, "OfferingsExportOfferingResponseT404ApplicationJsonSchema": OfferingsExportOfferingResponseT404ApplicationJsonSchema, "SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema": SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema, "SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema": SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema, "SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema": SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema, "SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema": SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema, "SubscriptionsCreateSubscriptionResponseT201ApplicationJsonSchema": SubscriptionsCreateSubscriptionResponseT201ApplicationJsonSchema, "SubscriptionsCreateSubscriptionResponseT400ApplicationJsonSchema": SubscriptionsCreateSubscriptionResponseT400ApplicationJsonSchema, "SubscriptionsCreateSubscriptionResponseT401ApplicationJsonSchema": SubscriptionsCreateSubscriptionResponseT401ApplicationJsonSchema, "SubscriptionsCreateSubscriptionResponseT404ApplicationJsonSchema": SubscriptionsCreateSubscriptionResponseT404ApplicationJsonSchema, "SubscriptionsGetSubscriptionResponseT200ApplicationJsonSchema": SubscriptionsGetSubscriptionResponseT200ApplicationJsonSchema, "SubscriptionsGetSubscriptionResponseT400ApplicationJsonSchema": SubscriptionsGetSubscriptionResponseT400ApplicationJsonSchema, "SubscriptionsGetSubscriptionResponseT401ApplicationJsonSchema": SubscriptionsGetSubscriptionResponseT401ApplicationJsonSchema, "SubscriptionsGetSubscriptionResponseT404ApplicationJsonSchema": SubscriptionsGetSubscriptionResponseT404ApplicationJsonSchema, "SubscriptionsSubmitSubscriptionResponseT200ApplicationJsonSchema": SubscriptionsSubmitSubscriptionResponseT200ApplicationJsonSchema, "SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema": SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema, "SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema": SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema, "SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema": SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema, "SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema": SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema };
 export const api = {
     "documents": {
         "getDocument": defineEndpoint<DocumentsGetDocumentContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/documents/{documentId}",
                 "operationId": "getDocument",
@@ -891,68 +860,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -970,14 +877,55 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": DocumentsGetDocumentResponseT200ApplicationJsonSchema, "response-400-0": DocumentsGetDocumentResponseT400ApplicationJsonSchema, "response-401-0": DocumentsGetDocumentResponseT401ApplicationJsonSchema, "response-404-0": DocumentsGetDocumentResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsGetDocumentResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsGetDocumentResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsGetDocumentResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsGetDocumentResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "deleteDocument": defineEndpoint<DocumentsDeleteDocumentContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "DELETE",
                 "path": "/api/v1/documents/{documentId}",
                 "operationId": "deleteDocument",
@@ -993,58 +941,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 204,
-                        "content": [],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1062,14 +958,50 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-400-0": DocumentsDeleteDocumentResponseT400ApplicationJsonSchema, "response-401-0": DocumentsDeleteDocumentResponseT401ApplicationJsonSchema, "response-404-0": DocumentsDeleteDocumentResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 204,
+                        "headers": [],
+                        "content": []
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsDeleteDocumentResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsDeleteDocumentResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsDeleteDocumentResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "downloadDocument": defineEndpoint<DocumentsDownloadDocumentContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/documents/{documentId}/content",
                 "operationId": "downloadDocument",
@@ -1085,79 +1017,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/octet-stream",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "bytes",
-                                        "value": "ArrayBuffer"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": [
-                            {
-                                "name": "Content-Disposition",
-                                "inputName": "Content-Disposition",
-                                "in": "header",
-                                "required": false,
-                                "style": "simple",
-                                "explode": false,
-                                "allowReserved": false
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1175,14 +1034,65 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": DocumentsDownloadDocumentResponseT200ApplicationOctetStreamSchema, "response-400-0": DocumentsDownloadDocumentResponseT400ApplicationJsonSchema, "response-401-0": DocumentsDownloadDocumentResponseT401ApplicationJsonSchema, "response-404-0": DocumentsDownloadDocumentResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [
+                            {
+                                "name": "Content-Disposition",
+                                "inputName": "Content-Disposition",
+                                "in": "header",
+                                "required": false,
+                                "style": "simple",
+                                "explode": false,
+                                "allowReserved": false
+                            }
+                        ],
+                        "content": [
+                            {
+                                "mediaType": "application/octet-stream",
+                                "schema": DocumentsDownloadDocumentResponseT200ApplicationOctetStreamSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsDownloadDocumentResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsDownloadDocumentResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsDownloadDocumentResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "uploadDocument": defineEndpoint<DocumentsUploadDocumentContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "POST",
                 "path": "/api/v1/offerings/{offeringId}/documents",
                 "operationId": "uploadDocument",
@@ -1196,83 +1106,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 413,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-413-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -1304,40 +1137,19 @@ export const api = {
                     "content": [
                         {
                             "mediaType": "multipart/form-data",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "form",
-                                    "mediaType": "multipart/form-data",
-                                    "fields": {
-                                        "category": {
-                                            "mediaType": "text/plain",
-                                            "codec": {
-                                                "kind": "text"
-                                            },
-                                            "multiple": false,
-                                            "headers": {}
+                            "codec": {
+                                "kind": "form",
+                                "mediaType": "multipart/form-data",
+                                "fields": {
+                                    "category": {
+                                        "mediaType": "text/plain",
+                                        "codec": {
+                                            "kind": "text"
                                         },
-                                        "file": {
-                                            "mediaType": "application/octet-stream",
-                                            "codec": {
-                                                "kind": "bytes",
-                                                "value": "upload"
-                                            },
-                                            "multiple": false,
-                                            "headers": {}
-                                        },
-                                        "note": {
-                                            "mediaType": "text/plain",
-                                            "codec": {
-                                                "kind": "text"
-                                            },
-                                            "multiple": false,
-                                            "headers": {}
-                                        }
+                                        "multiple": false,
+                                        "headers": {}
                                     },
-                                    "patterns": {},
-                                    "additional": {
+                                    "file": {
                                         "mediaType": "application/octet-stream",
                                         "codec": {
                                             "kind": "bytes",
@@ -1345,89 +1157,96 @@ export const api = {
                                         },
                                         "multiple": false,
                                         "headers": {}
+                                    },
+                                    "note": {
+                                        "mediaType": "text/plain",
+                                        "codec": {
+                                            "kind": "text"
+                                        },
+                                        "multiple": false,
+                                        "headers": {}
                                     }
+                                },
+                                "patterns": {},
+                                "additional": {
+                                    "mediaType": "application/octet-stream",
+                                    "codec": {
+                                        "kind": "bytes",
+                                        "value": "upload"
+                                    },
+                                    "multiple": false,
+                                    "headers": {}
                                 }
                             }
                         }
                     ],
                     "defaultMediaType": "multipart/form-data"
-                }
-            },
-            "validators": { "response-201-0": DocumentsUploadDocumentResponseT201ApplicationJsonSchema, "response-400-0": DocumentsUploadDocumentResponseT400ApplicationJsonSchema, "response-401-0": DocumentsUploadDocumentResponseT401ApplicationJsonSchema, "response-404-0": DocumentsUploadDocumentResponseT404ApplicationJsonSchema, "response-413-0": DocumentsUploadDocumentResponseT413ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsUploadDocumentResponseT201ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsUploadDocumentResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsUploadDocumentResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsUploadDocumentResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 413,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": DocumentsUploadDocumentResponseT413ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         })
     },
     "investors": {
         "createCompanyInvestor": defineEndpoint<InvestorsCreateCompanyInvestorContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "POST",
                 "path": "/api/v1/investors/companies",
                 "operationId": "createCompanyInvestor",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1459,91 +1278,64 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-201-0": InvestorsCreateCompanyInvestorResponseT201ApplicationJsonSchema, "response-400-0": InvestorsCreateCompanyInvestorResponseT400ApplicationJsonSchema, "response-401-0": InvestorsCreateCompanyInvestorResponseT401ApplicationJsonSchema, "response-404-0": InvestorsCreateCompanyInvestorResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateCompanyInvestorResponseT201ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateCompanyInvestorResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateCompanyInvestorResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateCompanyInvestorResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "createIndividualInvestor": defineEndpoint<InvestorsCreateIndividualInvestorContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "POST",
                 "path": "/api/v1/investors/individuals",
                 "operationId": "createIndividualInvestor",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1574,24 +1366,59 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-201-0": InvestorsCreateIndividualInvestorResponseT201ApplicationJsonSchema, "response-400-0": InvestorsCreateIndividualInvestorResponseT400ApplicationJsonSchema, "response-401-0": InvestorsCreateIndividualInvestorResponseT401ApplicationJsonSchema, "response-404-0": InvestorsCreateIndividualInvestorResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateIndividualInvestorResponseT201ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateIndividualInvestorResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateIndividualInvestorResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsCreateIndividualInvestorResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "getInvestor": defineEndpoint<InvestorsGetInvestorContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/investors/{investorId}",
                 "operationId": "getInvestor",
@@ -1607,68 +1434,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1686,16 +1451,57 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": InvestorsGetInvestorResponseT200ApplicationJsonSchema, "response-400-0": InvestorsGetInvestorResponseT400ApplicationJsonSchema, "response-401-0": InvestorsGetInvestorResponseT401ApplicationJsonSchema, "response-404-0": InvestorsGetInvestorResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsGetInvestorResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsGetInvestorResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsGetInvestorResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": InvestorsGetInvestorResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         })
     },
     "jobs": {
         "getSubmissionJob": defineEndpoint<JobsGetSubmissionJobContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/jobs/{jobId}",
                 "operationId": "getSubmissionJob",
@@ -1711,68 +1517,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1790,16 +1534,57 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": JobsGetSubmissionJobResponseT200ApplicationJsonSchema, "response-400-0": JobsGetSubmissionJobResponseT400ApplicationJsonSchema, "response-401-0": JobsGetSubmissionJobResponseT401ApplicationJsonSchema, "response-404-0": JobsGetSubmissionJobResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": JobsGetSubmissionJobResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": JobsGetSubmissionJobResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": JobsGetSubmissionJobResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": JobsGetSubmissionJobResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         })
     },
     "offerings": {
         "listOfferings": defineEndpoint<OfferingsListOfferingsContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/offerings",
                 "operationId": "listOfferings",
@@ -1833,68 +1618,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -1912,81 +1635,60 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": OfferingsListOfferingsResponseT200ApplicationJsonSchema, "response-400-0": OfferingsListOfferingsResponseT400ApplicationJsonSchema, "response-401-0": OfferingsListOfferingsResponseT401ApplicationJsonSchema, "response-404-0": OfferingsListOfferingsResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsListOfferingsResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsListOfferingsResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsListOfferingsResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsListOfferingsResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "createOffering": defineEndpoint<OfferingsCreateOfferingContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "POST",
                 "path": "/api/v1/offerings",
                 "operationId": "createOffering",
                 "operationKind": "mutation",
                 "parameters": [],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -2016,24 +1718,59 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-201-0": OfferingsCreateOfferingResponseT201ApplicationJsonSchema, "response-400-0": OfferingsCreateOfferingResponseT400ApplicationJsonSchema, "response-401-0": OfferingsCreateOfferingResponseT401ApplicationJsonSchema, "response-404-0": OfferingsCreateOfferingResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsCreateOfferingResponseT201ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsCreateOfferingResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsCreateOfferingResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsCreateOfferingResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "getOffering": defineEndpoint<OfferingsGetOfferingContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/offerings/{offeringId}",
                 "operationId": "getOffering",
@@ -2047,68 +1784,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -2128,14 +1803,55 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": OfferingsGetOfferingResponseT200ApplicationJsonSchema, "response-400-0": OfferingsGetOfferingResponseT400ApplicationJsonSchema, "response-401-0": OfferingsGetOfferingResponseT401ApplicationJsonSchema, "response-404-0": OfferingsGetOfferingResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsGetOfferingResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsGetOfferingResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsGetOfferingResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsGetOfferingResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "updateOffering": defineEndpoint<OfferingsUpdateOfferingContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "PATCH",
                 "path": "/api/v1/offerings/{offeringId}",
                 "operationId": "updateOffering",
@@ -2149,68 +1865,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -2242,24 +1896,59 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-200-0": OfferingsUpdateOfferingResponseT200ApplicationJsonSchema, "response-400-0": OfferingsUpdateOfferingResponseT400ApplicationJsonSchema, "response-401-0": OfferingsUpdateOfferingResponseT401ApplicationJsonSchema, "response-404-0": OfferingsUpdateOfferingResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsUpdateOfferingResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsUpdateOfferingResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsUpdateOfferingResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsUpdateOfferingResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "deleteOffering": defineEndpoint<OfferingsDeleteOfferingContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "DELETE",
                 "path": "/api/v1/offerings/{offeringId}",
                 "operationId": "deleteOffering",
@@ -2275,73 +1964,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 204,
-                        "content": [],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 409,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-409-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -2359,14 +1981,60 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-400-0": OfferingsDeleteOfferingResponseT400ApplicationJsonSchema, "response-401-0": OfferingsDeleteOfferingResponseT401ApplicationJsonSchema, "response-404-0": OfferingsDeleteOfferingResponseT404ApplicationJsonSchema, "response-409-0": OfferingsDeleteOfferingResponseT409ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 204,
+                        "headers": [],
+                        "content": []
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsDeleteOfferingResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsDeleteOfferingResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsDeleteOfferingResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 409,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsDeleteOfferingResponseT409ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "exportOffering": defineEndpoint<OfferingsExportOfferingContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/offerings/{offeringId}/report",
                 "operationId": "exportOffering",
@@ -2382,77 +2050,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            },
-                            {
-                                "mediaType": "text/csv",
-                                "representation": {
-                                    "key": "response-200-1",
-                                    "codec": {
-                                        "kind": "text"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -2470,16 +2067,61 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": OfferingsExportOfferingResponseT200ApplicationJsonSchema, "response-200-1": OfferingsExportOfferingResponseT200TextCsvSchema, "response-400-0": OfferingsExportOfferingResponseT400ApplicationJsonSchema, "response-401-0": OfferingsExportOfferingResponseT401ApplicationJsonSchema, "response-404-0": OfferingsExportOfferingResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsExportOfferingResponseT200ApplicationJsonSchema
+                            },
+                            {
+                                "mediaType": "text/csv",
+                                "schema": OfferingsExportOfferingResponseT200TextCsvSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsExportOfferingResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsExportOfferingResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": OfferingsExportOfferingResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         })
     },
     "subscriptions": {
         "listSubscriptions": defineEndpoint<SubscriptionsListSubscriptionsContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/offerings/{offeringId}/subscriptions",
                 "operationId": "listSubscriptions",
@@ -2522,68 +2164,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "payload",
                 "servers": [
                     {
@@ -2601,14 +2181,55 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema, "response-400-0": SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema, "response-401-0": SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema, "response-404-0": SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsListSubscriptionsResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsListSubscriptionsResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsListSubscriptionsResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsListSubscriptionsResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "createSubscription": defineEndpoint<SubscriptionsCreateSubscriptionContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "POST",
                 "path": "/api/v1/offerings/{offeringId}/subscriptions",
                 "operationId": "createSubscription",
@@ -2622,68 +2243,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 201,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-201-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -2714,24 +2273,59 @@ export const api = {
                     ],
                     "content": [
                         {
-                            "mediaType": "application/json",
-                            "representation": {
-                                "key": "request-0",
-                                "codec": {
-                                    "kind": "json"
-                                }
-                            }
+                            "mediaType": "application/json"
                         }
                     ],
                     "defaultMediaType": "application/json"
-                }
-            },
-            "validators": { "response-201-0": SubscriptionsCreateSubscriptionResponseT201ApplicationJsonSchema, "response-400-0": SubscriptionsCreateSubscriptionResponseT400ApplicationJsonSchema, "response-401-0": SubscriptionsCreateSubscriptionResponseT401ApplicationJsonSchema, "response-404-0": SubscriptionsCreateSubscriptionResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 201,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsCreateSubscriptionResponseT201ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsCreateSubscriptionResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsCreateSubscriptionResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsCreateSubscriptionResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "getSubscription": defineEndpoint<SubscriptionsGetSubscriptionContract, "query">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "GET",
                 "path": "/api/v1/subscriptions/{subscriptionId}",
                 "operationId": "getSubscription",
@@ -2745,68 +2339,6 @@ export const api = {
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
-                    }
-                ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
                     }
                 ],
                 "resultMode": "payload",
@@ -2826,14 +2358,55 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": SubscriptionsGetSubscriptionResponseT200ApplicationJsonSchema, "response-400-0": SubscriptionsGetSubscriptionResponseT400ApplicationJsonSchema, "response-401-0": SubscriptionsGetSubscriptionResponseT401ApplicationJsonSchema, "response-404-0": SubscriptionsGetSubscriptionResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsGetSubscriptionResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsGetSubscriptionResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsGetSubscriptionResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsGetSubscriptionResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         }),
         "submitSubscription": defineEndpoint<SubscriptionsSubmitSubscriptionContract, "mutation">({
-            "kind": "endpoint",
-            "plan": {
-                "apiId": "8d41eea9ab8a9ef2",
+            kind: "endpoint",
+            plan: {
+                "apiId": "5b76ccd055adf73a",
                 "method": "POST",
                 "path": "/api/v1/subscriptions/{subscriptionId}/submit",
                 "operationId": "submitSubscription",
@@ -2858,93 +2431,6 @@ export const api = {
                         "allowReserved": false
                     }
                 ],
-                "responses": [
-                    {
-                        "status": 200,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-200-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 202,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-202-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": [
-                            {
-                                "name": "Location",
-                                "inputName": "Location",
-                                "in": "header",
-                                "required": false,
-                                "style": "simple",
-                                "explode": false,
-                                "allowReserved": false
-                            }
-                        ]
-                    },
-                    {
-                        "status": 400,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-400-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 401,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-401-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    },
-                    {
-                        "status": 404,
-                        "content": [
-                            {
-                                "mediaType": "application/json",
-                                "representation": {
-                                    "key": "response-404-0",
-                                    "codec": {
-                                        "kind": "json"
-                                    }
-                                }
-                            }
-                        ],
-                        "headers": []
-                    }
-                ],
                 "resultMode": "status",
                 "servers": [
                     {
@@ -2962,9 +2448,70 @@ export const api = {
                         "type": "http",
                         "scheme": "bearer"
                     }
-                }
-            },
-            "validators": { "response-200-0": SubscriptionsSubmitSubscriptionResponseT200ApplicationJsonSchema, "response-202-0": SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema, "response-400-0": SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema, "response-401-0": SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema, "response-404-0": SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema }
+                },
+                "responses": [
+                    {
+                        "status": 200,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsSubmitSubscriptionResponseT200ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 202,
+                        "headers": [
+                            {
+                                "name": "Location",
+                                "inputName": "Location",
+                                "in": "header",
+                                "required": false,
+                                "style": "simple",
+                                "explode": false,
+                                "allowReserved": false
+                            }
+                        ],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsSubmitSubscriptionResponseT202ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 400,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsSubmitSubscriptionResponseT400ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 401,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsSubmitSubscriptionResponseT401ApplicationJsonSchema
+                            }
+                        ]
+                    },
+                    {
+                        "status": 404,
+                        "headers": [],
+                        "content": [
+                            {
+                                "mediaType": "application/json",
+                                "schema": SubscriptionsSubmitSubscriptionResponseT404ApplicationJsonSchema
+                            }
+                        ]
+                    }
+                ]
+            }
         })
     }
 };
@@ -3226,7 +2773,7 @@ function createAccordValidators(): {
     } as JsValue);
     // <stdin>
     var check0: JsValue = validate1;
-    var schema1: JsValue = { "properties": { "category": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema8" } as JsValue, "filename": { "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "note": { "type": "string" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "size": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["category", "id", "offeringId", "filename", "size"] as JsValue, "type": "object" } as JsValue;
+    var schema1: JsValue = { "additionalProperties": false, "properties": { "category": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema8" } as JsValue, "filename": { "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "note": { "type": "string" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "size": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["category", "id", "offeringId", "filename", "size"] as JsValue, "type": "object" } as JsValue;
     var func0: JsValue = Object.prototype.hasOwnProperty;
     var schema2: JsValue = { "enum": ["terms", "prospectus", "other"] as JsValue, "type": "string" } as JsValue;
     function validate2(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
@@ -3287,15 +2834,9 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
-            if (data.category !== void 0 && func0.call(data, "category")) {
-                if (!validate2(data.category, { instancePath: instancePath + "/category", parentData: data, parentDataProperty: "category", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate2 as JsValue).errors : vErrors.concat((validate2 as JsValue).errors);
-                    errors = vErrors.length;
-                }
-            }
-            if (data.filename !== void 0 && func0.call(data, "filename")) {
-                if (typeof data.filename !== "string") {
-                    const err1: JsValue = { instancePath: instancePath + "/filename", schemaPath: "#/properties/filename/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "category" || key0 === "filename" || key0 === "id" || key0 === "note" || key0 === "offeringId" || key0 === "size")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err1] as JsValue;
                     }
@@ -3305,34 +2846,40 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            if (data.category !== void 0 && func0.call(data, "category")) {
+                if (!validate2(data.category, { instancePath: instancePath + "/category", parentData: data, parentDataProperty: "category", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate2 as JsValue).errors : vErrors.concat((validate2 as JsValue).errors);
+                    errors = vErrors.length;
+                }
+            }
+            if (data.filename !== void 0 && func0.call(data, "filename")) {
+                if (typeof data.filename !== "string") {
+                    const err2: JsValue = { instancePath: instancePath + "/filename", schemaPath: "#/properties/filename/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err2] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err2);
+                    }
+                    errors++;
+                }
+            }
             if (data.id !== void 0 && func0.call(data, "id")) {
                 let data2: JsValue = data.id;
                 if (typeof data2 === "string") {
                     if (!formats0.test(data2)) {
-                        const err2: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err3: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err2] as JsValue;
+                            vErrors = [err3] as JsValue;
                         }
                         else {
-                            vErrors.push(err2);
+                            vErrors.push(err3);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err3: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err3);
-                    }
-                    errors++;
-                }
-            }
-            if (data.note !== void 0 && func0.call(data, "note")) {
-                if (typeof data.note !== "string") {
-                    const err4: JsValue = { instancePath: instancePath + "/note", schemaPath: "#/properties/note/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err4] as JsValue;
                     }
@@ -3342,35 +2889,34 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            if (data.note !== void 0 && func0.call(data, "note")) {
+                if (typeof data.note !== "string") {
+                    const err5: JsValue = { instancePath: instancePath + "/note", schemaPath: "#/properties/note/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err5] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err5);
+                    }
+                    errors++;
+                }
+            }
             if (data.offeringId !== void 0 && func0.call(data, "offeringId")) {
                 let data4: JsValue = data.offeringId;
                 if (typeof data4 === "string") {
                     if (!formats0.test(data4)) {
-                        const err5: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err6: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err5] as JsValue;
+                            vErrors = [err6] as JsValue;
                         }
                         else {
-                            vErrors.push(err5);
+                            vErrors.push(err6);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err6: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err6] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err6);
-                    }
-                    errors++;
-                }
-            }
-            if (data.size !== void 0 && func0.call(data, "size")) {
-                let data5: JsValue = data.size;
-                if (!(typeof data5 == "number" && (!(data5 % 1) && !isNaN(data5)))) {
-                    const err7: JsValue = { instancePath: instancePath + "/size", schemaPath: "#/properties/size/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    const err7: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err7] as JsValue;
                     }
@@ -3379,14 +2925,27 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
+            }
+            if (data.size !== void 0 && func0.call(data, "size")) {
+                let data5: JsValue = data.size;
+                if (!(typeof data5 == "number" && (!(data5 % 1) && !isNaN(data5)))) {
+                    const err8: JsValue = { instancePath: instancePath + "/size", schemaPath: "#/properties/size/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err8] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err8);
+                    }
+                    errors++;
+                }
                 if (typeof data5 == "number") {
                     if (data5 < 0 || isNaN(data5)) {
-                        const err8: JsValue = { instancePath: instancePath + "/size", schemaPath: "#/properties/size/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
+                        const err9: JsValue = { instancePath: instancePath + "/size", schemaPath: "#/properties/size/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err8] as JsValue;
+                            vErrors = [err9] as JsValue;
                         }
                         else {
-                            vErrors.push(err8);
+                            vErrors.push(err9);
                         }
                         errors++;
                     }
@@ -3394,21 +2953,21 @@ function createAccordValidators(): {
             }
         }
         else {
-            const err9: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err10: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err9] as JsValue;
+                vErrors = [err10] as JsValue;
             }
             else {
-                vErrors.push(err9);
+                vErrors.push(err10);
             }
             errors++;
         }
         (validate1 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate1 as JsValue).evaluated = { "props": { "category": true, "filename": true, "id": true, "note": true, "offeringId": true, "size": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate1 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check1: JsValue = validate4;
-    var schema3: JsValue = { "properties": { "code": { "type": "string" } as JsValue, "details": { "items": { "type": "string" } as JsValue, "type": "array" } as JsValue, "message": { "type": "string" } as JsValue, "statusCode": { "type": "integer" } as JsValue } as JsValue, "required": ["statusCode", "code", "message"] as JsValue, "type": "object" } as JsValue;
+    var schema3: JsValue = { "additionalProperties": false, "properties": { "code": { "type": "string" } as JsValue, "details": { "items": { "type": "string" } as JsValue, "type": "array" } as JsValue, "message": { "type": "string" } as JsValue, "statusCode": { "type": "integer" } as JsValue } as JsValue, "required": ["statusCode", "code", "message"] as JsValue, "type": "object" } as JsValue;
     function validate4(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
@@ -3432,14 +2991,26 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
-            if (data.code !== void 0 && func0.call(data, "code")) {
-                if (typeof data.code !== "string") {
-                    const err1: JsValue = { instancePath: instancePath + "/code", schemaPath: "#/properties/code/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "code" || key0 === "details" || key0 === "message" || key0 === "statusCode")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err1] as JsValue;
                     }
                     else {
                         vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
+            if (data.code !== void 0 && func0.call(data, "code")) {
+                if (typeof data.code !== "string") {
+                    const err2: JsValue = { instancePath: instancePath + "/code", schemaPath: "#/properties/code/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err2] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err2);
                     }
                     errors++;
                 }
@@ -3450,31 +3021,19 @@ function createAccordValidators(): {
                     const len0: JsValue = data1.length;
                     for (let i0: JsValue = 0; i0 < len0; i0++) {
                         if (typeof data1[i0] !== "string") {
-                            const err2: JsValue = { instancePath: instancePath + "/details/" + i0, schemaPath: "#/properties/details/items/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                            const err3: JsValue = { instancePath: instancePath + "/details/" + i0, schemaPath: "#/properties/details/items/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                             if (vErrors === null) {
-                                vErrors = [err2] as JsValue;
+                                vErrors = [err3] as JsValue;
                             }
                             else {
-                                vErrors.push(err2);
+                                vErrors.push(err3);
                             }
                             errors++;
                         }
                     }
                 }
                 else {
-                    const err3: JsValue = { instancePath: instancePath + "/details", schemaPath: "#/properties/details/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err3);
-                    }
-                    errors++;
-                }
-            }
-            if (data.message !== void 0 && func0.call(data, "message")) {
-                if (typeof data.message !== "string") {
-                    const err4: JsValue = { instancePath: instancePath + "/message", schemaPath: "#/properties/message/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err4: JsValue = { instancePath: instancePath + "/details", schemaPath: "#/properties/details/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err4] as JsValue;
                     }
@@ -3484,10 +3043,9 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
-            if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
-                let data4: JsValue = data.statusCode;
-                if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
-                    const err5: JsValue = { instancePath: instancePath + "/statusCode", schemaPath: "#/properties/statusCode/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+            if (data.message !== void 0 && func0.call(data, "message")) {
+                if (typeof data.message !== "string") {
+                    const err5: JsValue = { instancePath: instancePath + "/message", schemaPath: "#/properties/message/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err5] as JsValue;
                     }
@@ -3497,21 +3055,34 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            if (data.statusCode !== void 0 && func0.call(data, "statusCode")) {
+                let data4: JsValue = data.statusCode;
+                if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
+                    const err6: JsValue = { instancePath: instancePath + "/statusCode", schemaPath: "#/properties/statusCode/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err6] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err6);
+                    }
+                    errors++;
+                }
+            }
         }
         else {
-            const err6: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err7: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err6] as JsValue;
+                vErrors = [err7] as JsValue;
             }
             else {
-                vErrors.push(err6);
+                vErrors.push(err7);
             }
             errors++;
         }
         (validate4 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate4 as JsValue).evaluated = { "props": { "code": true, "details": true, "message": true, "statusCode": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate4 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check7: JsValue = validate5;
     function validate5(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
@@ -3550,7 +3121,7 @@ function createAccordValidators(): {
     }
     (validate5 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check11: JsValue = validate6;
-    var schema5: JsValue = { "properties": { "country": { "maxLength": 2, "minLength": 2, "type": "string" } as JsValue, "displayName": { "minLength": 2, "type": "string" } as JsValue, "email": { "format": "email", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "kind": { "enum": ["company"] as JsValue, "type": "string" } as JsValue, "registrationNumber": { "minLength": 3, "type": "string" } as JsValue } as JsValue, "required": ["displayName", "email", "country", "kind", "registrationNumber", "id"] as JsValue, "type": "object" } as JsValue;
+    var schema5: JsValue = { "additionalProperties": false, "properties": { "country": { "maxLength": 2, "minLength": 2, "type": "string" } as JsValue, "displayName": { "minLength": 2, "type": "string" } as JsValue, "email": { "format": "email", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "kind": { "enum": ["company"] as JsValue, "type": "string" } as JsValue, "registrationNumber": { "minLength": 3, "type": "string" } as JsValue } as JsValue, "required": ["displayName", "email", "country", "kind", "registrationNumber", "id"] as JsValue, "type": "object" } as JsValue;
     var func14: JsValue = require_ucs2length().default;
     var formats4: JsValue = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
     function validate6(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
@@ -3576,21 +3147,23 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "country" || key0 === "displayName" || key0 === "email" || key0 === "id" || key0 === "kind" || key0 === "registrationNumber")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
             if (data.country !== void 0 && func0.call(data, "country")) {
                 let data0: JsValue = data.country;
                 if (typeof data0 === "string") {
                     if (func14(data0) > 2) {
-                        const err1: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 } as JsValue, message: "must NOT have more than 2 characters" } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err1);
-                        }
-                        errors++;
-                    }
-                    if (func14(data0) < 2) {
-                        const err2: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
+                        const err2: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 } as JsValue, message: "must NOT have more than 2 characters" } as JsValue;
                         if (vErrors === null) {
                             vErrors = [err2] as JsValue;
                         }
@@ -3599,14 +3172,24 @@ function createAccordValidators(): {
                         }
                         errors++;
                     }
+                    if (func14(data0) < 2) {
+                        const err3: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err3] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err3);
+                        }
+                        errors++;
+                    }
                 }
                 else {
-                    const err3: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err4: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
+                        vErrors = [err4] as JsValue;
                     }
                     else {
-                        vErrors.push(err3);
+                        vErrors.push(err4);
                     }
                     errors++;
                 }
@@ -3615,23 +3198,23 @@ function createAccordValidators(): {
                 let data1: JsValue = data.displayName;
                 if (typeof data1 === "string") {
                     if (func14(data1) < 2) {
-                        const err4: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
+                        const err5: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err4] as JsValue;
+                            vErrors = [err5] as JsValue;
                         }
                         else {
-                            vErrors.push(err4);
+                            vErrors.push(err5);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err5: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err6: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err5] as JsValue;
+                        vErrors = [err6] as JsValue;
                     }
                     else {
-                        vErrors.push(err5);
+                        vErrors.push(err6);
                     }
                     errors++;
                 }
@@ -3640,23 +3223,23 @@ function createAccordValidators(): {
                 let data2: JsValue = data.email;
                 if (typeof data2 === "string") {
                     if (!formats4.test(data2)) {
-                        const err6: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/format", keyword: "format", params: { format: "email" } as JsValue, message: 'must match format "email"' } as JsValue;
+                        const err7: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/format", keyword: "format", params: { format: "email" } as JsValue, message: 'must match format "email"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err6] as JsValue;
+                            vErrors = [err7] as JsValue;
                         }
                         else {
-                            vErrors.push(err6);
+                            vErrors.push(err7);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err7: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err8: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err7] as JsValue;
+                        vErrors = [err8] as JsValue;
                     }
                     else {
-                        vErrors.push(err7);
+                        vErrors.push(err8);
                     }
                     errors++;
                 }
@@ -3665,31 +3248,18 @@ function createAccordValidators(): {
                 let data3: JsValue = data.id;
                 if (typeof data3 === "string") {
                     if (!formats0.test(data3)) {
-                        const err8: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err9: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err8] as JsValue;
+                            vErrors = [err9] as JsValue;
                         }
                         else {
-                            vErrors.push(err8);
+                            vErrors.push(err9);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err9: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err9] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err9);
-                    }
-                    errors++;
-                }
-            }
-            if (data.kind !== void 0 && func0.call(data, "kind")) {
-                let data4: JsValue = data.kind;
-                if (typeof data4 !== "string") {
-                    const err10: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err10: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err10] as JsValue;
                     }
@@ -3698,8 +3268,11 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
-                if (!(data4 === "company")) {
-                    const err11: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/enum", keyword: "enum", params: { allowedValues: schema5.properties.kind.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+            }
+            if (data.kind !== void 0 && func0.call(data, "kind")) {
+                let data4: JsValue = data.kind;
+                if (typeof data4 !== "string") {
+                    const err11: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err11] as JsValue;
                     }
@@ -3708,49 +3281,59 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
+                if (!(data4 === "company")) {
+                    const err12: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/enum", keyword: "enum", params: { allowedValues: schema5.properties.kind.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err12] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err12);
+                    }
+                    errors++;
+                }
             }
             if (data.registrationNumber !== void 0 && func0.call(data, "registrationNumber")) {
                 let data5: JsValue = data.registrationNumber;
                 if (typeof data5 === "string") {
                     if (func14(data5) < 3) {
-                        const err12: JsValue = { instancePath: instancePath + "/registrationNumber", schemaPath: "#/properties/registrationNumber/minLength", keyword: "minLength", params: { limit: 3 } as JsValue, message: "must NOT have fewer than 3 characters" } as JsValue;
+                        const err13: JsValue = { instancePath: instancePath + "/registrationNumber", schemaPath: "#/properties/registrationNumber/minLength", keyword: "minLength", params: { limit: 3 } as JsValue, message: "must NOT have fewer than 3 characters" } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err12] as JsValue;
+                            vErrors = [err13] as JsValue;
                         }
                         else {
-                            vErrors.push(err12);
+                            vErrors.push(err13);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err13: JsValue = { instancePath: instancePath + "/registrationNumber", schemaPath: "#/properties/registrationNumber/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err14: JsValue = { instancePath: instancePath + "/registrationNumber", schemaPath: "#/properties/registrationNumber/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err13] as JsValue;
+                        vErrors = [err14] as JsValue;
                     }
                     else {
-                        vErrors.push(err13);
+                        vErrors.push(err14);
                     }
                     errors++;
                 }
             }
         }
         else {
-            const err14: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err15: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err14] as JsValue;
+                vErrors = [err15] as JsValue;
             }
             else {
-                vErrors.push(err14);
+                vErrors.push(err15);
             }
             errors++;
         }
         (validate6 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate6 as JsValue).evaluated = { "props": { "country": true, "displayName": true, "email": true, "id": true, "kind": true, "registrationNumber": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate6 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check15: JsValue = validate7;
-    var schema6: JsValue = { "properties": { "country": { "maxLength": 2, "minLength": 2, "type": "string" } as JsValue, "displayName": { "minLength": 2, "type": "string" } as JsValue, "email": { "format": "email", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "kind": { "enum": ["individual"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["displayName", "email", "country", "kind", "id"] as JsValue, "type": "object" } as JsValue;
+    var schema6: JsValue = { "additionalProperties": false, "properties": { "country": { "maxLength": 2, "minLength": 2, "type": "string" } as JsValue, "displayName": { "minLength": 2, "type": "string" } as JsValue, "email": { "format": "email", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "kind": { "enum": ["individual"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["displayName", "email", "country", "kind", "id"] as JsValue, "type": "object" } as JsValue;
     function validate7(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
@@ -3774,21 +3357,23 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "country" || key0 === "displayName" || key0 === "email" || key0 === "id" || key0 === "kind")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
             if (data.country !== void 0 && func0.call(data, "country")) {
                 let data0: JsValue = data.country;
                 if (typeof data0 === "string") {
                     if (func14(data0) > 2) {
-                        const err1: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 } as JsValue, message: "must NOT have more than 2 characters" } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err1);
-                        }
-                        errors++;
-                    }
-                    if (func14(data0) < 2) {
-                        const err2: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
+                        const err2: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/maxLength", keyword: "maxLength", params: { limit: 2 } as JsValue, message: "must NOT have more than 2 characters" } as JsValue;
                         if (vErrors === null) {
                             vErrors = [err2] as JsValue;
                         }
@@ -3797,14 +3382,24 @@ function createAccordValidators(): {
                         }
                         errors++;
                     }
+                    if (func14(data0) < 2) {
+                        const err3: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err3] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err3);
+                        }
+                        errors++;
+                    }
                 }
                 else {
-                    const err3: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err4: JsValue = { instancePath: instancePath + "/country", schemaPath: "#/properties/country/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
+                        vErrors = [err4] as JsValue;
                     }
                     else {
-                        vErrors.push(err3);
+                        vErrors.push(err4);
                     }
                     errors++;
                 }
@@ -3813,23 +3408,23 @@ function createAccordValidators(): {
                 let data1: JsValue = data.displayName;
                 if (typeof data1 === "string") {
                     if (func14(data1) < 2) {
-                        const err4: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
+                        const err5: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/minLength", keyword: "minLength", params: { limit: 2 } as JsValue, message: "must NOT have fewer than 2 characters" } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err4] as JsValue;
+                            vErrors = [err5] as JsValue;
                         }
                         else {
-                            vErrors.push(err4);
+                            vErrors.push(err5);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err5: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err6: JsValue = { instancePath: instancePath + "/displayName", schemaPath: "#/properties/displayName/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err5] as JsValue;
+                        vErrors = [err6] as JsValue;
                     }
                     else {
-                        vErrors.push(err5);
+                        vErrors.push(err6);
                     }
                     errors++;
                 }
@@ -3838,23 +3433,23 @@ function createAccordValidators(): {
                 let data2: JsValue = data.email;
                 if (typeof data2 === "string") {
                     if (!formats4.test(data2)) {
-                        const err6: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/format", keyword: "format", params: { format: "email" } as JsValue, message: 'must match format "email"' } as JsValue;
+                        const err7: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/format", keyword: "format", params: { format: "email" } as JsValue, message: 'must match format "email"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err6] as JsValue;
+                            vErrors = [err7] as JsValue;
                         }
                         else {
-                            vErrors.push(err6);
+                            vErrors.push(err7);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err7: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err8: JsValue = { instancePath: instancePath + "/email", schemaPath: "#/properties/email/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err7] as JsValue;
+                        vErrors = [err8] as JsValue;
                     }
                     else {
-                        vErrors.push(err7);
+                        vErrors.push(err8);
                     }
                     errors++;
                 }
@@ -3863,31 +3458,18 @@ function createAccordValidators(): {
                 let data3: JsValue = data.id;
                 if (typeof data3 === "string") {
                     if (!formats0.test(data3)) {
-                        const err8: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err9: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err8] as JsValue;
+                            vErrors = [err9] as JsValue;
                         }
                         else {
-                            vErrors.push(err8);
+                            vErrors.push(err9);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err9: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err9] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err9);
-                    }
-                    errors++;
-                }
-            }
-            if (data.kind !== void 0 && func0.call(data, "kind")) {
-                let data4: JsValue = data.kind;
-                if (typeof data4 !== "string") {
-                    const err10: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err10: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err10] as JsValue;
                     }
@@ -3896,8 +3478,11 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
-                if (!(data4 === "individual")) {
-                    const err11: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/enum", keyword: "enum", params: { allowedValues: schema6.properties.kind.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+            }
+            if (data.kind !== void 0 && func0.call(data, "kind")) {
+                let data4: JsValue = data.kind;
+                if (typeof data4 !== "string") {
+                    const err11: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err11] as JsValue;
                     }
@@ -3906,22 +3491,32 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
+                if (!(data4 === "individual")) {
+                    const err12: JsValue = { instancePath: instancePath + "/kind", schemaPath: "#/properties/kind/enum", keyword: "enum", params: { allowedValues: schema6.properties.kind.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err12] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err12);
+                    }
+                    errors++;
+                }
             }
         }
         else {
-            const err12: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err13: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err12] as JsValue;
+                vErrors = [err13] as JsValue;
             }
             else {
-                vErrors.push(err12);
+                vErrors.push(err13);
             }
             errors++;
         }
         (validate7 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate7 as JsValue).evaluated = { "props": { "country": true, "displayName": true, "email": true, "id": true, "kind": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate7 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     var check19: JsValue = validate8;
     function validate8(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
@@ -3945,12 +3540,7 @@ function createAccordValidators(): {
         if (_valid0) {
             valid0 = true;
             passing0 = 0;
-            var props0: JsValue = {} as JsValue;
-            props0.country = true;
-            props0.displayName = true;
-            props0.email = true;
-            props0.id = true;
-            props0.kind = true;
+            var props0: JsValue = true;
         }
         const _errs2: JsValue = errors;
         if (!validate6(data, { instancePath, parentData, parentDataProperty, rootData, dynamicAnchors } as JsValue)) {
@@ -3967,13 +3557,7 @@ function createAccordValidators(): {
                 valid0 = true;
                 passing0 = 1;
                 if (props0 !== true) {
-                    props0 = props0 || {} as JsValue;
-                    props0.country = true;
-                    props0.displayName = true;
-                    props0.email = true;
-                    props0.id = true;
-                    props0.kind = true;
-                    props0.registrationNumber = true;
+                    props0 = true;
                 }
             }
         }
@@ -4004,8 +3588,8 @@ function createAccordValidators(): {
     }
     (validate8 as JsValue).evaluated = { "dynamicProps": true, "dynamicItems": false } as JsValue;
     var check23: JsValue = validate11;
-    var schema8: JsValue = { "properties": { "id": { "format": "uuid", "type": "string" } as JsValue, "result": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema17" } as JsValue, "state": { "enum": ["completed"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["id", "state", "result"] as JsValue, "type": "object" } as JsValue;
-    var schema9: JsValue = { "properties": { "amount": { "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "investorId": { "format": "uuid", "type": "string" } as JsValue, "metadata": { "additionalProperties": { "type": "string" } as JsValue, "type": "object" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema18" } as JsValue, "submittedAt": { "format": "date-time", "readOnly": true, "type": ["string", "null"] as JsValue } as JsValue } as JsValue, "required": ["investorId", "amount", "id", "offeringId", "status", "submittedAt"] as JsValue, "type": "object" } as JsValue;
+    var schema8: JsValue = { "additionalProperties": false, "properties": { "id": { "format": "uuid", "type": "string" } as JsValue, "result": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema17" } as JsValue, "state": { "enum": ["completed"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["id", "state", "result"] as JsValue, "type": "object" } as JsValue;
+    var schema9: JsValue = { "additionalProperties": false, "properties": { "amount": { "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "investorId": { "format": "uuid", "type": "string" } as JsValue, "metadata": { "additionalProperties": { "type": "string" } as JsValue, "type": "object" } as JsValue, "offeringId": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema18" } as JsValue, "submittedAt": { "format": "date-time", "readOnly": true, "type": ["string", "null"] as JsValue } as JsValue } as JsValue, "required": ["investorId", "amount", "id", "offeringId", "status", "submittedAt"] as JsValue, "type": "object" } as JsValue;
     var pattern0: JsValue = new RegExp("^[0-9]+\\.[0-9]{2}$", "u");
     var formats20: JsValue = require_formats().fullFormats["date-time"];
     var schema10: JsValue = { "enum": ["draft", "submitted"] as JsValue, "type": "string" } as JsValue;
@@ -4066,27 +3650,39 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "amount" || key0 === "id" || key0 === "investorId" || key0 === "metadata" || key0 === "offeringId" || key0 === "status" || key0 === "submittedAt")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
             if (data.amount !== void 0 && func0.call(data, "amount")) {
                 let data0: JsValue = data.amount;
                 if (typeof data0 === "string") {
                     if (!pattern0.test(data0)) {
-                        const err1: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/pattern", keyword: "pattern", params: { pattern: "^[0-9]+\\.[0-9]{2}$" } as JsValue, message: 'must match pattern "^[0-9]+\\.[0-9]{2}$"' } as JsValue;
+                        const err2: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/pattern", keyword: "pattern", params: { pattern: "^[0-9]+\\.[0-9]{2}$" } as JsValue, message: 'must match pattern "^[0-9]+\\.[0-9]{2}$"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
+                            vErrors = [err2] as JsValue;
                         }
                         else {
-                            vErrors.push(err1);
+                            vErrors.push(err2);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err2: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err3: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err2] as JsValue;
+                        vErrors = [err3] as JsValue;
                     }
                     else {
-                        vErrors.push(err2);
+                        vErrors.push(err3);
                     }
                     errors++;
                 }
@@ -4095,23 +3691,23 @@ function createAccordValidators(): {
                 let data1: JsValue = data.id;
                 if (typeof data1 === "string") {
                     if (!formats0.test(data1)) {
-                        const err3: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err3] as JsValue;
+                            vErrors = [err4] as JsValue;
                         }
                         else {
-                            vErrors.push(err3);
+                            vErrors.push(err4);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err5: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err4] as JsValue;
+                        vErrors = [err5] as JsValue;
                     }
                     else {
-                        vErrors.push(err4);
+                        vErrors.push(err5);
                     }
                     errors++;
                 }
@@ -4120,23 +3716,23 @@ function createAccordValidators(): {
                 let data2: JsValue = data.investorId;
                 if (typeof data2 === "string") {
                     if (!formats0.test(data2)) {
-                        const err5: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err6: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err5] as JsValue;
+                            vErrors = [err6] as JsValue;
                         }
                         else {
-                            vErrors.push(err5);
+                            vErrors.push(err6);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err6: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err7: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err6] as JsValue;
+                        vErrors = [err7] as JsValue;
                     }
                     else {
-                        vErrors.push(err6);
+                        vErrors.push(err7);
                     }
                     errors++;
                 }
@@ -4144,26 +3740,26 @@ function createAccordValidators(): {
             if (data.metadata !== void 0 && func0.call(data, "metadata")) {
                 let data3: JsValue = data.metadata;
                 if (data3 && typeof data3 == "object" && !Array.isArray(data3)) {
-                    for (const key0 of Object.keys(data3)) {
-                        if (typeof data3[key0] !== "string") {
-                            const err7: JsValue = { instancePath: instancePath + "/metadata/" + key0.replace(/~/g, "~0").replace(/\//g, "~1"), schemaPath: "#/properties/metadata/additionalProperties/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    for (const key1 of Object.keys(data3)) {
+                        if (typeof data3[key1] !== "string") {
+                            const err8: JsValue = { instancePath: instancePath + "/metadata/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"), schemaPath: "#/properties/metadata/additionalProperties/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                             if (vErrors === null) {
-                                vErrors = [err7] as JsValue;
+                                vErrors = [err8] as JsValue;
                             }
                             else {
-                                vErrors.push(err7);
+                                vErrors.push(err8);
                             }
                             errors++;
                         }
                     }
                 }
                 else {
-                    const err8: JsValue = { instancePath: instancePath + "/metadata", schemaPath: "#/properties/metadata/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+                    const err9: JsValue = { instancePath: instancePath + "/metadata", schemaPath: "#/properties/metadata/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err8] as JsValue;
+                        vErrors = [err9] as JsValue;
                     }
                     else {
-                        vErrors.push(err8);
+                        vErrors.push(err9);
                     }
                     errors++;
                 }
@@ -4172,23 +3768,23 @@ function createAccordValidators(): {
                 let data5: JsValue = data.offeringId;
                 if (typeof data5 === "string") {
                     if (!formats0.test(data5)) {
-                        const err9: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err10: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err9] as JsValue;
+                            vErrors = [err10] as JsValue;
                         }
                         else {
-                            vErrors.push(err9);
+                            vErrors.push(err10);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err10: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err11: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err10] as JsValue;
+                        vErrors = [err11] as JsValue;
                     }
                     else {
-                        vErrors.push(err10);
+                        vErrors.push(err11);
                     }
                     errors++;
                 }
@@ -4202,23 +3798,23 @@ function createAccordValidators(): {
             if (data.submittedAt !== void 0 && func0.call(data, "submittedAt")) {
                 let data7: JsValue = data.submittedAt;
                 if (typeof data7 !== "string" && data7 !== null) {
-                    const err11: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/type", keyword: "type", params: { type: schema9.properties.submittedAt.type } as JsValue, message: "must be string,null" } as JsValue;
+                    const err12: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/type", keyword: "type", params: { type: schema9.properties.submittedAt.type } as JsValue, message: "must be string,null" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err11] as JsValue;
+                        vErrors = [err12] as JsValue;
                     }
                     else {
-                        vErrors.push(err11);
+                        vErrors.push(err12);
                     }
                     errors++;
                 }
                 if (typeof data7 === "string") {
                     if (!formats20.validate(data7)) {
-                        const err12: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
+                        const err13: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err12] as JsValue;
+                            vErrors = [err13] as JsValue;
                         }
                         else {
-                            vErrors.push(err12);
+                            vErrors.push(err13);
                         }
                         errors++;
                     }
@@ -4226,19 +3822,19 @@ function createAccordValidators(): {
             }
         }
         else {
-            const err13: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err14: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err13] as JsValue;
+                vErrors = [err14] as JsValue;
             }
             else {
-                vErrors.push(err13);
+                vErrors.push(err14);
             }
             errors++;
         }
         (validate12 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate12 as JsValue).evaluated = { "props": { "amount": true, "id": true, "investorId": true, "metadata": true, "offeringId": true, "status": true, "submittedAt": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate12 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     function validate11(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
@@ -4262,27 +3858,39 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "id" || key0 === "result" || key0 === "state")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
             if (data.id !== void 0 && func0.call(data, "id")) {
                 let data0: JsValue = data.id;
                 if (typeof data0 === "string") {
                     if (!formats0.test(data0)) {
-                        const err1: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err2: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
+                            vErrors = [err2] as JsValue;
                         }
                         else {
-                            vErrors.push(err1);
+                            vErrors.push(err2);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err2: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err3: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err2] as JsValue;
+                        vErrors = [err3] as JsValue;
                     }
                     else {
-                        vErrors.push(err2);
+                        vErrors.push(err3);
                     }
                     errors++;
                 }
@@ -4296,17 +3904,7 @@ function createAccordValidators(): {
             if (data.state !== void 0 && func0.call(data, "state")) {
                 let data2: JsValue = data.state;
                 if (typeof data2 !== "string") {
-                    const err3: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err3);
-                    }
-                    errors++;
-                }
-                if (!(data2 === "completed")) {
-                    const err4: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/enum", keyword: "enum", params: { allowedValues: schema8.properties.state.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+                    const err4: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err4] as JsValue;
                     }
@@ -4315,101 +3913,8 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
-            }
-        }
-        else {
-            const err5: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
-            if (vErrors === null) {
-                vErrors = [err5] as JsValue;
-            }
-            else {
-                vErrors.push(err5);
-            }
-            errors++;
-        }
-        (validate11 as JsValue).errors = vErrors;
-        return errors === 0;
-    }
-    (validate11 as JsValue).evaluated = { "props": { "id": true, "result": true, "state": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check27: JsValue = validate16;
-    var schema12: JsValue = { "properties": { "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total"] as JsValue, "type": "object" } as JsValue;
-    function validate17(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
-        let vErrors: JsValue = null;
-        let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate17 as JsValue).evaluated;
-        if (evaluated0.dynamicProps) {
-            evaluated0.props = void 0;
-        }
-        if (evaluated0.dynamicItems) {
-            evaluated0.items = void 0;
-        }
-        if (data && typeof data == "object" && !Array.isArray(data)) {
-            for (const prop0 of schema12.required) {
-                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
-                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err0] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err0);
-                    }
-                    errors++;
-                }
-            }
-            if (data.limit !== void 0 && func0.call(data, "limit")) {
-                let data0: JsValue = data.limit;
-                if (!(typeof data0 == "number" && (!(data0 % 1) && !isNaN(data0)))) {
-                    const err1: JsValue = { instancePath: instancePath + "/limit", schemaPath: "#/properties/limit/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err1] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err1);
-                    }
-                    errors++;
-                }
-                if (typeof data0 == "number") {
-                    if (data0 < 1 || isNaN(data0)) {
-                        const err2: JsValue = { instancePath: instancePath + "/limit", schemaPath: "#/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 } as JsValue, message: "must be >= 1" } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err2] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err2);
-                        }
-                        errors++;
-                    }
-                }
-            }
-            if (data.page !== void 0 && func0.call(data, "page")) {
-                let data1: JsValue = data.page;
-                if (!(typeof data1 == "number" && (!(data1 % 1) && !isNaN(data1)))) {
-                    const err3: JsValue = { instancePath: instancePath + "/page", schemaPath: "#/properties/page/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err3);
-                    }
-                    errors++;
-                }
-                if (typeof data1 == "number") {
-                    if (data1 < 1 || isNaN(data1)) {
-                        const err4: JsValue = { instancePath: instancePath + "/page", schemaPath: "#/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 } as JsValue, message: "must be >= 1" } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err4] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err4);
-                        }
-                        errors++;
-                    }
-                }
-            }
-            if (data.total !== void 0 && func0.call(data, "total")) {
-                let data2: JsValue = data.total;
-                if (!(typeof data2 == "number" && (!(data2 % 1) && !isNaN(data2)))) {
-                    const err5: JsValue = { instancePath: instancePath + "/total", schemaPath: "#/properties/total/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                if (!(data2 === "completed")) {
+                    const err5: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/enum", keyword: "enum", params: { allowedValues: schema8.properties.state.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err5] as JsValue;
                     }
@@ -4418,40 +3923,30 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
-                if (typeof data2 == "number") {
-                    if (data2 < 0 || isNaN(data2)) {
-                        const err6: JsValue = { instancePath: instancePath + "/total", schemaPath: "#/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err6] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err6);
-                        }
-                        errors++;
-                    }
-                }
             }
         }
         else {
-            const err7: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err6: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err7] as JsValue;
+                vErrors = [err6] as JsValue;
             }
             else {
-                vErrors.push(err7);
+                vErrors.push(err6);
             }
             errors++;
         }
-        (validate17 as JsValue).errors = vErrors;
+        (validate11 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate17 as JsValue).evaluated = { "props": { "limit": true, "page": true, "total": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var schema13: JsValue = { "properties": { "createdAt": { "format": "date-time", "readOnly": true, "type": "string" } as JsValue, "description": { "type": ["string", "null"] as JsValue } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "name": { "minLength": 3, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema12" } as JsValue, "tags": { "items": { "type": "string" } as JsValue, "type": "array" } as JsValue, "terms": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema5" } as JsValue } as JsValue, "required": ["name", "terms", "id", "status", "createdAt"] as JsValue, "type": "object" } as JsValue;
-    var schema14: JsValue = { "enum": ["draft", "open", "closed"] as JsValue, "type": "string" } as JsValue;
-    function validate20(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate11 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check27: JsValue = validate16;
+    var schema11: JsValue = { "additionalProperties": false, "properties": { "items": { "items": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema11" } as JsValue, "type": "array" } as JsValue, "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total", "items"] as JsValue, "type": "object" } as JsValue;
+    var schema12: JsValue = { "additionalProperties": false, "properties": { "createdAt": { "format": "date-time", "readOnly": true, "type": "string" } as JsValue, "description": { "type": ["string", "null"] as JsValue } as JsValue, "id": { "format": "uuid", "readOnly": true, "type": "string" } as JsValue, "name": { "minLength": 3, "type": "string" } as JsValue, "status": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema12" } as JsValue, "tags": { "items": { "type": "string" } as JsValue, "type": "array" } as JsValue, "terms": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema5" } as JsValue } as JsValue, "required": ["name", "terms", "id", "status", "createdAt"] as JsValue, "type": "object" } as JsValue;
+    var schema13: JsValue = { "enum": ["draft", "open", "closed"] as JsValue, "type": "string" } as JsValue;
+    function validate18(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate20 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate18 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -4469,7 +3964,7 @@ function createAccordValidators(): {
             errors++;
         }
         if (!(data === "draft" || data === "open" || data === "closed")) {
-            const err1: JsValue = { instancePath, schemaPath: "#/enum", keyword: "enum", params: { allowedValues: schema14.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+            const err1: JsValue = { instancePath, schemaPath: "#/enum", keyword: "enum", params: { allowedValues: schema13.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
             if (vErrors === null) {
                 vErrors = [err1] as JsValue;
             }
@@ -4478,16 +3973,16 @@ function createAccordValidators(): {
             }
             errors++;
         }
-        (validate20 as JsValue).errors = vErrors;
+        (validate18 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate20 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var schema15: JsValue = { "additionalProperties": false, "properties": { "closesAt": { "format": "date-time", "type": "string" } as JsValue, "currency": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema6" } as JsValue, "minimumInvestment": { "description": "Decimal string, avoiding floating-point currency rounding.", "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue } as JsValue, "required": ["minimumInvestment", "currency", "closesAt"] as JsValue, "type": "object" } as JsValue;
-    var schema16: JsValue = { "enum": ["EUR", "USD"] as JsValue, "type": "string" } as JsValue;
-    function validate23(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate18 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var schema14: JsValue = { "additionalProperties": false, "properties": { "closesAt": { "format": "date-time", "type": "string" } as JsValue, "currency": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema6" } as JsValue, "minimumInvestment": { "description": "Decimal string, avoiding floating-point currency rounding.", "pattern": "^[0-9]+\\.[0-9]{2}$", "type": "string" } as JsValue } as JsValue, "required": ["minimumInvestment", "currency", "closesAt"] as JsValue, "type": "object" } as JsValue;
+    var schema15: JsValue = { "enum": ["EUR", "USD"] as JsValue, "type": "string" } as JsValue;
+    function validate21(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate23 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate21 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -4505,7 +4000,7 @@ function createAccordValidators(): {
             errors++;
         }
         if (!(data === "EUR" || data === "USD")) {
-            const err1: JsValue = { instancePath, schemaPath: "#/enum", keyword: "enum", params: { allowedValues: schema16.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+            const err1: JsValue = { instancePath, schemaPath: "#/enum", keyword: "enum", params: { allowedValues: schema15.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
             if (vErrors === null) {
                 vErrors = [err1] as JsValue;
             }
@@ -4514,14 +4009,14 @@ function createAccordValidators(): {
             }
             errors++;
         }
-        (validate23 as JsValue).errors = vErrors;
+        (validate21 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate23 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
-    function validate22(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate21 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
+    function validate20(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate22 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate20 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -4529,7 +4024,7 @@ function createAccordValidators(): {
             evaluated0.items = void 0;
         }
         if (data && typeof data == "object" && !Array.isArray(data)) {
-            for (const prop0 of schema15.required) {
+            for (const prop0 of schema14.required) {
                 if (data[prop0] === void 0 || !func0.call(data, prop0)) {
                     const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
                     if (vErrors === null) {
@@ -4579,8 +4074,8 @@ function createAccordValidators(): {
                 }
             }
             if (data.currency !== void 0 && func0.call(data, "currency")) {
-                if (!validate23(data.currency, { instancePath: instancePath + "/currency", parentData: data, parentDataProperty: "currency", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate23 as JsValue).errors : vErrors.concat((validate23 as JsValue).errors);
+                if (!validate21(data.currency, { instancePath: instancePath + "/currency", parentData: data, parentDataProperty: "currency", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate21 as JsValue).errors : vErrors.concat((validate21 as JsValue).errors);
                     errors = vErrors.length;
                 }
             }
@@ -4620,14 +4115,14 @@ function createAccordValidators(): {
             }
             errors++;
         }
-        (validate22 as JsValue).errors = vErrors;
+        (validate20 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate22 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    function validate19(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate20 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    function validate17(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate19 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate17 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -4635,7 +4130,7 @@ function createAccordValidators(): {
             evaluated0.items = void 0;
         }
         if (data && typeof data == "object" && !Array.isArray(data)) {
-            for (const prop0 of schema13.required) {
+            for (const prop0 of schema12.required) {
                 if (data[prop0] === void 0 || !func0.call(data, prop0)) {
                     const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
                     if (vErrors === null) {
@@ -4647,35 +4142,34 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "createdAt" || key0 === "description" || key0 === "id" || key0 === "name" || key0 === "status" || key0 === "tags" || key0 === "terms")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
             if (data.createdAt !== void 0 && func0.call(data, "createdAt")) {
                 let data0: JsValue = data.createdAt;
                 if (typeof data0 === "string") {
                     if (!formats20.validate(data0)) {
-                        const err1: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
+                        const err2: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
+                            vErrors = [err2] as JsValue;
                         }
                         else {
-                            vErrors.push(err1);
+                            vErrors.push(err2);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err2: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err2] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err2);
-                    }
-                    errors++;
-                }
-            }
-            if (data.description !== void 0 && func0.call(data, "description")) {
-                let data1: JsValue = data.description;
-                if (typeof data1 !== "string" && data1 !== null) {
-                    const err3: JsValue = { instancePath: instancePath + "/description", schemaPath: "#/properties/description/type", keyword: "type", params: { type: schema13.properties.description.type } as JsValue, message: "must be string,null" } as JsValue;
+                    const err3: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err3] as JsValue;
                     }
@@ -4685,27 +4179,40 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            if (data.description !== void 0 && func0.call(data, "description")) {
+                let data1: JsValue = data.description;
+                if (typeof data1 !== "string" && data1 !== null) {
+                    const err4: JsValue = { instancePath: instancePath + "/description", schemaPath: "#/properties/description/type", keyword: "type", params: { type: schema12.properties.description.type } as JsValue, message: "must be string,null" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err4] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err4);
+                    }
+                    errors++;
+                }
+            }
             if (data.id !== void 0 && func0.call(data, "id")) {
                 let data2: JsValue = data.id;
                 if (typeof data2 === "string") {
                     if (!formats0.test(data2)) {
-                        const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err5: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err4] as JsValue;
+                            vErrors = [err5] as JsValue;
                         }
                         else {
-                            vErrors.push(err4);
+                            vErrors.push(err5);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err5: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err6: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err5] as JsValue;
+                        vErrors = [err6] as JsValue;
                     }
                     else {
-                        vErrors.push(err5);
+                        vErrors.push(err6);
                     }
                     errors++;
                 }
@@ -4714,30 +4221,30 @@ function createAccordValidators(): {
                 let data3: JsValue = data.name;
                 if (typeof data3 === "string") {
                     if (func14(data3) < 3) {
-                        const err6: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/minLength", keyword: "minLength", params: { limit: 3 } as JsValue, message: "must NOT have fewer than 3 characters" } as JsValue;
+                        const err7: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/minLength", keyword: "minLength", params: { limit: 3 } as JsValue, message: "must NOT have fewer than 3 characters" } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err6] as JsValue;
+                            vErrors = [err7] as JsValue;
                         }
                         else {
-                            vErrors.push(err6);
+                            vErrors.push(err7);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err7: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err8: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err7] as JsValue;
+                        vErrors = [err8] as JsValue;
                     }
                     else {
-                        vErrors.push(err7);
+                        vErrors.push(err8);
                     }
                     errors++;
                 }
             }
             if (data.status !== void 0 && func0.call(data, "status")) {
-                if (!validate20(data.status, { instancePath: instancePath + "/status", parentData: data, parentDataProperty: "status", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate20 as JsValue).errors : vErrors.concat((validate20 as JsValue).errors);
+                if (!validate18(data.status, { instancePath: instancePath + "/status", parentData: data, parentDataProperty: "status", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate18 as JsValue).errors : vErrors.concat((validate18 as JsValue).errors);
                     errors = vErrors.length;
                 }
             }
@@ -4747,49 +4254,49 @@ function createAccordValidators(): {
                     const len0: JsValue = data5.length;
                     for (let i0: JsValue = 0; i0 < len0; i0++) {
                         if (typeof data5[i0] !== "string") {
-                            const err8: JsValue = { instancePath: instancePath + "/tags/" + i0, schemaPath: "#/properties/tags/items/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                            const err9: JsValue = { instancePath: instancePath + "/tags/" + i0, schemaPath: "#/properties/tags/items/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                             if (vErrors === null) {
-                                vErrors = [err8] as JsValue;
+                                vErrors = [err9] as JsValue;
                             }
                             else {
-                                vErrors.push(err8);
+                                vErrors.push(err9);
                             }
                             errors++;
                         }
                     }
                 }
                 else {
-                    const err9: JsValue = { instancePath: instancePath + "/tags", schemaPath: "#/properties/tags/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
+                    const err10: JsValue = { instancePath: instancePath + "/tags", schemaPath: "#/properties/tags/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err9] as JsValue;
+                        vErrors = [err10] as JsValue;
                     }
                     else {
-                        vErrors.push(err9);
+                        vErrors.push(err10);
                     }
                     errors++;
                 }
             }
             if (data.terms !== void 0 && func0.call(data, "terms")) {
-                if (!validate22(data.terms, { instancePath: instancePath + "/terms", parentData: data, parentDataProperty: "terms", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate22 as JsValue).errors : vErrors.concat((validate22 as JsValue).errors);
+                if (!validate20(data.terms, { instancePath: instancePath + "/terms", parentData: data, parentDataProperty: "terms", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate20 as JsValue).errors : vErrors.concat((validate20 as JsValue).errors);
                     errors = vErrors.length;
                 }
             }
         }
         else {
-            const err10: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err11: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err10] as JsValue;
+                vErrors = [err11] as JsValue;
             }
             else {
-                vErrors.push(err10);
+                vErrors.push(err11);
             }
             errors++;
         }
-        (validate19 as JsValue).errors = vErrors;
+        (validate17 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate19 as JsValue).evaluated = { "props": { "createdAt": true, "description": true, "id": true, "name": true, "status": true, "tags": true, "terms": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate17 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     function validate16(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
@@ -4800,34 +4307,22 @@ function createAccordValidators(): {
         if (evaluated0.dynamicItems) {
             evaluated0.items = void 0;
         }
-        if (!validate17(data, { instancePath, parentData, parentDataProperty, rootData, dynamicAnchors } as JsValue)) {
-            vErrors = vErrors === null ? (validate17 as JsValue).errors : vErrors.concat((validate17 as JsValue).errors);
-            errors = vErrors.length;
-        }
         if (data && typeof data == "object" && !Array.isArray(data)) {
-            if (data.items === void 0 || !func0.call(data, "items")) {
-                const err0: JsValue = { instancePath, schemaPath: "#/allOf/1/required", keyword: "required", params: { missingProperty: "items" } as JsValue, message: "must have required property 'items'" } as JsValue;
-                if (vErrors === null) {
-                    vErrors = [err0] as JsValue;
-                }
-                else {
-                    vErrors.push(err0);
-                }
-                errors++;
-            }
-            if (data.items !== void 0 && func0.call(data, "items")) {
-                let data0: JsValue = data.items;
-                if (Array.isArray(data0)) {
-                    const len0: JsValue = data0.length;
-                    for (let i0: JsValue = 0; i0 < len0; i0++) {
-                        if (!validate19(data0[i0], { instancePath: instancePath + "/items/" + i0, parentData: data0, parentDataProperty: i0, rootData, dynamicAnchors } as JsValue)) {
-                            vErrors = vErrors === null ? (validate19 as JsValue).errors : vErrors.concat((validate19 as JsValue).errors);
-                            errors = vErrors.length;
-                        }
+            for (const prop0 of schema11.required) {
+                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
+                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err0] as JsValue;
                     }
+                    else {
+                        vErrors.push(err0);
+                    }
+                    errors++;
                 }
-                else {
-                    const err1: JsValue = { instancePath: instancePath + "/items", schemaPath: "#/allOf/1/properties/items/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
+            }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "items" || key0 === "limit" || key0 === "page" || key0 === "total")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err1] as JsValue;
                     }
@@ -4837,235 +4332,19 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
-        }
-        else {
-            const err2: JsValue = { instancePath, schemaPath: "#/allOf/1/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
-            if (vErrors === null) {
-                vErrors = [err2] as JsValue;
-            }
-            else {
-                vErrors.push(err2);
-            }
-            errors++;
-        }
-        (validate16 as JsValue).errors = vErrors;
-        return errors === 0;
-    }
-    (validate16 as JsValue).evaluated = { "props": { "items": true, "limit": true, "page": true, "total": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check31: JsValue = validate27;
-    function validate27(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
-        let vErrors: JsValue = null;
-        let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate27 as JsValue).evaluated;
-        if (evaluated0.dynamicProps) {
-            evaluated0.props = void 0;
-        }
-        if (evaluated0.dynamicItems) {
-            evaluated0.items = void 0;
-        }
-        if (data && typeof data == "object" && !Array.isArray(data)) {
-            for (const prop0 of schema13.required) {
-                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
-                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err0] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err0);
-                    }
-                    errors++;
-                }
-            }
-            if (data.createdAt !== void 0 && func0.call(data, "createdAt")) {
-                let data0: JsValue = data.createdAt;
-                if (typeof data0 === "string") {
-                    if (!formats20.validate(data0)) {
-                        const err1: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err1);
-                        }
-                        errors++;
-                    }
-                }
-                else {
-                    const err2: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err2] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err2);
-                    }
-                    errors++;
-                }
-            }
-            if (data.description !== void 0 && func0.call(data, "description")) {
-                let data1: JsValue = data.description;
-                if (typeof data1 !== "string" && data1 !== null) {
-                    const err3: JsValue = { instancePath: instancePath + "/description", schemaPath: "#/properties/description/type", keyword: "type", params: { type: schema13.properties.description.type } as JsValue, message: "must be string,null" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err3);
-                    }
-                    errors++;
-                }
-            }
-            if (data.id !== void 0 && func0.call(data, "id")) {
-                let data2: JsValue = data.id;
-                if (typeof data2 === "string") {
-                    if (!formats0.test(data2)) {
-                        const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err4] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err4);
-                        }
-                        errors++;
-                    }
-                }
-                else {
-                    const err5: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err5] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err5);
-                    }
-                    errors++;
-                }
-            }
-            if (data.name !== void 0 && func0.call(data, "name")) {
-                let data3: JsValue = data.name;
-                if (typeof data3 === "string") {
-                    if (func14(data3) < 3) {
-                        const err6: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/minLength", keyword: "minLength", params: { limit: 3 } as JsValue, message: "must NOT have fewer than 3 characters" } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err6] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err6);
-                        }
-                        errors++;
-                    }
-                }
-                else {
-                    const err7: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err7] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err7);
-                    }
-                    errors++;
-                }
-            }
-            if (data.status !== void 0 && func0.call(data, "status")) {
-                if (!validate20(data.status, { instancePath: instancePath + "/status", parentData: data, parentDataProperty: "status", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate20 as JsValue).errors : vErrors.concat((validate20 as JsValue).errors);
-                    errors = vErrors.length;
-                }
-            }
-            if (data.tags !== void 0 && func0.call(data, "tags")) {
-                let data5: JsValue = data.tags;
-                if (Array.isArray(data5)) {
-                    const len0: JsValue = data5.length;
+            if (data.items !== void 0 && func0.call(data, "items")) {
+                let data0: JsValue = data.items;
+                if (Array.isArray(data0)) {
+                    const len0: JsValue = data0.length;
                     for (let i0: JsValue = 0; i0 < len0; i0++) {
-                        if (typeof data5[i0] !== "string") {
-                            const err8: JsValue = { instancePath: instancePath + "/tags/" + i0, schemaPath: "#/properties/tags/items/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                            if (vErrors === null) {
-                                vErrors = [err8] as JsValue;
-                            }
-                            else {
-                                vErrors.push(err8);
-                            }
-                            errors++;
+                        if (!validate17(data0[i0], { instancePath: instancePath + "/items/" + i0, parentData: data0, parentDataProperty: i0, rootData, dynamicAnchors } as JsValue)) {
+                            vErrors = vErrors === null ? (validate17 as JsValue).errors : vErrors.concat((validate17 as JsValue).errors);
+                            errors = vErrors.length;
                         }
                     }
                 }
                 else {
-                    const err9: JsValue = { instancePath: instancePath + "/tags", schemaPath: "#/properties/tags/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err9] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err9);
-                    }
-                    errors++;
-                }
-            }
-            if (data.terms !== void 0 && func0.call(data, "terms")) {
-                if (!validate22(data.terms, { instancePath: instancePath + "/terms", parentData: data, parentDataProperty: "terms", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate22 as JsValue).errors : vErrors.concat((validate22 as JsValue).errors);
-                    errors = vErrors.length;
-                }
-            }
-        }
-        else {
-            const err10: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
-            if (vErrors === null) {
-                vErrors = [err10] as JsValue;
-            }
-            else {
-                vErrors.push(err10);
-            }
-            errors++;
-        }
-        (validate27 as JsValue).errors = vErrors;
-        return errors === 0;
-    }
-    (validate27 as JsValue).evaluated = { "props": { "createdAt": true, "description": true, "id": true, "name": true, "status": true, "tags": true, "terms": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check52: JsValue = validate30;
-    var schema18: JsValue = { "properties": { "currency": { "$ref": "urn:accord:8d41eea9ab8a9ef2:base:resource0#/$defs/schema6" } as JsValue, "offeringId": { "format": "uuid", "type": "string" } as JsValue, "subscriptionCount": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["offeringId", "subscriptionCount", "currency"] as JsValue, "type": "object" } as JsValue;
-    function validate30(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
-        let vErrors: JsValue = null;
-        let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate30 as JsValue).evaluated;
-        if (evaluated0.dynamicProps) {
-            evaluated0.props = void 0;
-        }
-        if (evaluated0.dynamicItems) {
-            evaluated0.items = void 0;
-        }
-        if (data && typeof data == "object" && !Array.isArray(data)) {
-            for (const prop0 of schema18.required) {
-                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
-                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err0] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err0);
-                    }
-                    errors++;
-                }
-            }
-            if (data.currency !== void 0 && func0.call(data, "currency")) {
-                if (!validate23(data.currency, { instancePath: instancePath + "/currency", parentData: data, parentDataProperty: "currency", rootData, dynamicAnchors } as JsValue)) {
-                    vErrors = vErrors === null ? (validate23 as JsValue).errors : vErrors.concat((validate23 as JsValue).errors);
-                    errors = vErrors.length;
-                }
-            }
-            if (data.offeringId !== void 0 && func0.call(data, "offeringId")) {
-                let data1: JsValue = data.offeringId;
-                if (typeof data1 === "string") {
-                    if (!formats0.test(data1)) {
-                        const err1: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
-                        if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
-                        }
-                        else {
-                            vErrors.push(err1);
-                        }
-                        errors++;
-                    }
-                }
-                else {
-                    const err2: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err2: JsValue = { instancePath: instancePath + "/items", schemaPath: "#/properties/items/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err2] as JsValue;
                     }
@@ -5075,10 +4354,10 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
-            if (data.subscriptionCount !== void 0 && func0.call(data, "subscriptionCount")) {
-                let data2: JsValue = data.subscriptionCount;
+            if (data.limit !== void 0 && func0.call(data, "limit")) {
+                let data2: JsValue = data.limit;
                 if (!(typeof data2 == "number" && (!(data2 % 1) && !isNaN(data2)))) {
-                    const err3: JsValue = { instancePath: instancePath + "/subscriptionCount", schemaPath: "#/properties/subscriptionCount/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    const err3: JsValue = { instancePath: instancePath + "/limit", schemaPath: "#/properties/limit/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err3] as JsValue;
                     }
@@ -5088,8 +4367,8 @@ function createAccordValidators(): {
                     errors++;
                 }
                 if (typeof data2 == "number") {
-                    if (data2 < 0 || isNaN(data2)) {
-                        const err4: JsValue = { instancePath: instancePath + "/subscriptionCount", schemaPath: "#/properties/subscriptionCount/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
+                    if (data2 < 1 || isNaN(data2)) {
+                        const err4: JsValue = { instancePath: instancePath + "/limit", schemaPath: "#/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 } as JsValue, message: "must be >= 1" } as JsValue;
                         if (vErrors === null) {
                             vErrors = [err4] as JsValue;
                         }
@@ -5100,26 +4379,363 @@ function createAccordValidators(): {
                     }
                 }
             }
+            if (data.page !== void 0 && func0.call(data, "page")) {
+                let data3: JsValue = data.page;
+                if (!(typeof data3 == "number" && (!(data3 % 1) && !isNaN(data3)))) {
+                    const err5: JsValue = { instancePath: instancePath + "/page", schemaPath: "#/properties/page/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err5] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err5);
+                    }
+                    errors++;
+                }
+                if (typeof data3 == "number") {
+                    if (data3 < 1 || isNaN(data3)) {
+                        const err6: JsValue = { instancePath: instancePath + "/page", schemaPath: "#/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 } as JsValue, message: "must be >= 1" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err6] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err6);
+                        }
+                        errors++;
+                    }
+                }
+            }
+            if (data.total !== void 0 && func0.call(data, "total")) {
+                let data4: JsValue = data.total;
+                if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
+                    const err7: JsValue = { instancePath: instancePath + "/total", schemaPath: "#/properties/total/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err7] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err7);
+                    }
+                    errors++;
+                }
+                if (typeof data4 == "number") {
+                    if (data4 < 0 || isNaN(data4)) {
+                        const err8: JsValue = { instancePath: instancePath + "/total", schemaPath: "#/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err8] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err8);
+                        }
+                        errors++;
+                    }
+                }
+            }
         }
         else {
-            const err5: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err9: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err5] as JsValue;
+                vErrors = [err9] as JsValue;
             }
             else {
-                vErrors.push(err5);
+                vErrors.push(err9);
             }
             errors++;
         }
-        (validate30 as JsValue).errors = vErrors;
+        (validate16 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate30 as JsValue).evaluated = { "props": { "currency": true, "offeringId": true, "subscriptionCount": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check53: JsValue = validate32;
-    function validate32(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate16 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check31: JsValue = validate25;
+    function validate25(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate32 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate25 as JsValue).evaluated;
+        if (evaluated0.dynamicProps) {
+            evaluated0.props = void 0;
+        }
+        if (evaluated0.dynamicItems) {
+            evaluated0.items = void 0;
+        }
+        if (data && typeof data == "object" && !Array.isArray(data)) {
+            for (const prop0 of schema12.required) {
+                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
+                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err0] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err0);
+                    }
+                    errors++;
+                }
+            }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "createdAt" || key0 === "description" || key0 === "id" || key0 === "name" || key0 === "status" || key0 === "tags" || key0 === "terms")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
+            if (data.createdAt !== void 0 && func0.call(data, "createdAt")) {
+                let data0: JsValue = data.createdAt;
+                if (typeof data0 === "string") {
+                    if (!formats20.validate(data0)) {
+                        const err2: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err2] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err2);
+                        }
+                        errors++;
+                    }
+                }
+                else {
+                    const err3: JsValue = { instancePath: instancePath + "/createdAt", schemaPath: "#/properties/createdAt/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err3] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err3);
+                    }
+                    errors++;
+                }
+            }
+            if (data.description !== void 0 && func0.call(data, "description")) {
+                let data1: JsValue = data.description;
+                if (typeof data1 !== "string" && data1 !== null) {
+                    const err4: JsValue = { instancePath: instancePath + "/description", schemaPath: "#/properties/description/type", keyword: "type", params: { type: schema12.properties.description.type } as JsValue, message: "must be string,null" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err4] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err4);
+                    }
+                    errors++;
+                }
+            }
+            if (data.id !== void 0 && func0.call(data, "id")) {
+                let data2: JsValue = data.id;
+                if (typeof data2 === "string") {
+                    if (!formats0.test(data2)) {
+                        const err5: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err5] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err5);
+                        }
+                        errors++;
+                    }
+                }
+                else {
+                    const err6: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err6] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err6);
+                    }
+                    errors++;
+                }
+            }
+            if (data.name !== void 0 && func0.call(data, "name")) {
+                let data3: JsValue = data.name;
+                if (typeof data3 === "string") {
+                    if (func14(data3) < 3) {
+                        const err7: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/minLength", keyword: "minLength", params: { limit: 3 } as JsValue, message: "must NOT have fewer than 3 characters" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err7] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err7);
+                        }
+                        errors++;
+                    }
+                }
+                else {
+                    const err8: JsValue = { instancePath: instancePath + "/name", schemaPath: "#/properties/name/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err8] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err8);
+                    }
+                    errors++;
+                }
+            }
+            if (data.status !== void 0 && func0.call(data, "status")) {
+                if (!validate18(data.status, { instancePath: instancePath + "/status", parentData: data, parentDataProperty: "status", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate18 as JsValue).errors : vErrors.concat((validate18 as JsValue).errors);
+                    errors = vErrors.length;
+                }
+            }
+            if (data.tags !== void 0 && func0.call(data, "tags")) {
+                let data5: JsValue = data.tags;
+                if (Array.isArray(data5)) {
+                    const len0: JsValue = data5.length;
+                    for (let i0: JsValue = 0; i0 < len0; i0++) {
+                        if (typeof data5[i0] !== "string") {
+                            const err9: JsValue = { instancePath: instancePath + "/tags/" + i0, schemaPath: "#/properties/tags/items/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                            if (vErrors === null) {
+                                vErrors = [err9] as JsValue;
+                            }
+                            else {
+                                vErrors.push(err9);
+                            }
+                            errors++;
+                        }
+                    }
+                }
+                else {
+                    const err10: JsValue = { instancePath: instancePath + "/tags", schemaPath: "#/properties/tags/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err10] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err10);
+                    }
+                    errors++;
+                }
+            }
+            if (data.terms !== void 0 && func0.call(data, "terms")) {
+                if (!validate20(data.terms, { instancePath: instancePath + "/terms", parentData: data, parentDataProperty: "terms", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate20 as JsValue).errors : vErrors.concat((validate20 as JsValue).errors);
+                    errors = vErrors.length;
+                }
+            }
+        }
+        else {
+            const err11: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            if (vErrors === null) {
+                vErrors = [err11] as JsValue;
+            }
+            else {
+                vErrors.push(err11);
+            }
+            errors++;
+        }
+        (validate25 as JsValue).errors = vErrors;
+        return errors === 0;
+    }
+    (validate25 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check52: JsValue = validate28;
+    var schema17: JsValue = { "additionalProperties": false, "properties": { "currency": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema6" } as JsValue, "offeringId": { "format": "uuid", "type": "string" } as JsValue, "subscriptionCount": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["offeringId", "subscriptionCount", "currency"] as JsValue, "type": "object" } as JsValue;
+    function validate28(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+        let vErrors: JsValue = null;
+        let errors: JsValue = 0;
+        const evaluated0: JsValue = (validate28 as JsValue).evaluated;
+        if (evaluated0.dynamicProps) {
+            evaluated0.props = void 0;
+        }
+        if (evaluated0.dynamicItems) {
+            evaluated0.items = void 0;
+        }
+        if (data && typeof data == "object" && !Array.isArray(data)) {
+            for (const prop0 of schema17.required) {
+                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
+                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err0] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err0);
+                    }
+                    errors++;
+                }
+            }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "currency" || key0 === "offeringId" || key0 === "subscriptionCount")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
+            if (data.currency !== void 0 && func0.call(data, "currency")) {
+                if (!validate21(data.currency, { instancePath: instancePath + "/currency", parentData: data, parentDataProperty: "currency", rootData, dynamicAnchors } as JsValue)) {
+                    vErrors = vErrors === null ? (validate21 as JsValue).errors : vErrors.concat((validate21 as JsValue).errors);
+                    errors = vErrors.length;
+                }
+            }
+            if (data.offeringId !== void 0 && func0.call(data, "offeringId")) {
+                let data1: JsValue = data.offeringId;
+                if (typeof data1 === "string") {
+                    if (!formats0.test(data1)) {
+                        const err2: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err2] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err2);
+                        }
+                        errors++;
+                    }
+                }
+                else {
+                    const err3: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err3] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err3);
+                    }
+                    errors++;
+                }
+            }
+            if (data.subscriptionCount !== void 0 && func0.call(data, "subscriptionCount")) {
+                let data2: JsValue = data.subscriptionCount;
+                if (!(typeof data2 == "number" && (!(data2 % 1) && !isNaN(data2)))) {
+                    const err4: JsValue = { instancePath: instancePath + "/subscriptionCount", schemaPath: "#/properties/subscriptionCount/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err4] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err4);
+                    }
+                    errors++;
+                }
+                if (typeof data2 == "number") {
+                    if (data2 < 0 || isNaN(data2)) {
+                        const err5: JsValue = { instancePath: instancePath + "/subscriptionCount", schemaPath: "#/properties/subscriptionCount/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err5] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err5);
+                        }
+                        errors++;
+                    }
+                }
+            }
+        }
+        else {
+            const err6: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            if (vErrors === null) {
+                vErrors = [err6] as JsValue;
+            }
+            else {
+                vErrors.push(err6);
+            }
+            errors++;
+        }
+        (validate28 as JsValue).errors = vErrors;
+        return errors === 0;
+    }
+    (validate28 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check53: JsValue = validate30;
+    function validate30(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+        let vErrors: JsValue = null;
+        let errors: JsValue = 0;
+        const evaluated0: JsValue = (validate30 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -5136,35 +4752,46 @@ function createAccordValidators(): {
             }
             errors++;
         }
-        (validate32 as JsValue).errors = vErrors;
+        (validate30 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate32 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check57: JsValue = validate33;
-    function validate33(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate30 as JsValue).evaluated = { "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check57: JsValue = validate31;
+    var schema19: JsValue = { "additionalProperties": false, "properties": { "items": { "items": { "$ref": "urn:accord:5b76ccd055adf73a:base:resource0#/$defs/schema17" } as JsValue, "type": "array" } as JsValue, "limit": { "minimum": 1, "type": "integer" } as JsValue, "page": { "minimum": 1, "type": "integer" } as JsValue, "total": { "minimum": 0, "type": "integer" } as JsValue } as JsValue, "required": ["page", "limit", "total", "items"] as JsValue, "type": "object" } as JsValue;
+    function validate31(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate33 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate31 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
         if (evaluated0.dynamicItems) {
             evaluated0.items = void 0;
         }
-        if (!validate17(data, { instancePath, parentData, parentDataProperty, rootData, dynamicAnchors } as JsValue)) {
-            vErrors = vErrors === null ? (validate17 as JsValue).errors : vErrors.concat((validate17 as JsValue).errors);
-            errors = vErrors.length;
-        }
         if (data && typeof data == "object" && !Array.isArray(data)) {
-            if (data.items === void 0 || !func0.call(data, "items")) {
-                const err0: JsValue = { instancePath, schemaPath: "#/allOf/1/required", keyword: "required", params: { missingProperty: "items" } as JsValue, message: "must have required property 'items'" } as JsValue;
-                if (vErrors === null) {
-                    vErrors = [err0] as JsValue;
+            for (const prop0 of schema19.required) {
+                if (data[prop0] === void 0 || !func0.call(data, prop0)) {
+                    const err0: JsValue = { instancePath, schemaPath: "#/required", keyword: "required", params: { missingProperty: prop0 } as JsValue, message: "must have required property '" + prop0 + "'" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err0] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err0);
+                    }
+                    errors++;
                 }
-                else {
-                    vErrors.push(err0);
+            }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "items" || key0 === "limit" || key0 === "page" || key0 === "total")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
                 }
-                errors++;
             }
             if (data.items !== void 0 && func0.call(data, "items")) {
                 let data0: JsValue = data.items;
@@ -5178,36 +4805,111 @@ function createAccordValidators(): {
                     }
                 }
                 else {
-                    const err1: JsValue = { instancePath: instancePath + "/items", schemaPath: "#/allOf/1/properties/items/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
+                    const err2: JsValue = { instancePath: instancePath + "/items", schemaPath: "#/properties/items/type", keyword: "type", params: { type: "array" } as JsValue, message: "must be array" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err1] as JsValue;
+                        vErrors = [err2] as JsValue;
                     }
                     else {
-                        vErrors.push(err1);
+                        vErrors.push(err2);
                     }
                     errors++;
                 }
             }
+            if (data.limit !== void 0 && func0.call(data, "limit")) {
+                let data2: JsValue = data.limit;
+                if (!(typeof data2 == "number" && (!(data2 % 1) && !isNaN(data2)))) {
+                    const err3: JsValue = { instancePath: instancePath + "/limit", schemaPath: "#/properties/limit/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err3] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err3);
+                    }
+                    errors++;
+                }
+                if (typeof data2 == "number") {
+                    if (data2 < 1 || isNaN(data2)) {
+                        const err4: JsValue = { instancePath: instancePath + "/limit", schemaPath: "#/properties/limit/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 } as JsValue, message: "must be >= 1" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err4] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err4);
+                        }
+                        errors++;
+                    }
+                }
+            }
+            if (data.page !== void 0 && func0.call(data, "page")) {
+                let data3: JsValue = data.page;
+                if (!(typeof data3 == "number" && (!(data3 % 1) && !isNaN(data3)))) {
+                    const err5: JsValue = { instancePath: instancePath + "/page", schemaPath: "#/properties/page/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err5] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err5);
+                    }
+                    errors++;
+                }
+                if (typeof data3 == "number") {
+                    if (data3 < 1 || isNaN(data3)) {
+                        const err6: JsValue = { instancePath: instancePath + "/page", schemaPath: "#/properties/page/minimum", keyword: "minimum", params: { comparison: ">=", limit: 1 } as JsValue, message: "must be >= 1" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err6] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err6);
+                        }
+                        errors++;
+                    }
+                }
+            }
+            if (data.total !== void 0 && func0.call(data, "total")) {
+                let data4: JsValue = data.total;
+                if (!(typeof data4 == "number" && (!(data4 % 1) && !isNaN(data4)))) {
+                    const err7: JsValue = { instancePath: instancePath + "/total", schemaPath: "#/properties/total/type", keyword: "type", params: { type: "integer" } as JsValue, message: "must be integer" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err7] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err7);
+                    }
+                    errors++;
+                }
+                if (typeof data4 == "number") {
+                    if (data4 < 0 || isNaN(data4)) {
+                        const err8: JsValue = { instancePath: instancePath + "/total", schemaPath: "#/properties/total/minimum", keyword: "minimum", params: { comparison: ">=", limit: 0 } as JsValue, message: "must be >= 0" } as JsValue;
+                        if (vErrors === null) {
+                            vErrors = [err8] as JsValue;
+                        }
+                        else {
+                            vErrors.push(err8);
+                        }
+                        errors++;
+                    }
+                }
+            }
         }
         else {
-            const err2: JsValue = { instancePath, schemaPath: "#/allOf/1/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err9: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err2] as JsValue;
+                vErrors = [err9] as JsValue;
             }
             else {
-                vErrors.push(err2);
+                vErrors.push(err9);
             }
             errors++;
         }
-        (validate33 as JsValue).errors = vErrors;
+        (validate31 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate33 as JsValue).evaluated = { "props": { "items": true, "limit": true, "page": true, "total": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check61: JsValue = validate36;
-    function validate36(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate31 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check61: JsValue = validate33;
+    function validate33(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate36 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate33 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -5227,27 +4929,39 @@ function createAccordValidators(): {
                     errors++;
                 }
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "amount" || key0 === "id" || key0 === "investorId" || key0 === "metadata" || key0 === "offeringId" || key0 === "status" || key0 === "submittedAt")) {
+                    const err1: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err1] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err1);
+                    }
+                    errors++;
+                }
+            }
             if (data.amount !== void 0 && func0.call(data, "amount")) {
                 let data0: JsValue = data.amount;
                 if (typeof data0 === "string") {
                     if (!pattern0.test(data0)) {
-                        const err1: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/pattern", keyword: "pattern", params: { pattern: "^[0-9]+\\.[0-9]{2}$" } as JsValue, message: 'must match pattern "^[0-9]+\\.[0-9]{2}$"' } as JsValue;
+                        const err2: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/pattern", keyword: "pattern", params: { pattern: "^[0-9]+\\.[0-9]{2}$" } as JsValue, message: 'must match pattern "^[0-9]+\\.[0-9]{2}$"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err1] as JsValue;
+                            vErrors = [err2] as JsValue;
                         }
                         else {
-                            vErrors.push(err1);
+                            vErrors.push(err2);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err2: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err3: JsValue = { instancePath: instancePath + "/amount", schemaPath: "#/properties/amount/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err2] as JsValue;
+                        vErrors = [err3] as JsValue;
                     }
                     else {
-                        vErrors.push(err2);
+                        vErrors.push(err3);
                     }
                     errors++;
                 }
@@ -5256,23 +4970,23 @@ function createAccordValidators(): {
                 let data1: JsValue = data.id;
                 if (typeof data1 === "string") {
                     if (!formats0.test(data1)) {
-                        const err3: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err3] as JsValue;
+                            vErrors = [err4] as JsValue;
                         }
                         else {
-                            vErrors.push(err3);
+                            vErrors.push(err4);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err4: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err5: JsValue = { instancePath: instancePath + "/id", schemaPath: "#/properties/id/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err4] as JsValue;
+                        vErrors = [err5] as JsValue;
                     }
                     else {
-                        vErrors.push(err4);
+                        vErrors.push(err5);
                     }
                     errors++;
                 }
@@ -5281,23 +4995,23 @@ function createAccordValidators(): {
                 let data2: JsValue = data.investorId;
                 if (typeof data2 === "string") {
                     if (!formats0.test(data2)) {
-                        const err5: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err6: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err5] as JsValue;
+                            vErrors = [err6] as JsValue;
                         }
                         else {
-                            vErrors.push(err5);
+                            vErrors.push(err6);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err6: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err7: JsValue = { instancePath: instancePath + "/investorId", schemaPath: "#/properties/investorId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err6] as JsValue;
+                        vErrors = [err7] as JsValue;
                     }
                     else {
-                        vErrors.push(err6);
+                        vErrors.push(err7);
                     }
                     errors++;
                 }
@@ -5305,26 +5019,26 @@ function createAccordValidators(): {
             if (data.metadata !== void 0 && func0.call(data, "metadata")) {
                 let data3: JsValue = data.metadata;
                 if (data3 && typeof data3 == "object" && !Array.isArray(data3)) {
-                    for (const key0 of Object.keys(data3)) {
-                        if (typeof data3[key0] !== "string") {
-                            const err7: JsValue = { instancePath: instancePath + "/metadata/" + key0.replace(/~/g, "~0").replace(/\//g, "~1"), schemaPath: "#/properties/metadata/additionalProperties/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    for (const key1 of Object.keys(data3)) {
+                        if (typeof data3[key1] !== "string") {
+                            const err8: JsValue = { instancePath: instancePath + "/metadata/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"), schemaPath: "#/properties/metadata/additionalProperties/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                             if (vErrors === null) {
-                                vErrors = [err7] as JsValue;
+                                vErrors = [err8] as JsValue;
                             }
                             else {
-                                vErrors.push(err7);
+                                vErrors.push(err8);
                             }
                             errors++;
                         }
                     }
                 }
                 else {
-                    const err8: JsValue = { instancePath: instancePath + "/metadata", schemaPath: "#/properties/metadata/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+                    const err9: JsValue = { instancePath: instancePath + "/metadata", schemaPath: "#/properties/metadata/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err8] as JsValue;
+                        vErrors = [err9] as JsValue;
                     }
                     else {
-                        vErrors.push(err8);
+                        vErrors.push(err9);
                     }
                     errors++;
                 }
@@ -5333,23 +5047,23 @@ function createAccordValidators(): {
                 let data5: JsValue = data.offeringId;
                 if (typeof data5 === "string") {
                     if (!formats0.test(data5)) {
-                        const err9: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err10: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err9] as JsValue;
+                            vErrors = [err10] as JsValue;
                         }
                         else {
-                            vErrors.push(err9);
+                            vErrors.push(err10);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err10: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err11: JsValue = { instancePath: instancePath + "/offeringId", schemaPath: "#/properties/offeringId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err10] as JsValue;
+                        vErrors = [err11] as JsValue;
                     }
                     else {
-                        vErrors.push(err10);
+                        vErrors.push(err11);
                     }
                     errors++;
                 }
@@ -5363,23 +5077,23 @@ function createAccordValidators(): {
             if (data.submittedAt !== void 0 && func0.call(data, "submittedAt")) {
                 let data7: JsValue = data.submittedAt;
                 if (typeof data7 !== "string" && data7 !== null) {
-                    const err11: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/type", keyword: "type", params: { type: schema9.properties.submittedAt.type } as JsValue, message: "must be string,null" } as JsValue;
+                    const err12: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/type", keyword: "type", params: { type: schema9.properties.submittedAt.type } as JsValue, message: "must be string,null" } as JsValue;
                     if (vErrors === null) {
-                        vErrors = [err11] as JsValue;
+                        vErrors = [err12] as JsValue;
                     }
                     else {
-                        vErrors.push(err11);
+                        vErrors.push(err12);
                     }
                     errors++;
                 }
                 if (typeof data7 === "string") {
                     if (!formats20.validate(data7)) {
-                        const err12: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
+                        const err13: JsValue = { instancePath: instancePath + "/submittedAt", schemaPath: "#/properties/submittedAt/format", keyword: "format", params: { format: "date-time" } as JsValue, message: 'must match format "date-time"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err12] as JsValue;
+                            vErrors = [err13] as JsValue;
                         }
                         else {
-                            vErrors.push(err12);
+                            vErrors.push(err13);
                         }
                         errors++;
                     }
@@ -5387,25 +5101,25 @@ function createAccordValidators(): {
             }
         }
         else {
-            const err13: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err14: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err13] as JsValue;
+                vErrors = [err14] as JsValue;
             }
             else {
-                vErrors.push(err13);
+                vErrors.push(err14);
             }
             errors++;
         }
-        (validate36 as JsValue).errors = vErrors;
+        (validate33 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate36 as JsValue).evaluated = { "props": { "amount": true, "id": true, "investorId": true, "metadata": true, "offeringId": true, "status": true, "submittedAt": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
-    var check70: JsValue = validate38;
-    var schema22: JsValue = { "properties": { "jobId": { "format": "uuid", "type": "string" } as JsValue, "state": { "enum": ["accepted"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["state", "jobId"] as JsValue, "type": "object" } as JsValue;
-    function validate38(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
+    (validate33 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    var check70: JsValue = validate35;
+    var schema21: JsValue = { "additionalProperties": false, "properties": { "jobId": { "format": "uuid", "type": "string" } as JsValue, "state": { "enum": ["accepted"] as JsValue, "type": "string" } as JsValue } as JsValue, "required": ["state", "jobId"] as JsValue, "type": "object" } as JsValue;
+    function validate35(this: JsValue, data?: JsValue, { instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = {} as JsValue }: JsValue = {} as JsValue): JsValue {
         let vErrors: JsValue = null;
         let errors: JsValue = 0;
-        const evaluated0: JsValue = (validate38 as JsValue).evaluated;
+        const evaluated0: JsValue = (validate35 as JsValue).evaluated;
         if (evaluated0.dynamicProps) {
             evaluated0.props = void 0;
         }
@@ -5433,35 +5147,34 @@ function createAccordValidators(): {
                 }
                 errors++;
             }
+            for (const key0 of Object.keys(data)) {
+                if (!(key0 === "jobId" || key0 === "state")) {
+                    const err2: JsValue = { instancePath, schemaPath: "#/additionalProperties", keyword: "additionalProperties", params: { additionalProperty: key0 } as JsValue, message: "must NOT have additional properties" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err2] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err2);
+                    }
+                    errors++;
+                }
+            }
             if (data.jobId !== void 0 && func0.call(data, "jobId")) {
                 let data0: JsValue = data.jobId;
                 if (typeof data0 === "string") {
                     if (!formats0.test(data0)) {
-                        const err2: JsValue = { instancePath: instancePath + "/jobId", schemaPath: "#/properties/jobId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
+                        const err3: JsValue = { instancePath: instancePath + "/jobId", schemaPath: "#/properties/jobId/format", keyword: "format", params: { format: "uuid" } as JsValue, message: 'must match format "uuid"' } as JsValue;
                         if (vErrors === null) {
-                            vErrors = [err2] as JsValue;
+                            vErrors = [err3] as JsValue;
                         }
                         else {
-                            vErrors.push(err2);
+                            vErrors.push(err3);
                         }
                         errors++;
                     }
                 }
                 else {
-                    const err3: JsValue = { instancePath: instancePath + "/jobId", schemaPath: "#/properties/jobId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
-                    if (vErrors === null) {
-                        vErrors = [err3] as JsValue;
-                    }
-                    else {
-                        vErrors.push(err3);
-                    }
-                    errors++;
-                }
-            }
-            if (data.state !== void 0 && func0.call(data, "state")) {
-                let data1: JsValue = data.state;
-                if (typeof data1 !== "string") {
-                    const err4: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
+                    const err4: JsValue = { instancePath: instancePath + "/jobId", schemaPath: "#/properties/jobId/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err4] as JsValue;
                     }
@@ -5470,8 +5183,11 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
-                if (!(data1 === "accepted")) {
-                    const err5: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/enum", keyword: "enum", params: { allowedValues: schema22.properties.state.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+            }
+            if (data.state !== void 0 && func0.call(data, "state")) {
+                let data1: JsValue = data.state;
+                if (typeof data1 !== "string") {
+                    const err5: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/type", keyword: "type", params: { type: "string" } as JsValue, message: "must be string" } as JsValue;
                     if (vErrors === null) {
                         vErrors = [err5] as JsValue;
                     }
@@ -5480,21 +5196,31 @@ function createAccordValidators(): {
                     }
                     errors++;
                 }
+                if (!(data1 === "accepted")) {
+                    const err6: JsValue = { instancePath: instancePath + "/state", schemaPath: "#/properties/state/enum", keyword: "enum", params: { allowedValues: schema21.properties.state.enum } as JsValue, message: "must be equal to one of the allowed values" } as JsValue;
+                    if (vErrors === null) {
+                        vErrors = [err6] as JsValue;
+                    }
+                    else {
+                        vErrors.push(err6);
+                    }
+                    errors++;
+                }
             }
         }
         else {
-            const err6: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
+            const err7: JsValue = { instancePath, schemaPath: "#/type", keyword: "type", params: { type: "object" } as JsValue, message: "must be object" } as JsValue;
             if (vErrors === null) {
-                vErrors = [err6] as JsValue;
+                vErrors = [err7] as JsValue;
             }
             else {
-                vErrors.push(err6);
+                vErrors.push(err7);
             }
             errors++;
         }
-        (validate38 as JsValue).errors = vErrors;
+        (validate35 as JsValue).errors = vErrors;
         return errors === 0;
     }
-    (validate38 as JsValue).evaluated = { "props": { "jobId": true, "state": true } as JsValue, "dynamicProps": false, "dynamicItems": false } as JsValue;
+    (validate35 as JsValue).evaluated = { "props": true, "dynamicProps": false, "dynamicItems": false } as JsValue;
     return { check0: check0, check1: check1, check11: check11, check15: check15, check19: check19, check23: check23, check27: check27, check31: check31, check52: check52, check53: check53, check57: check57, check61: check61, check7: check7, check70: check70 };
 }

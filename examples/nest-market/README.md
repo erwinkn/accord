@@ -1,6 +1,6 @@
 # NestJS → OpenAPI → Accord
 
-A runnable investment-platform API with **18 endpoints and 21 schemas**. Nest controllers and DTOs produce the OpenAPI document; Accord consumes that document to generate the SDK and response validators. The tests execute the SDK against a real Nest HTTP server.
+A runnable investment-platform API with **18 endpoints and 22 schemas**. Nest controllers and DTOs produce the OpenAPI document; Accord consumes that document to generate the SDK and response validators. The tests execute the SDK against a real Nest HTTP server.
 
 This example models a financial marketplace using Nest 10 and Swagger 7, with representative investment, entity, and document workflows. It runs entirely in memory, with a public demo credential, no database, and no external services.
 
@@ -8,12 +8,12 @@ This example models a financial marketplace using Nest 10 and Swagger 7, with re
 
 1. [Typed SDK workflow](usage.ts): create an offering and investor, subscribe, submit, upload/download a document, export CSV.
 2. [Offering controller](src/offerings/offerings.controller.ts) and [DTOs](src/offerings/offering.dto.ts): the Nest source of the contract.
-3. [Generated OpenAPI](openapi.json): Swagger output with explicit closed request DTOs, also served by Swagger UI.
+3. [Generated OpenAPI](openapi.json): Swagger output with explicit closed DTOs, also served by Swagger UI.
 4. [Generated SDK](sdk/sdk.ts): public types, endpoint plans, and Standard Schema validators.
 
 ```text
 Nest controllers + DTO decorators
-       ↓ SwaggerModule.createDocument + request DTO closure
+       ↓ SwaggerModule.createDocument + DTO closure
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
    sdk/sdk.ts                     ← types, plans and validators in one file
@@ -41,7 +41,7 @@ Use bearer token `accord-demo-token`. This is an intentionally public demo crede
 
 | Area | Server contract | Generated SDK behavior |
 | --- | --- | --- |
-| Offerings | Nested terms, currency/status enums, repeated query filters, paginated `allOf` response | Typed nested inputs and page items; exact decimal strings; dates remain strings |
+| Offerings | Nested terms, currency/status enums, repeated query filters, concrete page DTOs | Typed nested inputs and page items; exact decimal strings; dates remain strings |
 | Updates | Swagger `PartialType`, optional fields, explicitly nullable description | Partial updates preserve omitted values; `null` remains distinct from absence |
 | Investors | Individuals and companies, `OmitType` response DTOs, `oneOf` with a `kind` discriminator | Narrow the response by `kind`; onboarding-only data is omitted |
 | Subscriptions | Nested routes, dynamic string metadata, synchronous 200 or accepted 202 | Path/body binding, dictionary preservation, automatic status/data union |
@@ -86,11 +86,13 @@ if (report.mediaType === "text/csv") console.log(report.data.trim())
 else console.log(report.data.subscriptionCount)
 ```
 
-Creates and uploads use **flat inputs**, including nested terms, metadata dictionaries, and files. Nest Swagger 7 leaves DTOs open to arbitrary properties by default. The [document factory](src/app.ts) explicitly sets `additionalProperties: false` on the fixed request DTOs to describe the server's strict validation policy. It leaves response composition and nested dictionaries alone. Both Swagger UI and Accord use this same exported contract; the SDK needs no body-mode overrides.
+Creates and uploads use **flat inputs**, including nested terms, metadata dictionaries, and files. Nest Swagger 7 leaves DTOs open to arbitrary properties by default. The [document factory](src/app.ts) explicitly sets `additionalProperties: false` on this example's fixed request and response DTOs. Concrete page DTOs include both pagination fields and items, so closure applies to the whole record. Nested dictionaries such as subscription metadata retain their arbitrary string keys. Both Swagger UI and Accord use this same exported contract; the SDK needs no body-mode overrides.
 
 The one explicit `body` example is the optional PATCH payload: `client.offerings.updateOffering({ offeringId, body: { description: null } })`. Its whole body can be omitted, so Accord preserves the distinction between no payload and `body: {}`. Both are no-ops on this server; supplied fields update the offering.
 
 The backend's `ValidationPipe` validates DTO fields and rejects unknown properties. Accord performs no request schema validation; generated TypeScript checks callers, and generated Standard Schema checks decoded responses. Money remains a decimal string end to end.
+
+Response media entries reference their generated Standard Schema directly. There is no `responseSchemas` registry or separate validator-key map. JSON, ordinary text and binary codecs are inferred from the declared media type and direction; multipart retains its field encoding metadata. The private `createAccordValidators()` factory initializes shared precompiled checks once when the SDK module loads. Numbered checks are internal implementation names, while exported schemas provide typed validation for HTTP calls or other consumers.
 
 ## Adapting to a real backend
 
