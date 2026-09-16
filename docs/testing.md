@@ -66,7 +66,7 @@ Advanced `$dynamicRef` specialization, arbitrary conditional/negation type preci
 
 XML decoding uses declared names/prefixes and rejects document type/entity declarations. Browser bundling is verified; a browser/CORS/credential interoperability matrix is separate work. Fetch controls redirects and transport restrictions. Full response wrappers expose the original `Response`, whose body may have been consumed by decoding.
 
-Response validators check decoded bodies. They preserve values rather than transforming/coercing them. They cannot validate an undeclared success status/media pairing, which instead raises a decode error. HTTP error status/headers survive malformed error bodies. Keep the generated validator companions beside their SDK.
+Response validators check decoded bodies. They preserve values rather than transforming/coercing them. They cannot validate an undeclared success status/media pairing, which instead raises a decode error. HTTP error status/headers survive malformed error bodies. Validators are embedded in the single generated SDK file and compile under the same strict settings as its public types.
 
 ## Reports
 

@@ -112,24 +112,6 @@ export type UsersGetUserContract = {
     readonly "responses": UsersGetUserResponses;
     readonly "fullResponse": UsersGetUserFullResponse;
 };
-type _UsersListUsersInput = UsersListUsersInput;
-type _UsersListUsersResponse = UsersListUsersResponse;
-type _UsersListUsersError = UsersListUsersError;
-type _UsersListUsersResponses = UsersListUsersResponses;
-type _UsersListUsersArguments = UsersListUsersArguments;
-type _UsersListUsersFullResponse = UsersListUsersFullResponse;
-type _UsersCreateUserInput = UsersCreateUserInput;
-type _UsersCreateUserResponse = UsersCreateUserResponse;
-type _UsersCreateUserError = UsersCreateUserError;
-type _UsersCreateUserResponses = UsersCreateUserResponses;
-type _UsersCreateUserArguments = UsersCreateUserArguments;
-type _UsersCreateUserFullResponse = UsersCreateUserFullResponse;
-type _UsersGetUserInput = UsersGetUserInput;
-type _UsersGetUserResponse = UsersGetUserResponse;
-type _UsersGetUserError = UsersGetUserError;
-type _UsersGetUserResponses = UsersGetUserResponses;
-type _UsersGetUserArguments = UsersGetUserArguments;
-type _UsersGetUserFullResponse = UsersGetUserFullResponse;
 export const api = {
     "users": {
         "listUsers": defineEndpoint<UsersListUsersContract, "query">({
@@ -300,23 +282,3 @@ export const api = {
         })
     }
 };
-export namespace AccordTypes {
-    export type UsersListUsersInput = _UsersListUsersInput;
-    export type UsersListUsersResponse = _UsersListUsersResponse;
-    export type UsersListUsersError = _UsersListUsersError;
-    export type UsersListUsersResponses = _UsersListUsersResponses;
-    export type UsersListUsersArguments = _UsersListUsersArguments;
-    export type UsersListUsersFullResponse = _UsersListUsersFullResponse;
-    export type UsersCreateUserInput = _UsersCreateUserInput;
-    export type UsersCreateUserResponse = _UsersCreateUserResponse;
-    export type UsersCreateUserError = _UsersCreateUserError;
-    export type UsersCreateUserResponses = _UsersCreateUserResponses;
-    export type UsersCreateUserArguments = _UsersCreateUserArguments;
-    export type UsersCreateUserFullResponse = _UsersCreateUserFullResponse;
-    export type UsersGetUserInput = _UsersGetUserInput;
-    export type UsersGetUserResponse = _UsersGetUserResponse;
-    export type UsersGetUserError = _UsersGetUserError;
-    export type UsersGetUserResponses = _UsersGetUserResponses;
-    export type UsersGetUserArguments = _UsersGetUserArguments;
-    export type UsersGetUserFullResponse = _UsersGetUserFullResponse;
-}

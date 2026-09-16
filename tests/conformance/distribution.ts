@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { execFile } from "node:child_process"
-import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises"
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { responseDocument } from "./fixture.js"
@@ -117,6 +117,15 @@ async function main(): Promise<void> {
       "generated.ts",
       "--validators",
     ])
+    const stdoutSdk = await command(installed, "pnpm", [
+      "exec",
+      "accord",
+      "generate",
+      "openapi.json",
+      "--validators",
+    ])
+    assert.equal(stdoutSdk, await readFile(join(installed, "generated.ts"), "utf8"))
+    assert(!(await readdir(installed)).some((name) => name.includes(".validators.")))
     await writeFile(join(installed, "config.mjs"), 'export default { namespace: "tag" }\n')
     await command(installed, "pnpm", [
       "exec",
@@ -188,6 +197,7 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"])
             "clean-install",
             "cli-help",
             "cli-generation",
+            "single-file-validators-and-stdout",
             "config-import",
             "semantic-consumer-compile-with-declaration-checking",
             "standalone-validator-generation-and-execution",

@@ -27,7 +27,7 @@ pnpm add ./vendor/accord-react-query-0.1.0-alpha.0.tgz @tanstack/react-query rea
 pnpm exec accord generate openapi.yaml --output src/api.ts --validators
 ```
 
-Use ESM, TypeScript 5.9+, and a Fetch-capable runtime; generation requires Node 22+. Keep the generated validator companions beside `api.ts`. Omit `--validators` to generate a smaller SDK that trusts decoded response values.
+Use ESM, TypeScript 5.9+, and a Fetch-capable runtime; generation requires Node 22+. The entire generated SDK, including optional response validators, lives in `api.ts`. Omit `--validators` to generate a smaller SDK that trusts decoded response values.
 
 Start with the [Tasks usage example](../examples/tasks/usage.ts) for authentication, ordinary calls, full responses, and React Query options. [Schema wrappers](../examples/adapters/README.md) show Zod/ArkType consumption without a library-specific generator.
 

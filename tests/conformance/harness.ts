@@ -245,9 +245,6 @@ export async function verifyFixture(fixture: Fixture): Promise<Failure | undefin
         `Accepted invalid document; expected ${fixture.rejection}`,
       )
     }
-    for (const [name, contents] of Object.entries(generated.files)) {
-      await writeFile(safeFixturePath(directory, name), contents)
-    }
     await writeFile(join(directory, "generated.ts"), generated.source)
     await writeFile(
       join(directory, "endpoint-plans.json"),

@@ -16,7 +16,7 @@ Nest controllers + DTO decorators
        ↓ SwaggerModule.createDocument + request DTO closure
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
-   sdk/sdk.ts + validator companions
+   sdk/sdk.ts                     ← types, plans and validators in one file
        ↓ createClient / React Query
    real Nest server
 ```

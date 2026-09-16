@@ -35,8 +35,6 @@ async function main(): Promise<void> {
   if (args.basePath !== undefined) config.basePath = args.basePath
   if (args.bodyMode !== undefined) config.body = { ...fileConfig.body, mode: args.bodyMode }
 
-  if (config.validators && !args.output)
-    throw new TypeError("--validators requires --output so companion validators can be written")
   const result = await generateFromFile(args.input, config)
   if (args.output) await writeGeneratedSdk(args.output, result)
   else process.stdout.write(result.source)

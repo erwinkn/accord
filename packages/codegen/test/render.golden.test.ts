@@ -1,7 +1,10 @@
-import { readFile } from "node:fs/promises"
+import { mkdtemp, readdir, readFile, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { generateFromFile } from "../src/generate.js"
+import { generate, generateFromFile, writeGeneratedSdk } from "../src/generate.js"
+import type { JsonObject } from "../src/types.js"
 
 const fixture = (name: string) =>
   fileURLToPath(new URL(`../../../tests/fixtures/${name}`, import.meta.url))
@@ -28,6 +31,60 @@ describe("owned generation goldens", () => {
     const first = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
     const second = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
     expect(first.source).toBe(second.source)
-    expect(first.files).toEqual(second.files)
+  })
+  it("writes a complete single-file SDK, including optional validators", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "accord-single-file-"))
+    try {
+      const result = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
+      await writeGeneratedSdk(join(directory, "sdk.ts"), result)
+      expect(await readdir(directory)).toEqual(["sdk.ts"])
+      expect(await readFile(join(directory, "sdk.ts"), "utf8")).toBe(result.source)
+      expect(result.source).not.toMatch(/@ts-(?:ignore|nocheck)|\.validators\.js/)
+    } finally {
+      await rm(directory, { recursive: true, force: true })
+    }
+  })
+  it("shared response models do not duplicate the validation implementation per endpoint", async () => {
+    const model = {
+      type: "object",
+      required: ["id", "name", "email", "roles"],
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string", minLength: 2 },
+        email: { type: "string", format: "email" },
+        roles: { type: "array", items: { type: "string", enum: ["admin", "member"] } },
+      },
+    }
+    const document = (count: number): JsonObject => ({
+      openapi: "3.1.0",
+      info: { title: "Shared validators", version: "1" },
+      components: { schemas: { User: model } },
+      paths: Object.fromEntries(
+        Array.from({ length: count }, (_, index) => [
+          `/users${index}`,
+          {
+            get: {
+              operationId: `getUser${index}`,
+              responses: {
+                200: {
+                  description: "User",
+                  content: {
+                    "application/json": { schema: { $ref: "#/components/schemas/User" } },
+                  },
+                },
+              },
+            },
+          },
+        ]),
+      ),
+    })
+    const extraBytes = async (count: number) => {
+      const input = document(count)
+      const withChecks = await generate(input, { validators: true })
+      const withoutChecks = await generate(input)
+      return withChecks.source.length - withoutChecks.source.length
+    }
+    // Extra endpoint bindings are small; the complex schema check must not grow 20-fold.
+    expect(await extraBytes(20)).toBeLessThan((await extraBytes(1)) * 3)
   })
 })

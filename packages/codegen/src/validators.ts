@@ -8,6 +8,7 @@ import { object, pointerSegment } from "./loader.js"
 import type { SchemaId } from "./model.js"
 import { isObject, isString } from "./object.js"
 import type { JsonObject, JsonValue } from "./types.js"
+import { validatorSource } from "./validator-source.js"
 
 // Ajv's CJS plugin exports do not expose a callable default under NodeNext's interop types.
 const require = createRequire(import.meta.url)
@@ -20,8 +21,7 @@ export interface ValidatorBinding {
   readonly schema: SchemaId
 }
 export interface ValidatorOutput {
-  readonly module: string
-  readonly files: Readonly<Record<string, string>>
+  readonly source: string
   readonly bindings: ReadonlyMap<string, ReadonlyMap<string, ValidatorBinding>>
 }
 
@@ -164,6 +164,10 @@ export async function generateValidators(
     removeAdditional: false,
     useDefaults: false,
     coerceTypes: false,
+    // Shared components should have one implementation, including common error responses.
+    inlineRefs: false,
+    loopRequired: 3,
+    loopEnum: 5,
   })
   ajv.addKeyword({
     keyword: "accordBinary",
@@ -182,6 +186,7 @@ export async function generateValidators(
   const { documents, references } = validationDocuments(compilation, store)
   for (const [uri, document] of documents) ajv.addSchema(document, uri)
   const exports: { [key: string]: string } = Object.create(null)
+  const shared = new Map<string, string>()
   const bindings = new Map<string, ReadonlyMap<string, ValidatorBinding>>()
   let count = 0
   for (const operation of compilation.model.operations) {
@@ -208,8 +213,22 @@ export async function generateValidators(
             selectedReferences = projected.references
           }
         }
-        let validator: JsonObject
-        if (compilation.graph.impossible(media.schema)) validator = { not: {} }
+        let schema = media.schema
+        // A bare static reference has no sibling constraints or dynamic scope of its own.
+        // Compile its target directly so every use of a component shares one check.
+        while (true) {
+          const node = compilation.graph.get(schema)
+          if (
+            !node.reference ||
+            !isObject(node.rules) ||
+            Object.keys(node.rules).length !== 1 ||
+            !isString(node.rules["$ref"])
+          )
+            break
+          schema = node.reference
+        }
+        let validator: JsonObject | undefined
+        if (compilation.graph.impossible(schema)) validator = { not: {} }
         else if (binary) {
           const rules = {
             minLength: compilation.graph.annotation(media.schema, "minLength"),
@@ -218,12 +237,17 @@ export async function generateValidators(
           validator = { type: "integer", minimum: rules["minLength"] ?? 0 }
           if (rules["maxLength"] !== undefined)
             validator = { ...validator, maximum: rules["maxLength"] }
-        } else if (media.schema === compilation.graph.any) validator = {}
-        else validator = { $ref: selectedReferences.get(media.schema)! }
-        ajv.addSchema(validator, key)
-        exports[exportName] = key
+        } else if (schema === compilation.graph.any) validator = {}
+        const identity = validator ? JSON.stringify(validator) : selectedReferences.get(schema)!
+        let sharedName = shared.get(identity)
+        if (!sharedName) {
+          sharedName = exportName
+          shared.set(identity, sharedName)
+          if (validator) ajv.addSchema(validator, key)
+          exports[sharedName] = validator ? key : identity
+        }
         operationBindings.set(media.representation.key, {
-          exportName,
+          exportName: sharedName,
           binary,
           schema: media.schema,
         })
@@ -231,7 +255,6 @@ export async function generateValidators(
     }
     bindings.set(operation.key, operationBindings)
   }
-  const module = `accord-${compilation.model.id}.validators`
   const javascript = standalone(ajv, exports)
   const bundled = await build({
     stdin: {
@@ -246,14 +269,8 @@ export async function generateValidators(
     target: "es2022",
     logLevel: "silent",
   })
-  const declaration = [
-    'import type { ValidationFunction } from "@accord/client/validation"',
-    ...Object.keys(exports).map((name) => `export declare const ${name}: ValidationFunction`),
-    "",
-  ].join("\n")
   return {
-    module,
     bindings,
-    files: { [`${module}.js`]: bundled.outputFiles[0]!.text, [`${module}.d.ts`]: declaration },
+    source: validatorSource(bundled.outputFiles[0]!.text),
   }
 }

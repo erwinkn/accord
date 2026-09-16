@@ -206,7 +206,10 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
   const emitter = new TypeEmitter(compilation.graph, [
     "api",
     "responseSchemas",
-    "AccordTypes",
+    "accordValidators",
+    "createAccordValidators",
+    "AccordValidationFunction",
+    "standardSchema",
     "BinaryUpload",
     "HttpResult",
     "RequestOptions",
@@ -240,7 +243,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
           const name = `${operation.typeName}Response${sanitizeTypeIdentifier(`${response.status} ${media.mediaType}`)}Schema`
           const type = printNode(emitter.emit(media.schema, "response", media.representation.codec))
           validatorDeclarations.push(
-            `export const ${name} = standardSchema<${type}>(checks.${binding.exportName}, ${binding.binary})`,
+            `export const ${name} = standardSchema<${type}>(accordValidators.${binding.exportName}, ${binding.binary})`,
           )
           entries.push(`${JSON.stringify(media.representation.key)}: ${name}`)
           publicSchemas.push(`${JSON.stringify(name)}: ${name}`)
@@ -277,8 +280,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     'import { defineEndpoint, type BinaryUpload, type HttpResult, type RequestOptions, type StatusRange } from "@accord/client"',
     ...(validators
       ? [
-          `import { standardSchema } from "@accord/client/validation"`,
-          `import * as checks from "./${validators.module}.js"`,
+          'import { standardSchema, type ValidationFunction as AccordValidationFunction } from "@accord/client/validation"',
         ]
       : []),
     "type AccordSimplify<T> = T extends unknown ? { [K in keyof T]: T[K] } : never",
@@ -286,22 +288,11 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     "type AccordArrayConstraints<T, R> = T extends readonly unknown[] ? T & R : T",
     ...[...emitter.declarations.values()].map(printNode),
     ...[...operations.values()].map((operation) => operation.declaration),
-    ...compilation.model.operations.flatMap((operation) =>
-      ["Input", "Response", "Error", "Responses", "Arguments", "FullResponse"].map(
-        (suffix) => `type _${operation.typeName}${suffix} = ${operation.typeName}${suffix}`,
-      ),
-    ),
+    ...(validators ? ["const accordValidators = createAccordValidators()"] : []),
     ...validatorDeclarations,
     ...(validators ? [`export const responseSchemas = { ${publicSchemas.join(", ")} }`] : []),
     `export const api = ${renderTree(root, 0)}`,
-    "export namespace AccordTypes {",
-    ...compilation.model.operations.flatMap((operation) => {
-      const name = operation.typeName
-      return ["Input", "Response", "Error", "Responses", "Arguments", "FullResponse"].map(
-        (suffix) => `  export type ${name}${suffix} = _${name}${suffix}`,
-      )
-    }),
-    "}",
+    ...(validators ? [validators.source] : []),
     "",
   ].join("\n\n")
   return ts

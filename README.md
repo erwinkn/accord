@@ -89,9 +89,9 @@ export default {
 pnpm exec accord generate openapi.yaml -c accord.config.mjs -o src/api.ts
 ```
 
-`--validators` requires an output path. Keep the generated `.validators.js` and `.validators.d.ts` companions beside the SDK. They contain standalone checks; the consuming app does not compile schemas or depend on Ajv. File and HTTP references resolve relative to their source document, including embedded `$id` resources and anchors.
+Generation produces one TypeScript file, including when `--validators` is enabled. Types are exported directly by name; no namespace or duplicate type aliases are needed. Optional response checks are compiled at generation time, share referenced models, and live in a private section at the end of the file. The consuming app does not compile schemas or depend on Ajv. File and HTTP references resolve relative to their source document, including embedded `$id` resources and anchors.
 
-The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, files, model }`. Write the complete SDK with `writeGeneratedSdk`, so validator companions are included.
+The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, model }`. Use `writeGeneratedSdk` to write the file, or consume `source` directly. The CLI can also print the complete SDK to stdout, with or without validators.
 
 ## Develop
 

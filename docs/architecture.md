@@ -38,7 +38,7 @@ The runtime reconstructs flattened closed bodies using the model's fields and pr
 
 ## Validation and library interoperability
 
-The optional validator backend projects response read/write rules and references into real JSON Schema trees, compiles them with Ajv at generation time, then bundles standalone ESM checks. Schema files are not interpreted at runtime. The generated facade implements [Standard Schema](https://standardschema.dev/), so compatible consumers can accept it directly.
+The optional validator backend projects response read/write rules and references into real JSON Schema trees and compiles them with Ajv at generation time. Referenced models share checks. Bundled JavaScript checks and helpers are embedded in a private factory at the end of the generated TypeScript file. A mechanical AST pass annotates their dynamic JavaScript internals; a `ValidationFunction` boundary keeps that implementation separate from the public types without disabling TypeScript checking. Schema files are not interpreted at runtime, and there is no `eval` or runtime compilation. The generated facade implements [Standard Schema](https://standardschema.dev/), so compatible consumers can accept it directly.
 
 Standard Schema is a validation interface, not a portable description from which a native Zod/ArkType object tree can be reconstructed. A downstream wrapper delegates validation; it does not gain the target library's object-shape introspection. Native library-specific emitters remain a later backend option.
 

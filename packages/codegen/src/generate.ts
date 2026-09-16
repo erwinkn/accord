@@ -11,8 +11,6 @@ import { generateValidators } from "./validators.js"
 export interface GenerateResult {
   readonly source: string
   readonly model: ApiModel
-  /** Companion modules, such as standalone validators, written alongside the SDK. */
-  readonly files: Readonly<Record<string, string>>
 }
 
 export async function generate(
@@ -29,7 +27,6 @@ export async function generate(
   return {
     source: renderSdk(compilation, validators),
     model: compilation.model,
-    files: validators?.files ?? {},
   }
 }
 
@@ -50,7 +47,5 @@ export async function writeGeneratedFile(outputPath: string, source: string): Pr
   await rename(temporary, absolute)
 }
 export async function writeGeneratedSdk(outputPath: string, result: GenerateResult): Promise<void> {
-  for (const [name, source] of Object.entries(result.files))
-    await writeGeneratedFile(resolve(dirname(outputPath), name), source)
   await writeGeneratedFile(outputPath, result.source)
 }

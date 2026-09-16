@@ -57,10 +57,7 @@ test("Nest's exported document and Accord output match the committed artifacts",
     },
   )
   assert.equal(generated.source, await readFile("sdk/sdk.ts", "utf8"))
-  const companions = (await readdir("sdk")).filter((file) => file.includes(".validators."))
-  assert.deepEqual(companions.sort(), Object.keys(generated.files).sort())
-  for (const [name, source] of Object.entries(generated.files))
-    assert.equal(await readFile(`sdk/${name}`, "utf8"), source)
+  assert.deepEqual(await readdir("sdk"), ["sdk.ts"])
 })
 
 test("the generated SDK completes the real HTTP investment workflow", async () => {

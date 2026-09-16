@@ -124,24 +124,6 @@ export type AssetsRemoveContract = {
     readonly "responses": AssetsRemoveResponses;
     readonly "fullResponse": AssetsRemoveFullResponse;
 };
-type _AssetsUploadInput = AssetsUploadInput;
-type _AssetsUploadResponse = AssetsUploadResponse;
-type _AssetsUploadError = AssetsUploadError;
-type _AssetsUploadResponses = AssetsUploadResponses;
-type _AssetsUploadArguments = AssetsUploadArguments;
-type _AssetsUploadFullResponse = AssetsUploadFullResponse;
-type _AssetsRenameInput = AssetsRenameInput;
-type _AssetsRenameResponse = AssetsRenameResponse;
-type _AssetsRenameError = AssetsRenameError;
-type _AssetsRenameResponses = AssetsRenameResponses;
-type _AssetsRenameArguments = AssetsRenameArguments;
-type _AssetsRenameFullResponse = AssetsRenameFullResponse;
-type _AssetsRemoveInput = AssetsRemoveInput;
-type _AssetsRemoveResponse = AssetsRemoveResponse;
-type _AssetsRemoveError = AssetsRemoveError;
-type _AssetsRemoveResponses = AssetsRemoveResponses;
-type _AssetsRemoveArguments = AssetsRemoveArguments;
-type _AssetsRemoveFullResponse = AssetsRemoveFullResponse;
 export const api = {
     "assets": {
         "upload": defineEndpoint<AssetsUploadContract, "mutation">({
@@ -400,23 +382,3 @@ export const api = {
         })
     }
 };
-export namespace AccordTypes {
-    export type AssetsUploadInput = _AssetsUploadInput;
-    export type AssetsUploadResponse = _AssetsUploadResponse;
-    export type AssetsUploadError = _AssetsUploadError;
-    export type AssetsUploadResponses = _AssetsUploadResponses;
-    export type AssetsUploadArguments = _AssetsUploadArguments;
-    export type AssetsUploadFullResponse = _AssetsUploadFullResponse;
-    export type AssetsRenameInput = _AssetsRenameInput;
-    export type AssetsRenameResponse = _AssetsRenameResponse;
-    export type AssetsRenameError = _AssetsRenameError;
-    export type AssetsRenameResponses = _AssetsRenameResponses;
-    export type AssetsRenameArguments = _AssetsRenameArguments;
-    export type AssetsRenameFullResponse = _AssetsRenameFullResponse;
-    export type AssetsRemoveInput = _AssetsRemoveInput;
-    export type AssetsRemoveResponse = _AssetsRemoveResponse;
-    export type AssetsRemoveError = _AssetsRemoveError;
-    export type AssetsRemoveResponses = _AssetsRemoveResponses;
-    export type AssetsRemoveArguments = _AssetsRemoveArguments;
-    export type AssetsRemoveFullResponse = _AssetsRemoveFullResponse;
-}
