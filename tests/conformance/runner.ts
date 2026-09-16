@@ -12,6 +12,8 @@ import {
 } from "./harness.js"
 import type { KnownGap, Result } from "./model.js"
 import { queryCases } from "./query-cases.js"
+import { representationCases } from "./representation-cases.js"
+import { rewriteCases } from "./rewrite-cases.js"
 import { typeCases } from "./type-cases.js"
 import { responseCases, wireCases } from "./wire-cases.js"
 
@@ -29,7 +31,15 @@ async function main(): Promise<void> {
   if (args.some((arg) => !supported.has(arg)))
     throw new Error(`Unknown arguments: ${args.join(" ")}`)
   const strict = args.includes("--strict")
-  const cases = [...generationCases, ...typeCases, ...wireCases, ...responseCases, ...queryCases]
+  const cases = [
+    ...generationCases,
+    ...typeCases,
+    ...wireCases,
+    ...responseCases,
+    ...queryCases,
+    ...rewriteCases,
+    ...representationCases,
+  ]
   const gaps: KnownGap[] = JSON.parse(
     await readFile(join(root, "tests/conformance/known-gaps.json"), "utf8"),
   )

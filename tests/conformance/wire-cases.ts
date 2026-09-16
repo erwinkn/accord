@@ -236,7 +236,12 @@ const composedBody = {
 
 wireCases.push(
   bodyCase("wire.body-merge", plainBody, { name: "Alice", count: 0 }, { name: "Alice", count: 0 }),
-  bodyCase("wire.body-allof-siblings", composedBody, { a: "A", b: "B" }, { a: "A", b: "B" }),
+  bodyCase(
+    "wire.body-allof-siblings",
+    composedBody,
+    { body: { a: "A", b: "B" } },
+    { a: "A", b: "B" },
+  ),
   {
     ...bodyCase(
       "wire.body-ref-siblings",
@@ -252,7 +257,7 @@ wireCases.push(
       source:
         consumer(`export async function run() { await withServer(async (baseUrl, requests) => {
       const input = { a: "A", b: "B" }
-      await createClient(api, { baseUrl }).probe.call(input)
+      await createClient(api, { baseUrl }).probe.call({ body: input })
       assert.deepEqual(JSON.parse(requests[0]!.body.toString()), input, "ACCORD_BODY_FIELDS")
     }) }`),
     },
@@ -408,7 +413,7 @@ for (const style of ["form", "pipeDelimited", "spaceDelimited"] as const) {
     ),
     consumer: {
       source: wireConsumer(
-        { ids: [1, 2] },
+        { body: { ids: [1, 2] } },
         `assert.equal(new URLSearchParams(request.body.toString()).get("ids"), ${JSON.stringify(expected)}, "ACCORD_FORM_STYLE")`,
       ),
     },
@@ -533,7 +538,7 @@ type ResponseContract = Expect<Equal<ResponseOf<typeof api.probe.call>, ArrayBuf
       await assert.rejects(createClient(api, { baseUrl }).probe.call(), error => {
         assert(error instanceof HttpError, "ACCORD_HTTP_ERROR")
         assert.equal(error.status, 404)
-        assert.equal(error.endpoint.operationId, "call")
+        assert.equal(error.endpoint.plan.operationId, "call")
         assert.deepEqual(JSON.parse(JSON.stringify(error.body)), { message: "missing" })
         return true
       })

@@ -1,6 +1,6 @@
 {
   "name": "@accord/client",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "Generic typed HTTP runtime for Accord endpoint descriptors",
   "type": "module",
   "sideEffects": false,
@@ -11,16 +11,24 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./validation": {
+      "types": "./dist/validation.d.ts",
+      "import": "./dist/validation.js"
     }
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
     "clean": "rm -rf dist *.tsbuildinfo",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "engines": {
     "node": ">=22.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@standard-schema/spec": "1.1.0",
+    "fast-xml-parser": "5.3.6"
+  }
 }

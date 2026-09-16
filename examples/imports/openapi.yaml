@@ -1,0 +1,87 @@
+openapi: 3.1.0
+info: { title: Data Imports, version: 1.0.0 }
+servers:
+  - url: https://imports.example.test/v2
+paths:
+  /imports:
+    post:
+      operationId: create
+      summary: Import JSON rows or a CSV document; return a result or an asynchronous job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rows]
+              additionalProperties: false
+              properties:
+                rows:
+                  type: array
+                  items:
+                    type: object
+                    required: [email]
+                    properties:
+                      email: { type: string, format: email }
+                    additionalProperties: { type: string }
+          text/csv:
+            schema: { type: string }
+      responses:
+        '200':
+          description: Completed immediately
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ImportResult' }
+        '202':
+          description: Accepted for processing
+          headers:
+            Location: { schema: { type: string, format: uri-reference } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ImportJob' }
+        '400':
+          description: Invalid document
+          content:
+            application/json:
+              schema: { type: object, required: [message], properties: { message: { type: string } } }
+  /imports/{jobId}:
+    get:
+      operationId: get
+      parameters:
+        - { name: jobId, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: Current processing state
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ImportJob'
+                  - $ref: '#/components/schemas/ImportResult'
+  /imports/{jobId}/report:
+    get:
+      operationId: download
+      parameters:
+        - { name: jobId, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: Binary spreadsheet
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+components:
+  schemas:
+    ImportResult:
+      type: object
+      required: [state, imported]
+      additionalProperties: false
+      properties:
+        state: { const: completed }
+        imported: { type: integer, minimum: 0 }
+    ImportJob:
+      type: object
+      required: [state, jobId]
+      additionalProperties: false
+      properties:
+        state: { const: queued }
+        jobId: { type: string }

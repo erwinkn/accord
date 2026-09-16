@@ -1,0 +1,111 @@
+openapi: 3.1.0
+info:
+  title: Team Tasks
+  version: 1.0.0
+servers:
+  - url: https://tasks.example.test/v1
+security:
+  - bearer: []
+paths:
+  /tasks:
+    get:
+      operationId: list
+      summary: List tasks for the current team
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string, enum: [open, done] }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100 }
+      responses:
+        '200':
+          description: A page of tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                additionalProperties: false
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/Task' } }
+                  nextCursor: { type: string }
+    post:
+      operationId: create
+      summary: Create a task from a flat input object
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Task' }
+      responses:
+        '201':
+          description: Created task
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '422':
+          $ref: '#/components/responses/Problem'
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: get
+      responses:
+        '200':
+          description: Task
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '404':
+          $ref: '#/components/responses/Problem'
+    patch:
+      operationId: update
+      summary: Optional patch body preserves the difference between absent and empty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                title: { type: string, minLength: 1 }
+                status: { type: string, enum: [open, done] }
+      responses:
+        '200':
+          description: Updated task
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }
+  schemas:
+    Task:
+      type: object
+      additionalProperties: false
+      required: [id, title, status, createdAt]
+      properties:
+        id: { type: string, readOnly: true }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        status: { type: string, enum: [open, done] }
+        createdAt: { type: string, format: date-time, readOnly: true }
+        labels:
+          type: object
+          additionalProperties: { type: string }
+    Problem:
+      type: object
+      required: [code, message]
+      additionalProperties: false
+      properties:
+        code: { type: string }
+        message: { type: string }
+  responses:
+    Problem:
+      description: Request problem
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }

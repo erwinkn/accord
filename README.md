@@ -1,70 +1,106 @@
 # Accord
 
-Type-safe TypeScript SDK generation from OpenAPI.
+Accord generates a typed TypeScript SDK from OpenAPI 3.0 or 3.1. One semantic model produces the caller types, declarative endpoint plans, and optional response validators. A shared Fetch runtime executes those plans; TanStack React Query integration uses the same endpoints.
 
-Accord generates a single endpoint metadata object and complete request/response types from an OpenAPI document. HTTP and TanStack Query clients are then derived from that object through TypeScript inference.
+This is the `0.1.0-alpha.0` rewrite. Start with the [alpha review and verification results](docs/alpha-review.md) or [example APIs and generated SDKs](examples/README.md), then see [architecture](docs/architecture.md) and [verification](docs/testing.md).
 
-## Intended API
+## Generate and use an SDK
 
-Given operations such as:
-
-```text
-GET   /users/{userId}        operationId: getUser
-PATCH /users/{userId}        operationId: updateUser
-GET   /users/{userId}/posts  operationId: listPosts
+```sh
+pnpm add @accord/client
+pnpm add -D @accord/codegen typescript
+pnpm exec accord generate openapi.yaml --output src/api.ts --validators
 ```
 
-Accord should generate an API object shaped like:
+The packages are prepared for an alpha release; these commands require access to the package versions, or [local packed tarballs](docs/trying-the-alpha.md). Nothing is published automatically by this repository.
 
 ```ts
-api.users.getUser
-api.users.updateUser
-api.users.posts.listPosts
-```
+import { createClient } from "@accord/client"
+import { api } from "./api.js"
 
-Dynamic path segments are function inputs, not namespace segments:
-
-```ts
-const http = createClient(api, { baseUrl: "/api" })
-
-const user = await http.users.getUser({ userId })
-
-const posts = await http.users.posts.listPosts({
-  userId,
-  limit: 20,
+const http = createClient(api, {
+  baseUrl: "https://api.example.test/v1",
+  credentials: { bearer: accessToken }, // OpenAPI security scheme name
+  cacheScope: teamId,
 })
+
+const task = await http.tasks.create({ title: "Review", status: "open" })
+const full = await http.tasks.get.withResponse({ id: task.id })
+console.log(full.data, full.status, full.headers.get("x-request-id"))
 ```
 
-React Query uses the same inferred inputs:
+Endpoint and namespace names come from the spec. The example above uses the [Tasks API](examples/tasks/openapi.yaml).
+
+## Request and response conventions
+
+- Path, query, header and cookie inputs occupy the first object; request options (`headers`, `signal`) occupy the second.
+- A required, closed object body is flattened when doing so preserves every field. Optional bodies, dictionaries, collisions, and non-object bodies automatically use `{ body: ... }`. Optional body absence stays distinct from `{ body: {} }`.
+- Multiple request media types produce correlated argument tuples. Select an alternative using `options.headers["content-type"]`. Use this lowercase spelling and an inspectable header object; opaque header dictionaries cannot establish a safe media/input relationship.
+- One successful status returns its payload. Multiple successful statuses return a `{ status, data }` union; status ranges account for bodyless 204/205 responses. `.withResponse()` also provides `headers`, `mediaType`, and the underlying Fetch `Response` (whose body may already be consumed).
+- Dates stay strings. Binary downloads are `ArrayBuffer`; uploads accept `Blob`, `ArrayBuffer`, or `Uint8Array`.
+- Caller inputs are trusted. Accord does not run request schema validation, inject defaults, coerce caller data, or strip dictionary fields.
+- Without `--validators`, responses are decoded without schema validation. With validators, generated Standard Schema checks run on responses. Invalid JSON/transport data still causes a decode error regardless of schema validation.
+- `HttpError` retains status, headers, endpoint, and decoded error body. If decoding or validation fails, `body` is `undefined` and `cause` records the failure. Network, decode, and response-validation failures have separate error classes.
 
 ```ts
-useApiQuery(api.users.getUser, { userId })
-
-const updateUser = useApiMutation(api.users.updateUser)
-updateUser.mutate({ userId, name: "Erwin" })
+const result = await http.imports.create(
+  { body: "email\na@example.test" },
+  { headers: { "content-type": "text/csv" }, signal },
+)
+if (result.status === 202) console.log(result.data.jobId)
+else console.log(result.data.imported)
 ```
 
-## Design decisions
+## React Query
 
-- OpenAPI is the compile-time source of truth.
-- The generated `api` object is transport-independent.
-- Runtime endpoint descriptors preserve canonical OpenAPI distinctions between path, query, headers, body, and response types.
-- Path parameters are passed to functions/hooks rather than represented in the object hierarchy.
-- Namespace defaults to static path segments plus an operation leaf. OpenAPI tags are an optional namespace strategy.
-- Operation naming precedence is `x-sdk-name`, then `operationId`, then a deterministic fallback.
-- Request bodies can be generated in `merge` or `separate` mode. Merge-mode collisions are generation errors by default.
-- The default distribution is small runtime packages plus codegen; a future standalone mode can vendor the generic runtime into generated output.
+```ts
+import { useQuery } from "@tanstack/react-query"
+import { apiQuery, apiMutation } from "@accord/react-query"
 
-## Packages
+const query = useQuery({
+  ...apiQuery(http.tasks.list, { status: "open" }),
+  staleTime: 30_000,
+  select: page => page.items,
+})
+// useMutation(apiMutation(http.tasks.create))
+```
 
-- `@accord/codegen` — OpenAPI parsing, normalization, type generation, and endpoint-object generation.
-- `@accord/client` — generic typed HTTP client derived from the generated endpoint object.
-- `@accord/react-query` — TanStack Query integration derived from the same endpoint descriptors.
+Use `apiQueryResponse` for full HTTP results. Ordinary mutations accept the default-media input; `apiMutationCall` uses the generated argument tuple as mutation variables. `AccordProvider` supplies client options to `useApiQuery` / `useApiMutation` when using unbound endpoint definitions.
 
-## Status
+Keys include API identity, server, account scope, inputs, headers, and result mode. Credentials use opaque identities rather than their values. Reuse the client/options object, and update `cacheScope` when a dynamic credential resolver switches accounts. Never place secrets in `cacheScope`.
 
-Initial architecture scaffold. The next implementation milestone is the normalized endpoint descriptor and OpenAPI-to-descriptor generator.
+## Generation options
 
-## Testing and conformance
+```js
+// accord.config.mjs
+export default {
+  namespace: "path", // or "tag"
+  basePath: "/v1",   // affects naming, not the HTTP path
+  validators: true,
+  body: { overrides: { replaceAsset: "separate" } },
+  defaultMediaTypes: { createImport: "application/json" },
+  operationKinds: { search: "query" },
+}
+```
 
-See [the testing architecture and invariant contracts](docs/testing.md). After installing dependencies and building, run `pnpm test:conformance` for the regression gate or `pnpm test:conformance:strict` to require every registered contract to pass. Known implementation gaps are executed and reported explicitly, not skipped.
+```sh
+pnpm exec accord generate openapi.yaml -c accord.config.mjs -o src/api.ts
+```
+
+`--validators` requires an output path. Keep the generated `.validators.js` and `.validators.d.ts` companions beside the SDK. They contain standalone checks; the consuming app does not compile schemas or depend on Ajv. File and HTTP references resolve relative to their source document, including embedded `$id` resources and anchors.
+
+The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, files, model }`. Write the complete SDK with `writeGeneratedSdk`, so validator companions are included.
+
+## Develop
+
+Node 22+, pnpm 11, TypeScript 5.9. Runtime packages use ESM and Fetch/Web platform APIs.
+
+```sh
+pnpm install
+pnpm build
+pnpm generate:test-fixtures
+pnpm generate:examples
+pnpm check
+```
+
+Fuzz failures save a minimized executable reproduction and a seed/replay path. See [testing](docs/testing.md) for the individual checks and the alpha's precision boundaries.

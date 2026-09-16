@@ -13,7 +13,7 @@ export const queryCases: Fixture[] = [
       const queryClient = new QueryClient()
       try {
         await withServer(async (baseUrl, requests) => {
-          const options = apiQuery(api.probe.call, {}, { clientOptions: { baseUrl }, staleTime: Infinity })
+          const options = { ...apiQuery(createClient(api, { baseUrl }).probe.call, {}), staleTime: Infinity }
           assert.equal(await queryClient.fetchQuery(options), "OK")
           assert.equal(await queryClient.fetchQuery(options), "OK")
           assert.equal(requests.length, 1, "ACCORD_QUERY_DEDUPLICATION")
@@ -34,8 +34,8 @@ export const queryCases: Fixture[] = [
       try {
         await withServer(async baseA => {
           await withServer(async baseB => {
-            const first = await queryClient.fetchQuery(apiQuery(api.probe.call, {}, { clientOptions: { baseUrl: baseA }, staleTime: Infinity }))
-            const second = await queryClient.fetchQuery(apiQuery(api.probe.call, {}, { clientOptions: { baseUrl: baseB }, staleTime: Infinity }))
+            const first = await queryClient.fetchQuery({ ...apiQuery(createClient(api, { baseUrl: baseA }).probe.call, {}), staleTime: Infinity })
+            const second = await queryClient.fetchQuery({ ...apiQuery(createClient(api, { baseUrl: baseB }).probe.call, {}), staleTime: Infinity })
             assert.equal(first, "TENANT_A")
             assert.equal(second, "TENANT_B", "ACCORD_CACHE_SCOPE")
           }, { status: 200, headers: { "content-type": "text/plain" }, body: "TENANT_B" })
@@ -80,7 +80,7 @@ export const queryCases: Fixture[] = [
         resolveStarted()
       })
       try {
-        const pending = queryClient.fetchQuery(apiQuery(api.probe.call, {}, { clientOptions: { fetch: fetcher }, retry: false }))
+        const pending = queryClient.fetchQuery({ ...apiQuery(createClient(api, { fetch: fetcher }).probe.call, {}), retry: false })
         const handled = pending.catch(() => undefined)
         await started
         await queryClient.cancelQueries()

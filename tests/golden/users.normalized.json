@@ -1,17 +1,14 @@
-{
-  "openapi": "3.1.0",
-  "operations": [
-    {
-      "key": "listUsers",
+[
+  {
+    "exportPath": [
+      "users",
+      "listUsers"
+    ],
+    "plan": {
+      "apiId": "8f355a546a72debe",
       "method": "GET",
-      "methodKey": "get",
       "path": "/users",
       "operationId": "listUsers",
-      "operationName": "listUsers",
-      "namespace": [
-        "users"
-      ],
-      "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
         {
@@ -27,64 +24,106 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-200-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         }
       ],
-      "typeName": "UsersListUsers"
-    },
-    {
-      "key": "createUser",
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {}
+    }
+  },
+  {
+    "exportPath": [
+      "users",
+      "createUser"
+    ],
+    "plan": {
+      "apiId": "8f355a546a72debe",
       "method": "POST",
-      "methodKey": "post",
       "path": "/users",
       "operationId": "createUser",
-      "operationName": "createUser",
-      "namespace": [
-        "users"
-      ],
-      "bodyMode": "merge",
       "operationKind": "mutation",
       "parameters": [],
-      "requestBody": {
-        "required": true,
-        "contentType": "application/json",
-        "contentTypes": [
-          "application/json"
-        ],
-        "fields": [
-          "email",
-          "name"
-        ]
-      },
       "responses": [
         {
           "status": 201,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-201-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         },
         {
           "status": 400,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-400-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         }
       ],
-      "typeName": "UsersCreateUser"
-    },
-    {
-      "key": "getUser",
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {},
+      "requestBody": {
+        "required": true,
+        "mode": "separate",
+        "fields": [
+          "email",
+          "name"
+        ],
+        "content": [
+          {
+            "mediaType": "application/json",
+            "representation": {
+              "key": "request-0",
+              "codec": {
+                "kind": "json"
+              }
+            }
+          }
+        ],
+        "defaultMediaType": "application/json"
+      }
+    }
+  },
+  {
+    "exportPath": [
+      "users",
+      "getUser"
+    ],
+    "plan": {
+      "apiId": "8f355a546a72debe",
       "method": "GET",
-      "methodKey": "get",
       "path": "/users/{userId}",
       "operationId": "getUser",
-      "operationName": "getUser",
-      "namespace": [
-        "users"
-      ],
-      "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
         {
@@ -100,18 +139,39 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-200-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         },
         {
           "status": 404,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-404-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         }
       ],
-      "typeName": "UsersGetUser"
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {}
     }
-  ]
-}
+  }
+]

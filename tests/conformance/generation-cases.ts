@@ -24,8 +24,8 @@ export const generationCases: Fixture[] = [
     consumer: {
       source: consumer(`type Namespace = Expect<Equal<keyof typeof api.users, "posts">>
       export async function run() {
-        assert.equal(api.users.posts.listPosts.path, "/api/v1/users/{userId}/posts")
-        assert.equal(api.users.posts.listPosts.operationId, "ignored")
+        assert.equal(api.users.posts.listPosts.plan.path, "/api/v1/users/{userId}/posts")
+        assert.equal(api.users.posts.listPosts.plan.operationId, "ignored")
       }`),
     },
   },
@@ -38,7 +38,7 @@ export const generationCases: Fixture[] = [
     config: { namespace: "tag" },
     consumer: {
       source: consumer(
-        'export async function run() { assert.equal(api.usersApi.call.path, "/probe") }',
+        'export async function run() { assert.equal(api.usersApi.call.plan.path, "/probe") }',
       ),
     },
   },
@@ -57,7 +57,7 @@ export const generationCases: Fixture[] = [
     }),
     consumer: {
       source: consumer(
-        'export async function run() { assert.equal(api.users.posts.getByUserId.path, "/users/{userId}/posts") }',
+        'export async function run() { assert.equal(api.users.posts.getByUserId.plan.path, "/users/{userId}/posts") }',
       ),
     },
   },
@@ -96,7 +96,7 @@ export const generationCases: Fixture[] = [
     },
     consumer: {
       source: consumer(
-        "type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly name: string }>>",
+        'type InputContract = Expect<Equal<InputOf<typeof api.probe.call>["body"]["name"], string>>',
       ),
     },
   },
@@ -203,12 +203,15 @@ const rejected: readonly [string, JsonValue, string][] = [
   ],
 ]
 for (const [id, input, rejection] of rejected) {
-  generationCases.push({
+  const fixture: Fixture = {
     id: `rejection.${id}`,
     title: `Reject ${id} with a structured ${rejection} diagnostic`,
     area: "generation",
     reference: references.accord,
     document: input,
     rejection,
-  })
+  }
+  if (["body-parameter-collision", "merged-non-object", "merged-dictionary"].includes(id))
+    generationCases.push({ ...fixture, config: { body: { mode: "merge" } } })
+  else generationCases.push(fixture)
 }

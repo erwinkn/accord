@@ -1,500 +1,336 @@
-import { HttpError } from "./errors.js"
+import { decodeBody, encodeBody, fallbackCodec, mediaMatches, mediaType } from "./codecs.js"
+import { DecodeError, HttpError, NetworkError, ValidationError } from "./errors.js"
 import {
-  interpolatePath,
-  isParameterValue,
   renderQueryString,
   serializeCookieParameter,
   serializeHeaderParameter,
+  serializePathParameter,
   serializeQueryParameter,
 } from "./serialize.js"
 import type {
+  ArgumentsOf,
   ClientFor,
   ClientOptions,
-  EndpointDescriptor,
+  Credential,
+  EndpointContract,
+  EndpointDefinition,
   EndpointFunction,
+  FullResponseOf,
   HeaderResolver,
-  JsonPrimitive,
-  JsonValue,
+  HttpResult,
+  MediaPlan,
+  OperationKind,
+  ParameterDescriptor,
   ParameterValue,
-  RequestBinary,
-  RequestBodyDescriptor,
   RequestMiddlewareContext,
   RequestObject,
-  RequestPrimitive,
+  RequestOptions,
   RequestValue,
-  ResponseMiddlewareContext,
+  ResponseDescriptor,
   ResponseOf,
-  ResponsePayload,
+  StatusSelector,
 } from "./types.js"
 
-interface MutableRequestObject {
-  [key: string]: RequestValue
+function isRecord<T>(value: T): value is T & object {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+}
+function isHeaderResolver<T>(value: T): value is T & HeaderResolver {
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  return typeof value === "function"
 }
 
-interface MutableJsonObject {
-  [key: string]: JsonValue
-}
-
-function isPlainObject<TValue>(value: TValue): value is TValue & object {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
-  const prototype = Object.getPrototypeOf(value)
-  return prototype === Object.prototype || prototype === null
-}
-
-function isRequestPrimitive<TValue>(value: TValue): value is TValue & RequestPrimitive {
+export function isEndpointDescriptor<T>(value: T): value is T & EndpointDefinition {
   return (
-    value === null ||
-    value === undefined ||
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean" ||
-    typeof value === "bigint"
+    isRecord(value) &&
+    "kind" in value &&
+    value.kind === "endpoint" &&
+    "plan" in value &&
+    isRecord(value.plan)
   )
 }
 
-function isRequestBinary<TValue>(value: TValue): value is TValue & RequestBinary {
-  return (
-    value instanceof Blob ||
-    value instanceof FormData ||
-    value instanceof URLSearchParams ||
-    value instanceof ArrayBuffer ||
-    ArrayBuffer.isView(value) ||
-    value instanceof ReadableStream
-  )
-}
-
-function parseRequestValue<TValue>(
-  value: TValue,
-  path: string,
-  ancestors: WeakSet<object>,
-): RequestValue {
-  if (isRequestPrimitive(value) || value instanceof Date || isRequestBinary(value)) return value
-
-  if (Array.isArray(value)) {
-    if (ancestors.has(value)) throw new TypeError(`Circular request value at ${path}`)
-    ancestors.add(value)
-    try {
-      return value.map((item, index) => parseRequestValue(item, `${path}[${index}]`, ancestors))
-    } finally {
-      ancestors.delete(value)
-    }
-  }
-
-  if (!isPlainObject(value)) {
-    throw new TypeError(`Unsupported request value at ${path}`)
-  }
-  if (ancestors.has(value)) throw new TypeError(`Circular request value at ${path}`)
-
-  ancestors.add(value)
-  try {
-    const parsed: MutableRequestObject = Object.create(null)
-    for (const [key, item] of Object.entries(value)) {
-      parsed[key] = parseRequestValue(item, `${path}.${key}`, ancestors)
-    }
-    return parsed
-  } finally {
-    ancestors.delete(value)
-  }
-}
-
-function isRequestObject(value: RequestValue): value is RequestObject {
-  return isPlainObject(value)
-}
-
-function parseRequestInput<TValue>(value: TValue, endpoint: EndpointDescriptor): RequestObject {
-  const parsed = parseRequestValue(value, "$", new WeakSet())
-  if (!isRequestObject(parsed)) {
-    throw new TypeError(`Input for ${endpoint.method} ${endpoint.path} must be an object`)
-  }
-  return parsed
-}
-
-export function isEndpointDescriptor<TValue>(value: TValue): value is TValue & EndpointDescriptor {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
-  return (
-    "method" in value &&
-    typeof value.method === "string" &&
-    "path" in value &&
-    typeof value.path === "string" &&
-    "operationKind" in value &&
-    (value.operationKind === "query" || value.operationKind === "mutation") &&
-    "bodyMode" in value &&
-    (value.bodyMode === "merge" || value.bodyMode === "separate") &&
-    "parameters" in value &&
-    Array.isArray(value.parameters) &&
-    "responses" in value &&
-    Array.isArray(value.responses)
-  )
-}
-
-function mapApi<TValue>(value: TValue, options: ClientOptions): ClientFor<TValue> {
-  if (isEndpointDescriptor(value)) {
-    const endpointClient = createEndpointClient(value, options)
-    // SAFETY: the descriptor predicate establishes the endpoint branch of ClientFor<TValue>.
-    return endpointClient as ClientFor<TValue>
-  }
-  if (!isPlainObject(value)) {
-    throw new TypeError("Accord API trees may contain only namespaces and endpoint descriptors")
-  }
-
-  const mapped = Object.fromEntries(
-    Object.entries(value).map(([key, child]) => [key, mapApi(child, options)]),
-  )
-  // SAFETY: every source key is preserved and recursively mapped through the same ClientFor contract.
-  return mapped as ClientFor<TValue>
-}
-
-export function defineEndpoint<TEndpoint extends EndpointDescriptor>(
-  descriptor: TEndpoint,
-): TEndpoint {
-  return descriptor
+export function defineEndpoint<C extends EndpointContract, K extends OperationKind = OperationKind>(
+  definition: EndpointDefinition<C, K>,
+): EndpointDefinition<C, K> {
+  return definition
 }
 
 export function createClient<const TApi extends object>(
   api: TApi,
   options: ClientOptions = {},
 ): ClientFor<TApi> {
-  return mapApi(api, options)
+  const map = <T>(value: T): ClientFor<T> => {
+    if (isEndpointDescriptor(value)) {
+      // SAFETY: the marker establishes the endpoint branch of ClientFor.
+      return createEndpointClient(value, options) as ClientFor<T>
+    }
+    if (!isRecord(value)) throw new TypeError("Accord namespaces must contain endpoint definitions")
+    const mapped = Object.fromEntries(
+      Object.entries(value).map(([key, child]) => [key, map(child)]),
+    )
+    // SAFETY: preserve every namespace key and recursively apply the ClientFor mapping.
+    return mapped as ClientFor<T>
+  }
+  return map(api)
 }
 
-export function createEndpointClient<E extends EndpointDescriptor>(
+export function createEndpointClient<E extends EndpointDefinition>(
   endpoint: E,
   options: ClientOptions = {},
 ): EndpointFunction<E> {
-  const request = async (...args: Parameters<EndpointFunction<E>>): Promise<ResponseOf<E>> => {
-    const input = parseRequestInput(args[0] ?? {}, endpoint)
-    const requestOptions = args[1] ?? {}
-    const fetchImplementation = options.fetch ?? globalThis.fetch
-    if (!isFetchImplementation(fetchImplementation)) {
-      throw new TypeError("No fetch implementation is available")
-    }
-
-    const path = interpolatePath(endpoint.path, endpoint.parameters, input)
-    const queryPairs = endpoint.parameters
-      .filter((parameter) => parameter.in === "query")
-      .flatMap((parameter) => {
-        const inputName = parameter.inputName ?? parameter.name
-        const value = parameterInput(input, inputName, parameter.required, "query")
-        return value === undefined ? [] : serializeQueryParameter(parameter, value)
-      })
-
-    const url = resolveUrl(path, options.baseUrl)
-    const query = renderQueryString(queryPairs)
-    if (query.length > 0) {
-      url.search = url.search.length > 1 ? `${url.search.slice(1)}&${query}` : query
-    }
-
-    const headers = await resolveHeaders(options, endpoint, input)
-
-    for (const parameter of endpoint.parameters.filter((item) => item.in === "header")) {
-      const inputName = parameter.inputName ?? parameter.name
-      const value = parameterInput(input, inputName, parameter.required, "header")
-      if (value !== undefined) {
-        headers.set(parameter.name, serializeHeaderParameter(parameter, value))
-      }
-    }
-
-    const cookies = endpoint.parameters
-      .filter((parameter) => parameter.in === "cookie")
-      .flatMap((parameter) => {
-        const inputName = parameter.inputName ?? parameter.name
-        const value = parameterInput(input, inputName, parameter.required, "cookie")
-        return value === undefined ? [] : serializeCookieParameter(parameter, value)
-      })
-
-    if (cookies.length > 0) {
-      const existing = headers.get("cookie")
-      const serialized = cookies
-        .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
-        .join("; ")
-      headers.set("cookie", existing ? `${existing}; ${serialized}` : serialized)
-    }
-
-    for (const [name, value] of new Headers(requestOptions.headers)) headers.set(name, value)
-
-    const body = buildRequestBody(endpoint, input, headers)
-    const init: RequestInit = {
-      method: endpoint.method,
-      headers,
-    }
-    if (body !== undefined) init.body = body
-    if (requestOptions.signal !== undefined) init.signal = requestOptions.signal
-
-    const initialContext: RequestMiddlewareContext = {
-      endpoint,
-      input,
-      url,
-      init,
-    }
-
-    const requestContext = await runRequestMiddleware(initialContext, options)
-    let response = await fetchImplementation(requestContext.url, requestContext.init)
-    response = await runResponseMiddleware({ ...requestContext, response }, options)
-
-    const parsedBody = await parseResponseBody(response, endpoint.method)
-    if (!response.ok) {
-      throw new HttpError({ response, endpoint, body: parsedBody })
-    }
-    // SAFETY: generated endpoint response types are derived from the same status/content metadata decoded here.
-    return parsedBody as ResponseOf<E>
+  const request = async (...args: ArgumentsOf<E>): Promise<ResponseOf<E>> => {
+    const result = await execute(endpoint, options, args)
+    const data =
+      endpoint.plan.resultMode === "status"
+        ? { status: result.status, data: result.data }
+        : result.data
+    // SAFETY: the generated contract and execution plan share one representation projection; validation is optional by design.
+    return data as ResponseOf<E>
   }
-
-  return request
+  return Object.assign(request, {
+    endpoint,
+    context: options,
+    async withResponse(...args: ArgumentsOf<E>): Promise<FullResponseOf<E>> {
+      // SAFETY: full-response contracts describe the selected status and representation plus these HTTP fields.
+      return (await execute(endpoint, options, args)) as FullResponseOf<E>
+    },
+  })
 }
 
-function isFetchImplementation<TValue>(value: TValue): value is TValue & typeof globalThis.fetch {
-  return typeof value === "function"
+export function statusMatches(selector: StatusSelector, status: number): boolean {
+  if (selector === "default") return status >= 100 && status <= 599
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  if (typeof selector === "number") return selector === status
+  return Math.floor(status / 100) === Number(selector[0])
 }
 
-function isHeaderResolver<TValue>(value: TValue): value is TValue & HeaderResolver {
-  return typeof value === "function"
+export function selectResponse(
+  responses: readonly ResponseDescriptor[],
+  status: number,
+): ResponseDescriptor | undefined {
+  return (
+    responses.find((response) => response.status === status) ??
+    responses.find(
+      (response) => response.status !== "default" && statusMatches(response.status, status),
+    ) ??
+    responses.find((response) => response.status === "default")
+  )
 }
 
-function parameterInput(
+function selectMedia(content: readonly MediaPlan[], actual: string | null): MediaPlan | undefined {
+  if (!actual) return content.length === 1 ? content[0] : undefined
+  return (
+    content.find((item) => mediaType(item.mediaType) === mediaType(actual)) ??
+    content.find((item) => item.mediaType !== "*/*" && mediaMatches(item.mediaType, actual)) ??
+    content.find((item) => item.mediaType === "*/*")
+  )
+}
+
+export function resolveBaseUrl(endpoint: EndpointDefinition, options: ClientOptions): string {
+  let base = options.baseUrl
+  if (base === undefined) {
+    const server = endpoint.plan.servers[options.server ?? 0]
+    if (server)
+      base = server.url.replace(/\{([^}]+)\}/g, (_match, name: string) => {
+        const variable = server.variables[name]
+        const value = options.serverVariables?.[name] ?? variable?.default
+        if (value === undefined) throw new TypeError(`Missing server variable ${name}`)
+        if (variable?.enum && !variable.enum.includes(value))
+          throw new TypeError(`Invalid server variable ${name}`)
+        return value
+      })
+  }
+  const origin = globalThis.location?.href ?? "http://localhost/"
+  return new URL(base ?? "/", origin).href
+}
+
+function resolveUrl(endpoint: EndpointDefinition, options: ClientOptions, path: string): URL {
+  const base = new URL(resolveBaseUrl(endpoint, options))
+  const existingQuery = base.search
+  base.search = ""
+  base.hash = ""
+  if (!base.pathname.endsWith("/")) base.pathname += "/"
+  const url = new URL(path.replace(/^\//, ""), base)
+  url.search = existingQuery
+  return url
+}
+
+async function parameterValue(
+  parameter: ParameterDescriptor,
   input: RequestObject,
-  inputName: string,
-  required: boolean,
-  location: "query" | "header" | "cookie",
-): ParameterValue | undefined {
-  const value = input[inputName]
-  if (value === undefined) {
-    if (required) throw new TypeError(`Missing required ${location} parameter: ${inputName}`)
-    return undefined
+): Promise<ParameterValue | undefined> {
+  const value = input[parameter.inputName ?? parameter.name]
+  if (value === undefined) return undefined
+  if (parameter.representation && parameter.representation.codec.kind !== "parameter") {
+    const encoded = await encodeBody(parameter.representation.codec, value, new Headers())
+    if (encoded instanceof Blob) return encoded.text()
+    if (encoded instanceof ArrayBuffer) return new TextDecoder().decode(encoded)
+    return String(encoded ?? "")
   }
-  if (!isParameterValue(value)) {
-    throw new TypeError(`${location} parameter ${inputName} contains an unsupported value`)
-  }
-  return value
+  // SAFETY: generated caller types constrain parameter values. Dispatch is serialization, not validation.
+  return value as ParameterValue
 }
 
-async function resolveHeaders(
+async function execute<E extends EndpointDefinition>(
+  endpoint: E,
   options: ClientOptions,
-  endpoint: EndpointDescriptor,
-  input: RequestObject,
-): Promise<Headers> {
-  const configured = isHeaderResolver(options.headers)
+  args: ArgumentsOf<E>,
+): Promise<HttpResult> {
+  // SAFETY: the TypeScript caller owns argument correctness; do not clone or re-parse the input.
+  const input = (args[0] ?? {}) as RequestObject
+  const requestOptions: RequestOptions = args[1] ?? {}
+  const plan = endpoint.plan
+  let path = plan.path
+  const query: ReturnType<typeof serializeQueryParameter>[number][] = []
+  const configuredHeaders = isHeaderResolver(options.headers)
     ? await options.headers({ endpoint, input })
     : options.headers
-  return new Headers(configured)
-}
-
-function resolveUrl(path: string, configuredBaseUrl?: string): URL {
-  const baseUrl = configuredBaseUrl ?? globalThis.location?.href ?? "http://localhost/"
-  const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`
-  const normalizedPath = path.startsWith("/") ? path.slice(1) : path
-  return new URL(normalizedPath, normalizedBase)
-}
-
-function bodyValue(
-  endpoint: EndpointDescriptor,
-  input: RequestObject,
-  descriptor: RequestBodyDescriptor,
-): RequestValue {
-  if (endpoint.bodyMode === "separate") return input["body"]
-
-  const body: MutableRequestObject = Object.create(null)
-  let hasValue = false
-  for (const field of descriptor.fields) {
-    const value = input[field]
+  const headers = new Headers(configuredHeaders)
+  const cookies: string[] = []
+  for (const parameter of plan.parameters) {
+    const value = await parameterValue(parameter, input)
+    if (value === undefined) continue
+    if (parameter.in === "path")
+      path = path.split(`{${parameter.name}}`).join(serializePathParameter(parameter, value))
+    if (parameter.in === "query") query.push(...serializeQueryParameter(parameter, value))
+    if (parameter.in === "header")
+      headers.set(parameter.name, serializeHeaderParameter(parameter, value))
+    if (parameter.in === "cookie") {
+      for (const [name, item] of serializeCookieParameter(parameter, value))
+        cookies.push(`${encodeURIComponent(name)}=${encodeURIComponent(item)}`)
+    }
+  }
+  if (cookies.length)
+    headers.set("cookie", [headers.get("cookie"), ...cookies].filter(Boolean).join("; "))
+  const url = resolveUrl(endpoint, options, path)
+  applyCredentials(endpoint, options, headers, url)
+  for (const [name, value] of new Headers(requestOptions.headers)) headers.set(name, value)
+  const queryString = renderQueryString(query)
+  if (queryString) url.search = [url.search.slice(1), queryString].filter(Boolean).join("&")
+  const init: RequestInit = { method: plan.method, headers }
+  if (requestOptions.signal) init.signal = requestOptions.signal
+  if (plan.requestBody) {
+    const bodyPlan = plan.requestBody
+    for (const name of Object.keys(requestOptions.headers ?? {})) {
+      if (name.toLowerCase() === "content-type" && name !== "content-type")
+        throw new TypeError(
+          'Select a request representation with the lowercase "content-type" header',
+        )
+    }
+    const contentType = requestOptions.headers?.["content-type"] ?? bodyPlan.defaultMediaType
+    const selected = selectMedia(bodyPlan.content, contentType)
+    if (!selected)
+      throw new TypeError(`Unsupported request content-type ${contentType} for ${plan.operationId}`)
+    let value: RequestValue
+    if (bodyPlan.mode === "separate") value = input["body"]
+    else {
+      const body: { [key: string]: RequestValue } = Object.create(null)
+      for (const field of bodyPlan.fields)
+        if (Object.hasOwn(input, field) && input[field] !== undefined) body[field] = input[field]
+      value = bodyPlan.required || Object.keys(body).length ? body : undefined
+    }
     if (value !== undefined) {
-      body[field] = value
-      hasValue = true
+      headers.set("content-type", contentType)
+      const body = await encodeBody(selected.representation.codec, value, headers)
+      if (body !== undefined) init.body = body
     }
   }
-  return descriptor.required || hasValue ? body : undefined
-}
-
-function buildRequestBody(
-  endpoint: EndpointDescriptor,
-  input: RequestObject,
-  headers: Headers,
-): BodyInit | null | undefined {
-  const descriptor = endpoint.requestBody
-  if (!descriptor) return undefined
-
-  const value = bodyValue(endpoint, input, descriptor)
-  if (value === undefined) {
-    if (descriptor.required) throw new TypeError("Missing required request body")
-    return undefined
-  }
-
-  const mediaType = descriptor.contentType.toLowerCase()
-  if (mediaType === "application/json" || mediaType.endsWith("+json")) {
-    if (!headers.has("content-type")) headers.set("content-type", descriptor.contentType)
-    return JSON.stringify(value)
-  }
-
-  if (mediaType === "application/x-www-form-urlencoded") {
-    if (!headers.has("content-type")) headers.set("content-type", descriptor.contentType)
-    return serializeFormBody(value, descriptor)
-  }
-
-  if (mediaType === "multipart/form-data") return serializeMultipartBody(value, descriptor)
-
-  if (mediaType.startsWith("text/")) {
-    if (!headers.has("content-type")) headers.set("content-type", descriptor.contentType)
-    return String(value)
-  }
-
-  if (!headers.has("content-type")) headers.set("content-type", descriptor.contentType)
-  if (isDirectBodyInit(value)) return value
-  return JSON.stringify(value)
-}
-
-function isDirectBodyInit(value: RequestValue): value is RequestValue & BodyInit {
-  return (
-    typeof value === "string" ||
-    value instanceof Blob ||
-    value instanceof FormData ||
-    value instanceof URLSearchParams ||
-    value instanceof ArrayBuffer ||
-    ArrayBuffer.isView(value) ||
-    value instanceof ReadableStream
-  )
-}
-
-function serializeFormBody(value: RequestValue, descriptor: RequestBodyDescriptor): string {
-  if (!isRequestObject(value)) return encodeURIComponent(String(value ?? ""))
-  const parts: string[] = []
-
-  for (const [name, fieldValue] of Object.entries(value)) {
-    if (fieldValue === undefined) continue
-    const encoding = descriptor.encoding?.[name]
-    const explode = encoding?.explode ?? true
-    const append = (entryName: string, entryValue: RequestValue) => {
-      parts.push(`${encodeURIComponent(entryName)}=${encodeURIComponent(String(entryValue ?? ""))}`)
-    }
-
-    if (Array.isArray(fieldValue)) {
-      if (explode) for (const item of fieldValue) append(name, item)
-      else append(name, fieldValue.join(","))
-    } else if (isRequestObject(fieldValue)) {
-      if (encoding?.style === "deepObject") {
-        for (const [key, item] of Object.entries(fieldValue)) append(`${name}[${key}]`, item)
-      } else if (explode) {
-        for (const [key, item] of Object.entries(fieldValue)) append(key, item)
-      } else {
-        append(name, Object.entries(fieldValue).flat().join(","))
-      }
-    } else {
-      append(name, fieldValue)
-    }
-  }
-
-  return parts.join("&")
-}
-
-function serializeMultipartBody(value: RequestValue, descriptor: RequestBodyDescriptor): FormData {
-  const form = new FormData()
-  if (!isRequestObject(value)) {
-    form.append("body", multipartValue(value))
-    return form
-  }
-
-  for (const [name, fieldValue] of Object.entries(value)) {
-    if (fieldValue === undefined) continue
-    const encoding = descriptor.encoding?.[name]
-    const values = Array.isArray(fieldValue) ? fieldValue : [fieldValue]
-    for (const item of values) {
-      if (encoding?.contentType && isRequestObject(item)) {
-        form.append(name, new Blob([JSON.stringify(item)], { type: encoding.contentType }))
-      } else {
-        form.append(name, multipartValue(item))
-      }
-    }
-  }
-  return form
-}
-
-function multipartValue(value: RequestValue): string | Blob {
-  if (value instanceof Blob) return value
-  if (isRequestObject(value) || Array.isArray(value)) return JSON.stringify(value)
-  return String(value ?? "")
-}
-
-async function runRequestMiddleware(
-  initial: RequestMiddlewareContext,
-  options: ClientOptions,
-): Promise<RequestMiddlewareContext> {
-  let context = initial
-  for (const middleware of options.requestMiddleware ?? []) {
+  let context: RequestMiddlewareContext = { endpoint, input, url, init }
+  for (const middleware of options.requestMiddleware ?? [])
     context = (await middleware(context)) ?? context
-  }
-  return context
-}
-
-async function runResponseMiddleware(
-  initial: ResponseMiddlewareContext,
-  options: ClientOptions,
-): Promise<Response> {
-  let context = initial
-  for (const middleware of options.responseMiddleware ?? []) {
-    const response = await middleware(context)
-    if (response) context = { ...context, response }
-  }
-  return context.response
-}
-
-function isJsonPrimitive<TValue>(value: TValue): value is TValue & JsonPrimitive {
-  return (
-    value === null ||
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean"
-  )
-}
-
-function parseJsonValue<TValue>(
-  value: TValue,
-  path: string,
-  ancestors: WeakSet<object>,
-): JsonValue {
-  if (isJsonPrimitive(value)) return value
-
-  if (Array.isArray(value)) {
-    if (ancestors.has(value)) throw new TypeError(`Circular JSON value at ${path}`)
-    ancestors.add(value)
-    try {
-      return value.map((item, index) => parseJsonValue(item, `${path}[${index}]`, ancestors))
-    } finally {
-      ancestors.delete(value)
-    }
-  }
-
-  if (!isPlainObject(value)) throw new TypeError(`Invalid JSON value at ${path}`)
-  if (ancestors.has(value)) throw new TypeError(`Circular JSON value at ${path}`)
-
-  ancestors.add(value)
+  let response: Response
   try {
-    const parsed: MutableJsonObject = Object.create(null)
-    for (const [key, item] of Object.entries(value)) {
-      parsed[key] = parseJsonValue(item, `${path}.${key}`, ancestors)
+    response = await (options.fetch ?? globalThis.fetch)(context.url, context.init)
+  } catch (cause) {
+    throw new NetworkError(endpoint, cause)
+  }
+  for (const middleware of options.responseMiddleware ?? [])
+    response = (await middleware({ ...context, response })) ?? response
+  const selectedResponse = selectResponse(plan.responses, response.status)
+  const actualMedia = mediaType(response.headers.get("content-type")) || null
+  const selectedMedia = selectedResponse
+    ? selectMedia(selectedResponse.content, actualMedia)
+    : undefined
+  const noBody = plan.method === "HEAD" || [204, 205, 304].includes(response.status)
+  const codec =
+    selectedMedia?.representation.codec ??
+    (selectedResponse?.content.length === 0 ? { kind: "empty" } : fallbackCodec(actualMedia))
+  let data: RequestValue | Response
+  try {
+    if (
+      response.ok &&
+      (!selectedResponse || (!noBody && selectedResponse.content.length > 0 && !selectedMedia))
+    ) {
+      throw new TypeError(
+        `Undeclared response ${response.status} ${actualMedia ?? "(missing content-type)"} for ${plan.operationId}`,
+      )
     }
-    return parsed
-  } finally {
-    ancestors.delete(value)
+    data = await decodeBody(codec, response, plan.method)
+  } catch (cause) {
+    const error = new DecodeError(response, endpoint, cause)
+    if (!response.ok) throw new HttpError({ response, endpoint, body: undefined, cause: error })
+    throw error
+  }
+  const validator =
+    !noBody && selectedMedia && endpoint.validators?.[selectedMedia.representation.key]
+  if (validator) {
+    try {
+      const validation = await validator["~standard"].validate(data)
+      if (validation.issues) throw new ValidationError(validation.issues, response, endpoint)
+      // Generated validators preserve values; no coercion, defaults or stripping.
+    } catch (cause) {
+      if (!response.ok) throw new HttpError({ response, endpoint, body: undefined, cause })
+      throw cause
+    }
+  }
+  if (!response.ok) throw new HttpError({ response, endpoint, body: data })
+  return {
+    status: response.status,
+    data,
+    headers: response.headers,
+    mediaType: actualMedia,
+    response,
   }
 }
 
-async function parseResponseBody(response: Response, method: string): Promise<ResponsePayload> {
-  if (
-    method.toUpperCase() === "HEAD" ||
-    response.status === 204 ||
-    response.status === 205 ||
-    response.headers.get("content-length") === "0"
-  ) {
-    return undefined
+function credentialText(value: Credential): string {
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  return typeof value === "string" ? value : `${value.username}:${value.password}`
+}
+function applyCredentials(
+  endpoint: EndpointDefinition,
+  options: ClientOptions,
+  headers: Headers,
+  url: URL,
+): void {
+  const credentials = options.credentials ?? {}
+  const requirement = endpoint.plan.security.find((entry) =>
+    Object.keys(entry).every((name) => credentials[name] !== undefined),
+  )
+  if (!requirement) return
+  for (const name of Object.keys(requirement)) {
+    const scheme = endpoint.plan.securitySchemes[name]
+    const credential = credentials[name]
+    if (!scheme || credential === undefined) continue
+    const value = credentialText(credential)
+    if (scheme.type === "apiKey") {
+      if (scheme.in === "header") headers.set(scheme.name, value)
+      else if (scheme.in === "query") url.searchParams.append(scheme.name, value)
+      else
+        headers.set(
+          "cookie",
+          [headers.get("cookie"), `${encodeURIComponent(scheme.name)}=${encodeURIComponent(value)}`]
+            .filter(Boolean)
+            .join("; "),
+        )
+    } else if (scheme.type === "http") {
+      if (scheme.scheme.toLowerCase() === "basic")
+        headers.set("authorization", `Basic ${btoa(value)}`)
+      else
+        headers.set(
+          "authorization",
+          `${scheme.scheme.toLowerCase() === "bearer" ? "Bearer" : scheme.scheme} ${value}`,
+        )
+    } else if (scheme.type !== "mutualTLS") headers.set("authorization", `Bearer ${value}`)
   }
-
-  const contentType = (response.headers.get("content-type") ?? "").toLowerCase()
-  if (contentType.includes("application/json") || contentType.includes("+json")) {
-    const text = await response.text()
-    if (text.length === 0) return undefined
-    return parseJsonValue(JSON.parse(text), "$", new WeakSet())
-  }
-  if (contentType.startsWith("text/") || contentType.includes("xml") || contentType === "") {
-    const text = await response.text()
-    return text.length === 0 ? undefined : text
-  }
-  return response.arrayBuffer()
 }

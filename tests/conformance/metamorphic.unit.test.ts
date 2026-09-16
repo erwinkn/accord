@@ -26,8 +26,15 @@ paths:
 components: {}
 `,
       )
-      expect(await generateFromFile(join(directory, "openapi.yaml"))).toEqual(
-        await generateFromFile(join(directory, "openapi.json")),
+      const yaml = await generateFromFile(join(directory, "openapi.yaml"))
+      const json = await generateFromFile(join(directory, "openapi.json"))
+      expect(yaml.source).toEqual(json.source)
+      expect(yaml.model.operations.map((operation) => operation.plan)).toEqual(
+        json.model.operations.map((operation) => operation.plan),
+      )
+      // Source URIs intentionally differ in the diagnostic model.
+      expect(yaml.model.operations[0]?.source.document).not.toBe(
+        json.model.operations[0]?.source.document,
       )
     } finally {
       await rm(directory, { recursive: true, force: true })
@@ -39,7 +46,9 @@ components: {}
       generate(endpoint()),
       generate(endpoint({ summary: "A new summary", description: "Documentation is not routing" })),
     ])
-    expect(after.normalized).toEqual(before.normalized)
+    expect(after.model.operations.map((operation) => operation.plan)).toEqual(
+      before.model.operations.map((operation) => operation.plan),
+    )
   })
 
   it("generation does not mutate the input document", async () => {

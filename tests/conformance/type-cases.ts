@@ -48,7 +48,7 @@ export const typeCases: Fixture[] = [
     },
     consumer: {
       source: consumer(`// @contract ACCORD_REF_SIBLING_TYPE
-type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: string; readonly b: string }>>`),
+type InputContract = Expect<Equal<Pick<InputOf<typeof api.probe.call>["body"], "a" | "b">, { readonly a: string; readonly b: string }>>`),
     },
   },
   {
@@ -75,9 +75,9 @@ type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: 
       }`),
       diagnostics: [
         { marker: "MISSING_PATH", codes: [2345] },
-        { marker: "WRONG_QUERY_TYPE", codes: [2322] },
+        { marker: "WRONG_QUERY_TYPE", codes: [2322, 2345] },
         { marker: "MISSING_HEADER", codes: [2345] },
-        { marker: "MISSPELLED_INPUT", codes: [2561, 2353] },
+        { marker: "MISSPELLED_INPUT", codes: [2561, 2353, 2345] },
       ],
     },
   },
@@ -93,11 +93,11 @@ type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: 
         // @negative MISSING_ARGUMENT
         client.probe.call()
       }`),
-      diagnostics: [{ marker: "MISSING_ARGUMENT", codes: [2554] }],
+      diagnostics: [{ marker: "MISSING_ARGUMENT", codes: [2554, 2345] }],
     },
   },
   {
-    id: "types.optional-merged-body",
+    id: "types.optional-body-presence",
     title: "An optional body can be wholly absent but not partially satisfy its required fields",
     area: "types",
     reference: references.accord,
@@ -115,11 +115,11 @@ type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: 
       function examples() {
         client.probe.call()
         client.probe.call({})
-        client.probe.call({ name: "Alice", age: 30 })
+        client.probe.call({ body: { name: "Alice", age: 30 } })
         // @negative PARTIAL_BODY
-        client.probe.call({ name: "Alice" })
+        client.probe.call({ body: { name: "Alice" } })
       }`),
-      diagnostics: [{ marker: "PARTIAL_BODY", codes: [2345] }],
+      diagnostics: [{ marker: "PARTIAL_BODY", codes: [2345, 2741] }],
     },
   },
   {
@@ -140,7 +140,7 @@ type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: 
       }`),
       diagnostics: [
         { marker: "MISSING_BODY", codes: [2345] },
-        { marker: "WRONG_BODY_ITEM", codes: [2322] },
+        { marker: "WRONG_BODY_ITEM", codes: [2322, 2345] },
       ],
     },
   },
@@ -157,8 +157,8 @@ type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: 
     consumer: {
       source: consumer(`const client = createClient(api)
       function examples() {
-        client.probe.call({ name: null })
-        client.probe.call({ name: "Alice" })
+        client.probe.call({ body: { name: null } })
+        client.probe.call({ body: { name: "Alice" } })
         // @negative OMIT_NULLABLE
         client.probe.call({})
       }`),
@@ -272,8 +272,10 @@ type InputContract = Expect<Equal<InputOf<typeof api.probe.call>, { readonly a: 
       },
     }),
     consumer: {
-      source:
-        consumer(`type Success = Expect<Equal<ResponseOf<typeof api.probe.call>, string | number>>
+      source: consumer(`type Result = ResponseOf<typeof api.probe.call>
+      type Success = Expect<Equal<Result["data"], string | number | undefined>>
+      type Exact = Expect<Equal<Extract<Result, { status: 200 }>["data"], string>>
+      type NoContent = Expect<Equal<Extract<Result, { status: 204 | 205 }>["data"], undefined>>
       type Failure = Expect<Equal<ErrorOf<typeof api.probe.call>, boolean>>
       type Status = Expect<Equal<ResponsesOf<typeof api.probe.call>[200], string>>`),
     },

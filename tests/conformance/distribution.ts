@@ -3,7 +3,7 @@ import { execFile } from "node:child_process"
 import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { endpoint } from "./fixture.js"
+import { responseDocument } from "./fixture.js"
 import { root } from "./harness.js"
 
 interface PackedManifest {
@@ -57,6 +57,7 @@ async function main(): Promise<void> {
       "@tanstack/react-query": "5.101.4",
       react: "19.2.8",
       typescript: "5.9.3",
+      esbuild: "0.28.2",
       "@types/node": "26.2.0",
       "@types/react": "^19.2.0",
     }
@@ -94,7 +95,17 @@ async function main(): Promise<void> {
     )
     // Outside the repository: workspace links, root imports, and source aliases cannot rescue broken packages.
     await command(installed, "pnpm", ["install", "--ignore-scripts", "--no-frozen-lockfile"])
-    await writeFile(join(installed, "openapi.json"), JSON.stringify(endpoint()))
+    await writeFile(
+      join(installed, "openapi.json"),
+      JSON.stringify(
+        responseDocument({
+          type: "object",
+          required: ["message"],
+          additionalProperties: false,
+          properties: { message: { type: "string" } },
+        }),
+      ),
+    )
     const help = await command(installed, "pnpm", ["exec", "accord", "--help"])
     assert.match(help, /Usage: accord/)
     await command(installed, "pnpm", [
@@ -104,6 +115,7 @@ async function main(): Promise<void> {
       "openapi.json",
       "--output",
       "generated.ts",
+      "--validators",
     ])
     await writeFile(join(installed, "config.mjs"), 'export default { namespace: "tag" }\n')
     await command(installed, "pnpm", [
@@ -124,9 +136,9 @@ import { apiQuery } from "@accord/react-query"
 import { api } from "./generated.js"
 const client = createClient(api, { baseUrl: "https://example.test/api", fetch: async input => {
   assert.equal(String(input), "https://example.test/api/probe")
-  return new Response(null, { status: 204 })
+  return Response.json({ message: "ok" })
 } })
-await client.probe.call()
+assert.deepEqual(await client.probe.call(), { message: "ok" })
 assert.equal(apiQuery(api.probe.call, {}).queryKey[0], "accord")
 for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"]) {
   assert(!import.meta.resolve(name).includes("/packages/"), "Must load tarballs, not workspace sources")
@@ -144,9 +156,27 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"])
       "--moduleResolution",
       "NodeNext",
       "--skipLibCheck",
+      "false",
+      "--exactOptionalPropertyTypes",
+      "--noUncheckedIndexedAccess",
       "consumer.ts",
     ])
     await command(installed, "node", ["consumer.js"])
+    await writeFile(
+      join(installed, "browser.ts"),
+      'import { createClient } from "@accord/client"; import { api } from "./generated.js"; export const client = createClient(api)\n',
+    )
+    await command(installed, "pnpm", [
+      "exec",
+      "esbuild",
+      "browser.ts",
+      "--bundle",
+      "--format=esm",
+      "--platform=browser",
+      "--target=es2022",
+      "--outfile=browser.js",
+    ])
+
     await writeFile(
       join(reportDirectory, "report.json"),
       JSON.stringify(
@@ -159,7 +189,9 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query"])
             "cli-help",
             "cli-generation",
             "config-import",
-            "semantic-consumer-compile",
+            "semantic-consumer-compile-with-declaration-checking",
+            "standalone-validator-generation-and-execution",
+            "browser-bundle",
             "runtime-imports-and-request",
           ],
         },

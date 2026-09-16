@@ -1,174 +1,343 @@
+import type { DecodeError, NetworkError, ValidationError } from "@accord/client"
 import {
+  type ArgumentsOf,
+  type CheckedCall,
   type ClientOptions,
   createEndpointClient,
-  type EndpointDescriptor,
+  type DefaultInputOf,
+  type EndpointDefinition,
+  type EndpointFunction,
   type ErrorOf,
+  type FullResponseOf,
   type HttpError,
-  type InputOf,
   type MutationEndpoint,
   type QueryEndpoint,
   type ResponseOf,
+  resolveBaseUrl,
 } from "@accord/client"
+import type { DataTag, UndefinedInitialDataOptions } from "@tanstack/react-query"
 import {
   mutationOptions,
   type QueryKey,
-  queryOptions,
-  type UseMutationOptions,
   type UseMutationResult,
-  type UseQueryOptions,
   type UseQueryResult,
   useMutation,
   useQuery,
 } from "@tanstack/react-query"
+import { createContext, createElement, type ReactNode, useContext } from "react"
 
+export type ClientError<E extends EndpointDefinition> =
+  | HttpError<ErrorOf<E>>
+  | DecodeError
+  | NetworkError
+  | ValidationError
+
+export interface BoundEndpoint<E extends EndpointDefinition> {
+  readonly endpoint: E
+  readonly context: ClientOptions
+}
+export type QueryTarget = QueryEndpoint | BoundEndpoint<QueryEndpoint>
+export type MutationTarget = MutationEndpoint | BoundEndpoint<MutationEndpoint>
+export type EndpointOf<T> =
+  T extends BoundEndpoint<infer E> ? E : T extends EndpointDefinition ? T : never
 export type ApiEndpointKey = readonly [
-  scope: "accord",
+  "accord",
+  apiId: string,
   method: string,
   path: string,
-  operationId: string | null,
+  operationId: string,
 ]
-export type CanonicalQueryPrimitive = string | number | boolean | null | undefined
 export type CanonicalQueryValue =
-  | CanonicalQueryPrimitive
+  | string
+  | number
+  | boolean
+  | null
   | readonly CanonicalQueryValue[]
   | CanonicalQueryObject
-
 export interface CanonicalQueryObject {
   readonly [key: string]: CanonicalQueryValue
 }
+export type ApiQueryKey = readonly [
+  ...ApiEndpointKey,
+  context: CanonicalQueryValue,
+  mode: "payload" | "response",
+  arguments: CanonicalQueryValue,
+]
+export type ApiMutationKey = readonly [...ApiEndpointKey, context: CanonicalQueryValue]
 
-interface MutableCanonicalQueryObject {
-  [key: string]: CanonicalQueryValue
-}
-
-export type ApiQueryKey = readonly [...ApiEndpointKey, input: CanonicalQueryValue]
-export type ApiMutationKey = ApiEndpointKey
-
-export type ApiQueryOptions<E extends QueryEndpoint, TData = ResponseOf<E>> = Omit<
-  UseQueryOptions<ResponseOf<E>, HttpError<ErrorOf<E>>, TData, ApiQueryKey>,
-  "queryKey" | "queryFn"
-> & {
-  readonly clientOptions?: ClientOptions
-}
-
-export type ApiMutationOptions<E extends MutationEndpoint, TContext = unknown> = Omit<
-  UseMutationOptions<ResponseOf<E>, HttpError<ErrorOf<E>>, InputOf<E>, TContext>,
-  "mutationKey" | "mutationFn"
-> & {
-  readonly clientOptions?: ClientOptions
-}
-
-export function endpointIdentity(endpoint: EndpointDescriptor): ApiEndpointKey {
-  return ["accord", endpoint.method.toUpperCase(), endpoint.path, endpoint.operationId ?? null]
-}
-
-export function apiQueryKey<E extends QueryEndpoint>(endpoint: E, input: InputOf<E>): ApiQueryKey {
-  return [...endpointIdentity(endpoint), canonicalQueryValue(input)]
-}
-
-export function apiMutationKey<E extends MutationEndpoint>(endpoint: E): ApiMutationKey {
-  return endpointIdentity(endpoint)
-}
-
-export function apiQuery<E extends QueryEndpoint, TData = ResponseOf<E>>(
-  endpoint: E,
-  input: InputOf<E>,
-  options: ApiQueryOptions<E, TData> = {},
-) {
-  const { clientOptions, ...queryConfiguration } = options
-  const request = createEndpointClient(endpoint, clientOptions)
-  return queryOptions({
-    ...queryConfiguration,
-    queryKey: apiQueryKey(endpoint, input),
-    queryFn: ({ signal }) => request(input, { signal }),
-  })
-}
-
-export function useApiQuery<E extends QueryEndpoint, TData = ResponseOf<E>>(
-  endpoint: E,
-  input: InputOf<E>,
-  options: ApiQueryOptions<E, TData> = {},
-): UseQueryResult<TData, HttpError<ErrorOf<E>>> {
-  return useQuery(apiQuery(endpoint, input, options))
-}
-
-export function apiMutation<E extends MutationEndpoint, TContext = unknown>(
-  endpoint: E,
-  options: ApiMutationOptions<E, TContext> = {},
-) {
-  const { clientOptions, ...mutationConfiguration } = options
-  const request = createEndpointClient(endpoint, clientOptions)
-  return mutationOptions({
-    ...mutationConfiguration,
-    mutationKey: apiMutationKey(endpoint),
-    mutationFn: (input: InputOf<E>) => request(input),
-  })
-}
-
-export function useApiMutation<E extends MutationEndpoint, TContext = unknown>(
-  endpoint: E,
-  options: ApiMutationOptions<E, TContext> = {},
-): UseMutationResult<ResponseOf<E>, HttpError<ErrorOf<E>>, InputOf<E>, TContext> {
-  return useMutation(apiMutation(endpoint, options))
-}
-
-function isCanonicalPrimitive<TValue>(value: TValue): value is TValue & CanonicalQueryPrimitive {
-  return (
-    value === null ||
-    value === undefined ||
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean"
-  )
-}
-
-function isBigInt<TValue>(value: TValue): value is TValue & bigint {
-  return typeof value === "bigint"
-}
-
-function isPlainQueryObject<TValue>(value: TValue): value is TValue & object {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) return false
-  const prototype = Object.getPrototypeOf(value)
-  return prototype === Object.prototype || prototype === null
-}
-
-function canonicalQueryValue<TValue>(
-  value: TValue,
-  ancestors: WeakSet<object> = new WeakSet(),
-): CanonicalQueryValue {
-  if (isCanonicalPrimitive(value)) return value
-  if (isBigInt(value)) return value.toString()
-  if (value instanceof Date) return value.toISOString()
-
-  if (Array.isArray(value)) {
-    if (ancestors.has(value)) throw new TypeError("Accord query inputs must not contain cycles")
-    ancestors.add(value)
-    try {
-      return value.map((item) => canonicalQueryValue(item, ancestors))
-    } finally {
-      ancestors.delete(value)
-    }
+const EMPTY_OPTIONS: ClientOptions = Object.freeze({})
+const Context = createContext<ClientOptions>(EMPTY_OPTIONS)
+const identities = new WeakMap<object, string>()
+function identity<T extends object>(value: T): string {
+  let id = identities.get(value)
+  if (!id) {
+    id = crypto.randomUUID()
+    identities.set(value, id)
   }
+  return id
+}
 
-  if (!isPlainQueryObject(value)) {
-    throw new TypeError(
-      "Accord query inputs must contain only plain objects and serializable values",
-    )
-  }
-  if (ancestors.has(value)) throw new TypeError("Accord query inputs must not contain cycles")
+export function AccordProvider(props: {
+  readonly options: ClientOptions
+  readonly children?: ReactNode
+}): ReactNode {
+  return createElement(Context.Provider, { value: props.options }, props.children)
+}
 
+function unpack<T extends QueryTarget | MutationTarget>(
+  target: T,
+  fallback: ClientOptions = EMPTY_OPTIONS,
+): BoundEndpoint<EndpointOf<T>> {
+  const resolved = "endpoint" in target ? target : { endpoint: target, context: fallback }
+  // SAFETY: EndpointOf uses precisely the same discriminant as this runtime branch.
+  return resolved as BoundEndpoint<EndpointOf<T>>
+}
+
+export function endpointIdentity(endpoint: EndpointDefinition): ApiEndpointKey {
+  const plan = endpoint.plan
+  return ["accord", plan.apiId, plan.method, plan.path, plan.operationId]
+}
+
+function contextKey(bound: BoundEndpoint<EndpointDefinition>): CanonicalQueryValue {
+  const context = bound.context
+  const credentialIdentity =
+    context.credentials ||
+    context.headers ||
+    context.fetch ||
+    context.requestMiddleware?.length ||
+    context.responseMiddleware?.length
+      ? identity(context)
+      : null
+  return [resolveBaseUrl(bound.endpoint, context), context.cacheScope ?? null, credentialIdentity]
+}
+
+function canonical<T>(value: T, ancestors = new Set<object>()): CanonicalQueryValue {
+  if (value === null) return null
+  if (value === undefined) return ["undefined"]
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  if (typeof value === "string" || typeof value === "boolean") return value
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  if (typeof value === "number") return Number.isFinite(value) ? value : ["number", String(value)]
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  if (typeof value === "bigint") return ["bigint", value.toString()]
+  if (value instanceof Date) return ["date", value.toISOString()]
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch an existing typed value without reparsing caller input.
+  if (typeof value !== "object") throw new TypeError("Query inputs must be serializable")
+  if (value instanceof Blob || value instanceof ArrayBuffer || ArrayBuffer.isView(value))
+    return ["binary", identity(value)]
+  if (ancestors.has(value)) throw new TypeError("Query inputs must not contain cycles")
   ancestors.add(value)
   try {
-    const result: MutableCanonicalQueryObject = Object.create(null)
-    for (const [key, item] of Object.entries(value).sort(([left], [right]) =>
-      left.localeCompare(right),
-    )) {
-      if (item !== undefined) result[key] = canonicalQueryValue(item, ancestors)
+    if (Array.isArray(value)) return ["array", value.map((item) => canonical(item, ancestors))]
+    const result: { [key: string]: CanonicalQueryValue } = Object.create(null)
+    for (const [key, item] of Object.entries(value).sort(([a], [b]) => a.localeCompare(b))) {
+      if (item !== undefined) result[key] = canonical(item, ancestors)
     }
-    return result
+    return ["object", Object.entries(result)]
   } finally {
     ancestors.delete(value)
   }
 }
 
+function argumentKey<E extends EndpointDefinition>(
+  endpoint: E,
+  args: ArgumentsOf<E>,
+): CanonicalQueryValue {
+  const headers = new Headers(args[1]?.headers)
+  const secretNames = new Set(["authorization", "proxy-authorization", "cookie", "set-cookie"])
+  for (const scheme of Object.values(endpoint.plan.securitySchemes))
+    if (scheme.type === "apiKey" && scheme.in === "header")
+      secretNames.add(scheme.name.toLowerCase())
+  const publicHeaders: { [key: string]: string } = Object.create(null)
+  let hasSecret = false
+  for (const [name, value] of headers) {
+    if (secretNames.has(name)) hasSecret = true
+    else publicHeaders[name] = value
+  }
+  const secretIdentity = hasSecret && args[1]?.headers ? identity(args[1].headers) : null
+  const input = args[0] ?? {}
+  const secretInputs = new Set(
+    endpoint.plan.parameters
+      .filter(
+        (parameter) =>
+          parameter.in === "cookie" ||
+          (parameter.in === "header" && secretNames.has(parameter.name.toLowerCase())) ||
+          Object.values(endpoint.plan.securitySchemes).some(
+            (scheme) =>
+              scheme.type === "apiKey" &&
+              scheme.in === parameter.in &&
+              scheme.name === parameter.name,
+          ),
+      )
+      .map((parameter) => parameter.inputName ?? parameter.name),
+  )
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Identify an input object solely to redact credential fields in cache keys.
+  if (secretInputs.size && input !== null && typeof input === "object") {
+    const publicInput = Object.fromEntries(
+      Object.entries(input).filter(([key]) => !secretInputs.has(key)),
+    )
+    return canonical([publicInput, publicHeaders, secretIdentity, identity(input)])
+  }
+  return canonical([input, publicHeaders, secretIdentity])
+}
+
+export function apiQueryKey<T extends QueryTarget>(
+  target: T,
+  ...args: ArgumentsOf<EndpointOf<T>>
+): ApiQueryKey {
+  const bound = unpack(target)
+  return [
+    ...endpointIdentity(bound.endpoint),
+    contextKey(bound),
+    "payload",
+    argumentKey(bound.endpoint, args),
+  ]
+}
+export function apiMutationKey<T extends MutationTarget>(target: T): ApiMutationKey {
+  const bound = unpack(target)
+  return [...endpointIdentity(bound.endpoint), contextKey(bound)]
+}
+
+function requestWithSignal<E extends EndpointDefinition>(
+  request: EndpointFunction<E>,
+  args: ArgumentsOf<E>,
+  signal: AbortSignal,
+  full: false,
+): Promise<ResponseOf<E>>
+function requestWithSignal<E extends EndpointDefinition>(
+  request: EndpointFunction<E>,
+  args: ArgumentsOf<E>,
+  signal: AbortSignal,
+  full: true,
+): Promise<FullResponseOf<E>>
+function requestWithSignal<E extends EndpointDefinition>(
+  request: EndpointFunction<E>,
+  args: ArgumentsOf<E>,
+  signal: AbortSignal,
+  full: boolean,
+): Promise<ResponseOf<E> | FullResponseOf<E>> {
+  const callerSignal = args[1]?.signal
+  const merged = [
+    args[0],
+    { ...args[1], signal: callerSignal ? AbortSignal.any([callerSignal, signal]) : signal },
+  ] as const
+  // SAFETY: preserve the complete caller input/media pair; only compose the cancellation signal.
+  const call = merged as ArgumentsOf<E>
+  // SAFETY: the public API checked the input/header pair; this adapter only added a signal.
+  const invoke = (full ? request.withResponse : request) as (
+    ...args: ArgumentsOf<E>
+  ) => Promise<ResponseOf<E> | FullResponseOf<E>>
+  return invoke(...call)
+}
+
+export type ApiQueryOptions<
+  E extends EndpointDefinition,
+  Data = ResponseOf<E>,
+> = UndefinedInitialDataOptions<Data, ClientError<E>, Data, ApiQueryKey> & {
+  queryKey: DataTag<ApiQueryKey, Data, ClientError<E>>
+}
+
+function queryImplementation<T extends QueryTarget>(
+  target: T,
+  ...args: ArgumentsOf<EndpointOf<T>>
+): ApiQueryOptions<EndpointOf<T>> {
+  const bound = unpack(target)
+  const request = createEndpointClient(bound.endpoint, bound.context)
+  // SAFETY: TanStack's data tag is compile-time evidence associating this exact key with queryFn's result.
+  const queryKey = apiQueryKey(target, ...args) as DataTag<
+    ApiQueryKey,
+    ResponseOf<EndpointOf<T>>,
+    ClientError<EndpointOf<T>>
+  >
+  return { queryKey, queryFn: ({ signal }) => requestWithSignal(request, args, signal, false) }
+}
+
+function queryResponseImplementation<T extends QueryTarget>(
+  target: T,
+  ...args: ArgumentsOf<EndpointOf<T>>
+): ApiQueryOptions<EndpointOf<T>, FullResponseOf<EndpointOf<T>>> {
+  const bound = unpack(target)
+  const request = createEndpointClient(bound.endpoint, bound.context)
+  const key: ApiQueryKey = [
+    ...endpointIdentity(bound.endpoint),
+    contextKey(bound),
+    "response",
+    argumentKey(bound.endpoint, args),
+  ]
+  // SAFETY: this cache mode always executes withResponse and therefore has the full-result data tag.
+  const queryKey = key as DataTag<
+    ApiQueryKey,
+    FullResponseOf<EndpointOf<T>>,
+    ClientError<EndpointOf<T>>
+  >
+  return { queryKey, queryFn: ({ signal }) => requestWithSignal(request, args, signal, true) }
+}
+
+export const apiQuery: <T extends QueryTarget, const A extends readonly unknown[]>(
+  target: T,
+  ...args: A & CheckedCall<EndpointOf<T>, A>
+) => ReturnType<typeof queryImplementation<T>> = queryImplementation
+export const apiQueryResponse: <T extends QueryTarget, const A extends readonly unknown[]>(
+  target: T,
+  ...args: A & CheckedCall<EndpointOf<T>, A>
+) => ReturnType<typeof queryResponseImplementation<T>> = queryResponseImplementation
+
+/** Ordinary mutations accept the default-media input. Use apiMutationCall for correlated argument tuples. */
+export function apiMutation<T extends MutationTarget>(target: T) {
+  const bound = unpack(target)
+  const request = createEndpointClient(bound.endpoint, bound.context)
+  return mutationOptions<
+    ResponseOf<EndpointOf<T>>,
+    ClientError<EndpointOf<T>>,
+    DefaultInputOf<EndpointOf<T>>
+  >({
+    mutationKey: apiMutationKey(target),
+    mutationFn: (input) => {
+      // SAFETY: this convenience form selects default request options; the generator supplies the input contract.
+      const args = [input] as ArgumentsOf<EndpointOf<T>>
+      // SAFETY: default mutation inputs are already derived from the default argument variant.
+      const invoke = request as (
+        ...args: ArgumentsOf<EndpointOf<T>>
+      ) => Promise<ResponseOf<EndpointOf<T>>>
+      return invoke(...args)
+    },
+  })
+}
+
+export function apiMutationCall<T extends MutationTarget>(target: T) {
+  const bound = unpack(target)
+  const request = createEndpointClient(bound.endpoint, bound.context)
+  return mutationOptions<
+    ResponseOf<EndpointOf<T>>,
+    ClientError<EndpointOf<T>>,
+    ArgumentsOf<EndpointOf<T>>
+  >({
+    mutationKey: apiMutationKey(target),
+    mutationFn: (args) => {
+      // SAFETY: mutation variables carry the complete generated argument tuple.
+      const invoke = request as (
+        ...args: ArgumentsOf<EndpointOf<T>>
+      ) => Promise<ResponseOf<EndpointOf<T>>>
+      return invoke(...args)
+    },
+  })
+}
+
+export function useApiQuery<T extends QueryTarget>(
+  target: T,
+  ...args: ArgumentsOf<EndpointOf<T>>
+): UseQueryResult<ResponseOf<EndpointOf<T>>, ClientError<EndpointOf<T>>> {
+  const options = useContext(Context)
+  return useQuery(queryImplementation(unpack(target, options), ...args))
+}
+export function useApiMutation<T extends MutationTarget>(
+  target: T,
+): UseMutationResult<
+  ResponseOf<EndpointOf<T>>,
+  ClientError<EndpointOf<T>>,
+  DefaultInputOf<EndpointOf<T>>
+> {
+  const options = useContext(Context)
+  return useMutation(apiMutation(unpack(target, options)))
+}
 export type { QueryKey }

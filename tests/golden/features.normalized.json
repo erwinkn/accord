@@ -1,80 +1,121 @@
-{
-  "openapi": "3.0.3",
-  "operations": [
-    {
-      "key": "GET /api/v1/health",
+[
+  {
+    "exportPath": [
+      "health",
+      "get"
+    ],
+    "plan": {
+      "apiId": "33d21648e074e9fc",
       "method": "GET",
-      "methodKey": "get",
       "path": "/api/v1/health",
-      "operationName": "get",
-      "namespace": [
-        "health"
-      ],
-      "bodyMode": "merge",
+      "operationId": "GET /api/v1/health",
       "operationKind": "query",
       "parameters": [],
       "responses": [
         {
           "status": 204,
-          "contentTypes": []
+          "content": [],
+          "headers": []
         }
       ],
-      "typeName": "HealthGet"
-    },
-    {
-      "key": "createNode",
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {}
+    }
+  },
+  {
+    "exportPath": [
+      "nodes",
+      "createNode"
+    ],
+    "plan": {
+      "apiId": "33d21648e074e9fc",
       "method": "POST",
-      "methodKey": "post",
       "path": "/api/v1/nodes",
       "operationId": "createNode",
-      "operationName": "createNode",
-      "namespace": [
-        "nodes"
-      ],
-      "bodyMode": "merge",
       "operationKind": "mutation",
       "parameters": [],
-      "requestBody": {
-        "required": true,
-        "contentType": "application/json",
-        "contentTypes": [
-          "application/json"
-        ],
-        "fields": [
-          "children",
-          "name"
-        ]
-      },
       "responses": [
         {
           "status": 201,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-201-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         }
       ],
-      "typeName": "NodesCreateNode"
-    },
-    {
-      "key": "search-users",
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {},
+      "requestBody": {
+        "required": true,
+        "mode": "separate",
+        "fields": [
+          "children",
+          "name"
+        ],
+        "content": [
+          {
+            "mediaType": "application/json",
+            "representation": {
+              "key": "request-0",
+              "codec": {
+                "kind": "json"
+              }
+            }
+          }
+        ],
+        "defaultMediaType": "application/json"
+      }
+    }
+  },
+  {
+    "exportPath": [
+      "organizations",
+      "users",
+      "searchUsers"
+    ],
+    "plan": {
+      "apiId": "33d21648e074e9fc",
       "method": "GET",
-      "methodKey": "get",
       "path": "/api/v1/organizations/{organization-id}/users",
       "operationId": "search-users",
-      "operationName": "searchUsers",
-      "namespace": [
-        "organizations",
-        "users"
-      ],
-      "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
         {
-          "name": "session",
-          "inputName": "session",
-          "in": "cookie",
+          "name": "organization-id",
+          "inputName": "organizationId",
+          "in": "path",
           "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
+        },
+        {
+          "name": "roles",
+          "inputName": "roles",
+          "in": "query",
+          "required": false,
           "style": "form",
+          "explode": true,
+          "allowReserved": false
+        },
+        {
+          "name": "filter",
+          "inputName": "filter",
+          "in": "query",
+          "required": false,
+          "style": "deepObject",
           "explode": true,
           "allowReserved": false
         },
@@ -88,28 +129,10 @@
           "allowReserved": false
         },
         {
-          "name": "organization-id",
-          "inputName": "organizationId",
-          "in": "path",
+          "name": "session",
+          "inputName": "session",
+          "in": "cookie",
           "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
-        },
-        {
-          "name": "filter",
-          "inputName": "filter",
-          "in": "query",
-          "required": false,
-          "style": "deepObject",
-          "explode": true,
-          "allowReserved": false
-        },
-        {
-          "name": "roles",
-          "inputName": "roles",
-          "in": "query",
-          "required": false,
           "style": "form",
           "explode": true,
           "allowReserved": false
@@ -118,40 +141,43 @@
       "responses": [
         {
           "status": 200,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-200-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         }
       ],
-      "typeName": "OrganizationsUsersSearchUsers"
-    },
-    {
-      "key": "get-post",
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {}
+    }
+  },
+  {
+    "exportPath": [
+      "organizations",
+      "users",
+      "posts",
+      "getPost"
+    ],
+    "plan": {
+      "apiId": "33d21648e074e9fc",
       "method": "GET",
-      "methodKey": "get",
       "path": "/api/v1/organizations/{organization-id}/users/{user-id}/posts/{post-id}",
       "operationId": "get-post",
-      "operationName": "getPost",
-      "namespace": [
-        "organizations",
-        "users",
-        "posts"
-      ],
-      "bodyMode": "merge",
       "operationKind": "query",
       "parameters": [
         {
           "name": "organization-id",
           "inputName": "organizationId",
-          "in": "path",
-          "required": true,
-          "style": "simple",
-          "explode": false,
-          "allowReserved": false
-        },
-        {
-          "name": "post-id",
-          "inputName": "postId",
           "in": "path",
           "required": true,
           "style": "simple",
@@ -166,56 +192,122 @@
           "style": "simple",
           "explode": false,
           "allowReserved": false
+        },
+        {
+          "name": "post-id",
+          "inputName": "postId",
+          "in": "path",
+          "required": true,
+          "style": "simple",
+          "explode": false,
+          "allowReserved": false
         }
       ],
       "responses": [
         {
           "status": 200,
-          "contentTypes": [
-            "application/json"
-          ]
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-200-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
         }
       ],
-      "typeName": "OrganizationsUsersPostsGetPost"
-    },
-    {
-      "key": "uploadFile",
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {}
+    }
+  },
+  {
+    "exportPath": [
+      "uploads",
+      "uploadFile"
+    ],
+    "plan": {
+      "apiId": "33d21648e074e9fc",
       "method": "POST",
-      "methodKey": "post",
       "path": "/api/v1/uploads",
       "operationId": "uploadFile",
-      "operationName": "uploadFile",
-      "namespace": [
-        "uploads"
-      ],
-      "bodyMode": "separate",
       "operationKind": "mutation",
       "parameters": [],
+      "responses": [
+        {
+          "status": 201,
+          "content": [
+            {
+              "mediaType": "application/json",
+              "representation": {
+                "key": "response-201-0",
+                "codec": {
+                  "kind": "json"
+                }
+              }
+            }
+          ],
+          "headers": []
+        }
+      ],
+      "resultMode": "payload",
+      "servers": [],
+      "security": [],
+      "securitySchemes": {},
       "requestBody": {
         "required": true,
-        "contentType": "multipart/form-data",
-        "contentTypes": [
-          "multipart/form-data"
-        ],
+        "mode": "separate",
         "fields": [
           "file",
           "metadata"
         ],
-        "encoding": {
-          "metadata": {
-            "contentType": "application/json"
+        "content": [
+          {
+            "mediaType": "multipart/form-data",
+            "representation": {
+              "key": "request-0",
+              "codec": {
+                "kind": "form",
+                "mediaType": "multipart/form-data",
+                "fields": {
+                  "file": {
+                    "mediaType": "application/octet-stream",
+                    "codec": {
+                      "kind": "bytes",
+                      "value": "upload"
+                    },
+                    "multiple": false,
+                    "headers": {}
+                  },
+                  "metadata": {
+                    "mediaType": "application/json",
+                    "codec": {
+                      "kind": "json"
+                    },
+                    "multiple": false,
+                    "headers": {}
+                  }
+                },
+                "patterns": {},
+                "additional": {
+                  "mediaType": "application/octet-stream",
+                  "codec": {
+                    "kind": "text"
+                  },
+                  "multiple": false,
+                  "headers": {}
+                }
+              }
+            }
           }
-        }
-      },
-      "responses": [
-        {
-          "status": 201,
-          "contentTypes": [
-            "application/json"
-          ]
-        }
-      ],
-      "typeName": "UploadsUploadFile"
+        ],
+        "defaultMediaType": "multipart/form-data"
+      }
     }
-  ]
-}
+  }
+]

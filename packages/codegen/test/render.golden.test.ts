@@ -1,78 +1,33 @@
 import { readFile } from "node:fs/promises"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { generate, loadOpenApiFile } from "../src/generate.js"
-import { normalizeOpenApi } from "../src/normalize.js"
-import { renderGeneratedModule, renderNormalizedApi } from "../src/render.js"
+import { generateFromFile } from "../src/generate.js"
 
 const fixture = (name: string) =>
   fileURLToPath(new URL(`../../../tests/fixtures/${name}`, import.meta.url))
 const golden = (name: string) =>
   fileURLToPath(new URL(`../../../tests/golden/${name}`, import.meta.url))
 
-const mockTypes = `export interface paths {
-  "/users": {
-    parameters: { query?: never; header?: never; path?: never; cookie?: never }
-    get: operations["listUsers"]
-    post: operations["createUser"]
-  }
-  "/users/{userId}": {
-    parameters: { query?: never; header?: never; path?: never; cookie?: never }
-    get: operations["getUser"]
-  }
-}
-export interface components {
-  schemas: {
-    User: { id: string; name: string; email?: string | null }
-    CreateUser: { name: string; email?: string }
-    ApiError: { code: string; message: string }
-  }
-}
-export interface operations {
-  listUsers: {
-    parameters: { query?: { limit?: number }; header?: never; path?: never; cookie?: never }
-    responses: { 200: { content: { "application/json": components["schemas"]["User"][] } } }
-  }
-  createUser: {
-    parameters: { query?: never; header?: never; path?: never; cookie?: never }
-    requestBody: { content: { "application/json": components["schemas"]["CreateUser"] } }
-    responses: {
-      201: { content: { "application/json": components["schemas"]["User"] } }
-      400: { content: { "application/json": components["schemas"]["ApiError"] } }
-    }
-  }
-  getUser: {
-    parameters: { query?: never; header?: never; path: { userId: string }; cookie?: never }
-    responses: {
-      200: { content: { "application/json": components["schemas"]["User"] } }
-      404: { content: { "application/json": components["schemas"]["ApiError"] } }
-    }
-  }
-}`
-
-describe("golden generation", () => {
+describe("owned generation goldens", () => {
   it.each([
     ["users.openapi.yaml", "users.normalized.json", {}],
     ["features.openapi.yaml", "features.normalized.json", { basePath: "/api/v1" }],
-  ] as const)("matches normalized golden for %s", async (fixtureName, goldenName, config) => {
-    const document = await loadOpenApiFile(fixture(fixtureName))
-    const actual = renderNormalizedApi(normalizeOpenApi(document, config))
-    expect(actual).toBe(await readFile(golden(goldenName), "utf8"))
+  ] as const)("matches reviewed endpoint plans for %s", async (input, output, config) => {
+    const result = await generateFromFile(fixture(input), config)
+    const plans = result.model.operations.map((operation) => ({
+      exportPath: operation.exportPath,
+      plan: operation.plan,
+    }))
+    expect(`${JSON.stringify(plans, null, 2)}\n`).toBe(await readFile(golden(output), "utf8"))
   })
-
-  it("matches the committed generated-module golden", async () => {
-    const document = await loadOpenApiFile(fixture("users.openapi.yaml"))
-    const source = renderGeneratedModule(normalizeOpenApi(document), mockTypes)
-    expect(source).toBe(await readFile(golden("users.rendered.ts"), "utf8"))
+  it("matches real generated types and metadata without a mocked type producer", async () => {
+    const result = await generateFromFile(fixture("users.openapi.yaml"))
+    expect(result.source).toBe(await readFile(golden("users.rendered.ts"), "utf8"))
   })
-
-  it("is deterministic with the real schema type generator", async () => {
-    const document = await loadOpenApiFile(fixture("users.openapi.yaml"))
-    const first = await generate(document)
-    const second = await generate(document)
+  it("is deterministic across complete generation runs", async () => {
+    const first = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
+    const second = await generateFromFile(fixture("users.openapi.yaml"), { validators: true })
     expect(first.source).toBe(second.source)
-    expect(first.source).toContain("export const api")
-    expect(first.source).toContain('"getUser"')
-    expect(first.source).toContain("UsersGetUserInput")
+    expect(first.files).toEqual(second.files)
   })
 })

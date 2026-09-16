@@ -56,7 +56,7 @@ describe("OpenAPI -> generated API -> client -> HTTP server", () => {
       name: "Erwin",
     })
     await expect(
-      http.users.createUser({ name: "Alice", email: "alice@example.test" }),
+      http.users.createUser({ body: { email: "alice@example.test", name: "Alice" } }),
     ).resolves.toEqual({ id: "2", name: "Alice", email: "alice@example.test" })
 
     expect(requests).toMatchObject([
@@ -87,7 +87,7 @@ describe("OpenAPI -> generated API -> client -> HTTP server", () => {
     expect(error).toMatchObject({
       status: 404,
       body: { code: "not_found", message: "User missing was not found" },
-      endpoint: { operationId: "getUser" },
+      endpoint: { plan: { operationId: "getUser" } },
     })
   })
 })

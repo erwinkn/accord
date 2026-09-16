@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info: { title: Asset Library, version: 1.0.0 }
+servers:
+  - url: https://assets.example.test/{region}/v1
+    variables:
+      region: { default: eu, enum: [eu, us] }
+security:
+  - apiKey: []
+paths:
+  /assets:
+    post:
+      operationId: upload
+      summary: Upload bytes with JSON metadata in a multipart request
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, metadata]
+              additionalProperties: false
+              properties:
+                file: { type: string, format: binary }
+                metadata: { $ref: './models.yaml#/Metadata' }
+                tags: { type: array, items: { type: string } }
+            encoding:
+              metadata: { contentType: application/json }
+      responses:
+        '201':
+          description: Stored asset
+          content:
+            application/json:
+              schema: { $ref: './models.yaml#/Asset' }
+  /assets/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    patch:
+      operationId: rename
+      summary: The body id collides with the path id, so Accord nests the body automatically
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, name]
+              additionalProperties: false
+              properties:
+                id: { type: string }
+                name: { type: string }
+      responses:
+        '200':
+          description: Updated asset
+          content:
+            application/json:
+              schema: { $ref: './models.yaml#/Asset' }
+    delete:
+      operationId: remove
+      responses:
+        '204': { description: Deleted }
+components:
+  securitySchemes:
+    apiKey: { type: apiKey, in: header, name: X-API-Key }

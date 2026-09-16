@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest"
+import { compileApi } from "../src/compile.js"
 import { AccordCodegenError } from "../src/diagnostics.js"
-import { normalizeOpenApi } from "../src/normalize.js"
+import { DocumentStore } from "../src/loader.js"
+import type { AccordCodegenConfig, JsonValue } from "../src/types.js"
+
+function compile(document: JsonValue, config: AccordCodegenConfig = {}) {
+  return compileApi(new DocumentStore(document, "file:///fixture.json"), config).model
+}
+
 import type { JsonObject } from "../src/types.js"
 
 const userSchema = {
@@ -18,9 +25,9 @@ function document(paths: JsonObject, components: JsonObject = {}): JsonObject {
   }
 }
 
-describe("normalizeOpenApi", () => {
+describe("compile", () => {
   it("normalizes a typed vertical slice", () => {
-    const api = normalizeOpenApi(
+    const api = compile(
       document({
         "/users": {
           get: {
@@ -71,14 +78,12 @@ describe("normalizeOpenApi", () => {
       }),
     )
 
-    expect(
-      api.operations.map((operation) => [...operation.namespace, operation.operationName]),
-    ).toEqual([
+    expect(api.operations.map((operation) => operation.exportPath)).toEqual([
       ["users", "listUsers"],
       ["users", "createUser"],
       ["users", "getUser"],
     ])
-    expect(api.operations[0]?.parameters[0]).toMatchObject({
+    expect(api.operations[0]?.plan.parameters[0]).toMatchObject({
       name: "limit",
       inputName: "limit",
       in: "query",
@@ -86,16 +91,16 @@ describe("normalizeOpenApi", () => {
       style: "form",
       explode: true,
     })
-    expect(api.operations[1]?.requestBody).toMatchObject({
+    expect(api.operations[1]?.plan.requestBody).toMatchObject({
       required: true,
-      contentType: "application/json",
+      defaultMediaType: "application/json",
       fields: ["name"],
     })
-    expect(api.operations[2]?.operationKind).toBe("query")
+    expect(api.operations[2]?.plan.operationKind).toBe("query")
   })
 
   it("lets operation parameters override path-item parameters", () => {
-    const api = normalizeOpenApi(
+    const api = compile(
       document({
         "/users/{id}": {
           parameters: [
@@ -124,7 +129,7 @@ describe("normalizeOpenApi", () => {
       }),
     )
     expect(api.operations[0]?.parameters).toHaveLength(1)
-    expect(api.operations[0]?.parameters[0]?.style).toBe("matrix")
+    expect(api.operations[0]?.plan.parameters[0]?.style).toBe("matrix")
   })
 
   it("supports path and tag namespaces with base path stripping", () => {
@@ -138,17 +143,17 @@ describe("normalizeOpenApi", () => {
         },
       },
     })
-    expect(normalizeOpenApi(input, { basePath: "/api/v1" }).operations[0]?.namespace).toEqual([
+    expect(compile(input, { basePath: "/api/v1" }).operations[0]?.exportPath.slice(0, -1)).toEqual([
       "users",
       "posts",
     ])
-    expect(normalizeOpenApi(input, { namespace: "tag" }).operations[0]?.namespace).toEqual([
+    expect(compile(input, { namespace: "tag" }).operations[0]?.exportPath.slice(0, -1)).toEqual([
       "blogApi",
     ])
   })
 
   it("renames invalid parameter identifiers structurally", () => {
-    const api = normalizeOpenApi(
+    const api = compile(
       document({
         "/organizations/{organization-id}": {
           get: {
@@ -171,7 +176,7 @@ describe("normalizeOpenApi", () => {
 
   it("rejects duplicate operation IDs", () => {
     expect(() =>
-      normalizeOpenApi(
+      compile(
         document({
           "/a": { get: { operationId: "duplicate", responses: { 200: { description: "ok" } } } },
           "/b": { get: { operationId: "duplicate", responses: { 200: { description: "ok" } } } },
@@ -182,7 +187,7 @@ describe("normalizeOpenApi", () => {
 
   it("rejects endpoint/namespace and sanitized-name collisions", () => {
     expect(() =>
-      normalizeOpenApi(
+      compile(
         document({
           "/users": {
             get: { "x-sdk-name": "posts", responses: { 200: { description: "ok" } } },
@@ -195,7 +200,7 @@ describe("normalizeOpenApi", () => {
     ).toThrowError(/NAME_COLLISION/)
 
     expect(() =>
-      normalizeOpenApi(
+      compile(
         document({
           "/users/{user-id}": {
             get: {
@@ -233,8 +238,8 @@ describe("normalizeOpenApi", () => {
         },
       },
     })
-    expect(() => normalizeOpenApi(input)).toThrowError(/INPUT_COLLISION/)
-    expect(normalizeOpenApi(input, { body: { mode: "separate" } }).operations[0]?.bodyMode).toBe(
+    expect(() => compile(input, { body: { mode: "merge" } })).toThrowError(/INPUT_COLLISION/)
+    expect(compile(input, { body: { mode: "separate" } }).operations[0]?.body?.mode).toBe(
       "separate",
     )
   })
@@ -251,8 +256,10 @@ describe("normalizeOpenApi", () => {
         },
       },
     })
-    expect(() => normalizeOpenApi(input)).toThrowError(/BODY_MERGE_REQUIRES_OBJECT/)
-    expect(normalizeOpenApi(input, { body: { mode: "separate" } }).operations).toHaveLength(1)
+    expect(() => compile(input, { body: { mode: "merge" } })).toThrowError(
+      /BODY_MERGE_REQUIRES_OBJECT/,
+    )
+    expect(compile(input, { body: { mode: "separate" } }).operations).toHaveLength(1)
   })
 
   it("resolves internal parameter, request body, and response references", () => {
@@ -286,17 +293,19 @@ describe("normalizeOpenApi", () => {
         },
       },
     }
-    const operation = normalizeOpenApi(input, { body: { mode: "separate" } }).operations[0]
-    expect(operation?.bodyMode).toBe("separate")
+    const operation = compile(input, { body: { mode: "separate" } }).operations[0]
+    expect(operation?.body?.mode).toBe("separate")
     expect(operation?.parameters[0]?.name).toBe("id")
-    expect(operation?.requestBody?.fields).toEqual(["id", "name"])
-    expect(operation?.responses[0]?.contentTypes).toEqual(["application/json"])
+    expect(operation?.plan.requestBody?.fields).toEqual(["id", "name"])
+    expect(operation?.plan.responses[0]?.content.map((media) => media.mediaType)).toEqual([
+      "application/json",
+    ])
   })
 
   it("returns structured diagnostics", () => {
     try {
-      normalizeOpenApi({ openapi: "2.0", paths: {} })
-      throw new Error("expected normalizeOpenApi to fail")
+      compile({ openapi: "2.0", paths: {} })
+      throw new Error("expected compile to fail")
     } catch (cause) {
       expect(cause).toBeInstanceOf(AccordCodegenError)
       if (!(cause instanceof AccordCodegenError)) throw cause

@@ -157,10 +157,9 @@ components:
               type: string
               enum: [active, disabled]
             contact:
-              oneOf:
-                - type: string
-                  format: email
-                - type: "null"
+              type: string
+              format: email
+              nullable: true
     Post:
       type: object
       required: [id, author]

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.8/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
   "files": {
     "includes": [
       "**",
@@ -8,11 +8,13 @@
       "!tests/generated",
       "!tests/golden",
       "!pnpm-lock.yaml",
-      "!**/.agents/**",
-      "!**/.claude/**",
-      "!tools/oxlint/anti-slop/**",
+      "!**/.agents",
+      "!**/.claude",
+      "!tools/oxlint/anti-slop",
       "!.accord-test-work",
-      "!artifacts"
+      "!artifacts",
+      "!examples/**/sdk.ts",
+      "!examples/**/*.validators.*"
     ]
   },
   "formatter": {

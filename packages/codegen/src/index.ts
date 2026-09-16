@@ -11,7 +11,9 @@ export {
   generateFromFile,
   loadOpenApiFile,
   writeGeneratedFile,
+  writeGeneratedSdk,
 } from "./generate.js"
+export type { ApiModel, OperationModel, SchemaNode, SchemaResource } from "./model.js"
 export {
   fallbackOperationName,
   isDangerousInputName,
@@ -22,9 +24,7 @@ export {
   sanitizeTypeIdentifier,
   stripBasePath,
 } from "./naming.js"
-export { normalizeOpenApi } from "./normalize.js"
-export { canonicalize, isObject, resolveJsonPointer, resolveObjectReference } from "./object.js"
-export { renderGeneratedModule, renderNormalizedApi } from "./render.js"
+export { canonicalize, isObject } from "./object.js"
 export type {
   AccordCodegenConfig,
   BodyCodegenConfig,
@@ -33,12 +33,6 @@ export type {
   JsonPrimitive,
   JsonValue,
   NamespaceStrategy,
-  NormalizedApi,
-  NormalizedBodyEncoding,
-  NormalizedOperation,
-  NormalizedParameter,
-  NormalizedRequestBody,
-  NormalizedResponse,
   OperationKind,
   ParameterLocation,
   ParameterStyle,

@@ -1,94 +1,95 @@
 import { describe, expect, it, vi } from "vitest"
 import {
   createClient,
+  DecodeError,
   defineEndpoint,
-  type EndpointDescriptor,
-  type EndpointTypes,
   HttpError,
+  type HttpResult,
+  NetworkError,
+  type RequestOptions,
 } from "../src/index.js"
 
 type User = { id: string; name: string }
-
-type UserEndpointTypes = {
-  path: { userId: string }
-  query: { includePosts?: boolean }
-  headers: { "x-request-id"?: string }
-  cookies: {}
-  body: never
-  bodyRequired: false
+type GetInput = { userId: string; includePosts?: boolean; "x-request-id"?: string }
+type CreateInput = { name: string; email?: string }
+type Contract<I> = {
+  args: [input: I, options?: RequestOptions]
+  input: I
   response: User
-  error: { status: 404; body: { message: string } }
+  error: { message: string }
   responses: { 200: User; 404: { message: string } }
+  fullResponse: HttpResult<200, User>
 }
-
-type CreateEndpointTypes = {
-  path: {}
-  query: {}
-  headers: {}
-  cookies: {}
-  body: { name: string; email?: string }
-  bodyRequired: true
-  response: User
-  error: never
-  responses: { 201: User }
-}
-
-const getUser = defineEndpoint<EndpointDescriptor<UserEndpointTypes, "merge", "query">>({
+const base = {
+  apiId: "unit",
+  servers: [],
+  security: [],
+  securitySchemes: {},
+  resultMode: "payload",
+} as const
+const json = {
+  mediaType: "application/json",
+  representation: { key: "json", codec: { kind: "json" } },
+} as const
+const getUser = defineEndpoint<Contract<GetInput>, "query">({
   kind: "endpoint",
-  method: "GET",
-  path: "/users/{userId}",
-  operationId: "getUser",
-  operationKind: "query",
-  bodyMode: "merge",
-  parameters: [
-    {
-      name: "userId",
-      in: "path",
-      required: true,
-      style: "simple",
-      explode: false,
-      allowReserved: false,
-    },
-    {
-      name: "includePosts",
-      in: "query",
-      required: false,
-      style: "form",
-      explode: true,
-      allowReserved: false,
-    },
-    {
-      name: "x-request-id",
-      in: "header",
-      required: false,
-      style: "simple",
-      explode: false,
-      allowReserved: false,
-    },
-  ],
-  responses: [
-    { status: 200, contentTypes: ["application/json"] },
-    { status: 404, contentTypes: ["application/json"] },
-  ],
-})
-
-const createUser = defineEndpoint<EndpointDescriptor<CreateEndpointTypes, "merge", "mutation">>({
-  kind: "endpoint",
-  method: "POST",
-  path: "/users",
-  operationId: "createUser",
-  operationKind: "mutation",
-  bodyMode: "merge",
-  parameters: [],
-  requestBody: {
-    required: true,
-    contentType: "application/json",
-    contentTypes: ["application/json"],
-    fields: ["name", "email"],
+  plan: {
+    ...base,
+    method: "GET",
+    path: "/users/{userId}",
+    operationId: "getUser",
+    operationKind: "query",
+    parameters: [
+      {
+        name: "userId",
+        in: "path",
+        required: true,
+        style: "simple",
+        explode: false,
+        allowReserved: false,
+      },
+      {
+        name: "includePosts",
+        in: "query",
+        required: false,
+        style: "form",
+        explode: true,
+        allowReserved: false,
+      },
+      {
+        name: "x-request-id",
+        in: "header",
+        required: false,
+        style: "simple",
+        explode: false,
+        allowReserved: false,
+      },
+    ],
+    responses: [
+      { status: 200, content: [json], headers: [] },
+      { status: 404, content: [json], headers: [] },
+    ],
   },
-  responses: [{ status: 201, contentTypes: ["application/json"] }],
 })
-
+const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
+  kind: "endpoint",
+  plan: {
+    ...base,
+    method: "POST",
+    path: "/users",
+    operationId: "createUser",
+    operationKind: "mutation",
+    parameters: [],
+    requestBody: {
+      required: true,
+      defaultMediaType: "application/json",
+      content: [json],
+      mode: "merge",
+      fields: ["name", "email"],
+    },
+    responses: [{ status: 201, content: [json], headers: [] }],
+  },
+})
 const api = { users: { getUser, createUser } }
 
 describe("createClient", () => {
@@ -182,15 +183,48 @@ describe("createClient", () => {
   })
 })
 
-const _endpointTypesSatisfyConstraint: EndpointTypes = {
-  path: {},
-  query: {},
-  headers: {},
-  cookies: {},
-  body: undefined,
-  bodyRequired: false,
-  response: undefined,
-  error: undefined,
-  responses: {},
-}
-void _endpointTypesSatisfyConstraint
+describe("response boundaries", () => {
+  it("retains HTTP status when the error body cannot be decoded", async () => {
+    const call = createClient(api, {
+      fetch: async () =>
+        new Response("broken json", {
+          status: 404,
+          headers: { "content-type": "application/json" },
+        }),
+    }).users.getUser
+    await expect(call({ userId: "1" })).rejects.toMatchObject({
+      status: 404,
+      cause: expect.any(DecodeError),
+    })
+  })
+  it("rejects an undeclared success media type instead of skipping a generated validator", async () => {
+    const call = createClient(api, {
+      fetch: async () => new Response("not JSON", { headers: { "content-type": "text/plain" } }),
+    }).users.getUser
+    await expect(call({ userId: "1" })).rejects.toBeInstanceOf(DecodeError)
+  })
+  it("preserves transport failures separately from HTTP failures", async () => {
+    const cause = new TypeError("offline")
+    const call = createClient(api, {
+      fetch: async () => {
+        throw cause
+      },
+    }).users.getUser
+    await expect(call({ userId: "1" })).rejects.toMatchObject({ cause })
+    await expect(call({ userId: "1" })).rejects.toBeInstanceOf(NetworkError)
+  })
+  it("passes the original input object to middleware without validating or rebuilding it", async () => {
+    const input = { userId: "1", includePosts: true }
+    const http = createClient(api, {
+      requestMiddleware: [
+        (context) => {
+          expect(context.input).toBe(input)
+        },
+      ],
+      fetch: async () => Response.json({ id: "1", name: "Ada" }),
+    })
+    const full = await http.users.getUser.withResponse(input)
+    expect(full.data).toEqual({ id: "1", name: "Ada" })
+    expect(full.response.bodyUsed).toBe(true)
+  })
+})

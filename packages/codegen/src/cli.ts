@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { resolve } from "node:path"
 import { pathToFileURL } from "node:url"
-import { generateFromFile, writeGeneratedFile } from "./generate.js"
+import { generateFromFile, writeGeneratedSdk } from "./generate.js"
 import type { AccordCodegenConfig, BodyMode, NamespaceStrategy } from "./types.js"
 
 interface CliArguments {
@@ -11,6 +11,7 @@ interface CliArguments {
   namespace?: NamespaceStrategy
   bodyMode?: BodyMode
   basePath?: string
+  validators?: boolean
 }
 
 interface ConfigModule {
@@ -21,6 +22,7 @@ interface MutableCodegenConfig {
   namespace?: NamespaceStrategy
   basePath?: string
   body?: NonNullable<AccordCodegenConfig["body"]>
+  validators?: boolean
   operationKinds?: NonNullable<AccordCodegenConfig["operationKinds"]>
 }
 
@@ -28,12 +30,15 @@ async function main(): Promise<void> {
   const args = parseArguments(process.argv.slice(2))
   const fileConfig = args.configPath ? await importConfig(args.configPath) : {}
   const config: MutableCodegenConfig = { ...fileConfig }
+  if (args.validators) config.validators = true
   if (args.namespace !== undefined) config.namespace = args.namespace
   if (args.basePath !== undefined) config.basePath = args.basePath
   if (args.bodyMode !== undefined) config.body = { ...fileConfig.body, mode: args.bodyMode }
 
+  if (config.validators && !args.output)
+    throw new TypeError("--validators requires --output so companion validators can be written")
   const result = await generateFromFile(args.input, config)
-  if (args.output) await writeGeneratedFile(args.output, result.source)
+  if (args.output) await writeGeneratedSdk(args.output, result)
   else process.stdout.write(result.source)
 }
 
@@ -61,6 +66,7 @@ function parseArguments(values: readonly string[]): CliArguments {
       continue
     }
 
+    if (value === "--validators") continue
     const next = args[index + 1]
     if (value === "--output" || value === "-o") {
       output = requireValue(value, next)
@@ -92,6 +98,7 @@ function parseArguments(values: readonly string[]): CliArguments {
 
   if (!input) throw new TypeError("An OpenAPI input file is required")
   const parsed: CliArguments = { input }
+  if (values.includes("--validators")) parsed.validators = true
   if (output !== undefined) parsed.output = output
   if (configPath !== undefined) parsed.configPath = configPath
   if (namespace !== undefined) parsed.namespace = namespace
@@ -116,7 +123,7 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 
 function printUsage(): void {
   process.stdout.write(
-    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge (default) or separate\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file>        Generated TypeScript output (stdout by default)\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators              Generate Standard Schema response validators\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
   )
 }
 

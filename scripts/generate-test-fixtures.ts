@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url"
-import { generateFromFile, writeGeneratedFile } from "../packages/codegen/src/index.js"
+import { generateFromFile, writeGeneratedSdk } from "../packages/codegen/src/index.js"
 
 const root = fileURLToPath(new URL("..", import.meta.url))
 
@@ -18,5 +18,5 @@ const fixtures = [
 
 for (const fixture of fixtures) {
   const result = await generateFromFile(fixture.input, fixture.config)
-  await writeGeneratedFile(fixture.output, result.source)
+  await writeGeneratedSdk(fixture.output, result)
 }

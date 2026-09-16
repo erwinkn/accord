@@ -37,7 +37,7 @@ function isParameterObject(value: RequestValue): value is ParameterObject {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return false
   const prototype = Object.getPrototypeOf(value)
   if (prototype !== Object.prototype && prototype !== null) return false
-  return Object.values(value).every((item) => item === undefined || isParameterValue(item))
+  return true
 }
 
 export function isParameterValue(value: RequestValue): value is ParameterValue {
@@ -52,7 +52,10 @@ export function isParameterValue(value: RequestValue): value is ParameterValue {
     return true
   }
   if (Array.isArray(value)) return value.every(isParameterValue)
-  return isParameterObject(value)
+  return (
+    isParameterObject(value) &&
+    Object.values(value).every((item) => item === undefined || isParameterValue(item))
+  )
 }
 
 function requireParameterValue(value: RequestValue, name: string): ParameterValue {

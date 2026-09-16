@@ -7,6 +7,10 @@ import fc from "fast-check"
 import { consumer, document, integerSchema, references, stringSchema } from "./fixture.js"
 import { root, verifyFixture } from "./harness.js"
 
+interface FuzzResponses {
+  [key: string]: JsonValue
+}
+
 function positiveInteger(value: string | undefined, fallback: number): number {
   if (value === undefined) return fallback
   const number = Number(value)
@@ -41,6 +45,9 @@ const scenario = fc.record({
   name: word,
   count: fc.integer({ min: -100_000, max: 100_000 }),
   enabled: fc.boolean(),
+  validators: fc.boolean(),
+  status: fc.constantFrom(200, 201, 202, 204),
+  statusUnion: fc.boolean(),
 })
 
 async function main(): Promise<void> {
@@ -80,6 +87,17 @@ async function main(): Promise<void> {
             },
           ],
         }
+      const responses: FuzzResponses = {
+        [sample.status]:
+          sample.status === 204
+            ? { description: "No content" }
+            : { description: "Result", content: { "application/json": { schema: leaf } } },
+      }
+      if (sample.statusUnion)
+        responses[sample.status === 202 ? 200 : 202] = {
+          description: "Alternate success",
+          content: { "application/json": { schema: leaf } },
+        }
       const inputDocument = {
         ...document(
           {
@@ -91,7 +109,7 @@ async function main(): Promise<void> {
                   { name: "q", in: "query", required: true, schema: stringSchema },
                 ],
                 requestBody: { required: true, content: { "application/json": { schema } } },
-                responses: { "204": { description: "No content" } },
+                responses,
               },
             },
           },
@@ -99,18 +117,22 @@ async function main(): Promise<void> {
         ),
         openapi: sample.version,
       }
-      const config = { body: { mode: sample.mode === "merge" ? "merge" : "separate" } } as const
+      const config = {
+        body: { mode: sample.mode === "merge" ? "merge" : "separate" },
+        validators: sample.validators,
+      } as const
       const [first, second] = await Promise.all([
         generate(inputDocument, config),
         generate(reordered(inputDocument), config),
       ])
       assert.equal(first.source, second.source, "Reordering object keys changed generated source")
       assert.deepEqual(
-        first.normalized,
-        second.normalized,
+        first.model,
+        second.model,
         "Reordering object keys changed endpoint metadata",
       )
       const body = { name: sample.name, count: sample.count, enabled: sample.enabled }
+      const payload = sample.status === 204 ? undefined : body
       const input =
         sample.mode === "merge"
           ? { id: sample.id, q: sample.query, ...body }
@@ -125,14 +147,15 @@ async function main(): Promise<void> {
         consumer: {
           source: consumer(`export async function run() {
         await withServer(async (baseUrl, requests) => {
-          await createClient(api, { baseUrl }).probe.call(${JSON.stringify(input)})
+          const result = await createClient(api, { baseUrl }).probe.call(${JSON.stringify(input)})
+          assert.deepEqual(result, ${sample.statusUnion ? `{ status: ${sample.status}, data: ${JSON.stringify(payload) ?? "undefined"} }` : (JSON.stringify(payload) ?? "undefined")}, "ACCORD_FUZZ_RESPONSE")
           assert.equal(requests.length, 1)
           const request = requests[0]!
           const url = new URL(request.url, baseUrl)
           assert.equal(decodeURIComponent(url.pathname.slice("/base/probe/".length)), ${JSON.stringify(sample.id)}, "ACCORD_FUZZ_PATH")
           assert.deepEqual([...url.searchParams], [["q", ${JSON.stringify(sample.query)}]], "ACCORD_FUZZ_QUERY")
           assert.deepEqual(JSON.parse(request.body.toString()), ${JSON.stringify(body)}, "ACCORD_FUZZ_BODY")
-        })
+        }, { status: ${sample.status}, headers: { "content-type": "application/json" }, body: ${JSON.stringify(payload ? JSON.stringify(payload) : "")} })
       }`),
         },
       })
