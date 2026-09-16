@@ -30,11 +30,7 @@
         }
       },
       "requestBody": {
-        "content": [
-          {
-            "mediaType": "application/json"
-          }
-        ],
+        "type": "json",
         "required": true,
         "mode": "separate"
       }
@@ -134,43 +130,18 @@
         }
       },
       "requestBody": {
-        "content": [
-          {
-            "mediaType": "multipart/form-data",
-            "codec": {
-              "kind": "form",
-              "mediaType": "multipart/form-data",
-              "fields": {
-                "file": {
-                  "mediaType": "application/octet-stream",
-                  "codec": {
-                    "kind": "bytes",
-                    "value": "upload"
-                  },
-                  "multiple": false,
-                  "headers": {}
-                },
-                "metadata": {
-                  "mediaType": "application/json",
-                  "codec": {
-                    "kind": "json"
-                  },
-                  "multiple": false,
-                  "headers": {}
-                }
-              },
-              "patterns": {},
-              "additional": {
-                "mediaType": "application/octet-stream",
-                "codec": {
-                  "kind": "text"
-                },
-                "multiple": false,
-                "headers": {}
-              }
-            }
+        "type": "multipart",
+        "fields": {
+          "file": {
+            "type": "binary"
+          },
+          "metadata": {
+            "type": "json"
           }
-        ],
+        },
+        "additional": {
+          "mediaType": "application/octet-stream"
+        },
         "required": true,
         "mode": "separate"
       }

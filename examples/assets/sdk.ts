@@ -124,7 +124,7 @@ export type RemoveContract = {
     readonly "responses": RemoveResponses;
     readonly "fullResponse": RemoveFullResponse;
 };
-const defineEndpoint = createEndpointFactory("582fb1aea7c8bea6");
+const defineEndpoint = createEndpointFactory("b7234d86fa45ef9a");
 export const api = {
     "assets": {
         "upload": defineEndpoint<UploadContract, "mutation">({
@@ -133,58 +133,19 @@ export const api = {
             "id": "upload",
             "kind": "mutation",
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "multipart/form-data",
-                        "codec": {
-                            "kind": "form",
-                            "mediaType": "multipart/form-data",
-                            "fields": {
-                                "file": {
-                                    "mediaType": "application/octet-stream",
-                                    "codec": {
-                                        "kind": "bytes",
-                                        "value": "upload"
-                                    },
-                                    "multiple": false,
-                                    "headers": {}
-                                },
-                                "metadata": {
-                                    "mediaType": "application/json",
-                                    "codec": {
-                                        "kind": "json"
-                                    },
-                                    "multiple": false,
-                                    "headers": {}
-                                },
-                                "tags": {
-                                    "mediaType": "text/plain",
-                                    "codec": {
-                                        "kind": "text"
-                                    },
-                                    "multiple": true,
-                                    "headers": {}
-                                }
-                            },
-                            "patterns": {},
-                            "additional": {
-                                "mediaType": "application/octet-stream",
-                                "codec": {
-                                    "kind": "bytes",
-                                    "value": "upload"
-                                },
-                                "multiple": false,
-                                "headers": {}
-                            }
-                        }
+                "type": "multipart",
+                "fields": {
+                    "file": {
+                        "type": "binary"
+                    },
+                    "metadata": {
+                        "type": "json"
+                    },
+                    "tags": {
+                        "multiple": true
                     }
-                ],
-                "required": true,
-                "fields": [
-                    "file",
-                    "metadata",
-                    "tags"
-                ]
+                },
+                "required": true
             },
             "responses": {
                 "201": {
@@ -203,11 +164,7 @@ export const api = {
                 }
             ],
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "mode": "separate"
             },

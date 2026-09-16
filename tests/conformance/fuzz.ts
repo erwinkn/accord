@@ -41,6 +41,11 @@ const scenario = fc.record({
   version: fc.constantFrom("3.0.3", "3.1.0"),
   composition: fc.constantFrom("inline", "reference", "allOf", "oneOf"),
   mode: fc.constantFrom("merge", "separate"),
+  mediaType: fc.constantFrom(
+    "application/json",
+    "multipart/form-data",
+    "application/x-www-form-urlencoded",
+  ),
   id: word.map((value) => `id-${value}`),
   query: word,
   name: word,
@@ -109,7 +114,7 @@ async function main(): Promise<void> {
                   { name: "id", in: "path", required: true, schema: stringSchema },
                   { name: "q", in: "query", required: true, schema: stringSchema },
                 ],
-                requestBody: { required: true, content: { "application/json": { schema } } },
+                requestBody: { required: true, content: { [sample.mediaType]: { schema } } },
                 responses,
               },
             },
@@ -133,6 +138,16 @@ async function main(): Promise<void> {
         "Reordering object keys changed endpoint metadata",
       )
       const body = { name: sample.name, count: sample.count, enabled: sample.enabled }
+      const bodyAssertion =
+        sample.mediaType === "application/json"
+          ? `assert.deepEqual(JSON.parse(request.body.toString()), ${JSON.stringify(body)}, "ACCORD_FUZZ_BODY")`
+          : `const fields = ${
+              sample.mediaType === "multipart/form-data"
+                ? 'await new Response(request.body.toString(), { headers: { "content-type": request.headers["content-type"]! } }).formData()'
+                : "new URLSearchParams(request.body.toString())"
+            }
+           assert.equal([...fields.keys()].length, 3, "ACCORD_FUZZ_FIELD_COUNT")
+           assert.deepEqual(Object.fromEntries(fields), ${JSON.stringify({ name: sample.name, count: String(sample.count), enabled: String(sample.enabled) })}, "ACCORD_FUZZ_FORM")`
       const payload = sample.status === 204 ? undefined : body
       const input =
         sample.mode === "merge"
@@ -155,7 +170,7 @@ async function main(): Promise<void> {
           const url = new URL(request.url, baseUrl)
           assert.equal(decodeURIComponent(url.pathname.slice("/base/probe/".length)), ${JSON.stringify(sample.id)}, "ACCORD_FUZZ_PATH")
           assert.deepEqual([...url.searchParams], [["q", ${JSON.stringify(sample.query)}]], "ACCORD_FUZZ_QUERY")
-          assert.deepEqual(JSON.parse(request.body.toString()), ${JSON.stringify(body)}, "ACCORD_FUZZ_BODY")
+          ${bodyAssertion}
         }, { status: ${sample.status}, headers: { "content-type": "application/json" }, body: ${JSON.stringify(payload ? JSON.stringify(payload) : "")} })
       }`),
         },

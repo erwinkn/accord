@@ -911,7 +911,7 @@ export const SubmitSubscription202Schema = z.strictObject({
 export const SubmitSubscription400Schema = ProblemDtoSchema;
 export const SubmitSubscription401Schema = ProblemDtoSchema;
 export const SubmitSubscription404Schema = ProblemDtoSchema;
-const defineEndpoint = createEndpointFactory("840f78478a19d000");
+const defineEndpoint = createEndpointFactory("bf460e1062765136");
 export const api = {
     "documents": {
         "getDocument": defineEndpoint<GetDocumentContract, "query">({
@@ -1009,58 +1009,15 @@ export const api = {
                 }
             ],
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "multipart/form-data",
-                        "codec": {
-                            "kind": "form",
-                            "mediaType": "multipart/form-data",
-                            "fields": {
-                                "category": {
-                                    "mediaType": "text/plain",
-                                    "codec": {
-                                        "kind": "text"
-                                    },
-                                    "multiple": false,
-                                    "headers": {}
-                                },
-                                "file": {
-                                    "mediaType": "application/octet-stream",
-                                    "codec": {
-                                        "kind": "bytes",
-                                        "value": "upload"
-                                    },
-                                    "multiple": false,
-                                    "headers": {}
-                                },
-                                "note": {
-                                    "mediaType": "text/plain",
-                                    "codec": {
-                                        "kind": "text"
-                                    },
-                                    "multiple": false,
-                                    "headers": {}
-                                }
-                            },
-                            "patterns": {},
-                            "additional": {
-                                "mediaType": "application/octet-stream",
-                                "codec": {
-                                    "kind": "bytes",
-                                    "value": "upload"
-                                },
-                                "multiple": false,
-                                "headers": {}
-                            }
-                        }
-                    }
-                ],
-                "required": true,
-                "fields": [
-                    "category",
-                    "file",
-                    "note"
-                ]
+                "type": "multipart",
+                "fields": {
+                    "category": {},
+                    "file": {
+                        "type": "binary"
+                    },
+                    "note": {}
+                },
+                "required": true
             },
             "responses": {
                 "201": {
@@ -1093,11 +1050,7 @@ export const api = {
             "id": "createCompanyInvestor",
             "kind": "mutation",
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "fields": [
                     "country",
@@ -1133,11 +1086,7 @@ export const api = {
             "id": "createIndividualInvestor",
             "kind": "mutation",
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "fields": [
                     "country",
@@ -1269,11 +1218,7 @@ export const api = {
             "id": "createOffering",
             "kind": "mutation",
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "fields": [
                     "description",
@@ -1341,11 +1286,7 @@ export const api = {
                 }
             ],
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "mode": "separate"
             },
             "responses": {
@@ -1485,11 +1426,7 @@ export const api = {
                 }
             ],
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "fields": [
                     "amount",

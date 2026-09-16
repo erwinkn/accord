@@ -302,17 +302,21 @@ export class TypeEmitter {
       }
     }
     const additional = this.graph.edge(id, "additionalProperties")
+    const patterns = [...this.graph.get(id).edges].filter(([key]) =>
+      key.startsWith("patternProperties/"),
+    )
     if (rules["additionalProperties"] !== false && rules["unevaluatedProperties"] !== false) {
       let value = this.emit(additional, direction)
-      // TS requires declared properties to be assignable to an index signature. JSON Schema's
-      // additionalProperties applies only to unlisted names; preserve its values as an intersection
-      // only when TS can express that contract, otherwise include declared member value types.
-      if (additional !== this.graph.any && Object.keys(properties).length)
+      // TS's string index covers named properties and narrower pattern indexes too. Include
+      // their actual projected types (including form binary values); their own declarations
+      // retain their narrower constraints. JSON Schema additionalProperties excludes both.
+      if (additional !== this.graph.any)
         value = union([
           value,
-          ...Object.keys(properties).map((name) =>
-            this.emit(this.graph.edge(id, `properties/${name}`), direction),
+          ...elements.flatMap((element) =>
+            ts.isPropertySignature(element) && element.type ? [element.type] : [],
           ),
+          ...patterns.map(([, child]) => this.emit(child, direction)),
         ])
       elements.push(
         f.createIndexSignature(
@@ -330,8 +334,7 @@ export class TypeEmitter {
         ),
       )
     }
-    for (const [pattern, child] of this.graph.get(id).edges) {
-      if (!pattern.startsWith("patternProperties/")) continue
+    for (const [pattern, child] of patterns) {
       const expression = pattern.slice("patternProperties/".length)
       const prefix = /^\^([A-Za-z0-9 _:-]+)(?:\.\*)?\$?$/.exec(expression)?.[1]
       if (prefix) {

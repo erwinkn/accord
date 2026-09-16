@@ -44,8 +44,7 @@ function isRecord(value: RequestValue): value is RequestObject {
 }
 
 function fieldPlan(codec: Extract<CodecPlan, { kind: "form" }>, key: string): FormFieldPlan {
-  const direct = codec.fields[key]
-  if (direct) return direct
+  if (Object.hasOwn(codec.fields, key)) return codec.fields[key]!
   for (const [pattern, plan] of Object.entries(codec.patterns)) {
     if (new RegExp(pattern, "u").test(key)) return plan
   }

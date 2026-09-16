@@ -169,7 +169,7 @@ export const Create422Schema = ProblemSchema;
 export const Get200Schema = TaskSchema;
 export const Get404Schema = ProblemSchema;
 export const Update200Schema = TaskSchema;
-const defineEndpoint = createEndpointFactory("73d49ce23725a9b2");
+const defineEndpoint = createEndpointFactory("a0e40c2397785a61");
 export const api = {
     "tasks": {
         "list": defineEndpoint<ListContract, "query">({
@@ -198,11 +198,7 @@ export const api = {
             "id": "create",
             "kind": "mutation",
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "fields": [
                     "labels",
@@ -253,11 +249,7 @@ export const api = {
                 }
             ],
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "mode": "separate"
             },
             "responses": {

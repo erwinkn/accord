@@ -33,8 +33,9 @@ Use `ACCORD_CONFORMANCE_CASE=representation.xml-roundtrip pnpm test:conformance`
 
 The original corpus remains, with corrections for the agreed rewrite rather than compatibility with the old implementation:
 
-- Collision-free closed bodies can flatten, including optional bodies. Dictionaries and collisions use `body`. Explicit unsafe merge tests now explicitly request merge instead of assuming it is the default.
+- Collision-free, required closed bodies can flatten. Optional bodies, dictionaries, and collisions use `body`. Explicit unsafe merge tests now explicitly request merge instead of assuming it is the default.
 - Endpoint metadata is passed directly to `defineEndpoint`. Responses are status-keyed records, with arrays only for multiple media types at one status.
+- Request bodies use flat encoding variants. Form field maps drive both input extraction and serialization; tests inspect actual part bytes, files, headers, style overrides, dynamic keys, XML, and alternate media defaults.
 - Configured client auth applies to every call, independent of source security declarations. Tests cover per-call opt-out, header overrides, provider order, and secret-safe cache separation.
 - Multiple successful statuses return status/data unions. A `2XX` group includes bodyless 204/205 responses, whose data is `undefined`.
 - Headers and request options occupy the second argument. React Query's own options are composed with its option factories.
@@ -53,7 +54,7 @@ Executable consumers run in isolated Node subprocesses with timeouts and ephemer
 
 Most conformance cases skip rechecking dependency declarations to isolate type/wire defects; the separate declaration audit, example compilation, scale test, and clean-install test use `skipLibCheck: false`. A successful generation followed by failed TypeScript checking remains a generation defect, not successful SDK execution.
 
-Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, Unicode/reserved characters, numeric/boolean values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Object-key reordering must preserve generated source and semantic metadata. Failures retain a minimized executable reproduction.
+Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, JSON/multipart/URL-form encodings, Unicode/reserved characters, numeric/boolean values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Object-key reordering must preserve generated source and semantic metadata. Failures retain a minimized executable reproduction.
 
 Generated snapshots and schemas are excluded from handwritten-code lint rules; they are compiled, executed, and compared against regeneration. Narrow inline lint exceptions explain genuine runtime dispatch and external validation boundaries. Request inputs are not reparsed to satisfy a lint rule.
 

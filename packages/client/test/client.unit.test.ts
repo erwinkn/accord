@@ -43,7 +43,7 @@ const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
   kind: "mutation",
   requestBody: {
     required: true,
-    content: [{ mediaType: "application/json" }],
+    type: "json",
     fields: ["name", "email"],
   },
   responses: { 201: { mediaType: "application/json" } },

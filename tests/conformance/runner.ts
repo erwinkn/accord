@@ -13,6 +13,7 @@ import {
 import type { KnownGap, Result } from "./model.js"
 import { queryCases } from "./query-cases.js"
 import { representationCases } from "./representation-cases.js"
+import { requestBodyCases } from "./request-body-cases.js"
 import { rewriteCases } from "./rewrite-cases.js"
 import { typeCases } from "./type-cases.js"
 import { responseCases, wireCases } from "./wire-cases.js"
@@ -39,6 +40,7 @@ async function main(): Promise<void> {
     ...queryCases,
     ...rewriteCases,
     ...representationCases,
+    ...requestBodyCases,
   ]
   const gaps: KnownGap[] = JSON.parse(
     await readFile(join(root, "tests/conformance/known-gaps.json"), "utf8"),

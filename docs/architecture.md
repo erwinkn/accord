@@ -49,7 +49,36 @@ A status with multiple media types uses an array only for that value: `200: [{ m
 
 Request parameters are grouped into `pathParams`, `queryParams`, `headerParams`, and `cookieParams`, each with location-specific options. The usual entry is just `{ name: "id" }`; `inputName` is emitted only for a rename. Requiredness stays in the semantic model and public TypeScript input, not in the runtime binding. Defaults follow the [OpenAPI parameter rules](https://spec.openapis.org/oas/v3.1.1.html#parameter-object): simple path/header encoding, form query/cookie encoding, exploded form values, and reserved-character escaping. Only overrides are emitted. Empty parameter groups are omitted.
 
-Request bodies default to `mode: "merge"`, optional requiredness, and JSON when declared (otherwise the first declared media type). Payload-only results are the default. Explicit body mode, required bodies, alternate default media, and status-envelope results retain their flags. Response header declarations remain in the semantic model; the runtime exposes the actual Fetch `Headers` without carrying unused declarations.
+Request bodies are flat discriminated unions on `type`: `json`, `text`, `binary`, `multipart`, `urlencoded`, or `xml`. A normal upload is:
+
+```ts
+requestBody: {
+  type: "multipart",
+  required: true,
+  fields: {
+    category: {},
+    file: { type: "binary" },
+    note: {},
+  },
+}
+```
+
+The field map both extracts the body from flat caller inputs and describes how to encode each part. There is no repeated list of field names, `content` array, or `codec` wrapper. An empty field definition means text/plain. JSON parts use `{ type: "json" }`; repeated parts add `multiple: true`. Non-default part media types, headers and style/explode/allowReserved options remain explicit. Dynamic field encodings live in `additional` and `patterns`; empty maps and default binary passthrough are omitted.
+
+JSON uses `requestBody: { type: "json", required: true, fields: ["title", "status"] }`. The media type follows `type` by default; a custom media type such as `text/csv` or `application/merge-patch+json` is retained as `mediaType`. XML retains its root and node metadata. `mode: "separate"` uses the caller's `body` value directly; otherwise fields come from the flat first argument. Requiredness controls whether an empty flattened body is sent, without validating caller input.
+
+Multiple accepted formats use an array of flat definitions, with the default first:
+
+```ts
+requestBody: [
+  { type: "json", required: true, mode: "separate" },
+  { type: "text", mediaType: "text/csv", required: true, mode: "separate" },
+]
+```
+
+The generator puts JSON first when declared, or honors `defaultMediaTypes`. The call's second-argument `headers["content-type"]` selects another format and remains correlated with its input type. Shared media defaults and a small transport-default expansion feed the existing codecs; request schemas and caller values are never reinterpreted by that expansion.
+
+Payload-only results are the default; status-envelope results retain their flag. Response header declarations remain in the semantic model; the runtime exposes the actual Fetch `Headers` without carrying unused declarations.
 
 ### Routing and credentials
 
@@ -76,4 +105,4 @@ The adapter fails generation on features it cannot represent faithfully, includi
 - `@accord/zod`: optional native Zod emitter and shared refinement helpers.
 - `@accord/react-query`: option factories/hooks and cache identity. It consumes endpoints rather than reinterpreting OpenAPI.
 
-The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,type-emitter,render-sdk,validators}.ts`, `packages/client/src/{types,client,codecs}.ts`, and `packages/react-query/src/index.ts`.
+The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,request-plan,type-emitter,render-sdk,validators}.ts`, `packages/client/src/{types,client,request-body,codecs}.ts`, and `packages/react-query/src/index.ts`.

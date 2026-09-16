@@ -112,7 +112,7 @@ export type GetUserContract = {
     readonly "responses": GetUserResponses;
     readonly "fullResponse": GetUserFullResponse;
 };
-const defineEndpoint = createEndpointFactory("85518fe54993967e");
+const defineEndpoint = createEndpointFactory("ff1dd6251c42ed1a");
 export const api = {
     "users": {
         "listUsers": defineEndpoint<ListUsersContract, "query">({
@@ -137,11 +137,7 @@ export const api = {
             "id": "createUser",
             "kind": "mutation",
             "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    }
-                ],
+                "type": "json",
                 "required": true,
                 "mode": "separate"
             },

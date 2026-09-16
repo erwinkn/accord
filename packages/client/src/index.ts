@@ -18,7 +18,6 @@ export {
   createClient,
   createEndpointClient,
   createEndpointFactory,
-  defaultRequestMediaType,
   defineEndpoint,
   getEndpointScope,
   isEndpointDescriptor,
@@ -37,6 +36,12 @@ export {
   NetworkError,
   ValidationError,
 } from "./errors.js"
+export {
+  defaultRequestMediaType,
+  requestBodyVariants,
+  requestCodec,
+  requestMediaType,
+} from "./request-body.js"
 export {
   encodeValue,
   interpolatePath,

@@ -40,11 +40,7 @@
         }
       },
       "requestBody": {
-        "content": [
-          {
-            "mediaType": "application/json"
-          }
-        ],
+        "type": "json",
         "required": true,
         "mode": "separate"
       }

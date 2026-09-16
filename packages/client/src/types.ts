@@ -102,15 +102,48 @@ export interface MediaPlan {
   readonly schema?: StandardSchemaV1
 }
 
-export interface RequestBodyDescriptor {
+/** Request encoding metadata: defaults and response-only decoding information are omitted. */
+export type RequestEncoding =
+  | { readonly type: "json" }
+  | { readonly type: "text" }
+  | { readonly type: "binary" }
+  | ({ readonly type: "xml" } & Pick<Extract<CodecPlan, { kind: "xml" }>, "root" | "nodes">)
+  | RequestFormEncoding
+  | ({ readonly type: "parameter" } & Pick<QueryParameter, "style" | "explode" | "allowReserved">)
+
+export type RequestFormEncoding = (
+  | { readonly type: "multipart" }
+  | { readonly type: "urlencoded" }
+) & {
+  readonly fields?: Readonly<Record<string, RequestField>>
+  readonly patterns?: Readonly<Record<string, RequestField>>
+  /** Default: binary passthrough for undeclared fields. Caller input is never validated here. */
+  readonly additional?: RequestField
+}
+/** An empty field definition means text/plain; only encoding overrides are emitted. */
+export type RequestField = (
+  | Exclude<RequestEncoding, { type: "text" }>
+  | { readonly type?: "text" }
+) & {
+  readonly mediaType?: string
+  readonly multiple?: boolean
+  readonly headers?: Readonly<Record<string, string>>
+}
+export type RequestBodyVariant = (
+  | (Exclude<RequestEncoding, RequestFormEncoding | { type: "parameter" }> & {
+      /** Names taken from a flattened input; form encodings use their field-map keys instead. */
+      readonly fields?: readonly string[]
+    })
+  | RequestFormEncoding
+) & {
+  /** Default determined by type: JSON, text/plain, octet-stream, XML, multipart or URL form. */
+  readonly mediaType?: string
   readonly required?: boolean
   /** Default: merge. */
   readonly mode?: BodyMode
-  readonly fields?: readonly string[]
-  readonly content: readonly MediaPlan[]
-  /** Default: application/json when declared, otherwise the first content entry. */
-  readonly defaultMediaType?: string
 }
+/** A single definition normally; multiple accepted formats use an array with the default first. */
+export type RequestBodyDescriptor = RequestBodyVariant | readonly RequestBodyVariant[]
 
 /** Omit mediaType for a response with no declared body. */
 export type ResponseMetadata = Partial<MediaPlan>

@@ -50,8 +50,7 @@ export const generationCases: Fixture[] = [
         assert.deepEqual(endpoint.pathParams, [{ name: "id" }])
         assert.deepEqual(endpoint.queryParams, [{ name: "tags" }])
         assert.deepEqual(endpoint.responses, { 204: {} })
-        assert.equal(endpoint.requestBody?.mode, undefined)
-        assert.equal(endpoint.requestBody?.defaultMediaType, undefined)
+        assert.deepEqual(endpoint.requestBody, { type: "json", required: true, fields: ["name"] })
         await withServer(async (baseUrl, requests) => {
           await createClient(api, { baseUrl }).probe.call({
             id: "a/b", tags: ["red", "blue"], xMeta: { role: "admin" }, prefs: { theme: "dark" }, name: "Ada",

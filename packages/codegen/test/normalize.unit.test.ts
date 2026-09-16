@@ -290,7 +290,7 @@ describe("compile", () => {
     expect(operation?.body?.mode).toBe("separate")
     expect(operation?.parameters[0]?.name).toBe("id")
     expect(operation?.body?.fields).toEqual(["id", "name"])
-    expect(operation?.plan.requestBody?.fields).toBeUndefined()
+    expect(operation?.plan.requestBody).not.toHaveProperty("fields")
     expect(operation?.plan.responses).toEqual({ 200: { mediaType: "application/json" } })
   })
 

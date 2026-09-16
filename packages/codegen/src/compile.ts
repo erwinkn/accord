@@ -1,14 +1,12 @@
 import { createHash } from "node:crypto"
 import {
   defaultCodec,
-  defaultRequestMediaType,
   type EndpointPlan,
   type HttpMethod,
   type MediaPlan,
   type ParameterBinding,
   type PathParameter,
   type QueryParameter,
-  type RequestBodyDescriptor,
   type ResponseMap,
   type StatusSelector,
   selectResponse,
@@ -31,6 +29,7 @@ import {
   sanitizeTypeIdentifier,
 } from "./naming.js"
 import { isObject, isString } from "./object.js"
+import { requestBodyPlan } from "./request-plan.js"
 import { SchemaGraph, styleEncoding } from "./schema.js"
 import type { AccordCodegenConfig } from "./types.js"
 
@@ -171,17 +170,7 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
           body.media[0]!.mediaType
         if (!body.media.some((media) => media.mediaType === defaultMediaType))
           fail("INVALID_EXTENSION", `Unknown default media type ${defaultMediaType}`, at.source)
-        let requestBodyPlan: RequestBodyDescriptor = {
-          content: body.media.map((media) => mediaPlan(media, "request")),
-        }
-        if (body.required) requestBodyPlan = { ...requestBodyPlan, required: true }
-        requestBodyPlan =
-          body.mode === "separate"
-            ? { ...requestBodyPlan, mode: "separate" }
-            : { ...requestBodyPlan, fields: body.fields }
-        if (defaultMediaType !== defaultRequestMediaType(requestBodyPlan))
-          requestBodyPlan = { ...requestBodyPlan, defaultMediaType }
-        plan = { ...plan, requestBody: requestBodyPlan }
+        plan = { ...plan, requestBody: requestBodyPlan(body, defaultMediaType) }
       }
       let operation: OperationModel = {
         key: id,

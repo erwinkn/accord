@@ -145,7 +145,7 @@ export const Create400Schema = z.looseObject({
 });
 export const Get200Schema = z.xor([ImportJobSchema, ImportResultSchema]);
 export const Download200Schema = z.instanceof(ArrayBuffer);
-const defineEndpoint = createEndpointFactory("584b2675fb5234a8");
+const defineEndpoint = createEndpointFactory("0f2f07b43a1ba796");
 export const api = {
     "imports": {
         "create": defineEndpoint<CreateContract, "mutation">({
@@ -154,18 +154,19 @@ export const api = {
             "id": "create",
             "kind": "mutation",
             "resultMode": "status",
-            "requestBody": {
-                "content": [
-                    {
-                        "mediaType": "application/json"
-                    },
-                    {
-                        "mediaType": "text/csv"
-                    }
-                ],
-                "required": true,
-                "mode": "separate"
-            },
+            "requestBody": [
+                {
+                    "type": "json",
+                    "required": true,
+                    "mode": "separate"
+                },
+                {
+                    "type": "text",
+                    "mediaType": "text/csv",
+                    "required": true,
+                    "mode": "separate"
+                }
+            ],
             "responses": {
                 "200": {
                     "mediaType": "application/json",

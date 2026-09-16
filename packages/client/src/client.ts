@@ -9,6 +9,13 @@ import {
 } from "./codecs.js"
 import { DecodeError, HttpError, NetworkError, ValidationError } from "./errors.js"
 import {
+  defaultRequestMediaType,
+  requestBodyFields,
+  requestBodyVariants,
+  requestCodec,
+  requestMediaType,
+} from "./request-body.js"
+import {
   renderQueryString,
   serializeCookieParameter,
   serializeHeaderParameter,
@@ -26,7 +33,6 @@ import type {
   FullResponseOf,
   HeaderResolver,
   HttpResult,
-  MediaPlan,
   OperationKind,
   ParameterBinding,
   ParameterValue,
@@ -168,18 +174,6 @@ export function resolveBaseUrl(options: ClientOptions): string {
   return new URL(options.baseUrl ?? "/", origin).href
 }
 
-export function defaultRequestMediaType(body: {
-  readonly defaultMediaType?: string
-  readonly content: readonly Pick<MediaPlan, "mediaType">[]
-}): string {
-  const selected =
-    body.defaultMediaType ??
-    body.content.find((media) => media.mediaType === "application/json")?.mediaType ??
-    body.content[0]?.mediaType
-  if (!selected) throw new TypeError("Request body must declare a media type")
-  return selected
-}
-
 function resolveUrl(options: ClientOptions, path: string): URL {
   const base = new URL(resolveBaseUrl(options))
   const existingQuery = base.search
@@ -260,24 +254,23 @@ async function execute<E extends EndpointDefinition>(
     }
     const contentType =
       requestOptions.headers?.["content-type"] ?? defaultRequestMediaType(bodyPlan)
-    const selected = selectMedia(bodyPlan.content, contentType)
+    const selected = selectMedia(
+      requestBodyVariants(bodyPlan).map((body) => ({ mediaType: requestMediaType(body), body })),
+      contentType,
+    )?.body
     if (!selected)
       throw new TypeError(`Unsupported request content-type ${contentType} for ${plan.id}`)
     let value: RequestValue
-    if (bodyPlan.mode === "separate") value = input["body"]
+    if (selected.mode === "separate") value = input["body"]
     else {
       const body: { [key: string]: RequestValue } = Object.create(null)
-      for (const field of bodyPlan.fields ?? [])
+      for (const field of requestBodyFields(selected))
         if (Object.hasOwn(input, field) && input[field] !== undefined) body[field] = input[field]
-      value = bodyPlan.required || Object.keys(body).length ? body : undefined
+      value = selected.required || Object.keys(body).length ? body : undefined
     }
     if (value !== undefined) {
       headers.set("content-type", contentType)
-      const body = await encodeBody(
-        selected.codec ?? defaultCodec(selected.mediaType, "request"),
-        value,
-        headers,
-      )
+      const body = await encodeBody(requestCodec(selected), value, headers)
       if (body !== undefined) init.body = body
     }
   }
