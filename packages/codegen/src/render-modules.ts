@@ -1,4 +1,5 @@
 import ts from "typescript"
+import { modelModules, sourceTypeReferences } from "./model-modules.js"
 import { sanitizeIdentifier } from "./naming.js"
 import type { ValidationSource } from "./validation-adapter.js"
 
@@ -58,29 +59,23 @@ interface EndpointGroup {
 interface ModuleInput {
   readonly apiId: string
   readonly models: ReadonlyMap<string, string>
+  readonly modelFamilies: readonly (readonly string[])[]
   readonly groups: readonly EndpointGroup[]
   readonly validation: ValidationSource | undefined
 }
 
 /** Import only referenced types, keeping public declarations unqualified and readable. */
-function typeImports(source: string, candidates: readonly string[], from: string): string {
-  const available = new Set(candidates)
-  const used = new Set<string>()
-  const visit = (node: ts.Node, shadowed: ReadonlySet<string>): void => {
-    const scoped = new Set(shadowed)
-    if (ts.isTypeAliasDeclaration(node) || ts.isFunctionTypeNode(node))
-      for (const parameter of node.typeParameters ?? []) scoped.add(parameter.name.text)
-    if (ts.isMappedTypeNode(node)) scoped.add(node.typeParameter.name.text)
-    if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
-      const name = node.typeName.text
-      if (available.has(name) && !scoped.has(name)) used.add(name)
-    }
-    ts.forEachChild(node, (child) => visit(child, scoped))
-  }
-  visit(ts.createSourceFile("module.ts", source, ts.ScriptTarget.Latest, true), new Set())
-  return used.size
-    ? `import type { ${[...used].sort().join(", ")} } from ${JSON.stringify(from)}`
-    : ""
+function typeImports(
+  usedTypes: ReadonlySet<string>,
+  candidates: readonly string[],
+  from: string,
+): string {
+  const used = candidates.filter((name) => usedTypes.has(name))
+  return used.length ? `import type { ${used.sort().join(", ")} } from ${JSON.stringify(from)}` : ""
+}
+
+function localHelpers(usedTypes: ReadonlySet<string>): readonly string[] {
+  return typeHelpers.filter((_, index) => usedTypes.has(helperNames[index]!))
 }
 
 function groupFileNames(groups: readonly EndpointGroup[]): ReadonlyMap<string, string> {
@@ -88,8 +83,8 @@ function groupFileNames(groups: readonly EndpointGroup[]): ReadonlyMap<string, s
   const used = new Set<string>()
   for (const group of groups) {
     let core = sanitizeIdentifier(group.name)
-    // Keep filenames portable, including on case-insensitive Windows filesystems.
-    if (/^(?:con|prn|aux|nul|com[0-9]|lpt[0-9])$/i.test(core)) core += "Api"
+    // Reserve the shared types module and keep filenames portable on Windows.
+    if (/^(?:shared|con|prn|aux|nul|com[0-9]|lpt[0-9])$/i.test(core)) core += "Api"
     let name = core
     for (let index = 2; used.has(name.toLowerCase()); index++) name = `${core}${index}`
     used.add(name.toLowerCase())
@@ -103,34 +98,49 @@ export function renderModules(input: ModuleInput) {
   const add = (path: string, parts: readonly string[]) => {
     files[path] = formatModule([generatedHeader, ...parts.filter(Boolean), ""].join("\n\n"))
   }
-  const models = [...input.models.values()].join("\n\n")
-  const modelNames = [...input.models.keys()]
-  const internalNames = [...modelNames, ...helperNames]
-  add("models.ts", [
-    typeImports(models, clientTypes, "@accord/client"),
-    ...typeHelpers.map((helper) => `export ${helper}`),
-    models,
-  ])
+  const groupNames = groupFileNames(input.groups)
+  const modelsByFile = new Map<string, string[]>()
+  const placement = modelModules(input.models, input.modelFamilies, input.groups)
+  for (const [name, group] of placement) {
+    const file = group === undefined ? "shared" : groupNames.get(group)!
+    const names = modelsByFile.get(file) ?? []
+    names.push(name)
+    modelsByFile.set(file, names)
+  }
+  const modelImports = (usedTypes: ReadonlySet<string>, prefix: string, self?: string) =>
+    [...modelsByFile].flatMap(([file, names]) =>
+      file === self ? [] : [typeImports(usedTypes, names, `${prefix}${file}.js`)],
+    )
+  const typeFiles = new Map(input.groups.map((group) => [groupNames.get(group.name)!, group.types]))
+  if (modelsByFile.has("shared")) typeFiles.set("shared", "")
+  for (const [file, operations] of typeFiles) {
+    const source = [
+      ...(modelsByFile.get(file) ?? []).map((name) => input.models.get(name)!),
+      operations,
+    ].join("\n\n")
+    const usedTypes = sourceTypeReferences(source)
+    add(`types/${file}.ts`, [
+      typeImports(usedTypes, clientTypes, "@accord/client"),
+      ...modelImports(usedTypes, "./", file),
+      ...localHelpers(usedTypes),
+      source,
+    ])
+  }
   if (input.validation) {
     const schemas = input.validation.declarations.join("\n\n")
+    const usedTypes = sourceTypeReferences(schemas)
     add("schemas.ts", [
       ...input.validation.imports,
-      typeImports(schemas, internalNames, "./models.js"),
-      typeImports(schemas, clientTypes, "@accord/client"),
+      ...modelImports(usedTypes, "./types/"),
+      typeImports(usedTypes, clientTypes, "@accord/client"),
+      ...localHelpers(usedTypes),
       schemas,
     ])
   }
-  const groupNames = groupFileNames(input.groups)
   const imports: string[] = []
-  const exports: string[] = []
   const namespaces: string[] = []
   for (const group of input.groups) {
     const file = groupNames.get(group.name)!
-    add(`types/${file}.ts`, [
-      typeImports(group.types, clientTypes, "@accord/client"),
-      typeImports(group.types, internalNames, "../models.js"),
-      group.types,
-    ])
     add(`endpoints/${file}.ts`, [
       'import { createEndpointFactory } from "@accord/client"',
       `import type { ${group.contracts.join(", ")} } from "../types/${file}.js"`,
@@ -139,13 +149,11 @@ export function renderModules(input: ModuleInput) {
       `export const endpoints = ${group.endpoints}`,
     ])
     imports.push(`import { endpoints as ${file}Endpoints } from "./endpoints/${file}.js"`)
-    exports.push(`export type * from "./types/${file}.js"`)
     namespaces.push(`${JSON.stringify(group.name)}: ${file}Endpoints`)
   }
   add("index.ts", [
     ...imports,
-    modelNames.length ? `export type { ${modelNames.join(", ")} } from "./models.js"` : "",
-    ...exports,
+    ...[...typeFiles.keys()].map((file) => `export type * from "./types/${file}.js"`),
     input.validation ? 'export * from "./schemas.js"' : "",
     `export const api = {\n${namespaces.join(",\n")}\n}`,
   ])

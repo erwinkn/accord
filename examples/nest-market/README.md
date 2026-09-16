@@ -17,15 +17,15 @@ Nest controllers + DTO decorators
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
    sdk/index.ts                    ← api and public exports
-   sdk/models.ts                   ← shared request/response model types
    sdk/schemas.ts                  ← native Zod schemas
-   sdk/types/<group>.ts            ← each group's call types
+   sdk/types/<group>.ts            ← each domain's DTOs and call types
+   sdk/types/shared.ts             ← ErrorDto, used across domains
    sdk/endpoints/<group>.ts        ← each group's endpoint metadata
        ↓ createClient / React Query
    real Nest server
 ```
 
-For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [call types](sdk/types/offerings.ts). The [model types](sdk/models.ts) and [Zod schemas](sdk/schemas.ts) hold the definitions reused across groups. The entry re-exports public types and schemas, so callers can keep one import source. `SubscriptionDto` and `SubscriptionDtoPage` are response models: no unused request variants are emitted. Models with identical request/response shapes share one type; a distinct request type is generated only when an endpoint needs it.
+For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [DTOs and call types](sdk/types/offerings.ts). Each domain’s DTOs live in its type slice: jobs imports `SubscriptionDto` from [subscriptions](sdk/types/subscriptions.ts). The common `ErrorDto` lives in [shared types](sdk/types/shared.ts); [Zod schemas](sdk/schemas.ts) stay together for reuse and recursion. The entry re-exports public types and schemas, so callers can keep one import source. `SubscriptionDto` and `SubscriptionDtoPage` are response models: no unused request variants are emitted. Models with identical request/response shapes share one type; a distinct request type is generated only when an endpoint needs it.
 
 ## Run it
 

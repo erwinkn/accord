@@ -32,11 +32,19 @@ export function renameTypeReferences(
 
 export function typeReferences(node: ts.Node): ReadonlySet<string> {
   const names = new Set<string>()
-  const visit = (child: ts.Node): void => {
-    if (ts.isTypeReferenceNode(child) && ts.isIdentifier(child.typeName))
+  const visit = (child: ts.Node, shadowed: ReadonlySet<string>): void => {
+    const scoped = new Set(shadowed)
+    if (ts.isTypeAliasDeclaration(child) || ts.isFunctionTypeNode(child))
+      for (const parameter of child.typeParameters ?? []) scoped.add(parameter.name.text)
+    if (ts.isMappedTypeNode(child)) scoped.add(child.typeParameter.name.text)
+    if (
+      ts.isTypeReferenceNode(child) &&
+      ts.isIdentifier(child.typeName) &&
+      !scoped.has(child.typeName.text)
+    )
       names.add(child.typeName.text)
-    ts.forEachChild(child, visit)
+    ts.forEachChild(child, (node) => visit(node, scoped))
   }
-  visit(node)
+  visit(node, new Set())
   return names
 }

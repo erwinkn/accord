@@ -177,7 +177,7 @@ async function main(): Promise<void> {
       await readFile(join(installed, "generated.ts"), "utf8"),
       /generated\/endpoints\/probe\.js/,
     )
-    for (const file of ["models.ts", "schemas.ts", "types/probe.ts", "endpoints/probe.ts"])
+    for (const file of ["schemas.ts", "types/probe.ts", "endpoints/probe.ts"])
       assert((await readFile(join(installed, "generated", file), "utf8")).length > 0)
     assert(!(await readdir(installed)).some((name) => name.includes(".validators.")))
     await writeFile(join(installed, "config.mjs"), 'export default { namespace: "tag" }\n')

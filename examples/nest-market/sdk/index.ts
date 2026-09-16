@@ -4,38 +4,12 @@ import { endpoints as investorsEndpoints } from "./endpoints/investors.js";
 import { endpoints as jobsEndpoints } from "./endpoints/jobs.js";
 import { endpoints as offeringsEndpoints } from "./endpoints/offerings.js";
 import { endpoints as subscriptionsEndpoints } from "./endpoints/subscriptions.js";
-export type {
-    AcceptedSubmissionDto,
-    CompanyInvestorDto,
-    CreateCompanyInvestorDto,
-    CreateCompanyInvestorDtoRequest,
-    CreateIndividualInvestorDto,
-    CreateIndividualInvestorDtoRequest,
-    Currency,
-    TermsDto,
-    CreateOfferingDto,
-    CreateSubscriptionDto,
-    DocumentCategory,
-    DocumentDto,
-    ErrorDto,
-    IndividualInvestorDto,
-    OfferingStatus,
-    OfferingDto,
-    OfferingDtoPage,
-    OfferingReportDto,
-    SubscriptionStatus,
-    SubscriptionDto,
-    SubmissionJobDto,
-    SubscriptionDtoPage,
-    UpdateOfferingDto,
-    UploadDocumentDto,
-    UploadDocumentDtoForm
-} from "./models.js";
 export type * from "./types/documents.js";
 export type * from "./types/investors.js";
 export type * from "./types/jobs.js";
 export type * from "./types/offerings.js";
 export type * from "./types/subscriptions.js";
+export type * from "./types/shared.js";
 export * from "./schemas.js";
 export const api = {
     "documents": documentsEndpoints,

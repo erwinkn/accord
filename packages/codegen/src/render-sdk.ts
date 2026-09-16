@@ -420,6 +420,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
       models: new Map(
         [...emitter.declarations].map(([name, declaration]) => [name, printNode(declaration)]),
       ),
+      modelFamilies: emitter.declarationFamilies(),
       groups,
       validation: validationSource,
     }),

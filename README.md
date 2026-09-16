@@ -103,17 +103,17 @@ For example, a tag-grouped SDK has this layout:
 ```text
 sdk/
   index.ts             # api and public type/schema exports
-  models.ts            # shared request/response model types
   schemas.ts           # native validation schemas (only when enabled)
   types/
-    users.ts           # inputs, results, errors and contracts
+    users.ts           # user DTOs, inputs, results, errors and contracts
     documents.ts
+    shared.ts          # models shared across slices (only when needed)
   endpoints/
     users.ts           # endpoint metadata, referencing types and schemas
     documents.ts
 ```
 
-Groups follow the configured path or tag namespaces. Shared models and schemas stay together to support reuse and recursion. Import from the entry as before: `import { api, type User } from "./sdk/index.js"`.
+Groups follow the configured path or tag namespaces. Each type slice includes its DTOs and their request/response variants. Direct endpoint uses determine a model’s slice; nested models follow their parent unless they have their own slice. Cross-slice references use type-only imports. Models directly used by multiple slices, and public components with no endpoint owner, go in `types/shared.ts`. Validators stay together in `schemas.ts` to support recursive schemas without runtime import cycles. Import from the entry as before: `import { api, type User } from "./sdk/index.js"`.
 
 Generated body call options use the shared `RequestOptionsFor<"application/json">` helper from `@accord/client`. It preserves authentication, cancellation and custom headers while constraining `content-type`, including parameters such as `charset`. Non-default formats use `RequestOptionsFor<"text/csv", true>` to require an explicit selector. Merged path/body inputs use ordinary intersections.
 

@@ -75,6 +75,7 @@ export function literal(value: string | number | boolean | null): ts.TypeNode {
 export class TypeEmitter {
   readonly names = new Map<string, string>()
   readonly declarations = new Map<string, ts.TypeAliasDeclaration>()
+  private readonly declarationSchemas = new Map<string, SchemaId>()
   private readonly used = new Set<string>()
   private readonly visiting = new Set<string>()
   private readonly cache = new Map<string, ts.TypeNode>()
@@ -138,6 +139,7 @@ export class TypeEmitter {
     const finalName = this.names.get(key)
     if (finalName) {
       this.declarations.set(finalName, alias(finalName, result))
+      this.declarationSchemas.set(finalName, id)
       return typeReference(finalName)
     }
     return result
@@ -149,6 +151,18 @@ export class TypeEmitter {
       this.emit(id, "request")
     }
     this.shareIdenticalProjections()
+  }
+
+  /** Keep every retained projection of a schema in the same output module. */
+  declarationFamilies(): readonly (readonly string[])[] {
+    const families = new Map<SchemaId, string[]>()
+    for (const name of this.declarations.keys()) {
+      const schema = this.declarationSchemas.get(name)!
+      const family = families.get(schema) ?? []
+      family.push(name)
+      families.set(schema, family)
+    }
+    return [...families.values()]
   }
 
   private shareIdenticalProjections(): void {

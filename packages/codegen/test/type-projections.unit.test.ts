@@ -41,7 +41,7 @@ it("shares identical models through nested arrays, dictionaries and recursive re
     ),
     { validators: zodAdapter() },
   )
-  const models = files["models.ts"]!
+  const models = files["types/probe.ts"]!
   expect(models).toContain('readonly "NodeRequest"?: "NodeRequest"')
   expect(models).toContain('readonly "child"?: Node')
   expect(models).toContain("ReadonlyArray<Node>")
@@ -68,7 +68,7 @@ it("keeps differences throughout mutually recursive models and shares their unch
       "application/json",
     ),
   )
-  const models = files["models.ts"]!
+  const models = files["types/probe.ts"]!
   for (const name of ["A", "B", "C"]) expect(models).toContain(`export type ${name}Request =`)
   expect(models).toContain('readonly "common"?: Common;')
   expect(models).not.toContain("CommonRequest")
@@ -89,7 +89,7 @@ it("omits unused request variants even when a response model has read-only prope
       "Page",
     ),
   )
-  const models = files["models.ts"]!
+  const models = files["types/probe.ts"]!
   expect(models).toContain("export type Subscription =")
   expect(models).toContain("export type Page =")
   expect(models).not.toContain("SubscriptionRequest")
@@ -107,7 +107,7 @@ it("retains the upload representation when the shared JSON model uses a string",
       "multipart/form-data",
     ),
   )
-  const models = files["models.ts"]!
+  const models = files["types/probe.ts"]!
   expect(models).toContain('readonly "file"?: string;')
   expect(models).toContain('readonly "file"?: BinaryUpload;')
   expect(files["types/probe.ts"]).toContain("export type CallInput = UploadForm;")

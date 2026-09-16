@@ -110,9 +110,16 @@ it("rejects traversal in module paths or cleanup manifests and refuses symlinked
 })
 
 it("uses portable unique module names and keeps reserved namespace names as object keys", async () => {
-  const { files } = await generate(document(["con", "default", "CON-api"]))
+  const { files } = await generate(document(["con", "default", "CON-api", "models", "shared"]))
   const paths = Object.keys(files)
   expect(new Set(paths.map((path) => path.toLowerCase())).size).toBe(paths.length)
   expect(paths).toContain("endpoints/conApi.ts")
+  expect(paths).toContain("types/models.ts")
+  expect(paths).not.toContain("models.ts")
+  expect(files["types/models.ts"]).toContain("Contract")
+  expect(paths).not.toContain("types/shared.ts")
+  expect(files["types/sharedApi.ts"]).toContain("Contract")
+  expect(files["index.ts"]).toContain('"models": modelsEndpoints')
+  expect(files["index.ts"]).toContain('"shared": sharedApiEndpoints')
   expect(files["index.ts"]).toContain('"default": defaultEndpoints')
 })

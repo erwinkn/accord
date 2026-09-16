@@ -17,6 +17,79 @@ const roundTrip = (root: string) => ({
 
 export const projectionCases: Fixture[] = [
   {
+    id: "types.recursive-domain-slices",
+    title: "Domain DTO imports support mutual recursion, shared types and native validators",
+    area: "types",
+    reference: references.accord,
+    document: document(
+      {
+        "/users": {
+          get: {
+            operationId: "getUser",
+            responses: {
+              200: { description: "ok", content: { "application/json": { schema: ref("User") } } },
+            },
+          },
+        },
+        "/teams": {
+          get: {
+            operationId: "getTeam",
+            responses: {
+              200: { description: "ok", content: { "application/json": { schema: ref("Team") } } },
+            },
+          },
+        },
+      },
+      {
+        schemas: {
+          User: {
+            type: "object",
+            required: ["name"],
+            additionalProperties: false,
+            properties: { name: { type: "string" }, team: ref("Team"), detail: ref("Detail") },
+          },
+          Team: {
+            type: "object",
+            required: ["name"],
+            additionalProperties: false,
+            properties: { name: { type: "string" }, owner: ref("User"), detail: ref("Detail") },
+          },
+          Detail: { type: "object", additionalProperties: { type: "string" } },
+        },
+      },
+    ),
+    config: { validators: zodAdapter() },
+    consumer: {
+      source: consumer(`import type { User, Team, Detail } from "./generated.js"
+      import type { User as SliceUser } from "./generated/types/users.js"
+      import type { Team as SliceTeam } from "./generated/types/teams.js"
+      import type { Detail as SharedDetail } from "./generated/types/shared.js"
+      type UserExport = Expect<Equal<User, SliceUser>>
+      type TeamExport = Expect<Equal<Team, SliceTeam>>
+      type SharedExport = Expect<Equal<Detail, SharedDetail>>
+      function invalid() {
+        // @negative CROSS_SLICE_VALUE
+        const value: User = { name: "Ada", team: { name: "Platform", owner: { name: 42 } } }
+      }
+      export async function run() {
+        const value: User & Team = {
+          name: "root",
+          team: { name: "Platform", owner: { name: "Ada" }, detail: { label: "team" } },
+          detail: { label: "root" }
+        }
+        await withServer(async (baseUrl) => {
+          const client = createClient(api, { baseUrl })
+          assert.deepEqual(await client.users.getUser(), value)
+        }, { status: 200, headers: { "content-type": "application/json" }, body: JSON.stringify(value) })
+        await withServer(async (baseUrl) => {
+          const client = createClient(api, { baseUrl })
+          assert.deepEqual(await client.teams.getTeam(), value.team)
+        }, { status: 200, headers: { "content-type": "application/json" }, body: JSON.stringify(value.team) })
+      }`),
+      diagnostics: [{ marker: "CROSS_SLICE_VALUE", codes: [2322] }],
+    },
+  },
+  {
     id: "types.shared-recursive-projection",
     title:
       "A recursive model is shared between request and response, with native validation and correct wire data",
