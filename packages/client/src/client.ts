@@ -66,7 +66,18 @@ export function defineEndpoint<C extends EndpointContract, K extends OperationKi
   return { ...definition, [endpointMarker]: true }
 }
 
-/** Bind one stable SDK identity without repeating it in every endpoint's metadata. */
+/** Bind the assembled API to one cache identity without changing the supplied endpoint tree. */
+export function defineApi<const TApi extends object>(scope: string, api: TApi): TApi {
+  const bind = <T>(value: T): T => {
+    if (isEndpointDescriptor(value)) return { ...value, [endpointScope]: scope }
+    if (!isRecord(value)) throw new TypeError("Accord namespaces must contain endpoint definitions")
+    // SAFETY: copy the same namespace keys and preserve each endpoint's contract; only add its scope symbol.
+    return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, bind(child)])) as T
+  }
+  return bind(api)
+}
+
+/** @deprecated Use defineApi(scope, endpoints) around the assembled API. */
 export function createEndpointFactory(scope: string) {
   return function scopedEndpoint<
     C extends EndpointContract,

@@ -142,20 +142,20 @@ export function renderModules(input: ModuleInput) {
   for (const group of input.groups) {
     const file = groupNames.get(group.name)!
     add(`endpoints/${file}.ts`, [
-      'import { createEndpointFactory } from "@accord/client"',
+      'import { defineEndpoint } from "@accord/client"',
       `import type { ${group.contracts.join(", ")} } from "../types/${file}.js"`,
       group.schemas.length ? `import { ${group.schemas.join(", ")} } from "../schemas.js"` : "",
-      `const defineEndpoint = createEndpointFactory(${JSON.stringify(input.apiId)})`,
       `export const endpoints = ${group.endpoints}`,
     ])
     imports.push(`import { endpoints as ${file}Endpoints } from "./endpoints/${file}.js"`)
     namespaces.push(`${JSON.stringify(group.name)}: ${file}Endpoints`)
   }
   add("index.ts", [
+    'import { defineApi } from "@accord/client"',
     ...imports,
     ...[...typeFiles.keys()].map((file) => `export type * from "./types/${file}.js"`),
     input.validation ? 'export * from "./schemas.js"' : "",
-    `export const api = {\n${namespaces.join(",\n")}\n}`,
+    `export const api = defineApi(${JSON.stringify(input.apiId)}, {\n${namespaces.join(",\n")}\n})`,
   ])
   return files
 }

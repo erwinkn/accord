@@ -212,7 +212,7 @@ interface TreeNode {
 export function renderSdk(compilation: Compilation, validators?: ValidatorOutput) {
   const reserved = [
     "api",
-    "createEndpointFactory",
+    "defineApi",
     "defineEndpoint",
     ...(validators?.adapter.reservedNames ?? []),
     "BinaryUpload",
@@ -380,14 +380,13 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
   }
   const source = [
     generatedHeader,
-    'import { createEndpointFactory, type BinaryUpload, type HttpResult, type RequestOptions, type RequestOptionsFor, type StatusRange } from "@accord/client"',
+    'import { defineApi, defineEndpoint, type BinaryUpload, type HttpResult, type RequestOptions, type RequestOptionsFor, type StatusRange } from "@accord/client"',
     ...(validationSource?.imports ?? []),
     ...typeHelpers,
     ...[...emitter.declarations.values()].map(printNode),
     ...[...operations.values()].map((operation) => operation.declaration),
     ...(validationSource?.declarations ?? []),
-    `const defineEndpoint = createEndpointFactory(${JSON.stringify(compilation.model.id)})`,
-    `export const api = ${renderTree(root, 0)}`,
+    `export const api = defineApi(${JSON.stringify(compilation.model.id)}, ${renderTree(root, 0)})`,
     "",
   ].join("\n\n")
   const groups = [...root.children].map(([name, node]) => {

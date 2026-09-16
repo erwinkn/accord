@@ -2,8 +2,10 @@ import { describe, expect, it, vi } from "vitest"
 import {
   createClient,
   DecodeError,
+  defineApi,
   defineEndpoint,
   type EndpointContract,
+  getEndpointScope,
   HttpError,
   type HttpResult,
   NetworkError,
@@ -48,7 +50,28 @@ const createUser = defineEndpoint<Contract<CreateInput>, "mutation">({
   },
   responses: { 201: { mediaType: "application/json" } },
 })
-const api = { users: { getUser, createUser } }
+const api = defineApi("users-api", { users: { getUser, createUser } })
+
+describe("defineApi", () => {
+  it("binds nested endpoints without mutating reusable or frozen declarations", () => {
+    const source = Object.freeze({ users: Object.freeze({ getUser: Object.freeze(getUser) }) })
+    const first = defineApi("first", source)
+    const second = defineApi("second", source)
+    const rebound = defineApi("third", first)
+    expect(getEndpointScope(first.users.getUser)).toBe("first")
+    expect(getEndpointScope(second.users.getUser)).toBe("second")
+    expect(getEndpointScope(rebound.users.getUser)).toBe("third")
+    expect(getEndpointScope(source.users.getUser)).toBeUndefined()
+    expect(first.users.getUser.responses).toBe(getUser.responses)
+    expect(Object.keys(first)).toEqual(["users"])
+  })
+
+  it("rejects namespace entries that are not endpoint definitions", () => {
+    expect(() => defineApi("invalid", { users: { id: "metadata" } })).toThrow(
+      "Accord namespaces must contain endpoint definitions",
+    )
+  })
+})
 
 describe("createClient", () => {
   it("maps endpoint trees and sends normalized requests", async () => {

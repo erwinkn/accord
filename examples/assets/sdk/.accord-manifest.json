@@ -2,6 +2,6 @@
   "version": 1,
   "files": {
     "types/assets.ts": "e5251812d25e35297a824ddd2557366cedbaa64ee25121f19aee06c8a4093a9a",
-    "endpoints/assets.ts": "44b2d56fa33d8273836388a62f9fb294619917812a11c3812cf5ae53fc183b10"
+    "endpoints/assets.ts": "7f96ec42df75885ff084188fefdbe0ed679d3570afcad67d5b933fde6af9850a"
   }
 }

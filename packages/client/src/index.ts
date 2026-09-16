@@ -18,6 +18,7 @@ export {
   createClient,
   createEndpointClient,
   createEndpointFactory,
+  defineApi,
   defineEndpoint,
   getEndpointScope,
   isEndpointDescriptor,

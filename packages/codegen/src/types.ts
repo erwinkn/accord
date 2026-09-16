@@ -19,6 +19,7 @@ export interface BodyCodegenConfig {
 }
 
 export interface AccordCodegenConfig {
+  /** API cache identity, emitted once in defineApi. Defaults to a fingerprint of the API contract. */
   readonly apiId?: string
   /** Opt in to response schema generation with a library-specific adapter. */
   readonly validators?: ValidationAdapter

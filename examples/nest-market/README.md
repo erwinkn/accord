@@ -16,7 +16,7 @@ Nest controllers + DTO decorators
        ↓ SwaggerModule.createDocument + DTO closure
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
-   sdk/index.ts                    ← api and public exports
+   sdk/index.ts                    ← defineApi(identity, slices) and public exports
    sdk/schemas.ts                  ← native Zod schemas
    sdk/types/<group>.ts            ← each domain's DTOs and call types
    sdk/types/shared.ts             ← ErrorDto, used across domains

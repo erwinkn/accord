@@ -115,6 +115,17 @@ sdk/
 
 Groups follow the configured path or tag namespaces. Each type slice includes its DTOs and their request/response variants. Direct endpoint uses determine a model’s slice; nested models follow their parent unless they have their own slice. Cross-slice references use type-only imports. Models directly used by multiple slices, and public components with no endpoint owner, go in `types/shared.ts`. Validators stay together in `schemas.ts` to support recursive schemas without runtime import cycles. Import from the entry as before: `import { api, type User } from "./sdk/index.js"`.
 
+The entry assigns the SDK's cache identity once:
+
+```ts
+export const api = defineApi("<generated contract fingerprint>", {
+  users: usersEndpoints,
+  documents: documentsEndpoints,
+})
+```
+
+This identity separates APIs in React Query cache keys. Set `apiId` in the generator config to override the default fingerprint. Endpoint modules only call `defineEndpoint`; take runtime endpoints from the exported `api` so they carry the SDK identity, including when destructured or passed individually to React Query.
+
 Public DTOs, input aliases, and response data use mutable properties, arrays, tuples, and dictionaries, so callers can build requests incrementally and edit local results. Request calls also accept readonly values, including nested `as const` arrays; the client only reads caller input. Endpoint metadata stays readonly. OpenAPI `readOnly`/`writeOnly` still controls which fields belong in requests and responses; it does not make returned objects immutable.
 
 Generated body call options use the shared `RequestOptionsFor<"application/json">` helper from `@accord/client`. It preserves authentication, cancellation and custom headers while constraining `content-type`, including parameters such as `charset`. Non-default formats use `RequestOptionsFor<"text/csv", true>` to require an explicit selector. Merged path/body inputs use ordinary intersections.

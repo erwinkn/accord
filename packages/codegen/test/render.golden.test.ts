@@ -54,6 +54,10 @@ describe("owned generation goldens", () => {
           expect(await readFile(join(directory, "sdk", path), "utf8")).toBe(source)
       }
       expect(result.files["endpoints/users.ts"]).not.toContain("export type")
+      expect(result.files["endpoints/users.ts"]).toContain("import { defineEndpoint }")
+      expect(result.files["endpoints/users.ts"]).not.toContain("createEndpointFactory")
+      expect(result.files["endpoints/users.ts"]).not.toContain(result.model.id)
+      expect(result.files["index.ts"]).toContain(`defineApi("${result.model.id}", {`)
       expect(result.files["endpoints/users.ts"]).toContain("import {\n    ListUsers200Schema,")
       expect(result.files["schemas.ts"]).toContain("export const GetUser200Schema = UserSchema")
       expect(result.source).not.toMatch(/@ts-(?:ignore|nocheck)|\.validators\.js/)

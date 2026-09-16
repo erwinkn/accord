@@ -3,6 +3,6 @@
   "files": {
     "types/imports.ts": "36cef9d75a7da6c858623fce8a9f48c1191762d6435a84c307cbbd79817b8bd1",
     "schemas.ts": "33ea07192f29a49c24cc2740cc56176f753ad4d2e4e59d13d5233350bc4712e7",
-    "endpoints/imports.ts": "bf9b53f69dedcd7891808f94fbbadd49baa05c30f140e21b3487c9603d5dd13e"
+    "endpoints/imports.ts": "43aff55a37c7f038f4879c72f8b8877ba9f7ec664f9ce6d13d9286b48a96caf5"
   }
 }

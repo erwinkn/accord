@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { createClient } from "@accord/client"
+import { createClient, defineApi } from "@accord/client"
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query"
 import { act, renderHook, waitFor } from "@testing-library/react"
 import { createElement, type PropsWithChildren } from "react"
@@ -110,4 +110,17 @@ it("isolates token/provider contexts without exposing secrets and keeps SDK scop
   expect(apiQueryKey(third.users.getUser, { userId: "7" })).not.toEqual(
     apiQueryKey(fourth.users.getUser, { userId: "7" }),
   )
+})
+
+it("uses API-level identities for both detached endpoints and bound clients", () => {
+  const original = apiQueryKey(api.users.getUser, { userId: "7" })
+  const first = defineApi("first-api", api)
+  const duplicate = defineApi("first-api", api)
+  const second = defineApi("second-api", api)
+  const firstKey = apiQueryKey(first.users.getUser, { userId: "7" })
+  expect(firstKey[1]).toBe("first-api")
+  expect(firstKey).toEqual(apiQueryKey(duplicate.users.getUser, { userId: "7" }))
+  expect(firstKey).not.toEqual(apiQueryKey(second.users.getUser, { userId: "7" }))
+  expect(firstKey).toEqual(apiQueryKey(createClient(first).users.getUser, { userId: "7" }))
+  expect(apiQueryKey(api.users.getUser, { userId: "7" })).toEqual(original)
 })
