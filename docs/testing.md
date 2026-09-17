@@ -54,7 +54,9 @@ Executable consumers run in isolated Node subprocesses with timeouts and ephemer
 
 Most conformance cases skip rechecking dependency declarations to isolate type/wire defects; the separate declaration audit, example compilation, scale test, and clean-install test use `skipLibCheck: false`. A successful generation followed by failed TypeScript checking remains a generation defect, not successful SDK execution.
 
-Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, JSON/multipart/URL-form encodings, Unicode/reserved characters, numeric/boolean values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Consumers compile and execute the modular SDK. Object-key reordering must preserve every generated module, the single-file rendering, and semantic metadata. Failures retain a minimized executable reproduction.
+Fuzzing varies OpenAPI 3.0/3.1, references/composition, body modes, JSON/multipart/URL-form encodings, Unicode/reserved characters, string/integer/boolean path and query parameters, numeric/boolean body values, success statuses/envelopes, and validator presence. Every sample runs the complete pipeline. Consumers compile and execute the modular SDK. Object-key reordering must preserve every generated module, the single-file rendering, and semantic metadata. Failures retain a minimized executable reproduction.
+
+The parameter-type matrix compiles consumers and inspects real HTTP URLs for both path and query parameters in OpenAPI 3.0/3.1. It covers integers (including zero), decimals, false booleans, numeric/boolean arrays, flat objects, date/UUID strings, enums, scalar unions and nullable/absent query values. These tests distinguish caller types from their serialized URL text; numbers and booleans never require callers to pre-stringify them.
 
 Generated snapshots and schemas are excluded from handwritten-code lint rules; they are compiled, executed, and compared against regeneration. Narrow inline lint exceptions explain genuine runtime dispatch and external validation boundaries. Request inputs are not reparsed to satisfy a lint rule.
 

@@ -46,8 +46,12 @@ const scenario = fc.record({
     "multipart/form-data",
     "application/x-www-form-urlencoded",
   ),
-  id: word.map((value) => `id-${value}`),
-  query: word,
+  id: fc.oneof(
+    word.map((value) => `id-${value}`),
+    fc.integer(),
+    fc.boolean(),
+  ),
+  query: fc.oneof(word, fc.integer(), fc.boolean()),
   name: word,
   count: fc.integer({ min: -100_000, max: 100_000 }),
   enabled: fc.boolean(),
@@ -55,6 +59,11 @@ const scenario = fc.record({
   status: fc.constantFrom(200, 201, 202, 204),
   statusUnion: fc.boolean(),
 })
+
+function parameterSchema(value: string | number | boolean): JsonObject {
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Pick the schema matching a generated scalar; fuzz integers are always integral.
+  return { type: typeof value === "number" ? "integer" : typeof value }
+}
 
 async function main(): Promise<void> {
   const seedValue = process.env["ACCORD_FUZZ_SEED"]
@@ -111,8 +120,8 @@ async function main(): Promise<void> {
               post: {
                 operationId: "call",
                 parameters: [
-                  { name: "id", in: "path", required: true, schema: stringSchema },
-                  { name: "q", in: "query", required: true, schema: stringSchema },
+                  { name: "id", in: "path", required: true, schema: parameterSchema(sample.id) },
+                  { name: "q", in: "query", required: true, schema: parameterSchema(sample.query) },
                 ],
                 requestBody: { required: true, content: { [sample.mediaType]: { schema } } },
                 responses,
@@ -173,8 +182,8 @@ async function main(): Promise<void> {
           assert.equal(requests.length, 1)
           const request = requests[0]!
           const url = new URL(request.url, baseUrl)
-          assert.equal(decodeURIComponent(url.pathname.slice("/base/probe/".length)), ${JSON.stringify(sample.id)}, "ACCORD_FUZZ_PATH")
-          assert.deepEqual([...url.searchParams], [["q", ${JSON.stringify(sample.query)}]], "ACCORD_FUZZ_QUERY")
+          assert.equal(decodeURIComponent(url.pathname.slice("/base/probe/".length)), ${JSON.stringify(String(sample.id))}, "ACCORD_FUZZ_PATH")
+          assert.deepEqual([...url.searchParams], [["q", ${JSON.stringify(String(sample.query))}]], "ACCORD_FUZZ_QUERY")
           ${bodyAssertion}
         }, { status: ${sample.status}, headers: { "content-type": "application/json" }, body: ${JSON.stringify(payload ? JSON.stringify(payload) : "")} })
       }`),

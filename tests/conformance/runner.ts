@@ -11,6 +11,7 @@ import {
   verifyFixture,
 } from "./harness.js"
 import type { KnownGap, Result } from "./model.js"
+import { parameterTypeCases } from "./parameter-types-cases.js"
 import { projectionCases } from "./projection-cases.js"
 import { queryCases } from "./query-cases.js"
 import { representationCases } from "./representation-cases.js"
@@ -38,6 +39,7 @@ async function main(): Promise<void> {
     ...typeCases,
     ...projectionCases,
     ...wireCases,
+    ...parameterTypeCases,
     ...responseCases,
     ...queryCases,
     ...rewriteCases,
