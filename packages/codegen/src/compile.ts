@@ -263,15 +263,17 @@ function parameters(at: LocatedValue, keyword: string, graph: SchemaGraph): Para
 function parameterBinding(parameter: ParameterModel): ParameterBinding {
   const codec = parameter.codec
   const encoding = codec.kind === "parameter" ? codec.encoding : undefined
-  const defaultExplode = encoding
-    ? encoding.style === "form"
-    : parameter.location === "query" || parameter.location === "cookie"
-  const explode = encoding?.explode ?? false
   let binding: ParameterBinding = { name: parameter.name }
   if (parameter.inputName !== parameter.name)
     binding = { ...binding, inputName: parameter.inputName }
-  if (codec.kind !== "parameter") binding = { ...binding, codec }
-  if (explode !== defaultExplode) binding = { ...binding, explode }
+  if (codec.kind !== "parameter")
+    // Text value hints affect response decoding only; request encoding always stringifies.
+    binding = {
+      ...binding,
+      codec: codec.kind === "json" || codec.kind === "text" ? codec.kind : codec,
+    }
+  if (encoding && encoding.explode !== (encoding.style === "form"))
+    binding = { ...binding, explode: encoding.explode }
   return binding
 }
 

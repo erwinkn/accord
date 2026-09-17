@@ -53,6 +53,8 @@ A status with multiple media types uses an array only for that value: `200: [{ m
 
 Request parameters are grouped into `pathParams`, `queryParams`, `headerParams`, and `cookieParams`, each with location-specific options. The usual entry is just `{ name: "id" }`; `inputName` is emitted only for a rename. Requiredness stays in the semantic model and public TypeScript input, not in the runtime binding. Defaults follow the [OpenAPI parameter rules](https://spec.openapis.org/oas/v3.1.1.html#parameter-object): simple path/header encoding, form query/cookie encoding, exploded form values, and reserved-character escaping. Only overrides are emitted. Empty parameter groups are omitted.
 
+Content-encoded parameters use `codec: "json"` or `codec: "text"` for simple encodings. Text always stringifies on requests, so response-only number/boolean hints are omitted from parameter bindings. The semantic parameter codec retains those hints for type generation. Configured encodings such as XML keep their codec objects, and the runtime also accepts the original JSON/text object forms. Content encoding produces one serialized parameter value, so `explode` is omitted for content-encoded parameters.
+
 Request bodies are flat discriminated unions on `type`: `json`, `text`, `binary`, `multipart`, `urlencoded`, or `xml`. A normal upload is:
 
 ```ts

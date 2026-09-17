@@ -202,8 +202,10 @@ async function parameterValue(
 ): Promise<ParameterValue | undefined> {
   const value = input[parameter.inputName ?? parameter.name]
   if (value === undefined) return undefined
-  if (parameter.codec && parameter.codec.kind !== "parameter") {
-    const encoded = await encodeBody(parameter.codec, value, new Headers())
+  // eslint-disable-next-line anti-slop/no-runtime-typeof -- Dispatch the declared shorthand or configured codec without revalidating caller input.
+  const codec = typeof parameter.codec === "string" ? { kind: parameter.codec } : parameter.codec
+  if (codec && codec.kind !== "parameter") {
+    const encoded = await encodeBody(codec, value, new Headers())
     if (encoded instanceof Blob) return encoded.text()
     if (encoded instanceof ArrayBuffer) return new TextDecoder().decode(encoded)
     return String(encoded ?? "")

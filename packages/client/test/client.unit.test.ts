@@ -74,6 +74,34 @@ describe("defineApi", () => {
 })
 
 describe("createClient", () => {
+  it.each(["json", { kind: "json" }] as const)(
+    "encodes parameter content with both shorthand and object codecs: %j",
+    async (codec) => {
+      const endpoint = defineEndpoint<Contract<{ filter: { id: number } }>, "query">({
+        method: "GET",
+        path: "/users/{filter}",
+        id: "findUser",
+        kind: "query",
+        pathParams: [{ name: "filter", codec }],
+        queryParams: [{ name: "filter", codec }],
+        responses: { 200: { mediaType: "application/json" } },
+      })
+      const client = createClient(
+        { findUser: endpoint },
+        {
+          baseUrl: "https://example.test",
+          fetch: async (request) => {
+            expect(String(request)).toBe(
+              "https://example.test/users/%7B%22id%22%3A7%7D?filter=%7B%22id%22%3A7%7D",
+            )
+            return Response.json({ id: "7", name: "Ada" })
+          },
+        },
+      )
+      expect(await client.findUser({ filter: { id: 7 } })).toEqual({ id: "7", name: "Ada" })
+    },
+  )
+
   it("maps endpoint trees and sends normalized requests", async () => {
     const fetchMock = vi.fn<typeof fetch>(async (request) => {
       const url = request instanceof Request ? request.url : String(request)

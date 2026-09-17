@@ -77,7 +77,8 @@ export interface FormFieldPlan {
 export interface ParameterBinding {
   readonly name: string
   readonly inputName?: string
-  readonly codec?: CodecPlan
+  /** Simple request encodings use a string; configured encodings retain their settings. */
+  readonly codec?: "json" | "text" | CodecPlan
   readonly explode?: boolean
 }
 export interface PathParameter extends ParameterBinding {

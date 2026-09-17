@@ -337,6 +337,87 @@ wireCases.push(
     },
   },
   {
+    id: "wire.parameter-codec-shorthand",
+    title: "Compact JSON/text codecs preserve path and query encoding, input types and omission",
+    area: "wire",
+    reference: references.accord,
+    document: endpoint(
+      {
+        parameters: [
+          {
+            name: "path-filter",
+            in: "path",
+            required: true,
+            content: { "application/json": { schema: arraySchema } },
+          },
+          {
+            name: "text-path",
+            in: "path",
+            required: true,
+            content: { "text/plain": { schema: stringSchema } },
+          },
+          {
+            name: "filter",
+            in: "query",
+            content: { "application/json": { schema: arraySchema } },
+          },
+          {
+            name: "label",
+            in: "query",
+            content: { "text/plain": { schema: stringSchema } },
+          },
+          {
+            name: "count",
+            in: "query",
+            content: { "text/plain": { schema: integerSchema } },
+          },
+          {
+            name: "active",
+            in: "query",
+            content: { "text/plain": { schema: { type: "boolean" } } },
+          },
+          {
+            name: "optional",
+            in: "query",
+            content: { "text/plain": { schema: stringSchema } },
+          },
+          { name: "tags", in: "query", schema: arraySchema },
+        ],
+      },
+      "get",
+      "/probe/{path-filter}/{text-path}",
+    ),
+    consumer: {
+      source: consumer(`export async function run() {
+        assert.deepEqual(api.probe.call.pathParams, [
+          { name: "path-filter", inputName: "pathFilter", codec: "json" },
+          { name: "text-path", inputName: "textPath", codec: "text" },
+        ])
+        assert.deepEqual(api.probe.call.queryParams, [
+          { name: "filter", codec: "json" },
+          { name: "label", codec: "text" },
+          { name: "count", codec: "text" },
+          { name: "active", codec: "text" },
+          { name: "optional", codec: "text" },
+          { name: "tags" },
+        ])
+        await withServer(async (baseUrl, requests) => {
+          await createClient(api, { baseUrl }).probe.call({
+            pathFilter: ["a/b"], textPath: "a/b", filter: ["open", "draft"],
+            label: "a&b /?", count: 0, active: false, tags: ["a", "b"],
+          })
+          assert.equal(requests.length, 1)
+          const url = new URL(requests[0]!.url, baseUrl)
+          assert.equal(url.pathname, "/base/probe/%5B%22a%2Fb%22%5D/a%2Fb")
+          assert.deepEqual([...url.searchParams], [
+            ["filter", '["open","draft"]'], ["label", "a&b /?"],
+            ["count", "0"], ["active", "false"], ["tags", "a"], ["tags", "b"],
+          ])
+        })
+      }`),
+    },
+  },
+  {
     id: "wire.query-reserved-escaping",
     title: "Default encoding cannot turn a parameter value into extra parameters or a fragment",
     area: "wire",
