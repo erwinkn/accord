@@ -436,6 +436,73 @@
         ]
       }
     },
+    "/api/v1/investors": {
+      "get": {
+        "operationId": "listInvestors",
+        "summary": "List the individual and company investors in the workspace",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/IndividualInvestorDto"
+                      },
+                      {
+                        "$ref": "#/components/schemas/CompanyInvestorDto"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "investors"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/investors/individuals": {
       "post": {
         "operationId": "createIndividualInvestor",
@@ -1045,6 +1112,73 @@
       }
     },
     "/api/v1/offerings/{offeringId}/documents": {
+      "get": {
+        "operationId": "listDocuments",
+        "parameters": [
+          {
+            "name": "offeringId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
       "post": {
         "operationId": "uploadDocument",
         "summary": "Upload an offering document with its category and note",
@@ -1339,8 +1473,8 @@
   "tags": [],
   "servers": [
     {
-      "url": "http://127.0.0.1:3100",
-      "description": "Local example server"
+      "url": "/",
+      "description": "Current origin (standalone API or development proxy)"
     }
   ],
   "components": {
@@ -1585,45 +1719,6 @@
         ],
         "additionalProperties": false
       },
-      "CreateIndividualInvestorDto": {
-        "type": "object",
-        "properties": {
-          "displayName": {
-            "type": "string",
-            "minLength": 2,
-            "example": "Alex Morgan"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "alex@example.test"
-          },
-          "country": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 2,
-            "example": "FR"
-          },
-          "onboardingNote": {
-            "type": "string",
-            "writeOnly": true,
-            "description": "An onboarding note accepted on creation and omitted from public responses."
-          },
-          "kind": {
-            "type": "string",
-            "enum": [
-              "individual"
-            ]
-          }
-        },
-        "required": [
-          "displayName",
-          "email",
-          "country",
-          "kind"
-        ],
-        "additionalProperties": false
-      },
       "IndividualInvestorDto": {
         "type": "object",
         "properties": {
@@ -1661,51 +1756,6 @@
           "country",
           "kind",
           "id"
-        ],
-        "additionalProperties": false
-      },
-      "CreateCompanyInvestorDto": {
-        "type": "object",
-        "properties": {
-          "displayName": {
-            "type": "string",
-            "minLength": 2,
-            "example": "Alex Morgan"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "alex@example.test"
-          },
-          "country": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 2,
-            "example": "FR"
-          },
-          "onboardingNote": {
-            "type": "string",
-            "writeOnly": true,
-            "description": "An onboarding note accepted on creation and omitted from public responses."
-          },
-          "kind": {
-            "type": "string",
-            "enum": [
-              "company"
-            ]
-          },
-          "registrationNumber": {
-            "type": "string",
-            "minLength": 3,
-            "example": "REG-123456"
-          }
-        },
-        "required": [
-          "displayName",
-          "email",
-          "country",
-          "kind",
-          "registrationNumber"
         ],
         "additionalProperties": false
       },
@@ -1752,6 +1802,90 @@
           "kind",
           "registrationNumber",
           "id"
+        ],
+        "additionalProperties": false
+      },
+      "CreateIndividualInvestorDto": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "minLength": 2,
+            "example": "Alex Morgan"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "alex@example.test"
+          },
+          "country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "example": "FR"
+          },
+          "onboardingNote": {
+            "type": "string",
+            "writeOnly": true,
+            "description": "An onboarding note accepted on creation and omitted from public responses."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "individual"
+            ]
+          }
+        },
+        "required": [
+          "displayName",
+          "email",
+          "country",
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "CreateCompanyInvestorDto": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "minLength": 2,
+            "example": "Alex Morgan"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "alex@example.test"
+          },
+          "country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "example": "FR"
+          },
+          "onboardingNote": {
+            "type": "string",
+            "writeOnly": true,
+            "description": "An onboarding note accepted on creation and omitted from public responses."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "company"
+            ]
+          },
+          "registrationNumber": {
+            "type": "string",
+            "minLength": 3,
+            "example": "REG-123456"
+          }
+        },
+        "required": [
+          "displayName",
+          "email",
+          "country",
+          "kind",
+          "registrationNumber"
         ],
         "additionalProperties": false
       },
@@ -1926,26 +2060,6 @@
           "other"
         ]
       },
-      "UploadDocumentDto": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/DocumentCategory"
-          },
-          "note": {
-            "type": "string"
-          },
-          "file": {
-            "type": "string",
-            "format": "binary"
-          }
-        },
-        "required": [
-          "category",
-          "file"
-        ],
-        "additionalProperties": false
-      },
       "DocumentDto": {
         "type": "object",
         "properties": {
@@ -1979,6 +2093,26 @@
           "offeringId",
           "filename",
           "size"
+        ],
+        "additionalProperties": false
+      },
+      "UploadDocumentDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/DocumentCategory"
+          },
+          "note": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "category",
+          "file"
         ],
         "additionalProperties": false
       }

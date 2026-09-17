@@ -16,11 +16,11 @@ import type {
 } from "./investors/investor.dto.js"
 import {
   type CreateOfferingDto,
-  Currency,
   type OfferingDto,
   OfferingStatus,
   type UpdateOfferingDto,
 } from "./offerings/offering.dto.js"
+import { demoDocuments, demoInvestors, demoOfferings, demoSubscriptions } from "./seed.js"
 import {
   type CreateSubscriptionDto,
   type SubmissionJobDto,
@@ -28,7 +28,8 @@ import {
   SubscriptionStatus,
 } from "./subscriptions/subscription.dto.js"
 
-export const SAMPLE_OFFERING_ID = "11111111-1111-4111-8111-111111111111"
+export { SAMPLE_OFFERING_ID } from "./seed.js"
+
 interface StoredDocument {
   metadata: DocumentDto
   bytes: Uint8Array
@@ -37,27 +38,18 @@ interface StoredDocument {
 /** In-memory state is per app instance: generation and tests need no infrastructure. */
 @Injectable()
 export class MarketStore {
-  private readonly offerings = new Map<string, OfferingDto>([
-    [
-      SAMPLE_OFFERING_ID,
-      {
-        id: SAMPLE_OFFERING_ID,
-        name: "Harbor Renewable Fund",
-        terms: {
-          minimumInvestment: "1000.00",
-          currency: Currency.EUR,
-          closesAt: "2027-12-31T23:59:59Z",
-        },
-        description: null,
-        tags: ["renewables"],
-        status: OfferingStatus.Open,
-        createdAt: "2026-01-01T00:00:00Z",
-      },
-    ],
-  ])
-  private readonly investors = new Map<string, Investor>()
-  private readonly subscriptions = new Map<string, SubscriptionDto>()
-  private readonly documents = new Map<string, StoredDocument>()
+  private readonly offerings = new Map(
+    structuredClone(demoOfferings).map((item) => [item.id, item]),
+  )
+  private readonly investors = new Map(
+    structuredClone(demoInvestors).map((item) => [item.id, item]),
+  )
+  private readonly subscriptions = new Map(
+    structuredClone(demoSubscriptions).map((item) => [item.id, item]),
+  )
+  private readonly documents = new Map<string, StoredDocument>(
+    structuredClone(demoDocuments).map((item) => [item.metadata.id, item]),
+  )
   private readonly jobs = new Map<string, SubmissionJobDto>()
 
   listOfferings(status?: OfferingStatus[]): OfferingDto[] {
@@ -99,6 +91,9 @@ export class MarketStore {
     const investor: IndividualInvestorDto = { ...publicFields, id: randomUUID() }
     this.investors.set(investor.id, investor)
     return investor
+  }
+  listInvestors(): Investor[] {
+    return [...this.investors.values()]
   }
   createCompany(input: CreateCompanyInvestorDto): CompanyInvestorDto {
     const { onboardingNote: _note, ...publicFields } = input
@@ -175,6 +170,12 @@ export class MarketStore {
     const document = this.documents.get(id)
     if (!document) throw new NotFoundException("Document not found")
     return document
+  }
+  listDocuments(offeringId: string): DocumentDto[] {
+    this.offering(offeringId)
+    return [...this.documents.values()]
+      .filter((item) => item.metadata.offeringId === offeringId)
+      .map((item) => item.metadata)
   }
   deleteDocument(id: string): void {
     this.document(id)

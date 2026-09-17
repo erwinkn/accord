@@ -46,6 +46,28 @@ export type IndividualInvestorDto = {
     "id": string;
     "kind": "individual" & string;
 };
+export type ListInvestorsInput = {};
+export type ListInvestorsArguments = [
+    input?: {},
+    options?: RequestOptions
+];
+export type ListInvestorsResponse = (IndividualInvestorDto | CompanyInvestorDto)[];
+export type ListInvestorsError = ErrorDto;
+export type ListInvestorsResponses = {
+    "200": (IndividualInvestorDto | CompanyInvestorDto)[];
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
+};
+export type ListInvestorsFullResponse = HttpResult<200, (IndividualInvestorDto | CompanyInvestorDto)[]>;
+export type ListInvestorsContract = {
+    "args": ListInvestorsArguments;
+    "input": ListInvestorsInput;
+    "response": ListInvestorsResponse;
+    "error": ListInvestorsError;
+    "responses": ListInvestorsResponses;
+    "fullResponse": ListInvestorsFullResponse;
+};
 export type CreateCompanyInvestorInput = CreateCompanyInvestorDtoRequest;
 export type CreateCompanyInvestorArguments = [
     input: CreateCompanyInvestorDtoRequest,

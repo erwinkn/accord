@@ -45,7 +45,7 @@ test("Nest's exported document and Accord output match the committed artifacts",
     namespace: "tag",
     validators: zodAdapter(),
   })
-  assert.equal(generated.model.operations.length, 18)
+  assert.equal(generated.model.operations.length, 20)
   assert.equal(Object.keys(document.components?.schemas ?? {}).length, 22)
   assert.deepEqual(
     Object.fromEntries(

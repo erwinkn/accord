@@ -25,6 +25,13 @@ export const DownloadDocument200Schema = z.instanceof(ArrayBuffer);
 export const DownloadDocument400Schema = ErrorDtoSchema;
 export const DownloadDocument401Schema = ErrorDtoSchema;
 export const DownloadDocument404Schema = ErrorDtoSchema;
+const IndividualInvestorDtoSchema = z.strictObject({
+    "country": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2").refine(value => [...value].length <= 2, "Must satisfy maxLength: 2"),
+    "displayName": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2"),
+    "email": z.email(),
+    "id": z.uuid(),
+    "kind": z.intersection(z.string(), z.literal("individual"))
+});
 const CompanyInvestorDtoSchema = z.strictObject({
     "country": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2").refine(value => [...value].length <= 2, "Must satisfy maxLength: 2"),
     "displayName": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2"),
@@ -33,17 +40,14 @@ const CompanyInvestorDtoSchema = z.strictObject({
     "kind": z.intersection(z.string(), z.literal("company")),
     "registrationNumber": z.string().refine(value => [...value].length >= 3, "Must satisfy minLength: 3")
 });
+export const ListInvestors200Schema = z.array(z.xor([IndividualInvestorDtoSchema, CompanyInvestorDtoSchema]));
+export const ListInvestors400Schema = ErrorDtoSchema;
+export const ListInvestors401Schema = ErrorDtoSchema;
+export const ListInvestors404Schema = ErrorDtoSchema;
 export const CreateCompanyInvestor201Schema = CompanyInvestorDtoSchema;
 export const CreateCompanyInvestor400Schema = ErrorDtoSchema;
 export const CreateCompanyInvestor401Schema = ErrorDtoSchema;
 export const CreateCompanyInvestor404Schema = ErrorDtoSchema;
-const IndividualInvestorDtoSchema = z.strictObject({
-    "country": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2").refine(value => [...value].length <= 2, "Must satisfy maxLength: 2"),
-    "displayName": z.string().refine(value => [...value].length >= 2, "Must satisfy minLength: 2"),
-    "email": z.email(),
-    "id": z.uuid(),
-    "kind": z.intersection(z.string(), z.literal("individual"))
-});
 export const CreateIndividualInvestor201Schema = IndividualInvestorDtoSchema;
 export const CreateIndividualInvestor400Schema = ErrorDtoSchema;
 export const CreateIndividualInvestor401Schema = ErrorDtoSchema;
@@ -108,6 +112,10 @@ export const DeleteOffering400Schema = ErrorDtoSchema;
 export const DeleteOffering401Schema = ErrorDtoSchema;
 export const DeleteOffering404Schema = ErrorDtoSchema;
 export const DeleteOffering409Schema = ErrorDtoSchema;
+export const ListDocuments200Schema = z.array(DocumentDtoSchema);
+export const ListDocuments400Schema = ErrorDtoSchema;
+export const ListDocuments401Schema = ErrorDtoSchema;
+export const ListDocuments404Schema = ErrorDtoSchema;
 export const UploadDocument201Schema = DocumentDtoSchema;
 export const UploadDocument400Schema = ErrorDtoSchema;
 export const UploadDocument401Schema = ErrorDtoSchema;

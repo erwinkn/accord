@@ -98,6 +98,32 @@ export type DownloadDocumentContract = {
     "responses": DownloadDocumentResponses;
     "fullResponse": DownloadDocumentFullResponse;
 };
+export type ListDocumentsInput = {
+    "offeringId": string;
+};
+export type ListDocumentsArguments = [
+    input: {
+        "offeringId": string;
+    },
+    options?: RequestOptions
+];
+export type ListDocumentsResponse = DocumentDto[];
+export type ListDocumentsError = ErrorDto;
+export type ListDocumentsResponses = {
+    "200": DocumentDto[];
+    "400": ErrorDto;
+    "401": ErrorDto;
+    "404": ErrorDto;
+};
+export type ListDocumentsFullResponse = HttpResult<200, DocumentDto[]>;
+export type ListDocumentsContract = {
+    "args": ListDocumentsArguments;
+    "input": ListDocumentsInput;
+    "response": ListDocumentsResponse;
+    "error": ListDocumentsError;
+    "responses": ListDocumentsResponses;
+    "fullResponse": ListDocumentsFullResponse;
+};
 export type UploadDocumentInput = {
     "offeringId": string;
 } & UploadDocumentDtoForm;

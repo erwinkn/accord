@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import { randomUUID } from "node:crypto"
+import { randomInt, randomUUID } from "node:crypto"
 import { type INestApplication, Module, ValidationPipe } from "@nestjs/common"
 import { APP_GUARD, NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
@@ -16,7 +16,17 @@ import { SubscriptionsModule } from "./subscriptions/subscriptions.controller.js
 })
 class AppModule {}
 
-export async function createApplication(): Promise<INestApplication> {
+export interface ApplicationOptions {
+  /** Tests and code generation use no artificial delay unless requested. */
+  latency?: { minMs: number; maxMs: number }
+}
+
+export async function createApplication(
+  options: ApplicationOptions = {},
+): Promise<INestApplication> {
+  const { minMs, maxMs } = options.latency ?? { minMs: 0, maxMs: 0 }
+  if (![minMs, maxMs].every(Number.isSafeInteger) || minMs < 0 || maxMs < minMs || maxMs > 10_000)
+    throw new Error("Latency must be whole milliseconds with 0 <= min <= max <= 10000")
   const app = await NestFactory.create(AppModule, { logger: false, abortOnError: false })
   app.setGlobalPrefix("api/v1")
   app.useGlobalPipes(
@@ -25,7 +35,13 @@ export async function createApplication(): Promise<INestApplication> {
   app.useGlobalFilters(new HttpErrorFilter())
   app.use((request: Request, response: Response, next: NextFunction) => {
     response.setHeader("x-request-id", request.get("x-request-id") ?? randomUUID())
-    next()
+    if (!request.path.startsWith("/api/")) return next()
+    const latency = randomInt(minMs, maxMs + 1)
+    response.setHeader("x-demo-latency-ms", latency)
+    response.setHeader("server-timing", `demo;dur=${latency};desc="Artificial latency"`)
+    if (latency === 0) return next()
+    const timer = setTimeout(next, latency)
+    response.once("close", () => clearTimeout(timer))
   })
   return app
 }
@@ -35,7 +51,7 @@ export function createOpenApiDocument(app: INestApplication) {
     .setTitle("Harbor investment platform")
     .setDescription("A runnable NestJS example: offerings, investors, subscriptions and documents.")
     .setVersion("1.0.0")
-    .addServer("http://127.0.0.1:3100", "Local example server")
+    .addServer("/", "Current origin (standalone API or development proxy)")
     .addBearerAuth({ type: "http", scheme: "bearer" }, "bearer")
     .build()
   const document = SwaggerModule.createDocument(app, config, {

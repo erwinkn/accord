@@ -36,6 +36,13 @@ import { DocumentDto, DocumentFieldsDto, UploadDocumentDto } from "./document.dt
 @Controller()
 export class DocumentsController {
   constructor(private readonly store: MarketStore) {}
+  @Get("offerings/:offeringId/documents")
+  @ApiParam({ name: "offeringId", format: "uuid" })
+  @ApiOkResponse({ type: DocumentDto, isArray: true })
+  listDocuments(@Param("offeringId", ParseUUIDPipe) offeringId: string): DocumentDto[] {
+    return this.store.listDocuments(offeringId)
+  }
+
   @Post("offerings/:offeringId/documents")
   @ApiParam({ name: "offeringId", format: "uuid" })
   @ApiConsumes("multipart/form-data")

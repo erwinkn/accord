@@ -25,6 +25,24 @@ import {
 @Controller("investors")
 export class InvestorsController {
   constructor(private readonly store: MarketStore) {}
+  @Get()
+  @ApiOperation({ summary: "List the individual and company investors in the workspace" })
+  @ApiExtraModels(IndividualInvestorDto, CompanyInvestorDto)
+  @ApiOkResponse({
+    schema: {
+      type: "array",
+      items: {
+        oneOf: [
+          { $ref: getSchemaPath(IndividualInvestorDto) },
+          { $ref: getSchemaPath(CompanyInvestorDto) },
+        ],
+      },
+    },
+  })
+  listInvestors(): Investor[] {
+    return this.store.listInvestors()
+  }
+
   @Post("individuals")
   @ApiCreatedResponse({ type: IndividualInvestorDto })
   createIndividualInvestor(@Body() input: CreateIndividualInvestorDto): IndividualInvestorDto {

@@ -41,7 +41,9 @@
     "example:nest:generate": "pnpm --filter @accord/example-nest-market generate",
     "example:nest:start": "pnpm --filter @accord/example-nest-market start",
     "example:nest:demo": "pnpm --filter @accord/example-nest-market demo",
-    "test:nest": "pnpm --filter @accord/example-nest-market test"
+    "test:nest": "pnpm --filter @accord/example-nest-market test",
+    "example:nest:dev": "pnpm --filter @accord/example-nest-market dev",
+    "test:nest:web": "pnpm --filter @accord/example-nest-market test:web"
   },
   "devDependencies": {
     "@accord/client": "workspace:*",

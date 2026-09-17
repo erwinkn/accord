@@ -1,6 +1,6 @@
 # NestJS → OpenAPI → Accord
 
-A runnable investment-platform API with **18 endpoints and 22 schemas**. Nest controllers and DTOs produce the OpenAPI document; Accord consumes that document to generate the SDK and response validators. The tests execute the SDK against a real Nest HTTP server.
+A runnable investment-platform API and React workspace with **20 endpoints and 22 schemas**. Nest controllers and DTOs produce the OpenAPI document; Accord generates the SDK, hooks and response validators used by the app. The browser talks to a real Nest server with seeded data and randomized latency.
 
 This example models a financial marketplace using Nest 10 and Swagger 7, with representative investment, entity, and document workflows. It runs entirely in memory, with a public demo credential, no database, and no external services.
 
@@ -11,6 +11,7 @@ This example models a financial marketplace using Nest 10 and Swagger 7, with re
 3. [Generated OpenAPI](openapi.json): Swagger output with explicit closed DTOs, also served by Swagger UI.
 4. [Generated SDK](sdk/index.ts): public types, endpoint plans, and Standard Schema validators.
 5. [React usage](react-usage.tsx): `MarketProvider` setup and a document component using the generated `useMarket` hook.
+6. [React application](web/app.tsx): the running workspace; [subscriptions](web/subscriptions.tsx) and [documents](web/documents.tsx) show mutations, validation errors, uploads and cache invalidation.
 
 ```text
 Nest controllers + DTO decorators
@@ -55,11 +56,33 @@ From the repository root, using Node 22+:
 pnpm install --frozen-lockfile
 pnpm build
 pnpm example:nest:generate   # export the spec, then generate the SDK
-pnpm example:nest:demo       # start a temporary server, run the workflow, close it
-pnpm test:nest               # regeneration checks and live HTTP tests
+pnpm example:nest:dev        # start Nest + the React application together
 ```
 
-To run the server yourself: `pnpm example:nest:start`. It listens on `127.0.0.1:3100`, with Swagger UI at `/docs`, the document at `/docs-json`, and routes under `/api/v1`. Set `PORT` to change the listener. The generated document keeps its fixed example server; pass the actual server origin to the client when using another port.
+Open `http://127.0.0.1:5173`. Vite serves React and proxies `/api` and `/docs` to Nest on port 3100, so the app works on the same origin locally or through a shared URL. The public demo credential is already configured. Ctrl+C closes both servers.
+
+The workspace starts with six offerings, four investors, twelve subscriptions, and six downloadable documents. Filter or search offerings, browse investors, create a subscription on an open offering, submit it, upload a file, and download documents or CSV reports. Server changes survive browser reloads; restarting the server restores the original seed. Separate server instances have separate state. Search is local to the demo's first 100 offerings; status filters are sent to the API.
+
+Each API request waits a fresh **350–1,100 ms** before processing, including error responses. Nest sets `X-Demo-Latency-Ms` and `Server-Timing` so the delay is visible in browser network tools. Configure `LATENCY_MIN_MS` and `LATENCY_MAX_MS` (whole milliseconds, 0–10,000); set both to `0` to disable it. `PORT` changes the API port; `WEB_PORT` changes the app port. For example:
+
+```sh
+LATENCY_MIN_MS=800 LATENCY_MAX_MS=2000 WEB_PORT=5175 pnpm example:nest:dev
+```
+
+The [provider configuration](web/market.ts) shares one stable options object between generated hooks and the bound client used for downloads. Queries use `useMarket`; mutations use `useMarketMutation` with flat inputs. Successful writes invalidate the affected `market` path group. Zod response validation remains enabled. Loading, empty, pending, server-validation, and retry states are visible in the UI.
+
+For backend edits, regenerate the SDK and restart the development command. Vite reloads frontend edits automatically. To build the browser bundle, run `pnpm --filter @accord/example-nest-market build:web`; the output is `examples/nest-market/dist/web`. A deployed static bundle needs the same `/api` reverse proxy; `vite preview` alone does not run Nest.
+
+Other commands:
+
+```sh
+pnpm example:nest:demo       # start a temporary server, run the workflow, close it
+pnpm test:nest               # regeneration checks and live HTTP tests
+pnpm --filter @accord/example-nest-market exec playwright install chromium
+pnpm test:nest:web           # desktop + mobile browser flows against an isolated Nest server
+```
+
+To run only the server: `pnpm example:nest:start`. It listens on `127.0.0.1:3100`, with Swagger UI at `/docs`, the document at `/docs-json`, and routes under `/api/v1`. The OpenAPI server URL is relative to the current origin so Swagger also works through the frontend proxy. `createApplication()` defaults to no artificial delay for code generation and HTTP tests; the runnable server enables the configured delay.
 
 Use bearer token `accord-demo-token`. This is an intentionally public demo credential, not a production authentication implementation. The demo command starts its own server on a free port and requires no setup or environment variables.
 
@@ -132,7 +155,9 @@ References: [Nest OpenAPI generation](https://docs.nestjs.com/openapi/introducti
 
 ## Verification and a bug found
 
-[HTTP tests](test/market.test.ts) cover all 18 operations, flat JSON/multipart inputs, absent and empty PATCH bodies, rejection of unknown DTO fields, both submission branches, error responses, actual Multer parsing, byte preservation, response validation, and a real `QueryClient`. They also regenerate the document and SDK and compare every committed artifact. [Compile-time checks](test/contracts.ts) include rejected inputs and union narrowing. Both are included in the root checks.
+[HTTP tests](test/market.test.ts) and [workspace tests](test/workspace.test.ts) cover all 20 operations, flat JSON/multipart inputs, absent and empty PATCH bodies, rejection of unknown DTO fields, both submission branches, error responses, actual Multer parsing, byte preservation, response validation, seed isolation, randomized delay, and a real `QueryClient`. They also regenerate the document and SDK and compare every committed artifact. [Compile-time checks](test/contracts.ts) include rejected inputs and union narrowing. These are included in the root checks.
+
+[Browser tests](web/test/workspace.spec.ts) run the actual React app on desktop and mobile Chromium. They exercise API status filters, empty searches, rejected and successful subscriptions, submission, file upload/download, CSV export, persistence across reloads, error recovery, and horizontal overflow. They start an isolated server on ports 3101/5174 with shorter delays and store screenshots/traces in `artifacts/market-browser`. They do not modify the running demo on 3100/5173. Run them separately with `pnpm test:nest:web` after installing Playwright Chromium.
 
 The real server exposed a multipart bug: unnamed byte buffers had no filename, so Multer did not accept them as uploaded files. Accord now gives binary parts a default filename, preserving explicit `File` names. A regression checks all supported binary input types, including empty files.
 

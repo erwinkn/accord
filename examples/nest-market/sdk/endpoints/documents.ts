@@ -4,6 +4,7 @@ import type {
     GetDocumentContract,
     DeleteDocumentContract,
     DownloadDocumentContract,
+    ListDocumentsContract,
     UploadDocumentContract
 } from "../types/documents.js";
 import {
@@ -18,6 +19,10 @@ import {
     DownloadDocument400Schema,
     DownloadDocument401Schema,
     DownloadDocument404Schema,
+    ListDocuments200Schema,
+    ListDocuments400Schema,
+    ListDocuments401Schema,
+    ListDocuments404Schema,
     UploadDocument201Schema,
     UploadDocument400Schema,
     UploadDocument401Schema,
@@ -106,6 +111,35 @@ export const endpoints = {
             "404": {
                 "mediaType": "application/json",
                 "schema": DownloadDocument404Schema
+            }
+        }
+    }),
+    "listDocuments": defineEndpoint<ListDocumentsContract, "query">({
+        "method": "GET",
+        "path": "/api/v1/offerings/{offeringId}/documents",
+        "id": "listDocuments",
+        "kind": "query",
+        "pathParams": [
+            {
+                "name": "offeringId"
+            }
+        ],
+        "responses": {
+            "200": {
+                "mediaType": "application/json",
+                "schema": ListDocuments200Schema
+            },
+            "400": {
+                "mediaType": "application/json",
+                "schema": ListDocuments400Schema
+            },
+            "401": {
+                "mediaType": "application/json",
+                "schema": ListDocuments401Schema
+            },
+            "404": {
+                "mediaType": "application/json",
+                "schema": ListDocuments404Schema
             }
         }
     }),
