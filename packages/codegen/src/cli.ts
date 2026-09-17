@@ -11,6 +11,7 @@ interface CliArguments {
   output?: string
   configPath?: string
   prefix?: string
+  reactQuery?: boolean
   namespace?: NamespaceStrategy
   bodyMode?: BodyMode
   basePath?: string
@@ -24,6 +25,7 @@ interface ConfigModule {
 
 interface MutableCodegenConfig {
   prefix?: string
+  reactQuery?: boolean
   namespace?: NamespaceStrategy
   basePath?: string
   body?: NonNullable<AccordCodegenConfig["body"]>
@@ -36,6 +38,7 @@ async function main(): Promise<void> {
   const fileConfig = args.configPath ? await importConfig(args.configPath) : {}
   const config: MutableCodegenConfig = { ...fileConfig }
   if (args.prefix !== undefined) config.prefix = args.prefix
+  if (args.reactQuery !== undefined) config.reactQuery = args.reactQuery
   if (args.validators) {
     const module: ValidationAdapterModule = await import(
       resolveModule(args.validators, pathToFileURL(resolve("package.json")).href)
@@ -69,6 +72,7 @@ function parseArguments(values: readonly string[]): CliArguments {
   let bodyMode: BodyMode | undefined
   let basePath: string | undefined
   let singleFile = false
+  let reactQuery: boolean | undefined
 
   for (let index = 0; index < args.length; index += 1) {
     const value = args[index]
@@ -81,6 +85,10 @@ function parseArguments(values: readonly string[]): CliArguments {
 
     if (value === "--single-file") {
       singleFile = true
+      continue
+    }
+    if (value === "--react-query") {
+      reactQuery = true
       continue
     }
     if (value === "--validators") {
@@ -126,6 +134,7 @@ function parseArguments(values: readonly string[]): CliArguments {
   if (output !== undefined) parsed.output = output
   if (configPath !== undefined) parsed.configPath = configPath
   if (prefix !== undefined) parsed.prefix = prefix
+  if (reactQuery !== undefined) parsed.reactQuery = reactQuery
   if (namespace !== undefined) parsed.namespace = namespace
   if (bodyMode !== undefined) parsed.bodyMode = bodyMode
   if (basePath !== undefined) parsed.basePath = basePath
@@ -148,7 +157,7 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 
 function printUsage(): void {
   process.stdout.write(
-    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --prefix <prefix>     SDK query/mutation key prefix (OpenAPI title by default)\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --prefix <prefix>     SDK query/mutation key prefix (OpenAPI title by default)\n      --react-query         Generate branded TanStack React Query hooks\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
   )
 }
 

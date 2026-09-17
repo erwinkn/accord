@@ -10,6 +10,7 @@ This example models a financial marketplace using Nest 10 and Swagger 7, with re
 2. [Offering controller](src/offerings/offerings.controller.ts) and [DTOs](src/offerings/offering.dto.ts): the Nest source of the contract.
 3. [Generated OpenAPI](openapi.json): Swagger output with explicit closed DTOs, also served by Swagger UI.
 4. [Generated SDK](sdk/index.ts): public types, endpoint plans, and Standard Schema validators.
+5. [React usage](react-usage.tsx): `MarketProvider` setup and a document component using the generated `useMarket` hook.
 
 ```text
 Nest controllers + DTO decorators
@@ -17,6 +18,7 @@ Nest controllers + DTO decorators
    openapi.json                    ← committed, reproducible
        ↓ Accord, with validators
    sdk/index.ts                    ← defineApi("market", slices) and public exports
+   sdk/react-query.ts              ← useMarket, MarketProvider and query/mutation helpers
    sdk/schemas.ts                  ← native Zod schemas
    sdk/types/<group>.ts            ← each domain's DTOs and call types
    sdk/types/shared.ts             ← ErrorDto, used across domains
@@ -30,6 +32,20 @@ For a focused review, start with [offering endpoint metadata](sdk/endpoints/offe
 DTOs and response data are mutable: you can annotate a draft as `CreateOfferingDto`, append to its `tags`, change nested `terms`, and edit returned arrays directly. Calls also accept deeply readonly inputs, including `as const` arrays. OpenAPI read/write field projections still apply.
 
 The generator sets `prefix: "market"`, so React Query keys start with `["market", "api", "v1", "offerings", …]` for the offering list. Change it in [the generation script](scripts/generate.ts) to use your SDK's name. `queryClient.invalidateQueries({ queryKey: ["market"] })` invalidates the whole SDK; use `["market", "api", "v1", "offerings"]` to target the offerings group, including nested routes. Input values, server, authentication context and result mode remain separate parts of the full key.
+
+With `reactQuery: true`, that same prefix names the generated hooks:
+
+```tsx
+import { api } from "./sdk/index.js"
+import { useMarket, useMarketMutation } from "./sdk/react-query.js"
+
+// Inside a component under QueryClientProvider and MarketProvider:
+const document = useMarket(api.documents.getDocument, { documentId })
+const remove = useMarketMutation(api.documents.deleteDocument)
+// remove.mutate({ documentId })
+```
+
+`MarketProvider` supplies client options, including the server URL and token; see [react-usage.tsx](react-usage.tsx) for the complete setup. `marketQuery` and `marketMutation` provide TanStack option objects when you want to customize `enabled`, `select`, or other options. Those plain functions use bound clients, as shown in [usage.ts](usage.ts), rather than provider context. The React entry stays separate so the ordinary SDK can be imported by the Nest backend or scripts without loading React.
 
 ## Run it
 
@@ -59,7 +75,7 @@ Use bearer token `accord-demo-token`. This is an intentionally public demo crede
 | Documents | Real Multer multipart upload, metadata, streamed binary download, 204 deletion | `File`/`Blob`/`Uint8Array`/`ArrayBuffer` upload; byte-exact `ArrayBuffer` download |
 | Exports | JSON or CSV selected by `Accept` | `.withResponse()` exposes a media-type-discriminated data union |
 | Boundaries | Bearer guard, Nest validation, structured errors and request IDs | Credentials, second-argument headers, typed errors, optional generated response validation |
-| React Query | Ordinary generated query endpoint | `apiQuery` options execute against the same backend |
+| React Query | Ordinary generated query endpoint | Branded `useMarket` hooks and `marketQuery` options use the same contracts and cache keys |
 
 The job path completes work inline for deterministic demonstrations. It models the 202/job HTTP contract without adding a queue. Data resets when the app closes; this is an SDK integration example, not a financial business engine.
 

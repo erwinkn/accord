@@ -30,7 +30,7 @@ export async function generate(
     ? await generateValidators(compilation, store, config.validators)
     : undefined
   return {
-    ...renderSdk(compilation, validators),
+    ...renderSdk(compilation, validators, config.reactQuery),
     model: compilation.model,
   }
 }

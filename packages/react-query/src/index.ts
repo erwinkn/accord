@@ -382,4 +382,28 @@ export function useApiMutation<T extends MutationTarget>(
   const options = useContext(Context)
   return useMutation(apiMutation(unpack(target, options)))
 }
+
+export interface QueryHooks {
+  readonly Provider: typeof AccordProvider
+  readonly useQuery: typeof useApiQuery
+  readonly useMutation: typeof useApiMutation
+}
+
+/** Create an independent provider and hooks for one generated SDK. Call once at module scope. */
+export function createQueryHooks(): QueryHooks {
+  const context = createContext<ClientOptions>(EMPTY_OPTIONS)
+  return {
+    Provider(props) {
+      return createElement(context.Provider, { value: props.options }, props.children)
+    },
+    useQuery(target, ...args) {
+      const options = useContext(context)
+      return useQuery(queryImplementation(unpack(target, options), ...args))
+    },
+    useMutation(target) {
+      const options = useContext(context)
+      return useMutation(apiMutation(unpack(target, options)))
+    },
+  }
+}
 export type { QueryKey }

@@ -2,8 +2,9 @@
   "extends": "./tsconfig.server.json",
   "compilerOptions": {
     "noEmit": true,
+    "jsx": "react-jsx",
     "declaration": false,
     "declarationMap": false
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts", "sdk/**/*.ts", "test/**/*.ts", "*.ts"]
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "sdk/**/*.ts", "test/**/*.ts", "*.ts", "*.tsx"]
 }

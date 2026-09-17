@@ -10,6 +10,7 @@ try {
   await writeFile("openapi.json", `${JSON.stringify(document, null, 2)}\n`)
   const generated = await generateFromFile("openapi.json", {
     prefix: "market",
+    reactQuery: true,
     namespace: "tag",
     validators: zodAdapter(),
   })

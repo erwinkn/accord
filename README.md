@@ -60,19 +60,49 @@ else console.log(result.data.imported)
 
 ## React Query
 
+Enable `reactQuery: true` with `prefix: "market"` to generate branded hooks in `sdk/react-query.ts`:
+
+```sh
+pnpm add @accord/react-query @tanstack/react-query react
+pnpm exec accord generate openapi.yaml -o src/sdk --prefix market --react-query
+```
+
+Using the [Market SDK](examples/nest-market/sdk/react-query.ts):
+
+```tsx
+import { api } from "./sdk/index.js"
+import { MarketProvider, useMarket, useMarketMutation } from "./sdk/react-query.js"
+
+function DocumentCard({ documentId }: { documentId: string }) {
+  const document = useMarket(api.documents.getDocument, { documentId })
+  const remove = useMarketMutation(api.documents.deleteDocument)
+  if (document.isPending) return <p>Loading…</p>
+  if (document.isError) return <p>{document.error.message}</p>
+  return <button onClick={() => remove.mutate({ documentId })}>
+    Delete {document.data.filename}
+  </button>
+}
+```
+
+Inside TanStack's `QueryClientProvider`, wrap these components in `<MarketProvider options={clientOptions}>` to configure `baseUrl`, `token`, and other client options. Keep that options object stable between renders. Each generated SDK has its own context, so nested SDK providers keep their connections separate. Hooks also accept bound endpoints from `createClient`; those use the bound client's configuration. See the [complete provider setup](examples/nest-market/react-usage.tsx).
+
+The hook arguments are the endpoint, its input, and optional request options. For TanStack options such as `enabled`, `select`, or `staleTime`, compose the generated option factories with TanStack's hooks:
+
 ```ts
 import { useQuery } from "@tanstack/react-query"
-import { apiQuery, apiMutation } from "@accord/react-query"
+import { marketQuery, marketMutation } from "./sdk/react-query.js"
 
 const query = useQuery({
-  ...apiQuery(http.tasks.list, { status: "open" }),
+  ...marketQuery(http.offerings.listOfferings, { status: ["open"] }),
   staleTime: 30_000,
   select: page => page.items,
 })
-// useMutation(apiMutation(http.tasks.create))
+// useMutation(marketMutation(http.documents.deleteDocument))
 ```
 
-Use `apiQueryResponse` for full HTTP results. Ordinary mutations accept the default-media input; `apiMutationCall` uses the generated argument tuple as mutation variables. `AccordProvider` supplies client options to `useApiQuery` / `useApiMutation` when using unbound endpoint definitions.
+Here `http` is a bound Market client created with `createClient(api, clientOptions)`. Option factories are ordinary functions: they use a bound client's options and do not read provider context. `marketQueryResponse` returns full HTTP results; `marketQueryKey` and `marketMutationKey` expose cache keys. Ordinary mutations accept the default-media input; `marketMutationCall` uses the generated argument tuple as mutation variables. The generic `apiQuery`, `apiMutation`, `AccordProvider`, `useApiQuery`, and `useApiMutation` exports remain available from `@accord/react-query` without enabling generation.
+
+The SDK's main entry does not import or re-export the React module, so server code can use the same SDK without loading React. With `--single-file` or stdout, enabling React Query puts the branded exports in that single file.
 
 Set `prefix: "harbor"` in the generator config (or pass CLI `--prefix harbor`) to make query and mutation keys start with `["harbor", "endpoint", "path", …]`. Each path segment is a separate element. For `/users/{userId}/documents`, the key starts with `["harbor", "users", "{userId}", "documents"]`; actual parameter values appear in a final request-details object. Without `prefix`, Accord uses the OpenAPI title, or `"api"` if no title is available. No generated API hash or operation ID is included in the key.
 
@@ -96,7 +126,8 @@ The final object includes HTTP method, server, account scope, inputs, headers, a
 import { zodAdapter } from "@accord/zod"
 
 export default {
-  prefix: "harbor", // query/mutation key prefix
+  prefix: "harbor", // query/mutation key prefix and React export names
+  reactQuery: true, // optional useHarbor, HarborProvider and helpers
   namespace: "path", // or "tag"
   basePath: "/v1",   // affects naming, not the HTTP path
   validators: zodAdapter(), // omit for no validation
@@ -117,6 +148,7 @@ For example, a tag-grouped SDK has this layout:
 ```text
 sdk/
   index.ts             # api and public type/schema exports
+  react-query.ts       # branded hooks/provider/helpers (only when enabled)
   schemas.ts           # native validation schemas (only when enabled)
   types/
     users.ts           # user DTOs, inputs, results, errors and contracts

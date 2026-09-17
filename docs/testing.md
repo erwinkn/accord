@@ -39,6 +39,7 @@ The original corpus remains, with corrections for the agreed rewrite rather than
 - Configured client auth applies to every call, independent of source security declarations. Tests cover per-call opt-out, header overrides, provider order, and secret-safe cache separation.
 - Multiple successful statuses return status/data unions. A `2XX` group includes bodyless 204/205 responses, whose data is `undefined`.
 - Headers and request options occupy the second argument. React Query's own options are composed with its option factories.
+- Generated React hooks are checked for input/result/mutation inference, nested SDK provider isolation, bound-client overrides, auth headers and cache-key agreement. Distribution checks compile branded exports and declarations in modular and single-file SDKs, and bundle both entries while checking that the ordinary SDK has no React dependency.
 - Goldens contain the actual owned types and plans. The old mocked openapi-typescript output and old generation pipeline have been removed.
 - JSON/YAML equivalence compares generated SDKs and runtime plans. Diagnostic source locations intentionally retain their different file names.
 - Numeric diagnostic codes may differ for correlated argument tuples; negative markers must still produce exactly the expected error at the offending line. Missing or unrelated errors fail the harness.

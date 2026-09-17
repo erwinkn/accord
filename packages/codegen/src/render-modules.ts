@@ -58,6 +58,7 @@ interface EndpointGroup {
 
 interface ModuleInput {
   readonly prefix: string
+  readonly reactQuery: string | undefined
   readonly models: ReadonlyMap<string, string>
   readonly modelFamilies: readonly (readonly string[])[]
   readonly groups: readonly EndpointGroup[]
@@ -157,5 +158,6 @@ export function renderModules(input: ModuleInput) {
     input.validation ? 'export * from "./schemas.js"' : "",
     `export const api = defineApi(${JSON.stringify(input.prefix)}, {\n${namespaces.join(",\n")}\n})`,
   ])
+  if (input.reactQuery) add("react-query.ts", [input.reactQuery])
   return files
 }

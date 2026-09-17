@@ -41,6 +41,7 @@ test("Nest's exported document and Accord output match the committed artifacts",
   assert.equal(`${JSON.stringify(document, null, 2)}\n`, await readFile("openapi.json", "utf8"))
   const generated = await generateFromFile("openapi.json", {
     prefix: "market",
+    reactQuery: true,
     namespace: "tag",
     validators: zodAdapter(),
   })

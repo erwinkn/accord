@@ -111,4 +111,6 @@ The adapter fails generation on features it cannot represent faithfully, includi
 - `@accord/zod`: optional native Zod emitter and shared refinement helpers.
 - `@accord/react-query`: option factories/hooks and cache identity. It consumes endpoints rather than reinterpreting OpenAPI.
 
+`reactQuery: true` (CLI `--react-query`) generates a separate `react-query.ts` module. The SDK prefix determines its exported names: `market` produces `MarketProvider`, `useMarket`, `useMarketMutation`, and `marketQuery`/`marketMutation` helpers. A module-level `createQueryHooks()` call creates an independent context per SDK; its hooks retain the generic endpoint contracts and use the shared executor and cache-key implementation. Bound client endpoints override provider options. Plain option factories do not read context. The ordinary SDK entry has no React imports or re-exports; explicit single-file generation includes the optional exports in that file. Branded identifiers participate in the generator's reserved-name allocation.
+
 The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,request-plan,type-emitter,render-sdk,render-modules,write-sdk,validators}.ts`, `packages/client/src/{types,client,request-body,codecs}.ts`, and `packages/react-query/src/index.ts`.

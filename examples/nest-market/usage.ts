@@ -1,6 +1,6 @@
 import { createClient } from "@accord/client"
-import { apiQuery } from "@accord/react-query"
 import { api } from "./sdk/index.js"
+import { marketQuery } from "./sdk/react-query.js"
 
 export function createMarketClient(baseUrl: string, token: string) {
   return createClient(api, { baseUrl, token, cacheScope: "demo-account" })
@@ -9,7 +9,7 @@ export type MarketClient = ReturnType<typeof createMarketClient>
 
 export function openOfferings(client: MarketClient) {
   return {
-    ...apiQuery(client.offerings.listOfferings, { status: ["open"], page: 1, limit: 10 }),
+    ...marketQuery(client.offerings.listOfferings, { status: ["open"], page: 1, limit: 10 }),
     staleTime: 30_000,
   }
 }

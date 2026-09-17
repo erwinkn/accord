@@ -30,6 +30,7 @@ it("regenerates a directory, removing obsolete modules and validators while pres
   const directory = await mkdtemp(join(tmpdir(), "accord-regenerate-"))
   try {
     const before = await generate(document(["users", "pets", "orders"]), {
+      reactQuery: true,
       validators: zodAdapter(),
     })
     await writeGeneratedSdk(directory, before)
@@ -46,6 +47,9 @@ it("regenerates a directory, removing obsolete modules and validators while pres
       code: "ENOENT",
     })
     await expect(readFile(join(directory, "schemas.ts"))).rejects.toMatchObject({ code: "ENOENT" })
+    await expect(readFile(join(directory, "react-query.ts"))).rejects.toMatchObject({
+      code: "ENOENT",
+    })
     expect(await readFile(join(directory, "notes.ts"), "utf8")).toBe("// handwritten\n")
     expect(await readFile(join(directory, "types/orders.ts"), "utf8")).toBe(
       "// edited obsolete module\n",

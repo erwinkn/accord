@@ -144,6 +144,7 @@ async function main(): Promise<void> {
     const help = await command(installed, "pnpm", ["exec", "accord", "--help"])
     assert.match(help, /Usage: accord/)
     assert.match(help, /--prefix/)
+    assert.match(help, /--react-query/)
     await command(installed, "pnpm", [
       "exec",
       "accord",
@@ -153,6 +154,7 @@ async function main(): Promise<void> {
       "generated.ts",
       "--prefix",
       "harbor",
+      "--react-query",
       "--validators",
       "@accord/zod",
     ])
@@ -161,6 +163,9 @@ async function main(): Promise<void> {
       "accord",
       "generate",
       "openapi.json",
+      "--prefix",
+      "harbor",
+      "--react-query",
       "--validators",
       "@accord/zod",
     ])
@@ -172,10 +177,18 @@ async function main(): Promise<void> {
       "--validators",
       "@accord/zod",
       "--single-file",
+      "--prefix",
+      "harbor",
+      "--react-query",
       "--output",
       "single.ts",
     ])
     assert.equal(stdoutSdk, await readFile(join(installed, "single.ts"), "utf8"))
+    assert.match(stdoutSdk, /useQuery: useHarbor/)
+    assert.match(
+      await readFile(join(installed, "generated/react-query.ts"), "utf8"),
+      /useQuery: useHarbor/,
+    )
     assert.match(
       await readFile(join(installed, "generated.ts"), "utf8"),
       /generated\/endpoints\/probe\.js/,
@@ -216,6 +229,15 @@ async function main(): Promise<void> {
 import { createClient, ValidationError } from "@accord/client"
 import { apiQuery } from "@accord/react-query"
 import { api } from "./generated.js"
+import { harborQuery, HarborProvider, useHarbor } from "./generated/react-query.js"
+import { useHarbor as singleHook } from "./single.js"
+assert.equal(typeof HarborProvider, "function")
+assert.equal(typeof singleHook, "function")
+function useExample() {
+  const result = useHarbor(api.probe.call)
+  const message: string | undefined = result.data?.message
+  return message
+}
 const client = createClient(api, { baseUrl: "https://example.test/api", fetch: async input => {
   assert.equal(String(input), "https://example.test/api/probe")
   return Response.json({ message: "ok" })
@@ -223,6 +245,7 @@ const client = createClient(api, { baseUrl: "https://example.test/api", fetch: a
 assert.deepEqual(await client.probe.call(), { message: "ok" })
 await assert.rejects(createClient(api, {fetch:async () => Response.json({message:42})}).probe.call(), ValidationError)
 assert.deepEqual(apiQuery(api.probe.call, {}).queryKey.slice(0, 2), ["harbor", "probe"])
+assert.deepEqual(harborQuery(api.probe.call).queryKey, apiQuery(api.probe.call).queryKey)
 for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", "@accord/zod"]) {
   assert(!import.meta.resolve(name).includes("/packages/"), "Must load tarballs, not workspace sources")
 }
@@ -242,6 +265,7 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", 
       "false",
       "--exactOptionalPropertyTypes",
       "--noUncheckedIndexedAccess",
+      "--declaration",
       "consumer.ts",
     ])
     await command(installed, "node", ["consumer.js"])
@@ -258,6 +282,27 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", 
       "--platform=browser",
       "--target=es2022",
       "--outfile=browser.js",
+      "--metafile=browser-meta.json",
+    ])
+    const browserMeta = await readFile(join(installed, "browser-meta.json"), "utf8")
+    assert(
+      !browserMeta.includes("react-query"),
+      "The core generated entry must not import React Query",
+    )
+
+    await writeFile(
+      join(installed, "browser-react.ts"),
+      'export { useHarbor, HarborProvider } from "./generated/react-query.js"\n',
+    )
+    await command(installed, "pnpm", [
+      "exec",
+      "esbuild",
+      "browser-react.ts",
+      "--bundle",
+      "--format=esm",
+      "--platform=browser",
+      "--target=es2022",
+      "--outfile=browser-react.js",
     ])
 
     await writeFile(
@@ -272,6 +317,8 @@ for (const name of ["@accord/client", "@accord/codegen", "@accord/react-query", 
             "cli-help",
             "cli-generation",
             "modular-sdk-with-native-schemas",
+            "branded-hooks-in-modular-and-single-file-sdks",
+            "react-free-core-entry-and-branded-browser-bundle",
             "single-file-option-and-stdout",
             "config-import",
             "semantic-consumer-compile-with-declaration-checking",

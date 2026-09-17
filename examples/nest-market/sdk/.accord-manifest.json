@@ -13,6 +13,7 @@
     "endpoints/jobs.ts": "b1bfea1ac4330baa601b7fa1939be8ff1f2f2bab6f8ae5d511f31bf073745a61",
     "endpoints/offerings.ts": "b136ed65540453307493c15b1962c5f19db39f42900477bed3749233a5e0f566",
     "endpoints/subscriptions.ts": "e7b190f5d465be848e68d93ab23df21e93f652d9c1936fa170eb21341d4f0fd7",
-    "index.ts": "18ba6b1d577937a11408445c866e51a6c61f227ef73e03dab0d147db0b47a708"
+    "index.ts": "18ba6b1d577937a11408445c866e51a6c61f227ef73e03dab0d147db0b47a708",
+    "react-query.ts": "86258e85dedc3e9691be2aaa0522c01a25583ffdfb863b543b666960202fdb8e"
   }
 }

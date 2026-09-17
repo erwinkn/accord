@@ -21,6 +21,8 @@ export interface BodyCodegenConfig {
 export interface AccordCodegenConfig {
   /** Readable SDK query/mutation key prefix, emitted once in defineApi. Defaults to the OpenAPI title (or "api" if absent). */
   readonly prefix?: string
+  /** Generate a separate react-query.ts entry with hooks/helpers named from prefix. Default: false. */
+  readonly reactQuery?: boolean
   /** Opt in to response schema generation with a library-specific adapter. */
   readonly validators?: ValidationAdapter
   readonly defaultMediaTypes?: Readonly<Record<string, string>>

@@ -5,6 +5,7 @@ import { AccordCodegenError } from "./diagnostics.js"
 import type { MediaModel, OperationModel, ResponseModel } from "./model.js"
 import { allocateIdentifiers, type IdentifierRequest, sanitizeTypeIdentifier } from "./naming.js"
 import { formatSource, generatedHeader, renderModules, typeHelpers } from "./render-modules.js"
+import { renderReactQuery } from "./render-react-query.js"
 import {
   alias,
   intersection,
@@ -209,11 +210,17 @@ interface TreeNode {
   operation?: OperationModel
 }
 
-export function renderSdk(compilation: Compilation, validators?: ValidatorOutput) {
+export function renderSdk(
+  compilation: Compilation,
+  validators?: ValidatorOutput,
+  reactQuery = false,
+) {
+  const query = reactQuery ? renderReactQuery(compilation.model.prefix) : undefined
   const reserved = [
     "api",
     "defineApi",
     "defineEndpoint",
+    ...(query?.names ?? []),
     ...(validators?.adapter.reservedNames ?? []),
     "BinaryUpload",
     "HttpResult",
@@ -387,6 +394,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     ...[...operations.values()].map((operation) => operation.declaration),
     ...(validationSource?.declarations ?? []),
     `export const api = defineApi(${JSON.stringify(compilation.model.prefix)}, ${renderTree(root, 0)})`,
+    query?.source ?? "",
     "",
   ].join("\n\n")
   const groups = [...root.children].map(([name, node]) => {
@@ -416,6 +424,7 @@ export function renderSdk(compilation: Compilation, validators?: ValidatorOutput
     source: formatSource(source),
     files: renderModules({
       prefix: compilation.model.prefix,
+      reactQuery: query?.source,
       models: new Map(
         [...emitter.declarations].map(([name, declaration]) => [name, printNode(declaration)]),
       ),
