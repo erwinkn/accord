@@ -29,6 +29,6 @@
   "license": "MIT",
   "dependencies": {
     "@standard-schema/spec": "1.1.0",
-    "fast-xml-parser": "5.3.6"
+    "fast-xml-parser": "5.11.1"
   }
 }
