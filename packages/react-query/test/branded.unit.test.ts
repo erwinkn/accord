@@ -10,7 +10,6 @@ import {
   MarketProvider,
   marketQueryKey,
   useMarket,
-  useMarketMutation,
 } from "../../../examples/nest-market/sdk/react-query.js"
 import { api } from "../../../tests/generated/users.js"
 
@@ -58,8 +57,8 @@ it("executes generated hooks with isolated SDK providers, inferred mutations and
           headers: { "x-request-id": "branded" },
         },
       ),
-      user: billing.useQuery(api.users.getUser, { userId: "7" }),
-      remove: useMarketMutation(marketApi.documents.deleteDocument),
+      user: billing.useApi(api.users.getUser, { userId: "7" }),
+      remove: useMarket(marketApi.documents.deleteDocument),
     }),
     { wrapper },
   )
@@ -105,7 +104,9 @@ it("executes generated hooks with isolated SDK providers, inferred mutations and
 
 it("lets a bound client override the generated provider's connection", async () => {
   const providerFetch = vi.fn<typeof fetch>()
-  const boundFetch = vi.fn<typeof fetch>(async () => Response.json(document))
+  const boundFetch = vi.fn<typeof fetch>(async (_url, init) =>
+    init?.method === "DELETE" ? new Response(null, { status: 204 }) : Response.json(document),
+  )
   const client = createClient(marketApi, { baseUrl: "https://bound.test", fetch: boundFetch })
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   const wrapper = ({ children }: PropsWithChildren) =>
@@ -119,15 +120,22 @@ it("lets a bound client override the generated provider's connection", async () 
       ),
     )
   const hook = renderHook(
-    () => useMarket(client.documents.getDocument, { documentId: document.id }),
+    () => ({
+      document: useMarket(client.documents.getDocument, { documentId: document.id }),
+      remove: useMarket(client.documents.deleteDocument),
+    }),
     { wrapper },
   )
   try {
-    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+    await waitFor(() => expect(hook.result.current.document.isSuccess).toBe(true))
+    await act(async () => {
+      await hook.result.current.remove.mutateAsync({ documentId: document.id })
+    })
     expect(providerFetch).not.toHaveBeenCalled()
     expect(String(boundFetch.mock.calls[0]?.[0])).toBe(
       `https://bound.test/api/v1/documents/${document.id}`,
     )
+    expect(boundFetch.mock.calls.at(-1)?.[1]?.method).toBe("DELETE")
   } finally {
     hook.unmount()
     queryClient.clear()

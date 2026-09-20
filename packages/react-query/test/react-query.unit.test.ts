@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { createClient, defineApi } from "@accord/client"
+import { createClient, defineApi, HttpError } from "@accord/client"
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query"
 import { act, renderHook, waitFor } from "@testing-library/react"
 import { createElement, type PropsWithChildren } from "react"
@@ -12,6 +12,7 @@ import {
   apiQuery,
   apiQueryKey,
   apiQueryResponse,
+  useApi,
   useApiMutation,
   useApiQuery,
 } from "../src/index.js"
@@ -61,6 +62,125 @@ describe("React Query integration", () => {
         name: "Alice",
       })
     })
+  })
+  it("keeps unified mutations idle until invoked, without creating a query cache entry", async () => {
+    const { wrapper, fetchMock, queryClient } = setup()
+    const hook = renderHook(() => useApi(api.users.createUser), { wrapper })
+    try {
+      expect(hook.result.current.isIdle).toBe(true)
+      expect(fetchMock).not.toHaveBeenCalled()
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
+      expect(queryClient.getMutationCache().getAll()).toHaveLength(0)
+      await act(async () => {
+        expect(await hook.result.current.mutateAsync({ body: { name: "Alice" } })).toEqual({
+          id: "7",
+          name: "Alice",
+        })
+      })
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+      expect(fetchMock.mock.calls[0]?.[1]?.method).toBe("POST")
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
+    } finally {
+      hook.unmount()
+      queryClient.clear()
+    }
+  })
+  it("updates unified bound queries when inputs change and shares normal query cache keys", async () => {
+    const { wrapper, client, fetchMock, queryClient } = setup()
+    const hook = renderHook(({ userId }) => useApi(client.users.getUser, { userId }), {
+      wrapper,
+      initialProps: { userId: "7" },
+    })
+    try {
+      await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+      expect(hook.result.current.data).toEqual(user)
+      hook.rerender({ userId: "8" })
+      await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+      expect(String(fetchMock.mock.calls.at(-1)?.[0])).toBe("https://example.test/users/8")
+      expect(queryClient.getQueryData(apiQueryKey(client.users.getUser, { userId: "8" }))).toEqual(
+        user,
+      )
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
+      expect(queryClient.getMutationCache().getAll()).toHaveLength(0)
+    } finally {
+      hook.unmount()
+      queryClient.clear()
+    }
+  })
+  it("dispatches unified hooks by endpoint kind, including queries transported with POST", async () => {
+    const fetchMock = vi.fn<typeof fetch>(async () => Response.json(user))
+    const endpoint = { ...api.users.getUser, method: "POST" as const }
+    const context = { baseUrl: "https://example.test", fetch: fetchMock }
+    const { wrapper, queryClient } = setup()
+    const hook = renderHook(() => useApi({ endpoint, context }, { userId: "7" }), { wrapper })
+    try {
+      await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+      expect(hook.result.current.data).toEqual(user)
+      expect(fetchMock.mock.calls[0]?.[1]?.method).toBe("POST")
+      expect(queryClient.getMutationCache().getAll()).toHaveLength(0)
+    } finally {
+      hook.unmount()
+      queryClient.clear()
+    }
+  })
+  it("preserves hook order and unsubscribes queries if a JavaScript caller changes endpoint kind", async () => {
+    const { wrapper, fetchMock, queryClient } = setup()
+    const hook = renderHook(({ endpoint }) => useApi(endpoint), {
+      wrapper,
+      initialProps: { endpoint: api.users.listUsers },
+    })
+    try {
+      await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+      const calls = fetchMock.mock.calls.length
+      // @ts-expect-error Exercise an untyped caller changing the endpoint kind between renders.
+      hook.rerender({ endpoint: api.users.createUser })
+      expect(hook.result.current).toHaveProperty("isIdle", true)
+      expect(fetchMock).toHaveBeenCalledTimes(calls)
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
+      expect(queryClient.getQueryCache().getAll()[0]?.getObserversCount()).toBe(0)
+      hook.rerender({ endpoint: api.users.listUsers })
+      await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+      expect(queryClient.getQueryCache().getAll()[0]?.getObserversCount()).toBe(1)
+    } finally {
+      hook.unmount()
+      queryClient.clear()
+    }
+  })
+  it("exposes HTTP errors through unified query and mutation results", async () => {
+    const client = createClient(api, {
+      baseUrl: "https://example.test",
+      fetch: async (_url, init) =>
+        Response.json(
+          { code: "rejected", message: "Request rejected" },
+          { status: init?.method === "POST" ? 400 : 404 },
+        ),
+    })
+    const { wrapper, queryClient } = setup()
+    const hook = renderHook(
+      () => ({
+        query: useApi(client.users.getUser, { userId: "missing" }),
+        mutation: useApi(client.users.createUser),
+      }),
+      { wrapper },
+    )
+    try {
+      await waitFor(() => expect(hook.result.current.query.isError).toBe(true))
+      expect(hook.result.current.query.error).toBeInstanceOf(HttpError)
+      expect(hook.result.current.query.error).toMatchObject({
+        status: 404,
+        body: { code: "rejected" },
+      })
+      await act(async () => {
+        await expect(
+          hook.result.current.mutation.mutateAsync({ body: { name: "Alice" } }),
+        ).rejects.toMatchObject({ status: 400, body: { code: "rejected" } })
+      })
+      await waitFor(() => expect(hook.result.current.mutation.isError).toBe(true))
+      expect(hook.result.current.mutation.error).toBeInstanceOf(HttpError)
+    } finally {
+      hook.unmount()
+      queryClient.clear()
+    }
   })
   it("supports TanStack enabled and select options through normal option composition", async () => {
     const { client, fetchMock, wrapper } = setup()

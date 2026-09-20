@@ -5,6 +5,11 @@ const root = fileURLToPath(new URL("..", import.meta.url))
 
 const fixtures = [
   {
+    input: `${root}/tests/fixtures/events.openapi.yaml`,
+    output: `${root}/tests/generated/events.ts`,
+    config: {},
+  },
+  {
     input: `${root}/tests/fixtures/users.openapi.yaml`,
     output: `${root}/tests/generated/users.ts`,
     config: {},

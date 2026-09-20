@@ -1,6 +1,6 @@
 # NestJS → OpenAPI → Accord
 
-A runnable investment-platform API and React workspace with **20 endpoints and 22 schemas**. Nest controllers and DTOs produce the OpenAPI document; Accord generates the SDK, hooks and response validators used by the app. The browser talks to a real Nest server with seeded data and randomized latency.
+A runnable investment-platform API and React workspace with **21 endpoints and 23 schemas**. Nest controllers and DTOs produce the OpenAPI document; Accord generates the SDK, hooks and response validators used by the app. The browser talks to a real Nest server with seeded data, randomized latency, and a live SSE activity feed.
 
 This example models a financial marketplace using Nest 10 and Swagger 7, with representative investment, entity, and document workflows. It runs entirely in memory, with a public demo credential, no database, and no external services.
 
@@ -22,13 +22,13 @@ Nest controllers + DTO decorators
    sdk/react-query.ts              ← useMarket, MarketProvider and query/mutation helpers
    sdk/schemas.ts                  ← native Zod schemas
    sdk/types/<group>.ts            ← each domain's DTOs and call types
-   sdk/types/shared.ts             ← ErrorDto, used across domains
+   sdk/types/shared.ts             ← DTOs used directly across domains
    sdk/endpoints/<group>.ts        ← each group's endpoint metadata
        ↓ createClient / React Query
    real Nest server
 ```
 
-For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [DTOs and call types](sdk/types/offerings.ts). Each domain’s DTOs live in its type slice: jobs imports `SubscriptionDto` from [subscriptions](sdk/types/subscriptions.ts). The common `ErrorDto` lives in [shared types](sdk/types/shared.ts); [Zod schemas](sdk/schemas.ts) stay together for reuse and recursion. The entry re-exports public types and schemas, so callers can keep one import source. `SubscriptionDto` and `SubscriptionDtoPage` are response models: no unused request variants are emitted. Models with identical request/response shapes share one type; a distinct request type is generated only when an endpoint needs it.
+For a focused review, start with [offering endpoint metadata](sdk/endpoints/offerings.ts) and its [DTOs and call types](sdk/types/offerings.ts). Domain-specific DTOs live in their type slice. `ErrorDto`, `SubscriptionDto` and `DocumentDto` live in [shared types](sdk/types/shared.ts), because multiple slices now use them directly, including the offering's live events. [Zod schemas](sdk/schemas.ts) stay together for reuse and recursion. The entry re-exports public types and schemas, so callers can keep one import source. `SubscriptionDto` and `SubscriptionDtoPage` are response models: no unused request variants are emitted. Models with identical request/response shapes share one type; a distinct request type is generated only when an endpoint needs it.
 
 DTOs and response data are mutable: you can annotate a draft as `CreateOfferingDto`, append to its `tags`, change nested `terms`, and edit returned arrays directly. Calls also accept deeply readonly inputs, including `as const` arrays. OpenAPI read/write field projections still apply.
 
@@ -38,17 +38,21 @@ With `reactQuery: true`, that same prefix names the generated hooks:
 
 ```tsx
 import { api } from "./sdk/index.js"
-import { useMarket, useMarketMutation } from "./sdk/react-query.js"
+import { useMarket } from "./sdk/react-query.js"
 
 // Inside a component under QueryClientProvider and MarketProvider:
 const document = useMarket(api.documents.getDocument, { documentId })
-const remove = useMarketMutation(api.documents.deleteDocument)
+const remove = useMarket(api.documents.deleteDocument)
 // remove.mutate({ documentId })
 ```
 
 `MarketProvider` supplies client options, including the server URL and token; see [react-usage.tsx](react-usage.tsx) for the complete setup. `marketQuery` and `marketMutation` provide TanStack option objects when you want to customize `enabled`, `select`, or other options. Those plain functions use bound clients, as shown in [usage.ts](usage.ts), rather than provider context. The React entry stays separate so the ordinary SDK can be imported by the Nest backend or scripts without loading React.
 
 ## Run it
+
+Open an offering to see **Live activity**. Creating/submitting a subscription, uploading a document or updating the offering sends an SSE event to every tab viewing that offering. Other tabs refresh their lists automatically. Pause/resume controls the connection; the UI retains only 20 activity entries. A `connected` event arrives immediately and a heartbeat follows every ten seconds. The demo has no replay log or automatic reconnection.
+
+The endpoint is `GET /api/v1/offerings/{offeringId}/events`. It uses standard Nest `@Sse()` and Swagger `@ApiExtension("x-accord-sse", ...)` decorators. The SDK returns an async iterable; the same `useMarket` hook exposes typed events and connection state in React. See the [live component](web/live-events.tsx) and [SSE contract documentation](../../docs/streaming.md).
 
 From the repository root, using Node 22+:
 
@@ -69,7 +73,7 @@ Each API request waits a fresh **350–1,100 ms** before processing, including e
 LATENCY_MIN_MS=800 LATENCY_MAX_MS=2000 WEB_PORT=5175 pnpm example:nest:dev
 ```
 
-The [provider configuration](web/market.ts) shares one stable options object between generated hooks and the bound client used for downloads. Queries use `useMarket`; mutations use `useMarketMutation` with flat inputs. Successful writes invalidate the affected `market` path group. Zod response validation remains enabled. Loading, empty, pending, server-validation, and retry states are visible in the UI.
+The [provider configuration](web/market.ts) shares one stable options object between generated hooks and the bound client used for downloads. Both queries and mutations use `useMarket`: queries receive their input immediately; mutations receive flat inputs through the returned `mutate` / `mutateAsync` methods. The endpoint determines the inferred argument, response, and error types. Successful writes invalidate the affected `market` path group. Zod response validation remains enabled. Loading, empty, pending, server-validation, and retry states are visible in the UI.
 
 For backend edits, regenerate the SDK and restart the development command. Vite reloads frontend edits automatically. To build the browser bundle, run `pnpm --filter @accord/example-nest-market build:web`; the output is `examples/nest-market/dist/web`. A deployed static bundle needs the same `/api` reverse proxy; `vite preview` alone does not run Nest.
 
@@ -147,7 +151,7 @@ Responses are a status-keyed record: `200: { mediaType: "application/json", sche
 
 ## Adapting to a real backend
 
-The example uses ordinary Nest modules and decorators to model investment, entity, and document workflows. It has no dependencies on a specific company's backend, database, or authorization conventions.
+The example uses ordinary Nest modules and decorators to model investment, entity, and document workflows. Controllers declare shared errors with standard `@ApiBadRequestResponse`, `@ApiUnauthorizedResponse`, and `@ApiNotFoundResponse` decorators. Paginated endpoints reference explicit `OfferingDtoPage` and `SubscriptionDtoPage` classes in their domain's DTO file through `@ApiOkResponse`. No custom Swagger decorators are required. It has no dependencies on a specific company's backend, database, or authorization conventions.
 
 The integration boundary is **the exported document's completeness**. Nest cannot recover erased TypeScript unions/generics or every custom validation pipe automatically. This example explicitly supplies response models, pagination item schemas, union members, and file metadata. A production backend's schema decorators and response serializers need to provide equivalent metadata before Accord can generate an accurate SDK.
 
@@ -155,9 +159,9 @@ References: [Nest OpenAPI generation](https://docs.nestjs.com/openapi/introducti
 
 ## Verification and a bug found
 
-[HTTP tests](test/market.test.ts) and [workspace tests](test/workspace.test.ts) cover all 20 operations, flat JSON/multipart inputs, absent and empty PATCH bodies, rejection of unknown DTO fields, both submission branches, error responses, actual Multer parsing, byte preservation, response validation, seed isolation, randomized delay, and a real `QueryClient`. They also regenerate the document and SDK and compare every committed artifact. [Compile-time checks](test/contracts.ts) include rejected inputs and union narrowing. These are included in the root checks.
+[HTTP tests](test/market.test.ts) and [workspace tests](test/workspace.test.ts) cover all 21 operations, flat JSON/multipart inputs, absent and empty PATCH bodies, rejection of unknown DTO fields, both submission branches, error responses, actual Multer parsing, byte preservation, response validation, seed isolation, randomized delay, live SSE events between clients, and a real `QueryClient`. They also regenerate the document and SDK and compare every committed artifact. [Compile-time checks](test/contracts.ts) include rejected inputs and union narrowing. These are included in the root checks.
 
-[Browser tests](web/test/workspace.spec.ts) run the actual React app on desktop and mobile Chromium. They exercise API status filters, empty searches, rejected and successful subscriptions, submission, file upload/download, CSV export, persistence across reloads, error recovery, and horizontal overflow. They start an isolated server on ports 3101/5174 with shorter delays and store screenshots/traces in `artifacts/market-browser`. They do not modify the running demo on 3100/5173. Run them separately with `pnpm test:nest:web` after installing Playwright Chromium.
+[Browser tests](web/test/workspace.spec.ts) run the actual React app on desktop and mobile Chromium. They exercise API status filters, empty searches, rejected and successful subscriptions, submission, file upload/download, CSV export, persistence across reloads, error recovery, SSE activity from an independent HTTP client, pause/resume, and horizontal overflow. They start an isolated server on ports 3101/5174 with shorter delays and store screenshots/traces in `artifacts/market-browser`. They do not modify the running demo on 3100/5173. Run them separately with `pnpm test:nest:web` after installing Playwright Chromium.
 
 The real server exposed a multipart bug: unnamed byte buffers had no filename, so Multer did not accept them as uploaded files. Accord now gives binary parts a default filename, preserving explicit `File` names. A regression checks all supported binary input types, including empty files.
 

@@ -15,24 +15,29 @@ import {
 } from "@nestjs/common"
 import { FileInterceptor } from "@nestjs/platform-express"
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiPayloadTooLargeResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger"
-import { ApiErrors, ErrorDto } from "../common.js"
+import { ErrorDto } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import { DocumentDto, DocumentFieldsDto, UploadDocumentDto } from "./document.dto.js"
 
 @ApiTags("documents")
 @ApiBearerAuth("bearer")
-@ApiErrors()
+@ApiBadRequestResponse({ type: ErrorDto })
+@ApiUnauthorizedResponse({ type: ErrorDto })
+@ApiNotFoundResponse({ type: ErrorDto })
 @Controller()
 export class DocumentsController {
   constructor(private readonly store: MarketStore) {}

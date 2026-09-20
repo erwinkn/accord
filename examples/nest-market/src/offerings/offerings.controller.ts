@@ -5,6 +5,7 @@ import {
   Get,
   Headers,
   HttpCode,
+  type MessageEvent,
   Module,
   Param,
   ParseUUIDPipe,
@@ -12,27 +13,37 @@ import {
   Post,
   Query,
   Res,
+  Sse,
 } from "@nestjs/common"
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiExtension,
   ApiExtraModels,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
   getSchemaPath,
 } from "@nestjs/swagger"
 import type { Response } from "express"
-import { ApiErrors, ApiPage, ErrorDto, type Page, paginate } from "../common.js"
+import type { Observable } from "rxjs"
+import { ErrorDto, paginate } from "../common.js"
+import { DocumentDto } from "../documents/document.dto.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
+import { SubscriptionDto } from "../subscriptions/subscription.dto.js"
+import { StreamStatusDto } from "./event.dto.js"
 import {
   CreateOfferingDto,
   OfferingDto,
+  OfferingDtoPage,
   OfferingQueryDto,
   OfferingReportDto,
   UpdateOfferingDto,
@@ -40,14 +51,54 @@ import {
 
 @ApiTags("offerings")
 @ApiBearerAuth("bearer")
-@ApiErrors()
+@ApiBadRequestResponse({ type: ErrorDto })
+@ApiUnauthorizedResponse({ type: ErrorDto })
+@ApiNotFoundResponse({ type: ErrorDto })
 @Controller("offerings")
 export class OfferingsController {
   constructor(private readonly store: MarketStore) {}
+
+  @Sse(":offeringId/events")
+  @ApiParam({ name: "offeringId", format: "uuid" })
+  @ApiOperation({ summary: "Watch live offering, subscription and document activity" })
+  @ApiExtraModels(StreamStatusDto, SubscriptionDto, DocumentDto, OfferingDto)
+  @ApiOkResponse({ content: { "text/event-stream": { schema: { type: "string" } } } })
+  @ApiExtension("x-accord-sse", {
+    events: {
+      connected: {
+        mediaType: "application/json",
+        schema: { $ref: getSchemaPath(StreamStatusDto) },
+      },
+      heartbeat: {
+        mediaType: "application/json",
+        schema: { $ref: getSchemaPath(StreamStatusDto) },
+      },
+      "offering.updated": {
+        mediaType: "application/json",
+        schema: { $ref: getSchemaPath(OfferingDto) },
+      },
+      "subscription.created": {
+        mediaType: "application/json",
+        schema: { $ref: getSchemaPath(SubscriptionDto) },
+      },
+      "subscription.submitted": {
+        mediaType: "application/json",
+        schema: { $ref: getSchemaPath(SubscriptionDto) },
+      },
+      "document.uploaded": {
+        mediaType: "application/json",
+        schema: { $ref: getSchemaPath(DocumentDto) },
+      },
+    },
+  })
+  watchOffering(@Param("offeringId", ParseUUIDPipe) offeringId: string): Observable<MessageEvent> {
+    return this.store.watchOffering(offeringId)
+  }
+
   @Get()
   @ApiOperation({ summary: "Browse offerings with repeated status filters and pagination" })
-  @ApiPage(OfferingDto)
-  listOfferings(@Query() query: OfferingQueryDto): Page<OfferingDto> {
+  @ApiOkResponse({ type: OfferingDtoPage })
+  listOfferings(@Query() query: OfferingQueryDto): OfferingDtoPage {
     return paginate(this.store.listOfferings(query.status), query)
   }
 

@@ -121,6 +121,19 @@ export const UploadDocument400Schema = ErrorDtoSchema;
 export const UploadDocument401Schema = ErrorDtoSchema;
 export const UploadDocument404Schema = ErrorDtoSchema;
 export const UploadDocument413Schema = ErrorDtoSchema;
+const StreamStatusDtoSchema = z.strictObject({
+    "offeringId": z.uuid(),
+    "timestamp": z.iso.datetime({ offset: true })
+});
+export const WatchOfferingConnectedSchema = StreamStatusDtoSchema;
+export const WatchOfferingDocumentUploadedSchema = DocumentDtoSchema;
+export const WatchOfferingHeartbeatSchema = StreamStatusDtoSchema;
+export const WatchOfferingOfferingUpdatedSchema = OfferingDtoSchema;
+export const WatchOfferingSubscriptionCreatedSchema = SubscriptionDtoSchema;
+export const WatchOfferingSubscriptionSubmittedSchema = SubscriptionDtoSchema;
+export const WatchOffering400Schema = ErrorDtoSchema;
+export const WatchOffering401Schema = ErrorDtoSchema;
+export const WatchOffering404Schema = ErrorDtoSchema;
 export const ExportOffering200JsonSchema = z.strictObject({
     "currency": CurrencySchema,
     "offeringId": z.uuid(),

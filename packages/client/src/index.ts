@@ -28,7 +28,7 @@ export {
   selectResponseStatus,
   statusMatches,
 } from "./client.js"
-export { defaultCodec, mediaMatches, mediaType } from "./codecs.js"
+export { defaultCodec, isEventStream, mediaMatches, mediaType } from "./codecs.js"
 export {
   DecodeError,
   HttpError,

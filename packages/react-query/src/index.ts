@@ -2,6 +2,7 @@ import type { DecodeError, NetworkError, ValidationError } from "@accord/client"
 import {
   type ArgumentsOf,
   type CheckedCall,
+  type CheckedRequestOptions,
   type ClientOptions,
   createEndpointClient,
   type DefaultInputOf,
@@ -12,6 +13,7 @@ import {
   getAuthProviders,
   getEndpointScope,
   type HttpError,
+  type InputOf,
   type MutationEndpoint,
   type QueryEndpoint,
   type ReadonlyInput,
@@ -30,9 +32,52 @@ import {
   type UseMutationResult,
   type UseQueryResult,
   useMutation,
+  useQueries,
   useQuery,
 } from "@tanstack/react-query"
-import { createContext, createElement, type ReactNode, useContext } from "react"
+import {
+  createContext,
+  createElement,
+  type Context as ReactContext,
+  type ReactNode,
+  useContext,
+} from "react"
+import {
+  hasStreamResponse,
+  isStreamResponse,
+  type StreamOptions,
+  type StreamResult,
+  useEventStream,
+} from "./stream.js"
+
+export type { StreamOptions, StreamResult } from "./stream.js"
+
+type StreamEventOf<E extends EndpointDefinition> =
+  ResponseOf<E> extends AsyncIterable<infer Event> ? Event : never
+type StreamArgumentTuple<A extends readonly unknown[], Event> = {
+  [K in keyof A]: K extends "1" ? A[K] & StreamOptions<Event> : A[K]
+}
+type StreamArguments<E extends EndpointDefinition> = StreamArgumentTuple<
+  ArgumentsOf<E>,
+  StreamEventOf<E>
+>
+type KeysOf<T> = T extends unknown ? keyof T : never
+type StreamInputCheck<E extends EndpointDefinition, A extends readonly unknown[]> = {
+  [K in keyof A]: K extends "0"
+    ? A[K] & Record<Exclude<keyof A[K], KeysOf<InputOf<E>>>, never>
+    : K extends "1"
+      ? CheckedRequestOptions<A[K]>
+      : A[K]
+}
+type StreamPart<T> =
+  T extends AsyncIterable<unknown>
+    ? T
+    : T extends { data: infer Data }
+      ? Extract<Data, AsyncIterable<unknown>>
+      : never
+type FiniteTarget<T extends QueryTarget> = [StreamPart<ResponseOf<EndpointOf<T>>>] extends [never]
+  ? T
+  : never
 
 export type ClientError<E extends EndpointDefinition> =
   | HttpError<ErrorOf<E>>
@@ -275,6 +320,8 @@ function queryImplementation<T extends QueryTarget>(
   ...args: ArgumentsOf<EndpointOf<T>>
 ): ApiQueryOptions<EndpointOf<T>> {
   const bound = unpack(target)
+  if (hasStreamResponse(bound.endpoint))
+    throw new TypeError("Use useApi for streaming queries, or iterate the SDK response directly")
   const request = createEndpointClient(bound.endpoint, bound.context)
   // SAFETY: TanStack's data tag is compile-time evidence associating this exact key with queryFn's result.
   const queryKey = apiQueryKey(target, ...args) as DataTag<
@@ -290,6 +337,8 @@ function queryResponseImplementation<T extends QueryTarget>(
   ...args: ArgumentsOf<EndpointOf<T>>
 ): ApiQueryOptions<EndpointOf<T>, FullResponseOf<EndpointOf<T>>> {
   const bound = unpack(target)
+  if (hasStreamResponse(bound.endpoint))
+    throw new TypeError("Iterate streaming full responses directly with the SDK")
   const request = createEndpointClient(bound.endpoint, bound.context)
   const key: ApiQueryKey = [
     ...endpointKeyPrefix(bound.endpoint),
@@ -310,11 +359,11 @@ function queryResponseImplementation<T extends QueryTarget>(
 }
 
 export const apiQuery: <T extends QueryTarget, const A extends readonly unknown[]>(
-  target: T,
+  target: T & FiniteTarget<T>,
   ...args: A & CheckedCall<EndpointOf<T>, A>
 ) => ReturnType<typeof queryImplementation<T>> = queryImplementation
 export const apiQueryResponse: <T extends QueryTarget, const A extends readonly unknown[]>(
-  target: T,
+  target: T & FiniteTarget<T>,
   ...args: A & CheckedCall<EndpointOf<T>, A>
 ) => ReturnType<typeof queryResponseImplementation<T>> = queryResponseImplementation
 
@@ -366,7 +415,7 @@ export function apiMutationCall<T extends MutationTarget>(
 }
 
 export function useApiQuery<T extends QueryTarget>(
-  target: T,
+  target: T & FiniteTarget<T>,
   ...args: ArgumentsOf<EndpointOf<T>>
 ): UseQueryResult<ResponseOf<EndpointOf<T>>, ClientError<EndpointOf<T>>> {
   const options = useContext(Context)
@@ -383,8 +432,61 @@ export function useApiMutation<T extends MutationTarget>(
   return useMutation(apiMutation(unpack(target, options)))
 }
 
+/** Named callable interface keeps generated hook declarations portable across package boundaries. */
+export interface ApiHook {
+  <T extends QueryTarget, const A extends readonly unknown[]>(
+    target: T & (ResponseOf<EndpointOf<T>> extends AsyncIterable<unknown> ? unknown : never),
+    ...args: A & StreamArguments<EndpointOf<T>> & StreamInputCheck<EndpointOf<T>, NoInfer<A>>
+  ): StreamResult<StreamEventOf<EndpointOf<T>>>
+  <T extends QueryTarget, const A extends readonly unknown[]>(
+    target: T & FiniteTarget<T>,
+    ...args: A & CheckedCall<EndpointOf<T>, A>
+  ): UseQueryResult<ResponseOf<EndpointOf<T>>, ClientError<EndpointOf<T>>>
+  <T extends MutationTarget>(
+    target: T,
+  ): UseMutationResult<
+    ResponseOf<EndpointOf<T>>,
+    ClientError<EndpointOf<T>>,
+    ReadonlyInput<DefaultInputOf<EndpointOf<T>>>
+  >
+}
+
+function createApiHook(context: ReactContext<ClientOptions>): ApiHook {
+  function useApi(target: QueryTarget | MutationTarget, ...args: ArgumentsOf<EndpointDefinition>) {
+    const options = useContext(context)
+    const { endpoint, context: connection } = unpack(target, options)
+    const streaming = endpoint.kind === "query" && isStreamResponse(endpoint)
+    const stream = useEventStream(
+      { endpoint, context: connection },
+      args,
+      streaming
+        ? JSON.stringify(apiQueryKey({ endpoint, context: connection }, ...args))
+        : undefined,
+    )
+    // Both hooks always run, preserving React's hook order. An empty queries list
+    // creates no cache entry; a mutation observer makes no request until mutate().
+    const queryOptions: ApiQueryOptions<QueryEndpoint>[] =
+      endpoint.kind === "query" && !streaming
+        ? [queryImplementation({ endpoint, context: connection }, ...args)]
+        : []
+    const queries = useQueries({ queries: queryOptions })
+    const mutation = useMutation(
+      endpoint.kind === "mutation"
+        ? apiMutation({ endpoint, context: connection })
+        : { mutationKey: [], throwOnError: false },
+    )
+    return streaming ? stream : (queries[0] ?? mutation)
+  }
+  // SAFETY: runtime metadata selects exactly the stream/query/mutation result declared by the overloads.
+  return useApi as ApiHook
+}
+
+/** Queries take request arguments now; mutations take their input when mutate() is called. */
+export const useApi = createApiHook(Context)
+
 export interface QueryHooks {
   readonly Provider: typeof AccordProvider
+  readonly useApi: typeof useApi
   readonly useQuery: typeof useApiQuery
   readonly useMutation: typeof useApiMutation
 }
@@ -393,6 +495,7 @@ export interface QueryHooks {
 export function createQueryHooks(): QueryHooks {
   const context = createContext<ClientOptions>(EMPTY_OPTIONS)
   return {
+    useApi: createApiHook(context),
     Provider(props) {
       return createElement(context.Provider, { value: props.options }, props.children)
     },

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { IsObject, IsOptional, IsUUID, Matches } from "class-validator"
-import { PageQueryDto } from "../common.js"
+import { PageInfoDto, PageQueryDto } from "../common.js"
 
 export enum SubscriptionStatus {
   Draft = "draft",
@@ -38,6 +38,11 @@ export class SubscriptionDto extends CreateSubscriptionDto {
 
   @ApiProperty({ type: String, format: "date-time", nullable: true, readOnly: true })
   submittedAt!: string | null
+}
+
+export class SubscriptionDtoPage extends PageInfoDto {
+  @ApiProperty({ type: [SubscriptionDto] })
+  items!: SubscriptionDto[]
 }
 
 export class SubscriptionQueryDto extends PageQueryDto {

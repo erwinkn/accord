@@ -95,3 +95,38 @@ test("shows loading, an API failure, and recovery without a page reload", async 
   await page.getByRole("button", { name: "Try again" }).first().click()
   await expect(page.locator(".offering-card")).toHaveCount(6)
 })
+
+test("receives live activity from an independent HTTP client and refreshes the page data", async ({
+  page,
+  request,
+}, info) => {
+  const errors: string[] = []
+  page.on("pageerror", (error) => errors.push(error.message))
+  await page.goto("/")
+  await page.locator(".offering-card").filter({ hasText: "Harbor Renewable Fund" }).click()
+  const feed = page.getByRole("region", { name: "Live activity" })
+  await expect(feed.getByTestId("stream-status")).toHaveText("Live")
+  const offeringId = new URL(page.url()).hash.split("/").at(-1)!
+  const headers = { authorization: "Bearer accord-demo-token" }
+  const investors = await (await request.get("/api/v1/investors", { headers })).json()
+  const amount = info.project.name === "desktop" ? "2765.00" : "2876.00"
+  const created = await request.post(`/api/v1/offerings/${offeringId}/subscriptions`, {
+    headers,
+    data: { investorId: investors[0].id, amount },
+  })
+  expect(created.ok()).toBe(true)
+  const formatted = info.project.name === "desktop" ? "2,765" : "2,876"
+  await expect(feed.getByText(`Subscription created · €${formatted}`)).toBeVisible()
+  await expect(page.locator(".subscription-row").filter({ hasText: formatted })).toBeVisible()
+  await feed.getByRole("button", { name: "Pause live updates" }).click()
+  await expect(feed.getByTestId("stream-status")).toHaveText("Paused")
+  await feed.getByRole("button", { name: "Resume live updates" }).click()
+  await expect(feed.getByTestId("stream-status")).toHaveText("Live")
+  await page.screenshot({ path: info.outputPath("live-activity.png"), fullPage: true })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
+  await page.getByRole("link", { name: "← All offerings" }).click()
+  await expect(feed).toHaveCount(0)
+  expect(errors).toEqual([])
+})

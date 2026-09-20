@@ -1,13 +1,13 @@
 import { HttpError } from "@accord/client"
 import { useState } from "react"
 import { api } from "../sdk/index.js"
-import { useMarket, useMarketMutation } from "../sdk/react-query.js"
+import { useMarket } from "../sdk/react-query.js"
 import { marketClient, queryClient, saveFile } from "./market.js"
 import { Arrow, Empty, ErrorNotice, Loading } from "./ui.js"
 
 export function Documents({ offeringId }: { offeringId: string }) {
   const documents = useMarket(api.documents.listDocuments, { offeringId })
-  const upload = useMarketMutation(api.documents.uploadDocument)
+  const upload = useMarket(api.documents.uploadDocument)
   const [downloading, setDownloading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   async function download(documentId: string, filename: string) {

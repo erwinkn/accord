@@ -17,6 +17,7 @@ const clientTypes = [
   "RequestOptions",
   "RequestOptionsFor",
   "StatusRange",
+  "SseEvent",
 ]
 
 export function formatSource(source: string): string {

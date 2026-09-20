@@ -45,8 +45,8 @@ test("Nest's exported document and Accord output match the committed artifacts",
     namespace: "tag",
     validators: zodAdapter(),
   })
-  assert.equal(generated.model.operations.length, 20)
-  assert.equal(Object.keys(document.components?.schemas ?? {}).length, 22)
+  assert.equal(generated.model.operations.length, 21)
+  assert.equal(Object.keys(document.components?.schemas ?? {}).length, 23)
   assert.deepEqual(
     Object.fromEntries(
       generated.model.operations
@@ -304,5 +304,50 @@ test("React Query options execute the generated endpoint against the live app", 
     assert.equal(page.items[0]?.id, SAMPLE_OFFERING_ID)
   } finally {
     cache.clear()
+  }
+})
+
+test("SSE carries validated activity from another client and closes on early return", {
+  timeout: 10_000,
+}, async () => {
+  const reader = createMarketClient(baseUrl, DEMO_TOKEN)
+  const writer = createMarketClient(baseUrl, DEMO_TOKEN)
+  const abort = new AbortController()
+  const events = await reader.offerings.watchOffering(
+    { offeringId: SAMPLE_OFFERING_ID },
+    { signal: abort.signal },
+  )
+  const iterator = events[Symbol.asyncIterator]()
+  try {
+    const connected = (await iterator.next()).value
+    assert.equal(connected?.event, "connected")
+    if (connected?.event === "connected")
+      assert.equal(connected.data.offeringId, SAMPLE_OFFERING_ID)
+    const investors = await writer.investors.listInvestors()
+    const investor = investors[0]!
+    const next = iterator.next()
+    const created = await writer.subscriptions.createSubscription({
+      offeringId: SAMPLE_OFFERING_ID,
+      investorId: investor.id,
+      amount: "3500.00",
+    })
+    const event = (await next).value
+    assert.equal(event?.event, "subscription.created")
+    if (event?.event === "subscription.created") assert.deepEqual(event.data, created)
+    assert(event?.id)
+    // The typed HTTP errors are available before stream consumption starts.
+    await assert.rejects(
+      createMarketClient(baseUrl, "wrong-token").offerings.watchOffering({
+        offeringId: SAMPLE_OFFERING_ID,
+      }),
+      httpError(401, "UNAUTHORIZED"),
+    )
+    await assert.rejects(
+      reader.offerings.watchOffering({ offeringId: "00000000-0000-4000-8000-000000000000" }),
+      httpError(404, "NOT_FOUND"),
+    )
+    await iterator.return?.()
+  } finally {
+    abort.abort()
   }
 })

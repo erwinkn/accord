@@ -1,7 +1,7 @@
 import type { Compilation } from "./compile.js"
 import type { DocumentStore } from "./loader.js"
 import { object, pointerSegment } from "./loader.js"
-import type { MediaModel, SchemaId } from "./model.js"
+import { type MediaModel, type SchemaId, validationMedia } from "./model.js"
 import { allocateIdentifiers, sanitizeTypeIdentifier } from "./naming.js"
 import { isObject, isString } from "./object.js"
 import type { JsonObject, JsonValue } from "./types.js"
@@ -85,11 +85,11 @@ function validationDocuments(
     roots.map((root) => {
       const operation = compilation.model.operations.find((operation) =>
         operation.responses.some((response) =>
-          response.media.some((media) => media.schema === root.id),
+          response.media.flatMap(validationMedia).some((media) => media.schema === root.id),
         ),
       )
       const response = operation?.responses.find((response) =>
-        response.media.some((media) => media.schema === root.id),
+        response.media.flatMap(validationMedia).some((media) => media.schema === root.id),
       )
       const file =
         new URL(root.source.document).pathname
@@ -217,6 +217,7 @@ export async function generateValidators(
   const selectedSchemas = compilation.model.operations.flatMap((operation) =>
     operation.responses.flatMap((response) =>
       response.media
+        .flatMap(validationMedia)
         .filter((media) => media.codec.kind !== "bytes")
         .map((media) => validationTarget(compilation, media.schema)),
     ),
@@ -227,7 +228,7 @@ export async function generateValidators(
   const bindings = new Map<MediaModel, boolean | JsonObject>()
   for (const operation of compilation.model.operations) {
     for (const response of operation.responses) {
-      for (const media of response.media) {
+      for (const media of response.media.flatMap(validationMedia)) {
         const codec = media.codec
         let selectedReferences = references
         if (codec.kind === "form") {

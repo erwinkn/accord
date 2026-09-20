@@ -1220,3 +1220,42 @@ footer {
     scroll-behavior: auto !important;
   }
 }
+/* Live events remain bounded, independently of how long the tab is open. */
+.live-events {
+  margin-top: 24px;
+  padding: 24px;
+}
+.live-events h2 {
+  margin: 0;
+}
+.live-events p,
+.activity-controls small {
+  color: var(--muted, #68766f);
+}
+.activity-list {
+  padding: 0;
+  margin: 16px 0;
+  list-style: none;
+}
+.activity-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e9e5;
+}
+.activity-list time {
+  white-space: nowrap;
+  color: #68766f;
+  font-size: 12px;
+}
+.activity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.activity-empty {
+  padding: 12px 0;
+}

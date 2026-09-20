@@ -1,8 +1,18 @@
-import { defaultRequestMediaType, responseVariants, selectResponseStatus } from "@accord/client"
+import {
+  defaultRequestMediaType,
+  isEventStream,
+  responseVariants,
+  selectResponseStatus,
+} from "@accord/client"
 import ts from "typescript"
 import type { Compilation } from "./compile.js"
 import { AccordCodegenError } from "./diagnostics.js"
-import type { MediaModel, OperationModel, ResponseModel } from "./model.js"
+import {
+  type MediaModel,
+  type OperationModel,
+  type ResponseModel,
+  validationMedia,
+} from "./model.js"
 import { allocateIdentifiers, type IdentifierRequest, sanitizeTypeIdentifier } from "./naming.js"
 import { formatSource, generatedHeader, renderModules, typeHelpers } from "./render-modules.js"
 import { renderReactQuery } from "./render-react-query.js"
@@ -23,6 +33,38 @@ import type { ValidatorOutput } from "./validators.js"
 
 const f = ts.factory
 const stringType = () => f.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+
+function responseType(media: MediaModel, emitter: TypeEmitter): ts.TypeNode {
+  if (!isEventStream(media.mediaType)) return emitter.emit(media.schema, "response", media.codec)
+  const events = media.events
+    ? union(
+        Object.entries(media.events).map(([name, event]) =>
+          typeReference("SseEvent", [
+            emitter.emit(event.schema, "response", event.codec),
+            literal(name),
+          ]),
+        ),
+      )
+    : typeReference("SseEvent")
+  return typeReference("AsyncIterable", [events])
+}
+
+interface ValidatorTarget {
+  media: MediaModel
+  key: string
+  event: string | undefined
+}
+function validatorTargets(response: ResponseModel): ValidatorTarget[] {
+  return response.media.flatMap<ValidatorTarget>((media) =>
+    isEventStream(media.mediaType)
+      ? Object.entries(media.events ?? {}).map(([name, event]) => ({
+          media: event,
+          key: `${media.mediaType}:${name}`,
+          event: name,
+        }))
+      : [{ media, key: media.mediaType, event: undefined }],
+  )
+}
 
 function responseCodes(operation: OperationModel, response: ResponseModel): number[] {
   return Array.from({ length: 500 }, (_, index) => index + 100).filter(
@@ -145,7 +187,7 @@ function renderOperation(
       full.push(typeReference("HttpResult", [statusType(emptyCodes), undefinedType()]))
     }
     const payloads = response.media.length
-      ? response.media.map((media) => emitter.emit(media.schema, "response", media.codec))
+      ? response.media.map((media) => responseType(media, emitter))
       : [undefinedType()]
     const payload = union(payloads)
     responseProperties.push(
@@ -227,6 +269,8 @@ export function renderSdk(
     "RequestOptions",
     "RequestOptionsFor",
     "StatusRange",
+    "SseEvent",
+    "AsyncIterable",
     "ObjectConstraints",
     "ArrayConstraints",
     "ArrayBuffer",
@@ -265,12 +309,14 @@ export function renderSdk(
       })
     if (validators)
       for (const response of operation.responses)
-        for (const media of response.media) {
+        for (const { media, key, event } of validatorTargets(response)) {
           const shortMedia = sanitizeTypeIdentifier(media.mediaType.split("/").at(-1)!)
           const fullMedia = sanitizeTypeIdentifier(media.mediaType)
           requests.push({
-            key: symbolKey("validator", operation.key, response.status, media.mediaType),
-            core: `${core}${response.status === "default" ? "Default" : response.status}`,
+            key: symbolKey("validator", operation.key, response.status, key),
+            core: event
+              ? `${core}${sanitizeTypeIdentifier(event)}`
+              : `${core}${response.status === "default" ? "Default" : response.status}`,
             suffix: "Schema",
             qualifiers: [
               { suffix: shortMedia },
@@ -299,12 +345,10 @@ export function renderSdk(
   if (validators) {
     for (const operation of compilation.model.operations) {
       for (const response of operation.responses) {
-        for (const media of response.media) {
+        for (const { media, key } of validatorTargets(response)) {
           const binding = validators.bindings.get(media)
           if (binding === undefined) continue
-          const name = names.get(
-            symbolKey("validator", operation.key, response.status, media.mediaType),
-          )!
+          const name = names.get(symbolKey("validator", operation.key, response.status, key))!
           const type = printNode(emitter.emit(media.schema, "response", media.codec))
           schemaExports.push({ name, type, schema: binding })
           validatorBindings.set(media, name)
@@ -372,6 +416,13 @@ export function renderSdk(
         const model = operation.responses.find((item) => item.status === status)!
         const variants = responseVariants(metadata).map((response) => {
           const media = model.media.find((item) => item.mediaType === response.mediaType)
+          if (media?.events) {
+            const events = Object.entries(media.events).map(([name, event]) => {
+              const schema = validatorBindings.get(event)
+              return `${JSON.stringify(name)}: {\n"mediaType": ${JSON.stringify(event.mediaType)}${schema ? `,\n"schema": ${schema}` : ""}\n}`
+            })
+            return `{\n"mediaType": ${JSON.stringify(media.mediaType)},\n"events": {\n${events.join(",\n")}\n}\n}`
+          }
           const schema = media && validatorBindings.get(media)
           const json = JSON.stringify(response, null, 2)
           // Only generated identifiers are injected; all spec-owned text remains JSON escaped.
@@ -387,7 +438,7 @@ export function renderSdk(
   }
   const source = [
     generatedHeader,
-    'import { defineApi, defineEndpoint, type BinaryUpload, type HttpResult, type RequestOptions, type RequestOptionsFor, type StatusRange } from "@accord/client"',
+    `import { defineApi, defineEndpoint, type BinaryUpload, type HttpResult, type RequestOptions, type RequestOptionsFor, type StatusRange${compilation.model.operations.some((operation) => operation.responses.some((response) => response.media.some((media) => isEventStream(media.mediaType)))) ? ", type SseEvent" : ""} } from "@accord/client"`,
     ...(validationSource?.imports ?? []),
     ...typeHelpers,
     ...[...emitter.declarations.values()].map(printNode),
@@ -409,7 +460,7 @@ export function renderSdk(
         ...new Set(
           members.flatMap((operation) =>
             operation.responses.flatMap((response) =>
-              response.media.flatMap((media) => {
+              response.media.flatMap(validationMedia).flatMap((media) => {
                 const binding = validatorBindings.get(media)
                 return binding ? [binding] : []
               }),

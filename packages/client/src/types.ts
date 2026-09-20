@@ -101,6 +101,21 @@ export interface MediaPlan {
   readonly codec?: CodecPlan
   /** Optional response validation, after decoding this media variant. */
   readonly schema?: StandardSchemaV1
+  /** Payload contracts by SSE event name; omitted for an untyped text event stream. */
+  readonly events?: Readonly<Record<string, SseEventPlan>>
+}
+
+export interface SseEventPlan {
+  readonly mediaType: "application/json" | "text/plain"
+  readonly schema?: StandardSchemaV1
+}
+
+/** Normalized SSE message. id is the last event ID, including inherited IDs and resets. */
+export interface SseEvent<Data = string, Name extends string = string> {
+  event: Name
+  data: Data
+  id: string
+  retry?: number
 }
 
 /** Request encoding metadata: defaults and response-only decoding information are omitted. */
@@ -226,17 +241,22 @@ type InvalidHeaderKeys<H> = {
       : never
     : never
 }[keyof H]
+/** Preserve inspectable, lowercase media selectors in integrations that add call options. */
+export type CheckedRequestOptions<O> =
+  NonNullable<O> extends { readonly headers?: infer H }
+    ? string extends keyof NonNullable<H>
+      ? never
+      : InvalidHeaderKeys<NonNullable<H>> extends never
+        ? O
+        : never
+    : O
 /** Headers stay inspectable so an opaque dictionary or alternate casing cannot bypass media/input correlation. */
 export type CheckedArguments<E extends EndpointDefinition, A extends ArgumentsOf<E>> =
   Exclude<keyof (A[0] extends object ? A[0] : {}), KeysOf<InputOf<E>>> extends never
     ? [NonNullable<A[1]>] extends [never]
       ? A
-      : NonNullable<A[1]> extends { readonly headers?: infer H }
-        ? string extends keyof NonNullable<H>
-          ? never
-          : InvalidHeaderKeys<NonNullable<H>> extends never
-            ? A
-            : never
+      : [CheckedRequestOptions<A[1]>] extends [never]
+        ? never
         : A
     : never
 export type CheckedCall<E extends EndpointDefinition, A extends readonly unknown[]> =

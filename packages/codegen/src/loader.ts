@@ -7,7 +7,15 @@ import type { LocatedValue, SchemaResource, SourceLocation } from "./model.js"
 import { canonicalize, isObject, isString } from "./object.js"
 import type { JsonObject, JsonValue } from "./types.js"
 
-type Role = "openapi" | "schema" | "schema-map" | "openapi-map" | "data"
+type Role =
+  | "openapi"
+  | "schema"
+  | "schema-map"
+  | "openapi-map"
+  | "data"
+  | "sse"
+  | "sse-events"
+  | "sse-event"
 const SCHEMA_MAPS = new Set([
   "properties",
   "patternProperties",
@@ -45,6 +53,9 @@ const OPENAPI_MAPS = new Set([
 ])
 function childRole(role: Role, key: string): Role {
   if (role === "data") return "data"
+  if (role === "sse") return key === "events" ? "sse-events" : "data"
+  if (role === "sse-events") return "sse-event"
+  if (role === "sse-event") return key === "schema" ? "schema" : "data"
   if (role === "schema-map") return "schema"
   if (role === "openapi-map") return "openapi"
   if (role === "schema") {
@@ -53,6 +64,7 @@ function childRole(role: Role, key: string): Role {
   }
   if (key === "schema") return "schema"
   if (key === "schemas") return "schema-map"
+  if (key === "x-accord-sse") return "sse"
   if (OPENAPI_MAPS.has(key)) return "openapi-map"
   if (["example", "default", "enum", "value"].includes(key) || key.startsWith("x-")) return "data"
   return "openapi"
@@ -161,7 +173,7 @@ export class DocumentStore {
         if (ancestors.has(value))
           fail("INVALID_DOCUMENT", "Cyclic YAML aliases are not JSON values", located.source)
         ancestors.add(value)
-        if (isObject(value) && role !== "data" && role !== "schema-map" && role !== "openapi-map") {
+        if (isObject(value) && (role === "openapi" || role === "schema")) {
           const scope = this.resources.get(resource)!
           for (const keyword of ["$anchor", "$dynamicAnchor"] as const) {
             const anchor = value[keyword]

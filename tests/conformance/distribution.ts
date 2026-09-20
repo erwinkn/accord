@@ -184,10 +184,10 @@ async function main(): Promise<void> {
       "single.ts",
     ])
     assert.equal(stdoutSdk, await readFile(join(installed, "single.ts"), "utf8"))
-    assert.match(stdoutSdk, /useQuery: useHarbor/)
+    assert.match(stdoutSdk, /useApi: useHarbor/)
     assert.match(
       await readFile(join(installed, "generated/react-query.ts"), "utf8"),
-      /useQuery: useHarbor/,
+      /useApi: useHarbor/,
     )
     assert.match(
       await readFile(join(installed, "generated.ts"), "utf8"),

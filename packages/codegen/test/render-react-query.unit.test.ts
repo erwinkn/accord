@@ -14,11 +14,11 @@ it.each([
   const result = await generateFromFile(fixture, { prefix, reactQuery: true })
   const source = result.files["react-query.ts"]!
   expect(source).toContain(`Provider: ${typeName}Provider`)
-  expect(source).toContain(`useQuery: use${typeName}`)
-  expect(source).toContain(`useMutation: use${typeName}Mutation`)
+  expect(source).toContain(`useApi: use${typeName}`)
+  expect(source).not.toContain(`use${typeName}Mutation`)
   expect(source).toContain(`apiQuery as ${name}Query`)
   expect(source).toContain(`apiMutationCall as ${name}MutationCall`)
-  expect(result.source).toContain(`useQuery: use${typeName}`)
+  expect(result.source).toContain(`useApi: use${typeName}`)
   // The ordinary API entry stays usable in Node and non-React applications.
   expect(result.files["index.ts"]).not.toContain("react-query")
   expect(result.files["index.ts"]).not.toContain("createQueryHooks")

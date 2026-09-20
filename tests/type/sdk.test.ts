@@ -1,5 +1,5 @@
 import { type ClientFor, createClient, type HttpError } from "@accord/client"
-import { apiMutation, apiQuery, useApiMutation, useApiQuery } from "@accord/react-query"
+import { apiMutation, apiQuery, useApi } from "@accord/react-query"
 import { api as featureApi } from "../generated/features.js"
 import {
   type ApiError,
@@ -45,8 +45,8 @@ const mutationOptions = apiMutation(api.users.createUser)
 void queryOptions
 void mutationOptions
 
-const queryResult = useApiQuery(api.users.getUser, { userId: "1" })
-const mutationResult = useApiMutation(api.users.createUser)
+const queryResult = useApi(api.users.getUser, { userId: "1" })
+const mutationResult = useApi(api.users.createUser)
 const queryData: User | undefined = queryResult.data
 mutationResult.mutate({ body: { name: "Alice", email: "alice@example.test" } })
 void queryData

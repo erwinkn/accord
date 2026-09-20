@@ -13,28 +13,34 @@ import {
 } from "@nestjs/common"
 import {
   ApiAcceptedResponse,
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiQuery,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger"
 import type { Response } from "express"
-import { ApiErrors, ApiPage, type Page, paginate } from "../common.js"
+import { ErrorDto, paginate } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import {
   AcceptedSubmissionDto,
   CreateSubscriptionDto,
   SubmissionJobDto,
   SubscriptionDto,
+  SubscriptionDtoPage,
   SubscriptionQueryDto,
 } from "./subscription.dto.js"
 
 @ApiTags("subscriptions")
 @ApiBearerAuth("bearer")
-@ApiErrors()
+@ApiBadRequestResponse({ type: ErrorDto })
+@ApiUnauthorizedResponse({ type: ErrorDto })
+@ApiNotFoundResponse({ type: ErrorDto })
 @Controller()
 export class SubscriptionsController {
   constructor(private readonly store: MarketStore) {}
@@ -50,11 +56,11 @@ export class SubscriptionsController {
 
   @Get("offerings/:offeringId/subscriptions")
   @ApiParam({ name: "offeringId", format: "uuid" })
-  @ApiPage(SubscriptionDto)
+  @ApiOkResponse({ type: SubscriptionDtoPage })
   listSubscriptions(
     @Param("offeringId", ParseUUIDPipe) offeringId: string,
     @Query() query: SubscriptionQueryDto,
-  ): Page<SubscriptionDto> {
+  ): SubscriptionDtoPage {
     return paginate(this.store.listSubscriptions(offeringId, query.investorId), query)
   }
 
@@ -91,7 +97,9 @@ export class SubscriptionsController {
 
 @ApiTags("jobs")
 @ApiBearerAuth("bearer")
-@ApiErrors()
+@ApiBadRequestResponse({ type: ErrorDto })
+@ApiUnauthorizedResponse({ type: ErrorDto })
+@ApiNotFoundResponse({ type: ErrorDto })
 @Controller("jobs")
 export class JobsController {
   constructor(private readonly store: MarketStore) {}

@@ -1,0 +1,86 @@
+openapi: 3.1.0
+info: { title: Event streams, version: '1.0' }
+paths:
+  /optional-stream:
+    get:
+      operationId: optionalStream
+      responses:
+        '200':
+          description: Stream immediately
+          content:
+            text/event-stream: { schema: { type: string } }
+        '202':
+          description: Queued instead
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [jobId]
+                properties: { jobId: { type: string } }
+  /events/{channel}:
+    get:
+      operationId: watchEvents
+      tags: [events]
+      parameters:
+        - { name: channel, in: path, required: true, schema: { type: string } }
+      x-accord-sse:
+        events:
+          changed:
+            mediaType: application/json
+            schema: { $ref: '#/components/schemas/Change' }
+          notice:
+            mediaType: text/plain
+            schema: { type: string }
+      responses:
+        '200':
+          description: Named events
+          content:
+            text/event-stream: { schema: { type: string } }
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema: { type: object, properties: { message: { type: string } } }
+  /raw:
+    get:
+      operationId: watchRaw
+      tags: [events]
+      responses:
+        '200':
+          description: Undocumented payloads remain strings
+          content:
+            text/event-stream: { schema: { type: string } }
+  /jobs:
+    post:
+      operationId: runJob
+      tags: [events]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [prompt]
+              properties: { prompt: { type: string } }
+      x-accord-sse:
+        events:
+          message:
+            mediaType: application/json
+            schema: { type: integer }
+      responses:
+        '200':
+          description: Incremental job output
+          content:
+            text/event-stream: { schema: { type: string } }
+components:
+  schemas:
+    Change:
+      type: object
+      additionalProperties: false
+      required: [id, amount, secret]
+      properties:
+        id: { type: string, readOnly: true }
+        amount: { type: number }
+        secret: { type: string, writeOnly: true }

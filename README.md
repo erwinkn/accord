@@ -58,6 +58,24 @@ if (result.status === 202) console.log(result.data.jobId)
 else console.log(result.data.imported)
 ```
 
+## Event streams
+
+Responses declared as `text/event-stream` return a `Promise<AsyncIterable<SseEvent<...>>>`, implemented with an async generator. The promise opens the HTTP connection; `for await` consumes events as they arrive. Named events narrow their payload types. Existing auth, headers and cancellation options work unchanged:
+
+```ts
+const abort = new AbortController()
+const events = await http.offerings.watchOffering(
+  { offeringId },
+  { signal: abort.signal },
+)
+for await (const event of events) {
+  if (event.event === "subscription.created") console.log(event.data.amount)
+  // break closes the connection; abort.abort() also interrupts a pending read.
+}
+```
+
+The optional Zod adapter validates each event's data. Without it, the client only decodes the transport. See [SSE contracts and lifecycle](docs/streaming.md) for the OpenAPI extension, raw text streams, React usage and reconnection policy.
+
 ## React Query
 
 Enable `reactQuery: true` with `prefix: "market"` to generate branded hooks in `sdk/react-query.ts`:
@@ -71,11 +89,11 @@ Using the [Market SDK](examples/nest-market/sdk/react-query.ts):
 
 ```tsx
 import { api } from "./sdk/index.js"
-import { MarketProvider, useMarket, useMarketMutation } from "./sdk/react-query.js"
+import { MarketProvider, useMarket } from "./sdk/react-query.js"
 
 function DocumentCard({ documentId }: { documentId: string }) {
   const document = useMarket(api.documents.getDocument, { documentId })
-  const remove = useMarketMutation(api.documents.deleteDocument)
+  const remove = useMarket(api.documents.deleteDocument)
   if (document.isPending) return <p>Loading…</p>
   if (document.isError) return <p>{document.error.message}</p>
   return <button onClick={() => remove.mutate({ documentId })}>
@@ -86,7 +104,11 @@ function DocumentCard({ documentId }: { documentId: string }) {
 
 Inside TanStack's `QueryClientProvider`, wrap these components in `<MarketProvider options={clientOptions}>` to configure `baseUrl`, `token`, and other client options. Keep that options object stable between renders. Each generated SDK has its own context, so nested SDK providers keep their connections separate. Hooks also accept bound endpoints from `createClient`; those use the bound client's configuration. See the [complete provider setup](examples/nest-market/react-usage.tsx).
 
-The hook arguments are the endpoint, its input, and optional request options. For TanStack options such as `enabled`, `select`, or `staleTime`, compose the generated option factories with TanStack's hooks:
+`useMarket` selects its arguments and result type from the endpoint's `kind`. Queries take the endpoint, its input, and optional request options, then fetch automatically. Mutations take only the endpoint and return typed `mutate(input)` / `mutateAsync(input)` methods; they send nothing until invoked. Response and error types are inferred in both cases.
+
+For streaming queries, the same hook returns `latestEvent`, `connectionState`, `error` and `close()`. Pass `onEvent` to process every event and `enabled: false` to pause. The hook closes its connection on unmount or input changes. It keeps only the latest event; a stream is never stored as finite query-cache data. The [live activity component](examples/nest-market/web/live-events.tsx) shows bounded history and cache invalidation from server events.
+
+For TanStack options such as `enabled`, `select`, or `staleTime`, compose the generated option factories with TanStack's hooks:
 
 ```ts
 import { useQuery } from "@tanstack/react-query"
@@ -100,7 +122,7 @@ const query = useQuery({
 // useMutation(marketMutation(http.documents.deleteDocument))
 ```
 
-Here `http` is a bound Market client created with `createClient(api, clientOptions)`. Option factories are ordinary functions: they use a bound client's options and do not read provider context. `marketQueryResponse` returns full HTTP results; `marketQueryKey` and `marketMutationKey` expose cache keys. Ordinary mutations accept the default-media input; `marketMutationCall` uses the generated argument tuple as mutation variables. The generic `apiQuery`, `apiMutation`, `AccordProvider`, `useApiQuery`, and `useApiMutation` exports remain available from `@accord/react-query` without enabling generation.
+Here `http` is a bound Market client created with `createClient(api, clientOptions)`. Option factories are ordinary functions: they use a bound client's options and do not read provider context. `marketQueryResponse` returns full HTTP results; `marketQueryKey` and `marketMutationKey` expose cache keys. Ordinary mutations accept the default-media input; `marketMutationCall` uses the generated argument tuple as mutation variables. The generic `useApi` hook and `AccordProvider` work without enabling generation. `apiQuery`, `apiMutation`, and the specialized `useApiQuery` / `useApiMutation` hooks also remain available from `@accord/react-query`.
 
 The SDK's main entry does not import or re-export the React module, so server code can use the same SDK without loading React. With `--single-file` or stdout, enabling React Query puts the branded exports in that single file.
 

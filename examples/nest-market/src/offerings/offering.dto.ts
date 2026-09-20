@@ -11,7 +11,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator"
-import { PageQueryDto } from "../common.js"
+import { PageInfoDto, PageQueryDto } from "../common.js"
 
 export enum Currency {
   EUR = "EUR",
@@ -82,6 +82,11 @@ export class OfferingDto extends CreateOfferingDto {
 
   @ApiProperty({ format: "date-time", readOnly: true })
   createdAt!: string
+}
+
+export class OfferingDtoPage extends PageInfoDto {
+  @ApiProperty({ type: [OfferingDto] })
+  items!: OfferingDto[]
 }
 
 export class OfferingQueryDto extends PageQueryDto {

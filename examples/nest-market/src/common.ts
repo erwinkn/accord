@@ -1,24 +1,14 @@
 import {
   type ArgumentsHost,
-  applyDecorators,
   type CanActivate,
   Catch,
   type ExceptionFilter,
   type ExecutionContext,
   HttpException,
   Injectable,
-  type Type,
   UnauthorizedException,
 } from "@nestjs/common"
-import {
-  ApiBadRequestResponse,
-  ApiExtraModels,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiProperty,
-  ApiPropertyOptional,
-  ApiUnauthorizedResponse,
-} from "@nestjs/swagger"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { Type as TransformType } from "class-transformer"
 import { IsInt, IsOptional, Max, Min } from "class-validator"
 import type { Request, Response } from "express"
@@ -77,14 +67,6 @@ export class HttpErrorFilter implements ExceptionFilter<HttpException> {
   }
 }
 
-export function ApiErrors() {
-  return applyDecorators(
-    ApiBadRequestResponse({ type: ErrorDto }),
-    ApiUnauthorizedResponse({ type: ErrorDto }),
-    ApiNotFoundResponse({ type: ErrorDto }),
-  )
-}
-
 export class PageQueryDto {
   @ApiPropertyOptional({ type: "integer", minimum: 1, default: 1 })
   @IsOptional()
@@ -115,16 +97,6 @@ export class PageInfoDto {
 
 export interface Page<T> extends PageInfoDto {
   items: T[]
-}
-
-/** Concrete page DTOs preserve generic item metadata and can describe a closed object. */
-export function ApiPage<T>(model: Type<T>) {
-  class PageDto extends PageInfoDto {
-    @ApiProperty({ type: [model] })
-    items!: T[]
-  }
-  Object.defineProperty(PageDto, "name", { value: `${model.name}Page` })
-  return applyDecorators(ApiExtraModels(PageDto), ApiOkResponse({ type: PageDto }))
 }
 
 export function paginate<T>(items: T[], query: PageQueryDto): Page<T> {

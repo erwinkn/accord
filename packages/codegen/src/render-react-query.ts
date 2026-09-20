@@ -6,8 +6,7 @@ export function renderReactQuery(prefix: string) {
   const name = sanitizeIdentifier(prefix)
   const hooks = {
     Provider: `${brand}Provider`,
-    useQuery: `use${brand}`,
-    useMutation: `use${brand}Mutation`,
+    useApi: `use${brand}`,
   }
   const helpers = {
     apiQuery: `${name}Query`,

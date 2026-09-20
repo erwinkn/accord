@@ -2,6 +2,7 @@ import { useState } from "react"
 import { api, type OfferingDto } from "../sdk/index.js"
 import { useMarket } from "../sdk/react-query.js"
 import { Documents } from "./documents.js"
+import { LiveEvents } from "./live-events.js"
 import { date, marketClient, money, saveFile } from "./market.js"
 import { Subscriptions } from "./subscriptions.js"
 import { Arrow, Badge, ErrorNotice, initials, Loading } from "./ui.js"
@@ -89,6 +90,7 @@ function OfferingContent({ offering }: { offering: OfferingDto }) {
         <Subscriptions offering={offering} />
         <Documents offeringId={offering.id} />
       </div>
+      <LiveEvents offeringId={offering.id} currency={offering.terms.currency} />
     </>
   )
 }

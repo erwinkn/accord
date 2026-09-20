@@ -4,6 +4,7 @@ import {
   defaultCodec,
   encodeBody,
   fallbackCodec,
+  isEventStream,
   mediaMatches,
   mediaType,
 } from "./codecs.js"
@@ -22,6 +23,7 @@ import {
   serializePathParameter,
   serializeQueryParameter,
 } from "./serialize.js"
+import { decodeEventStream } from "./sse.js"
 import type {
   ArgumentsOf,
   ClientFor,
@@ -43,6 +45,7 @@ import type {
   ResponseMap,
   ResponseMetadata,
   ResponseOf,
+  SseEvent,
   StatusSelector,
 } from "./types.js"
 
@@ -315,20 +318,33 @@ async function execute<E extends EndpointDefinition>(
         ? { kind: "empty" as const }
         : defaultCodec(selectedResponse.mediaType, "response")))
     : fallbackCodec(actualMedia)
-  let data: RequestValue | Response
+  let data: RequestValue | Response | AsyncIterable<SseEvent<unknown>>
+  const streaming = selectedResponse && isEventStream(selectedResponse.mediaType) && !noBody
   try {
     if (response.ok && (!matchedStatus || (!noBody && !selectedResponse))) {
+      await response.body?.cancel().catch(() => {})
       throw new TypeError(
         `Undeclared response ${response.status} ${actualMedia ?? "(missing content-type)"} for ${plan.id}`,
       )
     }
-    data = await decodeBody(codec, response, plan.method)
+    if (!response.ok && actualMedia === "text/event-stream") {
+      await response.body?.cancel().catch(() => {})
+      throw new HttpError({ response, endpoint, body: undefined })
+    }
+    if (streaming) {
+      if (actualMedia !== "text/event-stream") {
+        await response.body?.cancel()
+        throw new TypeError("Expected text/event-stream response content-type")
+      }
+      data = decodeEventStream(response, endpoint, selectedResponse.events, context.init.signal)
+    } else data = await decodeBody(codec, response, plan.method)
   } catch (cause) {
+    if (cause instanceof HttpError) throw cause
     const error = new DecodeError(response, endpoint, cause)
     if (!response.ok) throw new HttpError({ response, endpoint, body: undefined, cause: error })
     throw error
   }
-  const validator = !noBody && selectedResponse?.schema
+  const validator = !noBody && !streaming && selectedResponse?.schema
   if (validator) {
     try {
       const validation = await validator["~standard"].validate(data)

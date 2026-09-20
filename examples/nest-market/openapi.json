@@ -1,6 +1,113 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/api/v1/offerings/{offeringId}/events": {
+      "get": {
+        "operationId": "watchOffering",
+        "x-accord-sse": {
+          "events": {
+            "connected": {
+              "mediaType": "application/json",
+              "schema": {
+                "$ref": "#/components/schemas/StreamStatusDto"
+              }
+            },
+            "heartbeat": {
+              "mediaType": "application/json",
+              "schema": {
+                "$ref": "#/components/schemas/StreamStatusDto"
+              }
+            },
+            "offering.updated": {
+              "mediaType": "application/json",
+              "schema": {
+                "$ref": "#/components/schemas/OfferingDto"
+              }
+            },
+            "subscription.created": {
+              "mediaType": "application/json",
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionDto"
+              }
+            },
+            "subscription.submitted": {
+              "mediaType": "application/json",
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionDto"
+              }
+            },
+            "document.uploaded": {
+              "mediaType": "application/json",
+              "schema": {
+                "$ref": "#/components/schemas/DocumentDto"
+              }
+            }
+          }
+        },
+        "summary": "Watch live offering, subscription and document activity",
+        "parameters": [
+          {
+            "name": "offeringId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "offerings"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/offerings": {
       "get": {
         "operationId": "listOfferings",
@@ -1515,6 +1622,128 @@
         ],
         "additionalProperties": false
       },
+      "StreamStatusDto": {
+        "type": "object",
+        "properties": {
+          "offeringId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "offeringId",
+          "timestamp"
+        ],
+        "additionalProperties": false
+      },
+      "SubscriptionStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "submitted"
+        ]
+      },
+      "SubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "investorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]{2}$",
+            "example": "2500.00"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "example": {
+              "source": "advisor",
+              "reference": "WEB-42"
+            }
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "offeringId": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "status": {
+            "readOnly": true,
+            "$ref": "#/components/schemas/SubscriptionStatus"
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "required": [
+          "investorId",
+          "amount",
+          "id",
+          "offeringId",
+          "status",
+          "submittedAt"
+        ],
+        "additionalProperties": false
+      },
+      "DocumentCategory": {
+        "type": "string",
+        "enum": [
+          "terms",
+          "prospectus",
+          "other"
+        ]
+      },
+      "DocumentDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/DocumentCategory"
+          },
+          "note": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "offeringId": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "category",
+          "id",
+          "offeringId",
+          "filename",
+          "size"
+        ],
+        "additionalProperties": false
+      },
       "Currency": {
         "type": "string",
         "enum": [
@@ -1918,66 +2147,6 @@
         ],
         "additionalProperties": false
       },
-      "SubscriptionStatus": {
-        "type": "string",
-        "enum": [
-          "draft",
-          "submitted"
-        ]
-      },
-      "SubscriptionDto": {
-        "type": "object",
-        "properties": {
-          "investorId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "amount": {
-            "type": "string",
-            "pattern": "^[0-9]+\\.[0-9]{2}$",
-            "example": "2500.00"
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "example": {
-              "source": "advisor",
-              "reference": "WEB-42"
-            }
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "readOnly": true
-          },
-          "offeringId": {
-            "type": "string",
-            "format": "uuid",
-            "readOnly": true
-          },
-          "status": {
-            "readOnly": true,
-            "$ref": "#/components/schemas/SubscriptionStatus"
-          },
-          "submittedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true,
-            "readOnly": true
-          }
-        },
-        "required": [
-          "investorId",
-          "amount",
-          "id",
-          "offeringId",
-          "status",
-          "submittedAt"
-        ],
-        "additionalProperties": false
-      },
       "SubscriptionDtoPage": {
         "type": "object",
         "properties": {
@@ -2049,50 +2218,6 @@
           "id",
           "state",
           "result"
-        ],
-        "additionalProperties": false
-      },
-      "DocumentCategory": {
-        "type": "string",
-        "enum": [
-          "terms",
-          "prospectus",
-          "other"
-        ]
-      },
-      "DocumentDto": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/DocumentCategory"
-          },
-          "note": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "readOnly": true
-          },
-          "offeringId": {
-            "type": "string",
-            "format": "uuid",
-            "readOnly": true
-          },
-          "filename": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "minimum": 0
-          }
-        },
-        "required": [
-          "category",
-          "id",
-          "offeringId",
-          "filename",
-          "size"
         ],
         "additionalProperties": false
       },

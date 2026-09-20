@@ -14,6 +14,10 @@ export function mediaType(value: string | null): string {
   return (value ?? "").split(";", 1)[0]!.trim().toLowerCase()
 }
 
+export function isEventStream(value: string | undefined): boolean {
+  return mediaType(value ?? null) === "text/event-stream"
+}
+
 /** Shared by codegen and runtime: only schema-dependent decoding needs an explicit override. */
 export function defaultCodec(type: string, direction: "request" | "response"): CodecPlan {
   const actual = mediaType(type)

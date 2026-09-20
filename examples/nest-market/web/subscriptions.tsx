@@ -1,7 +1,7 @@
 import { HttpError } from "@accord/client"
 import { type FormEvent, useState } from "react"
 import { api, type OfferingDto } from "../sdk/index.js"
-import { useMarket, useMarketMutation } from "../sdk/react-query.js"
+import { useMarket } from "../sdk/react-query.js"
 import { date, money, queryClient } from "./market.js"
 import { Badge, Empty, ErrorNotice, initials, Loading } from "./ui.js"
 
@@ -13,7 +13,7 @@ export function Subscriptions({ offering }: { offering: OfferingDto }) {
     limit: 100,
   })
   const investors = useMarket(api.investors.listInvestors)
-  const submit = useMarketMutation(api.subscriptions.submitSubscription)
+  const submit = useMarket(api.subscriptions.submitSubscription)
   const refresh = () =>
     queryClient.invalidateQueries({ queryKey: ["market", "api", "v1", "offerings"] })
   return (
@@ -132,7 +132,7 @@ function SubscriptionForm({
   onCreated: () => void
 }) {
   const investors = useMarket(api.investors.listInvestors)
-  const create = useMarketMutation(api.subscriptions.createSubscription)
+  const create = useMarket(api.subscriptions.createSubscription)
   const [investorId, setInvestorId] = useState("")
   const [amount, setAmount] = useState(offering.terms.minimumInvestment)
   function submit(event: FormEvent<HTMLFormElement>) {

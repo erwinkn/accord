@@ -2,6 +2,7 @@ import {
   defaultCodec,
   type EndpointPlan,
   type HttpMethod,
+  isEventStream,
   type MediaPlan,
   type ParameterBinding,
   type PathParameter,
@@ -129,6 +130,53 @@ export function compileApi(store: DocumentStore, config: AccordCodegenConfig): C
       const responses = responseModels(at, graph).map((response) =>
         method === "head" ? { ...response, media: [] } : response,
       )
+      const streamAt =
+        value["x-accord-sse"] === undefined ? undefined : store.child(at, "x-accord-sse")
+      if (streamAt) {
+        const extension = object(streamAt.value)
+        if (!isObject(extension["events"]) || !Object.keys(extension["events"]).length)
+          fail("INVALID_EXTENSION", "x-accord-sse needs a nonempty events object", streamAt.source)
+        const events: Record<string, MediaModel> = Object.create(null)
+        for (const [name, raw] of Object.entries(extension["events"])) {
+          const eventAt = store.child(streamAt, "events", name)
+          if (!name || /[\r\n\0]/.test(name) || !isObject(raw))
+            fail("INVALID_EXTENSION", "Invalid SSE event definition", eventAt.source)
+          const mediaType = raw["mediaType"] ?? "text/plain"
+          if (mediaType !== "application/json" && mediaType !== "text/plain")
+            fail(
+              "INVALID_EXTENSION",
+              "SSE data supports application/json or text/plain",
+              eventAt.source,
+            )
+          const schema =
+            raw["schema"] === undefined ? graph.any : graph.add(store.child(eventAt, "schema"))
+          const codec = graph.codec(schema, "response", mediaType)
+          if (mediaType === "text/plain" && (codec.kind !== "text" || codec.value))
+            fail(
+              "INVALID_EXTENSION",
+              "Text SSE data stays a string; use application/json for numbers or booleans",
+              eventAt.source,
+            )
+          events[name] = { mediaType, schema, codec }
+        }
+        let found = false
+        for (const [index, response] of responses.entries()) {
+          responses[index] = {
+            ...response,
+            media: response.media.map((media) => {
+              if (!isEventStream(media.mediaType)) return media
+              found = true
+              return { ...media, events }
+            }),
+          }
+        }
+        if (!found)
+          fail(
+            "INVALID_EXTENSION",
+            "x-accord-sse requires a text/event-stream response",
+            streamAt.source,
+          )
+      }
       const responsePlans: ResponseMap = Object.fromEntries(
         responses.map((response) => {
           const status = statusSelector(response.status, at)
@@ -338,6 +386,19 @@ function mediaModels(
 
 function mediaPlan(media: MediaModel, direction: Direction): MediaPlan {
   const { mediaType, codec } = media
+  if (isEventStream(mediaType) && !media.events) return { mediaType }
+  if (media.events)
+    return {
+      mediaType,
+      events: Object.fromEntries(
+        Object.entries(media.events).map(([name, event]) => {
+          // The compiler above restricts event payloads to these two encodings.
+          if (event.mediaType !== "application/json" && event.mediaType !== "text/plain")
+            throw new TypeError("Invalid event media type")
+          return [name, { mediaType: event.mediaType }]
+        }),
+      ),
+    }
   return JSON.stringify(codec) === JSON.stringify(defaultCodec(mediaType, direction))
     ? { mediaType }
     : { mediaType, codec }

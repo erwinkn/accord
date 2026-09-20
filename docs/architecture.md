@@ -96,6 +96,14 @@ Built-ins cover Bearer, Basic, API keys, custom callbacks, and OAuth client cred
 
 The runtime reconstructs flattened closed bodies using the model's fields and preserves nested bodies whole. It delegates serialization to shared codecs and does not reparse caller inputs. Generated validators execute only on responses. Full results and errors retain Fetch response metadata.
 
+## Event streams
+
+`text/event-stream` is a response media type, not a third operation kind. An optional `MediaModel.events` map records each named event's payload schema and codec; both `AsyncIterable<SseEvent<Data, Name>>` types and per-event validator references derive from it. The OpenAPI 3.0/3.1 input uses `x-accord-sse`. Without an event map, the response is a raw text event stream.
+
+After the normal Fetch pipeline selects a streaming response, an async generator parses UTF-8 and SSE framing incrementally, decodes each payload and applies its optional Standard Schema validator. HTTP errors reject the initial call; read/decode/validation errors reject iteration. The generator cancels and releases the reader on early return or failure, and the request's abort signal interrupts pending reads. There is no automatic reconnect or event history.
+
+The unified React hook uses an effect to own each streaming query connection and exposes the latest event, connection state, error and close function. It never caches the iterator in TanStack. Its effect and the two TanStack hooks run unconditionally; only the matching branch performs requests. Changing request identity or unmounting aborts the stream. Streaming mutations retain the ordinary mutation API and return their iterable to the caller. See [streaming](streaming.md) for limits and mixed-response behavior.
+
 ## Validation and library interoperability
 
 Validation is disabled by default. Core projects decoded response schemas from the same semantic graph used for types and metadata, then delegates to an explicit `ValidationAdapter`. Its stable interface receives normalized JSON Schema documents, export names/types, reference types, and a batch name allocator; it returns TypeScript imports and declarations.
@@ -111,6 +119,8 @@ The adapter fails generation on features it cannot represent faithfully, includi
 - `@accord/zod`: optional native Zod emitter and shared refinement helpers.
 - `@accord/react-query`: option factories/hooks and cache identity. It consumes endpoints rather than reinterpreting OpenAPI.
 
-`reactQuery: true` (CLI `--react-query`) generates a separate `react-query.ts` module. The SDK prefix determines its exported names: `market` produces `MarketProvider`, `useMarket`, `useMarketMutation`, and `marketQuery`/`marketMutation` helpers. A module-level `createQueryHooks()` call creates an independent context per SDK; its hooks retain the generic endpoint contracts and use the shared executor and cache-key implementation. Bound client endpoints override provider options. Plain option factories do not read context. The ordinary SDK entry has no React imports or re-exports; explicit single-file generation includes the optional exports in that file. Branded identifiers participate in the generator's reserved-name allocation.
+`reactQuery: true` (CLI `--react-query`) generates a separate `react-query.ts` module. The SDK prefix determines its exported names: `market` produces `MarketProvider`, `useMarket`, and `marketQuery`/`marketMutation` helpers. A module-level `createQueryHooks()` call creates an independent context per SDK; its hooks retain the generic endpoint contracts and use the shared executor and cache-key implementation. Bound client endpoints override provider options. Plain option factories do not read context. The ordinary SDK entry has no React imports or re-exports; explicit single-file generation includes the optional exports in that file. Branded identifiers participate in the generator's reserved-name allocation.
+
+The branded hook wraps the runtime's overloaded `useApi`: query endpoints take their generated request arguments and return `UseQueryResult`; mutation endpoints take no hook arguments and return `UseMutationResult` with the endpoint's default-media input as mutation variables. Runtime dispatch uses `endpoint.kind`, including POST endpoints explicitly classified as queries. Both TanStack hooks run on every render to preserve React's hook order: `useQueries` receives one query or an empty list, and `useMutation` stays idle until invoked. This costs an idle observer for the unused operation, but creates no dummy query-cache entry or extra request. The specialized runtime hooks and plain option factories remain available.
 
 The concrete implementation starts in `packages/codegen/src/{loader,model,compile,schema,request-plan,type-emitter,render-sdk,render-modules,write-sdk,validators}.ts`, `packages/client/src/{types,client,request-body,codecs}.ts`, and `packages/react-query/src/index.ts`.

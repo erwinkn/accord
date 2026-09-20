@@ -3,9 +3,12 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  type MessageEvent,
   Module,
   NotFoundException,
+  type OnModuleDestroy,
 } from "@nestjs/common"
+import { concat, filter, interval, map, merge, type Observable, of, Subject, takeUntil } from "rxjs"
 import type { DocumentDto, DocumentFieldsDto } from "./documents/document.dto.js"
 import type {
   CompanyInvestorDto,
@@ -37,7 +40,45 @@ interface StoredDocument {
 
 /** In-memory state is per app instance: generation and tests need no infrastructure. */
 @Injectable()
-export class MarketStore {
+export class MarketStore implements OnModuleDestroy {
+  private readonly events = new Subject<{ offeringId: string; message: MessageEvent }>()
+  private readonly destroyed = new Subject<void>()
+
+  onModuleDestroy(): void {
+    this.destroyed.next()
+    this.destroyed.complete()
+    this.events.complete()
+  }
+
+  watchOffering(offeringId: string): Observable<MessageEvent> {
+    this.offering(offeringId)
+    const status = (type: string): MessageEvent => ({
+      type,
+      id: randomUUID(),
+      data: { offeringId, timestamp: new Date().toISOString() },
+    })
+    return concat(
+      of(status("connected")),
+      merge(
+        this.events.pipe(
+          filter((event) => event.offeringId === offeringId),
+          map((event) => event.message),
+        ),
+        interval(10_000).pipe(map(() => status("heartbeat"))),
+      ),
+    ).pipe(takeUntil(this.destroyed))
+  }
+
+  private publish(
+    offeringId: string,
+    type: string,
+    data: OfferingDto | SubscriptionDto | DocumentDto,
+  ): void {
+    this.events.next({
+      offeringId,
+      message: { type, id: randomUUID(), data: structuredClone(data) },
+    })
+  }
   private readonly offerings = new Map(
     structuredClone(demoOfferings).map((item) => [item.id, item]),
   )
@@ -75,6 +116,7 @@ export class MarketStore {
   updateOffering(id: string, input: UpdateOfferingDto): OfferingDto {
     const offering = this.offering(id)
     Object.assign(offering, input)
+    this.publish(id, "offering.updated", offering)
     return offering
   }
   deleteOffering(id: string): void {
@@ -123,6 +165,7 @@ export class MarketStore {
       submittedAt: null,
     }
     this.subscriptions.set(subscription.id, subscription)
+    this.publish(offeringId, "subscription.created", subscription)
     return subscription
   }
   listSubscriptions(offeringId: string, investorId?: string): SubscriptionDto[] {
@@ -140,6 +183,7 @@ export class MarketStore {
     const subscription = this.subscription(id)
     subscription.status = SubscriptionStatus.Submitted
     subscription.submittedAt ??= new Date().toISOString()
+    this.publish(subscription.offeringId, "subscription.submitted", subscription)
     return subscription
   }
   createSubmissionJob(id: string): SubmissionJobDto {
@@ -164,6 +208,7 @@ export class MarketStore {
       size: file.size,
     }
     this.documents.set(metadata.id, { metadata, bytes: new Uint8Array(file.buffer) })
+    this.publish(offeringId, "document.uploaded", metadata)
     return metadata
   }
   document(id: string): StoredDocument {

@@ -1,4 +1,4 @@
-import type { CodecPlan, EndpointPlan } from "@accord/client"
+import { type CodecPlan, type EndpointPlan, isEventStream } from "@accord/client"
 import type { JsonObject, JsonValue } from "./types.js"
 
 /** Identity is a canonical source URI, including its JSON pointer. */
@@ -53,6 +53,12 @@ export interface MediaModel {
   readonly mediaType: string
   readonly schema: SchemaId
   readonly codec: CodecPlan
+  readonly events?: Readonly<Record<string, MediaModel>>
+}
+
+/** Streams validate each event payload; ordinary responses validate one complete body. */
+export function validationMedia(media: MediaModel): readonly MediaModel[] {
+  return isEventStream(media.mediaType) ? Object.values(media.events ?? {}) : [media]
 }
 
 export interface ResponseModel {

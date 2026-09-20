@@ -6,6 +6,7 @@ import type {
     GetOfferingContract,
     UpdateOfferingContract,
     DeleteOfferingContract,
+    WatchOfferingContract,
     ExportOfferingContract
 } from "../types/offerings.js";
 import {
@@ -29,6 +30,15 @@ import {
     DeleteOffering401Schema,
     DeleteOffering404Schema,
     DeleteOffering409Schema,
+    WatchOfferingConnectedSchema,
+    WatchOfferingDocumentUploadedSchema,
+    WatchOfferingHeartbeatSchema,
+    WatchOfferingOfferingUpdatedSchema,
+    WatchOfferingSubscriptionCreatedSchema,
+    WatchOfferingSubscriptionSubmittedSchema,
+    WatchOffering400Schema,
+    WatchOffering401Schema,
+    WatchOffering404Schema,
     ExportOffering200JsonSchema,
     ExportOffering200CsvSchema,
     ExportOffering400Schema,
@@ -194,6 +204,60 @@ export const endpoints = {
             "409": {
                 "mediaType": "application/json",
                 "schema": DeleteOffering409Schema
+            }
+        }
+    }),
+    "watchOffering": defineEndpoint<WatchOfferingContract, "query">({
+        "method": "GET",
+        "path": "/api/v1/offerings/{offeringId}/events",
+        "id": "watchOffering",
+        "kind": "query",
+        "pathParams": [
+            {
+                "name": "offeringId"
+            }
+        ],
+        "responses": {
+            "200": {
+                "mediaType": "text/event-stream",
+                "events": {
+                    "connected": {
+                        "mediaType": "application/json",
+                        "schema": WatchOfferingConnectedSchema
+                    },
+                    "document.uploaded": {
+                        "mediaType": "application/json",
+                        "schema": WatchOfferingDocumentUploadedSchema
+                    },
+                    "heartbeat": {
+                        "mediaType": "application/json",
+                        "schema": WatchOfferingHeartbeatSchema
+                    },
+                    "offering.updated": {
+                        "mediaType": "application/json",
+                        "schema": WatchOfferingOfferingUpdatedSchema
+                    },
+                    "subscription.created": {
+                        "mediaType": "application/json",
+                        "schema": WatchOfferingSubscriptionCreatedSchema
+                    },
+                    "subscription.submitted": {
+                        "mediaType": "application/json",
+                        "schema": WatchOfferingSubscriptionSubmittedSchema
+                    }
+                }
+            },
+            "400": {
+                "mediaType": "application/json",
+                "schema": WatchOffering400Schema
+            },
+            "401": {
+                "mediaType": "application/json",
+                "schema": WatchOffering401Schema
+            },
+            "404": {
+                "mediaType": "application/json",
+                "schema": WatchOffering404Schema
             }
         }
     }),

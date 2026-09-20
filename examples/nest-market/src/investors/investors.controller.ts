@@ -1,15 +1,18 @@
 import { Body, Controller, Get, Module, Param, ParseUUIDPipe, Post } from "@nestjs/common"
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiExtraModels,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
   getSchemaPath,
 } from "@nestjs/swagger"
-import { ApiErrors } from "../common.js"
+import { ErrorDto } from "../common.js"
 import { MarketStore, MarketStoreModule } from "../market.store.js"
 import {
   CompanyInvestorDto,
@@ -21,7 +24,9 @@ import {
 
 @ApiTags("investors")
 @ApiBearerAuth("bearer")
-@ApiErrors()
+@ApiBadRequestResponse({ type: ErrorDto })
+@ApiUnauthorizedResponse({ type: ErrorDto })
+@ApiNotFoundResponse({ type: ErrorDto })
 @Controller("investors")
 export class InvestorsController {
   constructor(private readonly store: MarketStore) {}
