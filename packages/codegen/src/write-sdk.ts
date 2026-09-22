@@ -9,8 +9,24 @@ import type { JsonValue } from "./types.js"
 const manifestName = ".accord-manifest.json"
 const hash = (source: string) => createHash("sha256").update(source).digest("hex")
 
-export async function writeGeneratedFile(outputPath: string, source: string): Promise<void> {
+/** Files touched by one `writeGeneratedSdk` call, relative to the SDK directory. */
+export interface SdkWriteSummary {
+  /** Created or replaced because their content differed. */
+  readonly written: readonly string[]
+  /** Already held the generated content and were left untouched. */
+  readonly unchanged: readonly string[]
+  /** Previously generated modules that this SDK no longer produces. */
+  readonly removed: readonly string[]
+}
+
+/**
+ * Atomically replaces `outputPath` with `source`. An identical existing file is
+ * left untouched so that watchers downstream do not observe a spurious change.
+ * Returns whether the file was written.
+ */
+export async function writeGeneratedFile(outputPath: string, source: string): Promise<boolean> {
   const absolute = resolve(outputPath)
+  if ((await readOptional(absolute)) === source) return false
   await mkdir(dirname(absolute), { recursive: true })
   const temporary = `${absolute}.accord-${process.pid}-${crypto.randomUUID()}.tmp`
   try {
@@ -19,6 +35,7 @@ export async function writeGeneratedFile(outputPath: string, source: string): Pr
   } finally {
     await rm(temporary, { force: true })
   }
+  return true
 }
 
 async function readOptional(path: string): Promise<string | undefined> {
@@ -86,8 +103,13 @@ function rebaseEntry(source: string, directory: string): string {
 /**
  * A directory target gets index.ts; a .ts target keeps that entry filename and
  * stores its modules in an adjacent directory named after the file.
+ * Only files whose content changed are written, so repeated generation of the
+ * same document is a no-op for downstream file watchers.
  */
-export async function writeGeneratedSdk(outputPath: string, result: GenerateResult): Promise<void> {
+export async function writeGeneratedSdk(
+  outputPath: string,
+  result: GenerateResult,
+): Promise<SdkWriteSummary> {
   const absolute = resolve(outputPath)
   const fileTarget = /\.(?:[cm]?ts|tsx)$/.test(absolute)
   const directory = fileTarget ? absolute.replace(/\.(?:[cm]?ts|tsx)$/, "") : absolute
@@ -111,15 +133,24 @@ export async function writeGeneratedSdk(outputPath: string, result: GenerateResu
     const source = await readOptional(join(directory, path))
     if (source !== undefined && hash(source) === checksum) stale.push(path)
   }
+  const written: string[] = []
+  const unchanged: string[] = []
+  const record = (path: string, didWrite: boolean) => (didWrite ? written : unchanged).push(path)
   for (const [path, source] of modules)
-    if (path !== "index.ts") await writeGeneratedFile(join(directory, path), source)
-  await writeGeneratedFile(
-    fileTarget ? absolute : join(directory, "index.ts"),
-    fileTarget ? rebaseEntry(entry, basename(directory)) : entry,
+    if (path !== "index.ts") record(path, await writeGeneratedFile(join(directory, path), source))
+  // The entry is written last so that a consumer never imports a module the entry does not expect yet.
+  const entryPath = fileTarget ? absolute : join(directory, "index.ts")
+  record(
+    fileTarget ? basename(absolute) : "index.ts",
+    await writeGeneratedFile(
+      entryPath,
+      fileTarget ? rebaseEntry(entry, basename(directory)) : entry,
+    ),
   )
   for (const path of stale) await rm(join(directory, path))
   await writeGeneratedFile(
     join(directory, manifestName),
     `${JSON.stringify({ version: 1, files: Object.fromEntries(modules.map(([path, source]) => [path, hash(source)])) }, null, 2)}\n`,
   )
+  return { written, unchanged, removed: stale }
 }

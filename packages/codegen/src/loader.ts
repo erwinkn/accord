@@ -301,16 +301,21 @@ export class DocumentStore {
   }
 }
 
-export async function readDocument(uri: string): Promise<JsonValue> {
-  let source: string
+/** Reads the raw text of a file or HTTP(S) document. Transport failures throw ordinary errors. */
+export async function readDocumentSource(uri: string): Promise<string> {
+  const url = new URL(uri)
+  if (url.protocol === "file:") return readFile(fileURLToPath(url), "utf8")
+  if (url.protocol === "https:" || url.protocol === "http:") {
+    const response = await fetch(url, { signal: AbortSignal.timeout(30_000) })
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    return response.text()
+  }
+  throw new Error(`Unsupported reference protocol ${url.protocol}`)
+}
+
+/** Parses JSON or YAML source into a canonical document; `uri` only labels diagnostics. */
+export function parseDocument(source: string, uri: string): JsonValue {
   try {
-    const url = new URL(uri)
-    if (url.protocol === "file:") source = await readFile(fileURLToPath(url), "utf8")
-    else if (url.protocol === "https:" || url.protocol === "http:") {
-      const response = await fetch(url, { signal: AbortSignal.timeout(30_000) })
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
-      source = await response.text()
-    } else throw new Error(`Unsupported reference protocol ${url.protocol}`)
     // YAML's JSON-compatible values enter the owned document graph at this boundary.
     const document: JsonValue = parseYaml(source, { maxAliasCount: 100 })
     return canonicalize(document)
@@ -320,4 +325,17 @@ export async function readDocument(uri: string): Promise<JsonValue> {
       `Could not load ${uri}: ${error instanceof Error ? error.message : String(error)}`,
     )
   }
+}
+
+export async function readDocument(uri: string): Promise<JsonValue> {
+  let source: string
+  try {
+    source = await readDocumentSource(uri)
+  } catch (error) {
+    fail(
+      "INVALID_DOCUMENT",
+      `Could not load ${uri}: ${error instanceof Error ? error.message : String(error)}`,
+    )
+  }
+  return parseDocument(source, uri)
 }

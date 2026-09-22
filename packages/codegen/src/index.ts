@@ -10,6 +10,7 @@ export {
   generate,
   generateFromFile,
   loadOpenApiFile,
+  type SdkWriteSummary,
   writeGeneratedFile,
   writeGeneratedSdk,
 } from "./generate.js"
@@ -41,3 +42,4 @@ export type {
 } from "./types.js"
 
 export type * from "./validation-adapter.js"
+export { type WatchNotice, type WatchOptions, watchGenerate } from "./watch.js"

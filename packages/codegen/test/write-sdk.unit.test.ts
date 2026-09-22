@@ -1,4 +1,14 @@
-import { mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from "node:fs/promises"
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  stat,
+  symlink,
+  utimes,
+  writeFile,
+} from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { zodAdapter } from "@accord/zod"
@@ -126,4 +136,41 @@ it("uses portable unique module names and keeps reserved namespace names as obje
   expect(files["index.ts"]).toContain('"models": modelsEndpoints')
   expect(files["index.ts"]).toContain('"shared": sharedApiEndpoints')
   expect(files["index.ts"]).toContain('"default": defaultEndpoints')
+})
+
+it("leaves identical files untouched and reports what changed", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "accord-stable-"))
+  try {
+    const result = await generate(document(["users", "pets"]))
+    const first = await writeGeneratedSdk(directory, result)
+    expect(first.written.sort()).toEqual(Object.keys(result.files).sort())
+    expect(first.unchanged).toEqual([])
+    expect(first.removed).toEqual([])
+
+    const past = new Date("2020-01-01T00:00:00Z")
+    const paths = [...Object.keys(result.files), ".accord-manifest.json"]
+    for (const path of paths) await utimes(join(directory, path), past, past)
+    const second = await writeGeneratedSdk(directory, result)
+    expect(second.written).toEqual([])
+    expect(second.unchanged.sort()).toEqual(Object.keys(result.files).sort())
+    for (const path of paths) expect((await stat(join(directory, path))).mtime).toEqual(past)
+
+    await writeFile(join(directory, "endpoints/pets.ts"), "// edited generated module\n")
+    const third = await writeGeneratedSdk(directory, result)
+    expect(third.written).toEqual(["endpoints/pets.ts"])
+    expect(await readFile(join(directory, "endpoints/pets.ts"), "utf8")).toBe(
+      result.files["endpoints/pets.ts"],
+    )
+
+    const fourth = await writeGeneratedSdk(directory, await generate(document(["users"])))
+    expect(fourth.removed.sort()).toEqual(["endpoints/pets.ts", "types/pets.ts"])
+    expect(fourth.written).toEqual(["index.ts"])
+
+    expect(await writeGeneratedFile(join(directory, "single.ts"), result.source)).toBe(true)
+    await utimes(join(directory, "single.ts"), past, past)
+    expect(await writeGeneratedFile(join(directory, "single.ts"), result.source)).toBe(false)
+    expect((await stat(join(directory, "single.ts"))).mtime).toEqual(past)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
 })
