@@ -2,9 +2,16 @@
 import { resolve } from "node:path"
 import { pathToFileURL } from "node:url"
 import { resolve as resolveModule } from "import-meta-resolve"
-import { generateFromFile, writeGeneratedFile, writeGeneratedSdk } from "./generate.js"
+import {
+  type GenerateResult,
+  generateFromFile,
+  type SdkWriteSummary,
+  writeGeneratedFile,
+  writeGeneratedSdk,
+} from "./generate.js"
 import type { AccordCodegenConfig, BodyMode, NamespaceStrategy } from "./types.js"
 import type { ValidationAdapterModule } from "./validation-adapter.js"
+import { type WatchNotice, watchGenerate } from "./watch.js"
 
 interface CliArguments {
   input: string
@@ -17,6 +24,8 @@ interface CliArguments {
   basePath?: string
   validators?: string
   singleFile?: boolean
+  watch?: boolean
+  pollIntervalMs?: number
 }
 
 interface ConfigModule {
@@ -49,11 +58,62 @@ async function main(): Promise<void> {
   if (args.basePath !== undefined) config.basePath = args.basePath
   if (args.bodyMode !== undefined) config.body = { ...fileConfig.body, mode: args.bodyMode }
 
+  if (args.watch) {
+    const output = args.output
+    if (output === undefined) throw new TypeError("--watch requires --output")
+    await watchGenerate(
+      args.input,
+      config,
+      (notice) => reportWatch(notice, output, args.singleFile ?? false),
+      args.pollIntervalMs === undefined ? {} : { pollIntervalMs: args.pollIntervalMs },
+    )
+    return
+  }
+
   const result = await generateFromFile(args.input, config)
   if (args.output) {
     if (args.singleFile) await writeGeneratedFile(args.output, result.source)
     else await writeGeneratedSdk(args.output, result)
   } else process.stdout.write(result.source)
+}
+
+async function writeOutput(
+  output: string,
+  result: GenerateResult,
+  singleFile: boolean,
+): Promise<SdkWriteSummary> {
+  if (!singleFile) return writeGeneratedSdk(output, result)
+  const written = await writeGeneratedFile(output, result.source)
+  return { written: written ? [output] : [], unchanged: written ? [] : [output], removed: [] }
+}
+
+async function reportWatch(
+  notice: WatchNotice,
+  output: string,
+  singleFile: boolean,
+): Promise<void> {
+  const stamp = () => `[accord ${new Date().toLocaleTimeString()}]`
+  if (notice.kind === "unavailable") {
+    process.stdout.write(`${stamp()} waiting for source: ${notice.error.message}\n`)
+    return
+  }
+  if (notice.kind === "failed") {
+    process.stderr.write(`${stamp()} generation failed\n${notice.error.message}\n`)
+    return
+  }
+  const summary = await writeOutput(output, notice.result, singleFile)
+  const elapsed = `${notice.elapsedMs.toFixed(0)}ms`
+  if (summary.written.length === 0 && summary.removed.length === 0) {
+    process.stdout.write(`${stamp()} no changes (${elapsed})\n`)
+    return
+  }
+  const changes = [
+    ...summary.written.map((path) => path),
+    ...summary.removed.map((path) => `-${path}`),
+  ]
+  process.stdout.write(
+    `${stamp()} updated ${changes.length} file(s) (${elapsed}): ${changes.join(", ")}\n`,
+  )
 }
 
 function parseArguments(values: readonly string[]): CliArguments {
@@ -73,6 +133,8 @@ function parseArguments(values: readonly string[]): CliArguments {
   let basePath: string | undefined
   let singleFile = false
   let reactQuery: boolean | undefined
+  let watch = false
+  let pollIntervalMs: number | undefined
 
   for (let index = 0; index < args.length; index += 1) {
     const value = args[index]
@@ -89,6 +151,10 @@ function parseArguments(values: readonly string[]): CliArguments {
     }
     if (value === "--react-query") {
       reactQuery = true
+      continue
+    }
+    if (value === "--watch" || value === "-w") {
+      watch = true
       continue
     }
     if (value === "--validators") {
@@ -122,13 +188,20 @@ function parseArguments(values: readonly string[]): CliArguments {
     } else if (value === "--base-path") {
       basePath = requireValue(value, next)
       index += 1
+    } else if (value === "--poll") {
+      const candidate = Number(requireValue(value, next))
+      if (!Number.isSafeInteger(candidate) || candidate < 50)
+        throw new TypeError("--poll must be a whole number of milliseconds, at least 50")
+      pollIntervalMs = candidate
+      index += 1
     } else {
       throw new TypeError(`Unknown option ${value}`)
     }
   }
 
   if (!input) throw new TypeError("An OpenAPI input file is required")
-  const parsed: CliArguments = { input, singleFile }
+  const parsed: CliArguments = { input, singleFile, watch }
+  if (pollIntervalMs !== undefined) parsed.pollIntervalMs = pollIntervalMs
   const adapterIndex = values.indexOf("--validators")
   if (adapterIndex >= 0) parsed.validators = requireValue("--validators", values[adapterIndex + 1])
   if (output !== undefined) parsed.output = output
@@ -157,7 +230,7 @@ async function importConfig(configPath: string): Promise<AccordCodegenConfig> {
 
 function printUsage(): void {
   process.stdout.write(
-    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --prefix <prefix>     SDK query/mutation key prefix (OpenAPI title by default)\n      --react-query         Generate branded TanStack React Query hooks\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -h, --help                 Show this help\n`,
+    `Usage: accord generate <openapi.yaml> [options]\n\nOptions:\n  -o, --output <file-or-dir> SDK entry file or directory (stdout by default)\n      --single-file         Write one file instead of modules\n  -c, --config <file>        JavaScript/TypeScript-compatible config module\n      --prefix <prefix>     SDK query/mutation key prefix (OpenAPI title by default)\n      --react-query         Generate branded TanStack React Query hooks\n      --namespace <strategy> path (default) or tag\n      --body-mode <mode>     merge or separate (automatic by default)\n      --validators <package>  Response schema adapter, e.g. @accord/zod\n      --base-path <path>     Strip a path prefix from inferred namespaces\n  -w, --watch                Regenerate when the input changes (requires --output)\n      --poll <ms>           Polling interval for URL inputs in watch mode (1000 by default)\n  -h, --help                 Show this help\n`,
   )
 }
 

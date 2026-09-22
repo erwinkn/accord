@@ -206,7 +206,20 @@ Nullable query schemas are supported in both OpenAPI 3.0 and 3.1. For ordinary s
 
 Response media entries reference their generated schemas directly, so the selected status and content type also select validation. Ordinary JSON, text and binary formats need no explicit codec metadata. Schema-dependent encodings such as XML, multipart and numeric text retain their codec details.
 
-The programmatic API exposes `generate`, `generateFromFile`, and `writeGeneratedSdk`; generation returns `{ source, files, model }`. `files` contains the modules with relative paths and `index.ts` as their entry. `writeGeneratedSdk` writes them, tracks ownership in `.accord-manifest.json`, and removes obsolete generated files on regeneration if their contents are unchanged. Handwritten files outside the generated layout and edited obsolete files are preserved. Active generated files are replaced. `source` remains a complete single-file rendering; use `writeGeneratedFile` or CLI `--single-file -o sdk.ts` for that layout. With no output argument, the CLI prints that complete rendering to stdout.
+The programmatic API exposes `generate`, `generateFromFile`, `writeGeneratedSdk`, and `watchGenerate`; generation returns `{ source, files, model, sources }`. `files` contains the modules with relative paths and `index.ts` as their entry; `sources` lists the URIs of every document that was read. `writeGeneratedSdk` writes them, tracks ownership in `.accord-manifest.json`, and removes obsolete generated files on regeneration if their contents are unchanged. Files whose content is already current are left untouched, so regenerating an unchanged document does not disturb downstream watchers; the returned summary lists `written`, `unchanged`, and `removed` paths. Handwritten files outside the generated layout and edited obsolete files are preserved. Active generated files are replaced. `source` remains a complete single-file rendering; use `writeGeneratedFile` or CLI `--single-file -o sdk.ts` for that layout. With no output argument, the CLI prints that complete rendering to stdout.
+
+## Watch mode
+
+`--watch` keeps regenerating while you develop. A file input is watched together with every external document it references. A URL input is polled, every second by default, and only a changed response triggers regeneration:
+
+```sh
+pnpm exec accord generate openapi.yaml -o src/sdk --watch
+pnpm exec accord generate http://127.0.0.1:3100/docs-json -o src/sdk --watch --poll 500
+```
+
+The second form suits frameworks that serve their own OpenAPI document, such as NestJS with `SwaggerModule.setup("docs", …)`. Because the server rebuilds the document on every restart and Accord only writes files whose content changed, a source edit flows from the API to the SDK to the frontend's hot reload with no extra tooling. Generation errors are reported and watching continues; an unreachable URL is reported once and retried silently. The same loop is available programmatically as `watchGenerate(input, config, notify, { signal })`.
+
+Frameworks that build the document in process can also skip polling: call `generate` and `writeGeneratedSdk` right after creating the document during a development boot. Generation takes tens of milliseconds for typical APIs and the write is a no-op when nothing changed.
 
 ## Develop
 

@@ -6,7 +6,11 @@ import { renderSdk } from "./render-sdk.js"
 import type { AccordCodegenConfig, JsonValue } from "./types.js"
 import { generateValidators } from "./validators.js"
 
-export { writeGeneratedFile, writeGeneratedSdk } from "./write-sdk.js"
+export {
+  type SdkWriteSummary,
+  writeGeneratedFile,
+  writeGeneratedSdk,
+} from "./write-sdk.js"
 
 export interface GenerateResult {
   /** Complete single-file rendering, suitable for stdout. */
@@ -14,6 +18,8 @@ export interface GenerateResult {
   /** SDK modules, with index.ts as the public entry point. */
   readonly files: Readonly<Record<string, string>>
   readonly model: ApiModel
+  /** URIs of every document read during generation: the root and its external references. */
+  readonly sources: readonly string[]
 }
 
 export async function generate(
@@ -32,6 +38,7 @@ export async function generate(
   return {
     ...renderSdk(compilation, validators, config.reactQuery),
     model: compilation.model,
+    sources: [...store.documents.keys()],
   }
 }
 

@@ -30,7 +30,7 @@ pnpm add ./vendor/accord-zod-0.1.0-alpha.0.tgz zod
 pnpm exec accord generate openapi.yaml --output src/api.ts --validators @accord/zod
 ```
 
-Use ESM, TypeScript 5.9+, and a Fetch-capable runtime; generation requires Node 22+. The entire generated SDK, including optional response validators, lives in `api.ts`. Omit `--validators` to generate a smaller SDK that trusts decoded response values.
+Add `--watch` to regenerate whenever `openapi.yaml`, or a URL such as your dev server's `/docs-json`, changes. Use ESM, TypeScript 5.9+, and a Fetch-capable runtime; generation requires Node 22+. The entire generated SDK, including optional response validators, lives in `api.ts`. Omit `--validators` to generate a smaller SDK that trusts decoded response values.
 
 Start with the [Tasks usage example](../examples/tasks/usage.ts) for authentication, ordinary calls, full responses, and React Query options. [Schema wrappers](../examples/adapters/README.md) show native Zod and ArkType consumption through Standard Schema.
 
